@@ -1,0 +1,1923 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- ==========================================================================
+Useful entities
+=========================================================================== -->
+
+<!-- ========== Applications ========== -->
+
+<!-- ===== Software applications ===== -->
+
+<!ENTITY binutils "<application class='software'>Binutils</application>">
+<!ENTITY gcc "<application class='software'>GCC</application>">
+<!ENTITY gdb "<application class='software'>GDB</application>">
+<!ENTITY ddd "<application class='software'>DDD</application>" >
+<!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY uclinux "<application class='software'>uClinux</application>" >
+<!ENTITY uclibc "<application class='software'>uClibc</application>">
+<!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
+
+<!-- ===== Hardware applications ===== -->
+
+<!ENTITY or1k "<application class='hardware'>OpenRISC 1000</application>">
+<!ENTITY or1200 "<application class='hardware'>OpenRISC 1200</application>">
+<!ENTITY orpsoc "<application class='hardware'>ORPSoC</application>">
+
+<!-- ===== Commands ===== -->
+
+<!ENTITY patch "<command>patch</command>" >
+<!ENTITY diff "<command>diff</command>" >
+<!ENTITY configure "<command>configure</command>" >
+<!ENTITY make "<command>make</command>" >
+<!ENTITY makefile "<command>make</command> file" >
+<!ENTITY makeall "<command>make all</command>" >
+<!ENTITY makecheck "<command>make check</command>" >
+<!ENTITY makeinstall "<command>make install</command>" >
+<!ENTITY makeclean "<command>make clean</command>" >
+<!ENTITY xterm "<command>xterm</command>" >
+<!ENTITY sh "<command>sh</command>" >
+<!ENTITY bash "<command>bash</command>" >
+<!ENTITY csh "<command>csh</command>" >
+<!ENTITY tcsh "<command>tcsh</command>" >
+<!ENTITY bunzip2 "<command>bunzip2</command>" >
+<!ENTITY nm "<command>nm</command>" >
+<!ENTITY grep "<command>grep</command>" >
+
+<!-- ===== Libraries ===== -->
+
+<!ENTITY readline "<systemitem class='library'>readline</systemitem>" >
+<!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
+
+<!-- ========== Cross references ========== -->
+
+<!-- ===== Internal cross references ===== -->
+
+<!ENTITY patchref "See <xref linkend='sec_binutils_download' /> for an example
+  of how to apply a &patch; file." >
+
+<!-- ===== Web pages ===== -->
+
+<!ENTITY embecosm "<ulink
+  url='http://www.embecosm.com'>Embecosm</ulink>">
+<!ENTITY opencores "<ulink
+  url='http://www.opencores.org'>OpenCores</ulink>">
+<!ENTITY gnu "<ulink url='http://www.gnu.org'>GNU</ulink>">
+<!ENTITY gpl "<ulink url='http://www.gnu.org/licenses/gpl.html'>
+  GNU General Public License</ulink>">
+<!ENTITY lgpl "<ulink url='http://www.gnu.org/licenses/lgpl.html'>
+  GNU Lesser General Public License</ulink>">
+<!ENTITY mof "<ulink
+  url='http://www.meansoffreedom.com'><acronym>MOF</acronym></ulink>">
+<!ENTITY toolpage "<ulink
+  url='http://www.opencores.org/projects.cgi/web/or1k/gnu_toolchain_port'>&or1k;:
+  GNU Toolchain Port</ulink> project page">
+<!ENTITY busybox "<ulink url='http://www.busybox.net'>BusyBox</ulink>" >
+
+<!-- ===== Source, patch and config files ===== -->
+
+<!-- = OpenRISC -->
+
+<!ENTITY or_doc_arch "<ulink
+  url='http://www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf'>www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf</ulink>" >
+
+<!-- = Binutils = -->
+
+<!ENTITY binutils_clean "<ulink
+  url='http://ftp.gnu.org/gnu/binutils/binutils-2.16.1.tar.bz2'>ftp.gnu.org/gnu/binutils/binutils-2.16.1.tar.bz2</ulink>" >
+<!ENTITY binutils_mof_patch "<ulink
+  url='http://www.meansoffreedom.com/binutils_2.16.1_unified.diff_rgd_fixed.bz2?do_download=now'><filename>binutils_2.16.1_unified.diff_rgd_fixed.bz2</filename></ulink>" >
+
+<!-- = GCC = -->
+
+<!ENTITY gcc_clean "<ulink
+  url='http://ftp.gnu.org/gnu/gcc/gcc-3.4.4/gcc-3.4.4.tar.bz2'>ftp.gnu.org/gnu/gcc/gcc-3.4.4/gcc-3.4.4.tar.bz2</ulink>" >
+<!ENTITY gcc_mof_patch "<ulink
+  url='http://www.meansoffreedom.com/gcc-3.4.4-or32-unified.diff.bz2?do_download=now'><filename>gcc-3.4.4-or32-unified.diff.bz2</filename></ulink>" >
+
+<!-- = GDB = -->
+
+<!ENTITY gdb_clean "<ulink
+  url='http://ftp.gnu.org/gnu/gdb/gdb-5.3.tar.gz'>ftp.gnu.org/gnu/gdb/gdb-5.3.tar.gz</ulink>" >
+<!ENTITY gdb_emb_patch "<ulink
+  url='http://www.embecosm.com/patches/embecosm-or32-gdb-5.3-patch.bz2'><filename>embecosm-or32-gdb-5.3-patch.bz2</filename></ulink>" >
+
+<!-- = Linux = -->
+
+<!ENTITY linux_clean "<ulink
+  url='ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.19.tar.bz2'>ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.19.tar.bz2</ulink>" >
+<!ENTITY linux_mof_patch "<ulink
+  url='http://www.meansoffreedom.com/linux_2.6.19_or32_unified_simtested.bz2?do_download=now'><filename>linux_2.6.19_or32_unified_simtested.bz2</filename></ulink>" >
+<!ENTITY linux_emb_patch "<ulink
+  url='http://www.embecosm.com/patches/embecosm-or32-linux-2.6.19-modpost-patch.bz2'><filename>embecosm-or32-linux-2.6.19-modpost-patch.bz2</filename></ulink>" >
+<!ENTITY linux_mof_ramdisk "<ulink
+  url='http://www.meansoffreedom.com/rgd_initrd-fb-03.ext2.bz2?do_download=now'><filename>rgd_initrd-fb-03.ext2.bz2</filename></ulink>" >
+
+<!-- = uClibc = -->
+
+<!ENTITY uclibc_clean "<ulink
+  url='http://www.uclibc.org/downloads/uClibc-0.9.28.3.tar.bz2'>www.uclibc.org/downloads/uClibc-0.9.28.3.tar.bz2</ulink>" >
+<!ENTITY uclibc_mof_patch_main "<ulink
+  url='http://www.meansoffreedom.com/uClibc-0.9.28-or32-unified.bz2?do_download=now'><filename>uClibc-0.9.28-or32-unified.bz2</filename></ulink>" >
+<!ENTITY uclibc_mof_patch_supp "<ulink
+  url='http://www.meansoffreedom.com/uClibc-0.9.28-or32-libc-support.bz2?do_download=now'><filename>uClibc-0.9.28-or32-libc-support.bz2</filename></ulink>" >
+<!ENTITY uclibc_emb_patch "<ulink
+  url='http://www.embecosm.com/patches/embecosm-or32-uClibc-0.9.28.3-stdio-patch.bz2'><filename>embecosm-or32-uClibc-0.9.28.3-stdio-patch.bz2</filename></ulink>" >
+<!ENTITY uclibc_mof_config "<ulink
+  url='http://www.meansoffreedom.com/rgd_dot_config_example_uclibc.html'>suggested configuration file</ulink>" >
+
+<!-- = Or1ksim = -->
+
+<!ENTITY or1ksim_clean "<ulink
+  url='http://www.opencores.org/projects.cgi/web/or1k/or1ksim-0.2.0.tar.gz'>www.opencores.org/projects.cgi/web/or1k/or1ksim-0.2.0.tar.gz</ulink>" >
+<!ENTITY or1ksim_emb_patch "<ulink
+  url='http://www.embecosm.com/patches/embecosm-or32-or1ksim-0.2.0-patch.bz2'><filename>embecosm-or32-or1ksim-0.2.0-patch.bz2</filename></ulink>" >
+
+]>
+
+<!-- ==========================================================================
+
+                  CONFIDENTIAL AND PROPRIETARY INFORMATION
+                  ========================================
+
+Unpublished copyright (c) 2008 Embecosm. All Rights Reserved.
+
+This file contains confidential and proprietary information of Embecosm and
+is protected by copyright, trade secret and other regional, national and
+international laws, and may be embodied in patents issued or pending.
+
+Receipt or possession of this file does not convey any rights to use,
+reproduce, disclose its contents, or to manufacture, or sell anything it may
+describe.
+
+Reproduction, disclosure or use without specific written authorization of
+Embecosm is strictly forbidden.
+
+Reverse engineering is prohibited.
+
+===============================================================================
+
+Application note describing the deployment of the Opencores simulator and
+toolchain.
+
+$Id$
+
+=========================================================================== -->
+
+<article class="whitepaper" lang="en_GB">
+  <title>The &opencores; &or1k; Simulator and Tool Chain</title>
+  <subtitle>Installation Guide</subtitle>
+  <articleinfo>
+    <corpauthor>
+      &embecosm;
+    </corpauthor>
+    <pubdate>8 March 2008</pubdate>
+    <releaseinfo>Issue 1, draft A</releaseinfo>
+    <copyright>
+      <year>2008</year>
+      <holder>Embecosm</holder>
+    </copyright>
+    <legalnotice>
+      <title>Legal Notice</title>
+      <para>Unpublished copyright (c) 2008 &embecosm;. All Rights
+      Reserved.</para>
+
+      <para>This file contains confidential and proprietary information of
+      Embecosm and is protected by copyright, trade secret and other regional,
+      national and international laws, and may be embodied in patents issued
+      or pending.</para>
+
+      <para>Receipt or possession of this file does not convey any rights to
+      use, reproduce, disclose its contents, or to manufacture, or sell
+      anything it may describe.</para>
+
+      <para>Reproduction, disclosure or use without specific written
+      authorization of Embecosm is strictly forbidden.</para>
+
+      <para>Reverse engineering is prohibited.</para>
+    </legalnotice>
+  </articleinfo>
+      
+<!-- ==========================================================================
+Introduction
+=========================================================================== -->
+
+<sect1><title>Introduction</title>
+
+<para>Many of the other application notes and technical papers written by
+&embecosm; make use of the &opencores; &or1k; simulator and toolchain in
+examples. Since these systems are made available under the &gpl; and &lgpl;,
+the are a convenient base for examples that others can anyone can use
+freely.</para>
+
+<para>This application note supports those other papers by documenting how the
+&or1k; &or1ksim; architecture and its associated toolchain should be
+installed. It also provides examples of the simulator and toolchain in use,
+including a recent &linux; kernel.</para>
+
+</sect1>
+
+<!-- ==========================================================================
+Using OpenRISC
+=========================================================================== -->
+
+<sect1><title>Using the OpenRISC ISS, ork1sim</title>
+
+<para>The OpenRISC 1000 project forms part of the OpenCores organization
+(<ulink url="http://www.opencores.org">www.opencores.org</ulink>). Its aim
+is to create a free open source computing platform, comprising:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>An open source 32/64 bit RISC/DSP architecture;</para></listitem>
+  <listitem>
+    <para>A set of open source implementations of the architecture;
+    and</para></listitem>
+  <listitem>
+    <para>A complete open source toolchain and operating
+    system.</para></listitem>
+</itemizedlist>
+
+<para>The project has yielded Verilog for a 32 processor core, the &or1200;
+(sometimes known as <abbrev>OR1200</abbrev>) and a complete reference System
+on Chip design using that core, &orpsoc;.
+</para>
+
+<!-- ========== OpenRISC 1000 Components Used ========== -->
+
+<sect2><title>OpenRISC 1000 Components Used</title>
+
+<para>This application note describes several components of the OpenRISC 1000
+project:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>&gnu; &binutils;, &gcc; and &gdb; from the &gnu; toolchain
+    port;</para></listitem>
+  <listitem>
+    <para>the &linux; kernel;</para></listitem>
+  <listitem>
+    <para>the &uclibc; library and</para></listitem>
+  <listitem>
+    <para>the &or1ksim; architectural simulator.</para></listitem>
+</itemizedlist>
+
+<note>
+  <para>The &gnu; toolchain (&binutils;, &gcc;, &gdb;) is built for a
+  <emphasis>cross-compiling</emphasis> environment. In other words the tools
+  are designed to run on the development workstation, but generate code for
+  the target (&or1200;) architecture.</para></note>
+
+</sect2>
+</sect1>
+
+<!-- ==========================================================================
+Building the Components
+=========================================================================== -->
+
+<sect1><title>Building the Components</title>
+
+<para>In general the &opencores; website (<ulink
+url="http://www.opencores.org">www.opencores.org</ulink>) only provides
+&patch; files for tools from third parties (e.g. &gcc;) (&patchref;).</para>
+
+<para>The &opencores; website provides basic instructions for building the
+various components (see the &toolpage;). These can be slightly out-of-date,
+and are usefully supplemented by Rich D'Addio's <ulink
+url="http://www.meansoffreedom.com/">Meansoffreedom (MOF)</ulink>
+website. This Appendix aims to bring all these instructions together and
+update them for 2008.</para>
+
+<note>
+  <para>The details vary depending on the environment used. The examples given
+  below were all verified on a workstation using &gcc; 4.3.0 under Fedora 9
+  &linux;. The procedure should be very similar under other &linux;
+  versions.</para></note>
+
+<!-- ========== Binutils ========== -->
+
+<sect2 id="sec_binutils"><title>&gnu; &binutils; Version 2.16.1</title>
+
+<para>&binutils; provides the basic &gnu; utilities required by the remainder of
+the toolchain. The tools are
+<simplelist type="inline">
+  <member><command>addr2line</command></member>
+  <member><command>ar</command></member>
+  <member><command>as</command></member>
+  <member><command>c++filt</command></member>
+  <member><command>ld</command></member>
+  <member><command>nm</command></member>
+  <member><command>objcopy</command></member>
+  <member><command>objdump</command></member>
+  <member><command>ranlib</command></member>
+  <member><command>readelf</command></member>
+  <member><command>size</command></member>
+  <member><command>strings</command></member>
+  <member><command>strip</command></member>
+</simplelist>.</para>
+
+<important>
+  <para>Having built and installed &binutils;, don't forget to follow the
+  &binutils; specific instructions in <xref linkend="sec_binutils_setup" />.
+  </para></important>
+
+<!-- ===== Binutils download ===== -->
+
+<sect3 id="sec_binutils_download"><title>Generating the &binutils; Source Code</title>
+
+<para>Obtain a clean version from &binutils_clean;.</para>
+
+<important>
+  <para>Ensure the the version number (2.16.1) is <emphasis>exactly</emphasis>
+  the same</para></important>
+
+<para>Obtain the &or1k; &patch; file for &binutils; 2.16.1. A basic version is
+available on the &toolpage;. However a better version (&binutils_mof_patch;),
+which fixes a major bug in &binutils;, is available from the &mof;
+website. Unpack the downloaded source code and apply the patches.</para>
+
+<note>
+  <para>A &patch; file is the output from a recursive use of &diff; between
+  two file hierarchies&mdash;typically the original file hierarchy and the
+  file hierarchy with changes. The &patch; utility provides the inverse
+  functions, allowing the new file hierarchy to be generated from the
+  original.</para>
+
+  <para>Since the names of the top of the hierachy may not be identical,
+  &patch; includes an option <option>-p</option> to specify the amount of the
+  file hierarchy to be stripped off. A value of 1 is common, to remove just
+  the top level directory name.</para>
+
+  <para>For example if the source code has been downloaded as
+  <filename>binutils-2.16.1.tar.bz2</filename> with the &patch; file in the
+  same directory, the following commands would be appropriate</para>
+
+<programlisting>bunzip2 binutils-2.16.1.tar.bz2
+cd binutils-2.16.1
+bzcat -dc ../binutils_2.16.1_unified.diff_rgd_fixed.bz2 | patch -p1
+</programlisting>
+
+</note>
+
+</sect3>
+
+<!-- ===== Binutils config ===== -->
+
+<sect3 id="sec_binutils_config"><title>Configuring &binutils;</title>
+
+<para>All the &gnu; components build in a directory
+<emphasis>separate</emphasis> from the original source tree. A &configure;
+script is used from within this build directory to generate a &makefile;
+suitable for the particular component.</para>
+
+<para>The &configure; script has a huge number of parameters (try &configure;
+<option>--help</option>). Two are common to building the OpenRISC 1200
+toolchain.
+<variablelist>
+  <varlistentry>
+    <term><option>--target=</option><parameter>architecture</parameter></term>
+    <listitem><para>The configuration has been extended to understand the
+    OpenRISC 32 bit architecture if the <option>--target</option> option is
+    set to <parameter>or32-uclinux</parameter>. The name of the target
+    architecture was chosen, since the work was originally aimed at supporting
+    &uclinux;.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--prefix=</option><parameter>installdir</parameter></term>
+    <listitem><para>This specifies the directory in which all the components
+    will be installed. The default (typically <filename>/usr/local</filename>)
+    is not appropriate, since these are not tools for the workstation, but to
+    cross-compile for the &or1200; core. It is important that the same
+    installation directory is used for all the components built. The examples
+    here all use <filename>/opt/or32</filename> as the install
+    directory.</para></listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>For example if the source code has been downloaded and patched in a
+subdirectory, <filename>binutils-2.16.1</filename>, then from the parent
+directory (i.e. the one containing <filename>binutils-2.16.1</filename>), the
+following commands would be appropriate.</para>
+
+<programlisting>mkdir buildir_binutils cd buildir_binutils ../binutils-2.16.1/configure
+--target==or32-uclinux --prefix=/opt/or32
+</programlisting>
+
+</sect3>
+
+<!-- ===== Binutils build/install ===== -->
+
+<sect3 id="sec_binutils_build_install"><title>Building and Installing &binutils;</title>
+
+<para>Having configured the component, there are then three steps to building
+and installing the component.
+<variablelist>
+  <varlistentry>
+    <term>&makeall;</term>
+    <listitem><para>Build the component in the build
+    directory.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>&makecheck;</term>
+    <listitem><para>Carry out tests to ensure the component has built
+    correctly. This will be of limited use here, since the goal is to build a
+    cross compiling toolchain, the results of which will not run in the
+    development environment.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>&makeinstall;</term>
+    <listitem><para>Install the component in the directory specified when
+    configuring.</para></listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>For example if a build directory has been created as in <xref
+linkend="sec_binutils_config" />, then the following commands would be
+appropriate.</para>
+
+<programlisting>make all
+make install
+</programlisting>
+
+<para>The result is a set of cross platform commands installed in
+<filename>/opt/or32/bin</filename>:
+<simplelist type="inline">
+  <member><command>or32-uclinux-addr2line</command></member>
+  <member><command>or32-uclinux-ar</command></member>
+  <member><command>or32-uclinux-as</command></member>
+  <member><command>or32-uclinux-c++filt</command></member>
+  <member><command>or32-uclinux-ld</command></member>
+  <member><command>or32-uclinux-nm</command></member>
+  <member><command>or32-uclinux-objcopy</command></member>
+  <member><command>or32-uclinux-objdump</command></member>
+  <member><command>or32-uclinux-ranlib</command></member>
+  <member><command>or32-uclinux-readelf</command></member>
+  <member><command>or32-uclinux-size</command></member>
+  <member><command>or32-uclinux-strings</command></member>
+  <member><command>or32-uclinux-strip</command></member>
+</simplelist>.
+</para>
+
+<para>In addition there is also a further sub-directory,
+<filename>/opt/or32/or32-uclinux/bin</filename> (observe the extra
+<filename>or32-uclinx</filename>), which provides the main cross-platform
+ commands <emphasis>without</emphasis> their prefix
+(<simplelist type="inline">
+  <member><command>ar</command></member>
+  <member><command>as</command></member>
+  <member><command>ld</command></member>
+  <member><command>nm</command></member>
+  <member><command>objdump</command></member>
+  <member><command>ranlib</command></member>
+  <member><command>strip</command></member>
+</simplelist>). This will be required by later component builds.</para>
+
+</sect3>
+
+<!-- ===== Binutils setup ===== -->
+
+<sect3 id="sec_binutils_setup"><title>Setting up &binutils;</title>
+
+<para>The key final stage is to add the new cross-platform utilities to the
+search path, so they can be found in subsequent stages. For &sh; and &bash;
+users:</para>
+
+<programlisting>export PATH=/opt/or32/bin:$PATH
+</programlisting>
+
+<para>For &csh; and &tcsh; users:</para>
+
+<programlisting>setenv PATH /opt/or32/bin:$PATH
+</programlisting>
+
+<tip>
+  <para> It is useful to add these environment setup commands to
+  <filename>.profile</filename> (&sh; users),
+  <filename>.bash_profile</filename> (&bash; users) or
+  <filename>.login</filename> (&csh; and &tcsh;), to ensure they are set up
+  for subsequent sessions.</para>
+</tip>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== GCC (Phase 1) ========== -->
+
+<sect2><title>&gnu; C Compiler Version 3.4.4 (Initial Version)</title>
+
+<para>A compiler is closely tied to its associated operating system and
+libraries, in this case &linux; and &uclibc;. Eventually the &gcc; compiler
+has to be built in parallel with both of these (see <xref linkend="sec_gcc_2"
+/>). However to get started, we build a plain compiler without knowledge of
+operating system or libraries.</para>
+
+<!-- ===== GCC download ===== -->
+
+<sect3 id="sec_gcc_download"><title>Generating the &gcc; Source Code</title>
+
+<para>Obtain a clean version from &gcc_clean;.</para>
+
+<important>
+  <para>Ensure the the version number (3.4.4) is <emphasis>exactly</emphasis>
+  the same</para>
+</important>
+
+<para>The &patch; file is available on the &toolpage;, but the &mof; website
+has a compressed version, &gcc_mof_patch;, which saves bandwidth. Apply the
+&patch; file to the top level &gcc; directory (&patchref;).</para>
+
+</sect3>
+
+<!-- ===== GCC config ===== -->
+
+<sect3 id="sec_gcc_config"><title>Configuring &gcc;</title>
+
+<para>Like &binutils;, &gcc; is built in a separate build directory. It is
+configured to create just a cross-compiler for C.</para>
+
+<programlisting>mkdir builddir-gcc
+cd builddir-gcc
+../gcc-3.4.4/configure --target=or32-uclinux --prefix=/opt/or32 --enable-languages=c
+</programlisting>
+
+<para>The configuration will automatically assume that the various &binutils;
+utilities are prefixed by the target name, so finds
+<command>or32-uclinux-as</command> as the assembler and
+<command>or32-uclinux-ld</command> as the linker, so long as they are on the
+search path (in this example <filename>/opt/or32/bin</filename>).</para>
+
+<note>
+  <para>These instructions are simpler than those given on the &mof; website;
+  and &toolpage;. At this stage the objective is a vanilla cross-compiler,
+  without reference to the &linux; operating system or &uclibc; libraries. No
+  additional configuration flags are required.</para>
+</note>
+
+</sect3>
+
+<!-- ===== GCC build/install ===== -->
+
+<sect3 id="sec_gcc_build_install"><title>Building and Installing &gcc;</title>
+
+<para>The procedure is the same as that from &binutils; (see <xref
+linkend="sec_binutils_build_install" />). As before the use of &makecheck; is
+omitted, since it is of little meaning in a cross-compiling
+environment.</para>
+
+<programlisting>make all
+make install
+</programlisting>
+
+<para>Five new commands are now available in the installation
+<filename>bin</filename> subdirectory:
+<simplelist type="inline">
+  <member><command>or32-uclinux-cpp</command></member>
+  <member><command>or32-uclinux-gcc</command></member>
+  <member><command>or32-uclinux-gcc-3.4.4</command></member>
+  <member><command>or32-uclinux-gccbug</command></member>
+  <member><command>or32-uclinux-gcov</command></member>
+</simplelist>.</para>
+
+<para>In addition <command>gcc</command> without its prefix appears in the
+<filename>/opt/or32/or32-uclinux/bin</filename> directory.</para>
+
+<para>The installation has also set up a &gcc; library hierarchy in
+<filename>/opt/or32/lib/gcc/or32-uclinux/3.4.4</filename>. As well as the main
+&gcc; library, this includes fixed versions of include files. These are not of
+relevance at this stage, but will be important when the &linux; and &uclibc;
+installations are created and fixed versions of their header files are
+required.
+</para>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== GDB ========== -->
+
+<sect2 id="sec_gdb"><title><application>&gnu; Debugger</application> Version
+5.3</title>
+
+<para>&gdb; is not essential to getting a working &linux; environment for
+OpenRISC, so this step may be omitted initially.</para>
+
+<note>
+  <para>The porting of &gdb; to OpenRISC was design to allow debugging via the
+  &or1k; JTAG port. This does not appear to be fully functional, at least to
+  the JTAG port of the &or1ksim; simulator. The main value of &gdb; is as a
+  tool to provide disassembly of &or1k; binaries.</para>
+</note>
+
+<!-- ===== GDB download ===== -->
+
+<sect3><title>Generating the &gdb; Source Code</title>
+
+<para>Obtain a clean version from &gdb_clean;.</para>
+
+<important>
+  <para>Ensure the the version number (5.3) is <emphasis>exactly</emphasis>
+  the same</para>
+</important>
+
+<para>The &opencores; website provides a complete modified &gdb; hierarchy for
+versions 5.0 and 5.3. However this needs some patching to build with modern
+&gcc; compilers. As an alternative &embecosm; provides a comprehensive &patch;
+file, which can be applied to the clean &gdb; version 5.3,
+&gdb_emb_patch;. Apply this &patch; to the top level &gdb; directory
+(&patchref;).</para>
+
+</sect3>
+
+<!-- ===== GDB config ===== -->
+
+<sect3><title>Configuring &gdb;</title>
+
+<para>Like &binutils; and &gcc;, &gdb; is built in a separate build
+directory. It is configured to create just a cross-platform debugger for
+&or1k; programs compiled with <command>or32-uclinux-gcc</command>.</para>
+
+<programlisting>mkdir builddir-gdb
+cd builddir-gdb
+../gdb-5.3/configure --target=or32-uclinux
+</programlisting>
+
+<note>
+  <para>The <option>--prefix</option> option cannot be used with this
+  release of &gdb;, since it triggers a bug in &readline;. As a consequence,
+  &gdb; will have to be installed manually once built.</para>
+</note>
+
+</sect3>
+
+<!-- ===== GDB build/install ===== -->
+
+<sect3><title>Building and Installing &gdb;</title>
+
+<para>The procedure to build &gdb; is the same as that from &binutils; and
+&gcc;. As with these tools, the use of &makecheck; is omitted, since it is of
+little meaning in a cross-compiling environment.</para>
+
+<para>Since the <option>--prefix</option> option was not used, &makeinstall;
+cannot be used. The compiled <command>gdb</command> must be copied manually to
+<command>or32-uclinux-gdb</command> in the installation
+<filename>bin</filename> directory. If the installation directory is
+<filename>/opt/or32</filename>, then from the build directory, a suitable set
+of commands would be:
+</para>
+
+<programlisting>make all
+cp gdb/gdb /opt/or32/bin/or32-uclinux-gdb
+</programlisting>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== Linux ========== -->
+
+<sect2 id="sec_linux"><title>&linux; Kernel Version 2.6.19</title>
+
+<!-- ===== Linux download ===== -->
+
+<sect3 id="sec_linux_download"><title>Generating the &linux; Source Code</title>
+
+<para>Obtain a clean version from &linux_clean;.</para>
+
+<important>
+  <para>Ensure the the version number (2.6.19) is <emphasis>exactly</emphasis>
+  the same</para>
+</important>
+
+<para>Apply the &mof; &patch; file, &linux_mof_patch; (&patchref;).</para>
+
+<para>Two additional changes, not covered by the &mof; &patch; file are needed
+to successfully build &linux;. The first of these is a missing header,
+<filename>limits.h</filename> in the modversion script, needed by &gcc; 4.3.0
+(this is a program compiled on the local workstation, not using the
+cross-compiler). The second is a patch to the calculation of section sizes in
+vmlinux. This appears to be a known problem in version 2.6.19 &linux;. A
+&patch; file, &linux_emb_patch;, to fix both these problems is available from
+&embecosm;.</para>
+
+</sect3>
+
+<!-- ===== Linux config ===== -->
+
+<sect3 id="sec_linux_config"><title>Configuring &linux;</title>
+
+<para>The configuration options for a &linux; kernel are held in the
+<filename>.config</filename> file in the top directory of the kernel. The code
+patched for OpenRISC has a suitable file in
+<filename>rgd_dot_config</filename>, which should be copied to
+<filename>.config</filename>.</para>
+
+<para>The kenel can now be configured using its graphical configuration
+tool.</para>
+
+<programlisting>make menuconfig ARCH=or32 CROSS_COMPILE=/opt/or32/bin/or32-uclinux-
+</programlisting>
+
+<para>Use the cursor keys to move to the <computeroutput><guisubmenu>OpenRISC
+specific drivers</guisubmenu></computeroutput> submenu and select it. There is
+only one entry, <computeroutput><guimenuitem>OpenCores Ethernet
+support</guimenuitem></computeroutput>, which should be deselected (press
+<userinput><keycap>N</keycap></userinput>).</para>
+
+<note>
+  <para>The Ethernet code does not appear to work reliably in the simulator,
+  which is why it is deselected here.</para></note>
+
+<para>Having made this change, exit up through the menus and from the
+configuration system, saving the configuration file when prompted. As well as
+creating the <filename>.config</filename> file, this will have also linked in
+the correct include files for the &linux; kernel build.</para>
+
+<para>The build of &linux; makes use of a RAMdisk filing system. The
+instructions for making a customer disk can be found in <xref
+linkend="sec_ramdisk_setup" />. For initial building, the &mof; RAMDisk,
+&linux_mof_ramdisk;, is suitable. This provides a set of &busybox; utilities
+which can be used when Linux starts up. Download this, uncompress it with
+&bunzip2; and copy the resulting file to the file
+<filename>arch/or32/support/initrd-fb-03.ext2</filename> in the kernel.</para>
+
+</sect3>
+
+<!-- ===== Linux build ===== -->
+
+<sect3><title>Building &linux; for the OpenRISC 1200</title>
+
+<para>The configured &linux; is built from the configured &makefile;.</para>
+
+<programlisting>make vmlinux ARCH=or32 CROSS_COMPILE=/opt/or32/bin/or32-uclinux-
+</programlisting>
+
+<note>
+  <para>There will be a number of warnings at the end about section
+  mismatches. These are a known problem, which can be ignored.</para>
+</note>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== uClibc ========== -->
+
+<sect2><title> &uclibc; Version 0.9.28.3</title>
+
+<para><ulink url="http://www.uclibc.org">&uclibc;</ulink> is a C library for
+use particuarly in embedded environments. It is substantially smaller than the
+full <application>glibc</application> library.</para>
+
+<!-- ===== uClibc download ===== -->
+
+<sect3><title>Generating the &uclibc; Source</title>
+
+<para>Obtain a clean version from &uclibc_clean;.</para>
+
+<important>
+  <para>Ensure the the version number (0.9.28.3) is
+  <emphasis>exactly</emphasis> the same</para>
+</important>
+
+<para>In this case there are two sets of patches to apply, both provided by
+&mof;. Download the main &patch; file, &uclibc_mof_patch_main;, first and
+apply it to the main &uclibc; directory (&patchref;).</para>
+
+<para>Download the supplemental &patch; file, &uclibc_mof_patch_supp; and
+apply it to the <filename>libc</filename> subdirectory of the &uclibc;
+directory.</para>
+
+<para>A further fix is required to ensure &uclibc; will work correctly with
+the OpenRISC toolchain. The linker can get confused about the &stdio; library
+initialization and termination. To avoid this, dummy versions of
+<function>__stdio_init</function> and <function>__stdio_term</function> must
+be added. A &patch; file, &uclibc_emb_patch; to fix this problem is available
+from &embecosm;. It should be applied after the other patches to the top level
+&uclibc; directory.</para>
+
+<para>A typical set of commands would be:</para>
+
+<programlisting>cd uClibc-0.9.28.3
+bzcat -dc ../uClibc-0.9.28-or32-unified.bz2 | patch -p1
+cd libc
+bzcat -dc ../../uClibc-0.9.28-or32-libc-support.bz2 | patch -p1
+cd ..
+bzcat -dc ../embecosm-or32-uClibc-0.9.28.3-stdio-patch.bz2 | patch -p1
+</programlisting>
+
+</sect3>
+
+<!-- ===== uClibc config ===== -->
+
+<sect3><title>Configuring &uclibc;</title>
+
+<para>Additional configuration options specific to the OpenRISC core are
+provided in the patched source tree. Make these available by linking to
+<filename>Config</filename> in the main directory</para>
+
+<programlisting>ln -s extra/Configs/Config.or32 Config
+</programlisting>
+
+ 
+<para>Configuration for &uclibc; is via a the file
+<filename>.config</filename> in the main directory. Like &linux;, &uclibc;
+also provides a graphical configuration tool to set up
+<filename>.config</filename>.</para>
+
+<para>The &mof; website provides a template &uclibc_mof_config;. Copy this
+into <filename>.config</filename>.</para>
+
+<caution>
+  <para>The patched source tree contains a file,
+  <filename>DOT_CONFIG_or32</filename>. This is a historical remnant, and
+  should not be used as the <filename>.config</filename> file.</para>
+</caution>
+
+<para>The configuration tool is not able to set every parameter, so edit
+<filename>.config</filename> with a text editor. Change the line setting
+<option>CROSS_COMPILER_PREFIX</option> option to read.</para>
+
+<programlisting>CROSS_COMPILER_PREFIX="or32-uclinux-"
+</programlisting>
+
+<important>
+  <para>This is a key change, and ensures the build of &uclibc; picks up the
+  OpenRISC 1200 toolchain and not the standard workstation
+  compiler</para>
+</important>
+
+<para>Run the configuration tool, so the remaining changes can be made with
+the graphical parameter editor.</para>
+
+<programlisting>make menuconfig
+</programlisting>
+
+<para>Use the cursor keys to move to the <computeroutput><guisubmenu>Target
+Architecture Features and Options</guisubmenu></computeroutput> submenu and
+select it. Move to the <computeroutput><guimenuitem>Target CPU has a floating
+point unit (FPU)</guimenuitem></computeroutput> entry and deselect it (press
+<userinput><keycap>N</keycap></userinput>). Then move further down to the last
+entry <computeroutput><guimenuitem>Linux kernel source
+location</guimenuitem></computeroutput> and set this to point to the main
+linux distribution directory.</para>
+
+<para>Return back to the main menu and select the
+<computeroutput><guisubmenu>General Library
+Settings</guisubmenu></computeroutput> submenu. Move to the
+<computeroutput><guimenuitem>Large File Support</guimenuitem></computeroutput>
+entry and deselect it.
+</para>
+
+<para>Return back to the main menu and select the
+<computeroutput><guisubmenu>Library Installation
+Options</guisubmenu></computeroutput> submenu. Set the entries for both the
+<option>RUNTIME_PREFIX</option> and <option>DEVEL_PREFIX</option> options to
+be the main installation directory (in the examples here
+<filename>/opt/or32</filename>).
+</para>
+
+</sect3>
+
+<!-- ===== uClibc build ===== -->
+
+<sect3><title>Building and installing &uclibc;</title>
+
+<para>The &uclibc; library is built and installed using &make;.</para>
+
+<programlisting>make all
+make install
+</programlisting>
+
+<note>
+  <para>There is no need to set the <envar>CC</envar> environment variable (as
+  suggested by the &mof; website). The use of the
+  <option>CROSS_COMPILER_PREFIX</option> parameter ensures the OpenRISC
+  toolchain is used.</para>
+</note>
+
+<important>
+  <para>The &uclibc; &makefile; dependencies are not complete. If any
+  parameters are changed, run &makeclean; before
+  rebuilding.</para>
+</important>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== GCC (Phase 2) ========== -->
+
+<sect2><title>&gnu; C Compiler Version 3.4.4 (&linux; and &uclibc;
+aware)</title>
+
+<para>The previous build of &gcc; was not aware of Operating System specific
+include files and libraries. The compiler can now be rebuilt, so that it
+correctly picks up the &linux; and &uclibc; include files and
+libraries.</para>
+
+<!-- ===== GCC reconfiguration ===== -->
+
+<sect3 id="sec_gcc_2"><title>Reconfiguring &gcc;</title>
+
+<para>Return to the build directory used to build the original &gcc; compiler
+(see <xref linkend="sec_gcc_config" />). Delete the contents and reconfigure
+&gcc; this time to include a local prefix for searching (using the
+<option>--with-local-prefix</option> option to &configure;).</para>
+
+<programlisting>cd builddir-gcc
+rm -rf *
+../gcc-3.4.4/configure --target=or32-uclinux --prefix=/opt/or32 --enable-languages=c \
+    --with-local-prefix=/opt/or32/or32-uclinux
+</programlisting>
+
+<para>The compiler will preferentially consider include and library files
+within the <filename>/opt/or32/or32-linux</filename> directory (in other words
+the target specific subdirectory of the installation directory), which can be
+used for all the &linux; and &uclibc; files.</para>
+
+</sect3>
+
+<!-- ===== GCC rebuild ===== -->
+
+<sect3><title>Rebuilding &gcc;</title>
+
+<para>The build and install process for the compiler is identical:</para>
+
+<programlisting>make all
+make install
+</programlisting>
+
+<para>The final stage is to populate the target specific directory. &gcc; will
+look here for a <filename>sys-include</filename> directory. This can be linked
+to the parent <filename>include</filename> directory, which will have been
+populated by the &uclibc; install process (including any &linux;
+<filename>include</filename> files used by &uclibc;).</para>
+
+<para>The <filename>lib</filename> subdirectory will be used by the linker
+from &gcc; to complete linking of compiled programs. This cannot be simply
+linked, since not all of the main library should appear here. Instead, the
+revelant library and object files are linked here.</para>
+
+<para>In the examples give here, the install directory is
+<filename>/opt/or32</filename>. The following commands would set the target
+specific directory up appropriately.</para>
+
+<programlisting>cd /opt/or32/or32-uclinux/
+ln -s ../include sys-include
+cd lib/
+ln -s ../../lib/*.* .
+</programlisting>
+
+<important>
+  <para>The &mof; instructions suggest copying the library files into the
+  <filename>lib</filename> directory. However linking is preferable, since
+  when the &uclibc; is rebuilt, any changes will also appear in the
+  <filename>lib</filename> directory.</para>
+</important>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== Ork1sim ========== -->
+
+<sect2><title>The &or1ksim; Simulator</title>
+
+<para>The OpenRISC architectural simulator, &or1ksim;, is a traditional
+interpreting ISS, which also models some of the standard &orpsoc; components
+(memory, UART etc). It represents work in progress, although it has not been
+actively developed for a year or two.</para>
+
+<!-- ===== Or1ksim download ===== -->
+
+<sect3><title>Generating the &or1ksim; Source</title>
+
+<para>Obtain a clean version from &or1ksim_clean;.</para>
+
+<important>
+  <para>Ensure the the version number (0.2.0) is <emphasis>exactly</emphasis>
+  the same</para>
+</important>
+
+<para>There are three bugs in this version of &or1ksim; which must be
+fixed. These rectify problems with connecting to the simulator from &gdb; via
+the JTAG port, in using the simulator for an &xterm; as UART and in using
+diagnostic printf (the <function>simprintf()</function> function).</para>
+
+<para>A &patch; file, &or1ksim_emb_patch;, to fix these bugs is available from
+&embecosm;. It should be applied to the main &or1ksim; directory
+(&patchref;).</para>
+
+</sect3>
+
+<!-- ===== Or1ksim config ===== -->
+
+<sect3><title>Configuring &or1ksim;</title>
+
+<para>Configuration is similar to that of the &gnu; toolchain, using a
+&configure; script, to set a target and an install directory. However unlike
+the &gnu; tools, configuration is done within the main &or1ksim; directory, not
+in a separate build directory. A typical configuration would be:</para>
+
+<programlisting>cd or1ksim-0.2.0
+./configure --target=or32-uclinux --prefix=/opt/or32
+</programlisting>
+
+<note>
+  <para>The configuration target, <parameter>or32-uclinux</parameter>, is
+  chosen for consistency with the main toolchain. It is not the same as that
+  suggested in the <filename>INSTALL</filename> instructions with the
+  distribution, but works perfectly satisfactorily.</para>
+</note>
+
+<note>
+  <para>The <filename>INSTALL</filename> instructions with the distribution do
+  not describe use of the <option>--prefix</option> option, but this
+  works very satisfactorily here.</para>
+</note>
+
+</sect3>
+
+<!-- ===== Or1ksim build/install ===== -->
+
+<sect3><title>Building and installing &uclibc;</title>
+
+<para>Building and installing uses the &makefile; generated by the
+configuration stage. There is no use of the &makecheck; command, since there
+is a separate test suite for use with the simulator (see <xref
+linkend="sec_or1ksim_test" />>). Assuming the install directory has been
+chosen as <filename>/opt/or32</filename>, suitable commands would be:</para>
+
+<programlisting>make
+make install
+</programlisting>
+
+<para>A new command, <command>or32-uclinux-sim</command> will now be present
+in the <filename>opt/or32/bin</filename> directory.</para>
+
+</sect3>
+
+</sect2>
+
+</sect1>
+
+<!-- ==========================================================================
+Running and Debugging the simulator
+=========================================================================== -->
+
+<sect1><title>Getting it All to Work!</title>
+
+<para>Or1ksim comes with a testsuite of small programs to exercise the
+simulator. As a big test, the &linux; 2.6.19 kernel can be run on the
+simulator.</para>
+
+<!-- ========== The Or1ksim test suite  ========== -->
+
+<sect2 id="sec_or1ksim_test"><title>Running the &or1ksim; Test Suite</title>
+
+<para>The testsuite is found in the <filename>testbench</filename>
+subdirectory of the main &or1ksim; distribution.</para>
+
+<!-- ===== Configuring the Or1ksim test suite ===== -->
+
+<sect3><title>Configuring the &or1ksim; Test Suite</title>
+
+<para>The test suite is configured using a &configure; script. This specifies
+both the target and the host (which forces cross-compilation for the OpenRISC
+1000 architecture). Since the tests are not to be installed, there is no need
+to use the <option>--prefix</option> option. The configuration command should
+therefore be as follows.</para>
+
+<programlisting>cd or1ksim-0.2.0/testbench
+./configure --target=or32-uclinux --host=or32
+</programlisting>
+
+<caution>
+  <para>There appears to be a timestamp problem with the &configure; script,
+  so that the first time it is run it attempts to regenerate itself (without
+  success). If this occurs, then just rerun the command&mdash;it only fails
+  once.</para
+></caution>
+
+</sect3>
+
+<!-- ===== Running the Or1ksim test suite ===== -->
+
+<sect3><title>Running the &or1ksim; Test Suite</title>
+
+<para>Configuration creates a &makefile;. &makeall; will build all the tests,
+followed by &makecheck; to run the tests.</para>
+
+<para>Each test, if successful should output the follow two lines.</para>
+
+<screen>report(0xdeaddead);
+exit(0)
+</screen>
+
+<para>In the event of a test failing, its output can be found in
+<filename>/tmp/<parameter>testname</parameter>_output</filename> and a count
+of the cycles executed in
+<filename>/tmp/<parameter>testname</parameter>_error</filename> .</para>
+
+<note>
+  <para>The &makecheck; command does a simple test that the last two lines of
+  output are as indicated above to determine success or failure. In practice,
+  one or two tests (commonly the multiplication test and framebuffer test) may
+  report failure, due to &or1ksim; warning messages being interspersed between
+  and after these two lines. Manual inspection of the relevant output files in
+  the <filename>/tmp</filename> directory can be used to verify correct
+  termination has actually occured.</para>
+</note>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== Linux with Or1ksim  ========== -->
+
+<sect2><title>Running &linux; with &or1ksim;</title>
+
+<!-- ===== Configuring Linux to run with Or1ksim ===== -->
+
+<sect3><title>Configuring &or1ksim; for use with &linux;</title>
+
+<para>&or1ksim; is configured via a configuration file, which is specified by
+the <option>-f</option>. This is used to specify the detailed behavior of the
+CPU (virtual memory, caches etc), the various memories to be attached and the
+behavior of the various peripherals modelled. The structure of the
+configuration file is described in comments within the default configuration
+file (<filename>sim.cfg</filename> supplied in the main directory of
+&or1ksim;.</para>
+
+<para>The &linux; distribution, as patched for OpenRISC, is supplied with a
+configuration file, <filename>sim.cfg</filename> in its main directory. Three
+changes are needed to this, for the &linux; kernel built in <xref
+linkend="sec_linux" />.</para>
+
+<caution><para>Do not attempt to use the <filename>sim.cfg</filename> supplied
+with &or1ksim; itself. It specifies a completely inappropriate memory
+configuration for &linux;.</para></caution>
+
+<para>Find <computeroutput>section sim</computeroutput>. &linux; was built to
+run at a notional 100Mhz. The specification of the time take by one clock
+cycle is out by a factor of 1000. Change the value of
+<option>clkcycle</option> option to <parameter>10ns</parameter>.</para>
+
+<para>Find <computeroutput>section uart</computeroutput>. This specifies that
+the channel for I/O should be via TCP port 84. This will probably fail, since
+the port is in the Well Known Ports range, requiring administrative
+priviledges. If it is desired to run &linux; through a telnet link, this
+should be changed to a value in the Dynamic Range (49152-65535). A separate
+window can then connect to this port using telnet.</para>
+
+<para>Rather more elegant is to use an &xterm; for output. For this change the
+channel specification to:</para>
+
+<programlisting>channel = "xterm:"
+</programlisting>
+
+<para>Find <computeroutput>section ethernet</computeroutput>. &linux; was
+built without Ethernet, so this should be disabled. Set the
+<option>enabled</option> option to 0.</para>
+
+</sect3>
+
+<!-- ===== Running Linux ===== -->
+
+<sect3><title>Running &linux; on &or1ksim;</title>
+
+<para>The &linux; kernel should now just boot up. Run &or1ksim; from the main
+&linux; directory:</para>
+
+<programlisting>cd linux-2.6.19
+or32-uclinux-sim -f sim.cfg vmlinux
+</programlisting>
+
+<para>&linux; will initially show that it is copying from ROM to main memory,
+and then booting.</para>
+
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="linux_copying.png" format="PNG" width="100%"
+		 contentwidth="100%" contentdepth="100%" align="center" />
+    </imageobject>
+  </mediaobject>
+</informalfigure>
+
+<para>There is then a pause of one or two minutes, while the &linux; kernel
+boots prior to configuring the UART I/O. Once that point is reached, then
+standard &linux; boot messages will begin to appear. At the end of boot, the
+terminal will prompt to initiate a console session.</para>
+
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="linux_ready.png" format="PNG" width="100%"
+		 contentwidth="100%" contentdepth="100%" align="center" />
+    </imageobject>
+  </mediaobject>
+</informalfigure>
+
+<para>The core &linux; commands are available, provided within a &busybox;
+environment. The default terminal behavior echoes back what is typed, so the
+initial command should be.</para>
+
+<programlisting>stty -echo
+</programlisting>
+
+<para>Normal &linux; behavior is then available.</para>
+
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="linux_commands.png" format="PNG" width="100%"
+		 contentwidth="100%" contentdepth="100%" align="center" />
+    </imageobject>
+  </mediaobject>
+</informalfigure>
+
+<para>Custom programs may be added to the &linux; environment by compiling
+them and adding them to the RAMDisk image (see <xref
+linkend="sec_ramdisk_setup" />.</para>
+
+</sect3>
+
+</sect2>
+
+<!-- ========== Debugging with Or1ksim ========== -->
+
+<sect2><title>Debugging Strategies</title>
+
+<para>Debugging with &or1ksim; is not particularly straightforward. The
+implementation of remote &gdb; debugging via JTAG is not complete, and so of
+limited use. These are some suggestions for approaches that work.</para>
+
+<!-- ===== Remote debugging using GDB ===== -->
+
+<sect3><title>Debugging using OpenRISC &gdb; via JTAG</title>
+
+<para>This requires the &gnu; debugger built for cross platform use with
+OpenRISC (see <xref linkend="sec_gdb" />). &or1ksim; contains some guidelines
+in the file <filename>README.gdb</filename> in its main directory, but these
+are incomplete.</para>
+
+<para>To use the remote debug feature of &or1ksim;, enable the
+<option>debug</option> section in the simulator configuration file. Set
+<option>enabled</option> option to 1 and <option>gdb_enabled</option> option to
+1. The server port is not chosen at random, but set by the
+<option>server_port</option> option here. Good practice would
+recommend using a value in the Dynamic Range (49152-65535) rather than the
+9999 used in the default configuration file.</para>
+
+<para>When starting, &or1ksim; will now report the value of the port for the
+JTAG proxy server. It should be started without specifying any image
+file.</para>
+
+<para>In a separate window start the &or1k; &gdb; command
+(<command>or32-uclinux-gdb</command>).</para>
+<tip><para> For those who like their debugging to be graphical, it is
+perfectly feasible to run &gdb; under &ddd;. The following would be a suitable
+&ddd; command line.</para>
+
+<programlisting>ddd --debugger or32-uclinux-gdb --gdb
+</programlisting>
+</tip>
+
+<para>There are three stages to setting up &gdb;.</para>
+<orderedlist>
+  <listitem><para>Load a local symbol table (using the
+  &gdb; <command>file</command>)
+  command.</para></listitem>
+
+  <listitem><para>Connect to the remote simulator via JTAG (using the
+  &gdb; <command>target</command>)
+  command.</para></listitem>
+
+  <listitem><para>Load the program on the remote simulator via JTAG (using
+  the&gdb; <command>load</command>)
+  command.</para></listitem>
+</orderedlist>
+
+<para>A typical set of commands (once inside &gdb;) to debug &linux; on a
+simulator running a JTAG server on port 49152 would be:</para>
+
+<programlisting>file vmlinux
+target jtag jtag://localhost:49152
+load vmlinux
+</programlisting>
+
+<para>At this point the <command>run</command> should jump to the reset
+location (0x100) and start executing the remote program. For some reason this
+does now work. Having executed <command>run</command>, interrupt the debugger
+(this may take two strikes of <keysym>ctrl-C</keysym>). Then force a jump to
+location 0x100 with the command <command>j *0x100</command>.</para>
+
+<para>On the whole the value is fairly limited, since breakpoints do not
+behave correctly (the target program will breakpoint, but not report back to
+the GDB session). There are a set of commands that allow you to inspect the
+special purpose registers (<command>spr</command> to set and <command>info
+spr</command> to read the values of special purpose registers).</para>
+
+<para>The most useful application of &or1k; &gdb; is not for remote debugging,
+but symbolic disassembly of OpenRISC binaries. This can be essential if forced
+into debugging via &or1ksim; itself (see <xref linkend="sec_or1ksim_debug"
+/>).</para>
+
+</sect3>
+
+<!-- ===== Debugging Using Or1ksim ===== -->
+
+<sect3 id="sec_or1ksim_debug"><title>Debugging Using &or1ksim;
+Directly</title>
+
+<para>The fallback is to use native debugging of &or1ksim; itself. The key is
+to combine the interactive breakpointing facilities of &or1ksim; itself with
+native &gdb; debugging of the &or1ksim; code and use of &nm; and &or1k; &gdb; to
+identify the values of key symbols in the source code.</para>
+
+<para>For this to be effective, &or1ksim; must be rebuilt for debugging. From
+the original &or1ksim; directory, the commands for this are:</para>
+
+<programlisting>make clean
+make all CFLAGS+=-ggdb
+make install
+</programlisting>
+
+<para>As an example consider running Linux to breakpoint as it enters the main
+<function>start_kernel</function> routine, and then single stepping through to
+see how the assembly code instructions are executed.</para>
+
+<para>In one window (referred to as the <emphasis>&or1ksim; window</emphasis>)
+start &linux; running on &or1ksim; in interactive mode. From the main &linux;
+directory use the command:</para>
+
+<programlisting>or32-uclinux-sim -i -f sim.cfg vmlinux
+</programlisting>
+
+<para>The simulator will start up and then halt with a prompt,
+<prompt>(sim)</prompt>.</para>
+
+<para>In a separate window (referred to as the <emphasis>&gdb;
+window</emphasis>) start up &gdb; and attach it to the running simulator
+process. For an example process id of 5109, the command would be:</para>
+
+<programlisting>gdb or32-uclinux-sim 5109
+</programlisting>
+
+<para>The GDB <command>bt</command> shows that &or1ksim; is in its
+<function>handle_sim_command()</function> function attempting to read input
+with &readline;. The program will have stopped once &gdb; attaches, so
+continue its execution, with the &gdb; <command>cont</command> command.</para>
+
+<screen>(gdb) bt
+#0  0x00110416 in __kernel_vsyscall ()
+#1  0x067d56ad in ___newselect_nocancel () from /lib/libc.so.6
+#2  0x00628dd0 in rl_gather_tyi () at ../input.c:195
+#3  0x00629033 in rl_read_key () at ../input.c:442
+#4  0x00614e1e in readline_internal_char () at ../readline.c:484
+#5  0x006152ed in readline (prompt=&lt;value optimized out&gt;) at ../readline.c:545
+#6  0x0804f4bc in handle_sim_command () at sim-cmd.c:609
+#7  0x08049863 in check_int (dat=0x0) at toplevel.c:118
+#8  0x0804a70e in main (argc=1, argv=0x0) at toplevel.c:322
+(gdb) cont
+Continuing.
+</screen>
+
+<para>In a third window (referred to as the <emphasis>utility</emphasis>
+window), use &or1k; &nm; to find the location for the
+<function>start_kernel()</function> function. Since this is a C function, it
+will have an underscore prefix. &grep; can usefully be applied to find the
+desired symbol. From the main &linux; directory use:</para>
+
+<programlisting>or32-uclinux-nm vmlinux | grep _start_kernel
+</programlisting>
+
+<para>A typical result is:</para>
+
+<screen>c00021fc t jump_start_kernel
+c026a690 T _start_kernel
+</screen>
+
+<para>This can then be used to breakpoint &or1ksim;. However it should be
+remember that this is the <emphasis>virtual</emphasis> address of
+<function>start_kernel()</function> in the Linux image. &or1ksim; works with
+physical addresses for breakpoints. For Linux during boot, this is an offset
+0xc0000000 below the virtual address. So the actual breakpoint required is
+0x0026a690.</para>
+
+<note>
+  <para> This is a factor that can make breakpoint handling with the MMU
+  enabled very difficult under &or1ksim; For small test programs it is less of
+  an issue, particularly if they work without the MMU enabled.</para>
+</note>
+
+<para>In the &or1ksim; window set a breakpoint and then run the simulator for
+enough cycles to ensure it reaches that end point (200,000,000 should be
+sufficient).</para>
+
+<screen>(sim) break 0x0026a690
+
+Breakpoint at 0x0026a690 set.
+(sim) run 200000000 hush
+
+
+
+
+
+Copying Linux... Ok, booting the kernel.
+****************** counters reset ******************
+cycles 145321226, insn #9988651
+****************** counters reset ******************
+Breakpoint hit.
+(sim) 
+</screen>
+
+<tip>
+  <para>By default the &or1ksim; <command>run</command> displays the register
+  state every 4 instructions. By specifying the <option>hush</option> option,
+  this is supressed.</para>
+</tip>
+
+<para>At this point it is time for the main &gdb; session controlling
+&or1ksim; to take over. The main program loop for &or1ksim; is in
+<filename>toplevel.c</filename> in the main &or1ksim; directory. Within the
+definition of the <function>main()</function> routine is a perpetual loop
+(<literal>while (1)</literal>), within which is a call to
+<function>cpu_clock()</function>.</para>
+
+<para><function>cpu_clock()</function> is responsible for executing the next
+instruction in turn. This can be found in the file
+<filename>cpu/or32/execute.c</filename> in the &or1ksim; directory.</para>
+
+<programlisting>inline int cpu_clock ()
+{
+  except_pending = 0;
+  next_delay_insn = 0;
+  if(fetch()) {
+    PRINTF ("Breakpoint hit.\n");
+    return 1;
+  }
+
+  if(except_pending) {
+    update_pc();
+    except_pending = 0;
+    return 0;
+  }
+
+  if(breakpoint) {
+    except_handle(EXCEPT_TRAP, cpu_state.sprs[SPR_EEAR_BASE]);
+    update_pc();
+    except_pending = 0;
+    return 0;
+  }
+
+  decode_execute_wrapper (&amp;cpu_state.iqueue);
+  update_pc();
+  return 0;
+}
+</programlisting>
+
+<para>The call to <function>fetch()</function> gets the next instruction
+(which may trigger an exception if the address in memory is not
+available). The call to <function>decode_execute_wrapper()</function>
+evaluates the instruction and the call to <function>update_pc()</function>
+updates the PC to point to the next instruction to be executed. These all make
+very good points at which to set a breakpoint.</para>
+
+<screen>(gdb) b cpu_clock
+Breakpoint 1 at 0x8056bc1: file execute.c, line 672.
+(gdb) b execute.c:692
+Breakpoint 2 at 0x8056c63: file execute.c, line 692.
+(gdb) b execute.c:693
+Breakpoint 3 at 0x8056c6f: file execute.c, line 693.
+(gdb) 
+</screen>
+
+<para> To just trigger one breakpoint on an instruction, a breakpoint at the
+call to <function>decode_execute_wrapper()</function> is most useful, once the
+instruction has been fetched, but before it is executed.</para>
+
+<para>The key information on the state of execution is in the global struture,
+<structname>cpu_state</structname>.</para>
+
+<programlisting>struct cpu_state {
+  uorreg_t             reg[MAX_GPRS];
+  uorreg_t             sprs[MAX_SPRS];
+  oraddr_t             insn_ea;
+  int                  delay_insn;
+  oraddr_t             pc;
+  oraddr_t             pc_delay;
+  struct iqueue_entry  iqueue;
+  struct iqueue_entry  icomplet;
+  struct dyn_page     *curr_page;
+  struct dyn_page    **dyn_pages;
+  struct op_queue     *opqs;
+  int                  ts_current;
+  uorreg_t             t0;
+  uorreg_t             t1;
+  uorreg_t             t2;
+};
+</programlisting>
+
+<para>The most useful parts of this are:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>The stack pointer (r1) in
+    <literal>cpu_state.reg[1]</literal>;</para></listitem>
+  <listitem>
+    <para>The frame pointer (r2) in
+    <literal>cpu_state.reg[2]</literal>;</para></listitem>
+  <listitem>
+    <para>The first couple of arguments to any function (r3, r4) in
+    <literal>cpu_state.reg[3]</literal> and
+    <literal>cpu_state.reg[4]</literal>;</para></listitem>
+  <listitem>
+    <para>The link register (r9) in
+    <literal>cpu_state.reg[9]</literal>;</para></listitem>
+  <listitem>
+    <para>The result registers (r11 and r12) in
+    <literal>cpu_state.reg[11]</literal> and
+    <literal>cpu_state.reg[12]</literal>;</para></listitem>
+  <listitem>
+    <para>The supervision register in
+    <literal>cpu_state.sprs[17]</literal>;</para></listitem>
+  <listitem>
+    <para>The program counter in
+    <literal>cpu_state.pc</literal>; and</para></listitem>
+  <listitem>
+    <para>The next instruction to be executed in
+    <literal>cpu_state.iqueue.insn</literal>.</para></listitem>
+</itemizedlist>
+
+<para>These can usefully be set up to display each time control returns to
+&gdb; as follows.</para>
+
+<screen>(gdb) display /x cpu_state.reg[1]
+1: /x cpu_state.reg[1] = 0xc026a000
+(gdb) display /x cpu_state.reg[2]
+2: /x cpu_state.reg[2] = 0x0
+(gdb) display /x cpu_state.reg[3]
+3: /x cpu_state.reg[3] = 0x0
+(gdb) display /x cpu_state.reg[4]
+4: /x cpu_state.reg[4] = 0x0
+(gdb) display /x cpu_state.reg[9]
+5: /x cpu_state.reg[9] = 0x0
+(gdb) display /x cpu_state.reg[11]
+6: /x cpu_state.reg[11] = 0x0
+(gdb) display /x cpu_state.reg[12]
+7: /x cpu_state.reg[12] = 0x0
+(gdb) display /t cpu_state.sprs[17]
+8: /t cpu_state.sprs[17] = 1000001001110001
+(gdb) display /x cpu_state.pc
+9: /x cpu_state.pc = 0xc026a690
+(gdb) display /x cpu_state.iqueue.insn
+10: /x cpu_state.iqueue.insn = 0x24000000
+(gdb) 
+</screen>
+
+<para>Before proceeding, it is useful to see exactly what the machine code at
+this location looks like. The source C (in <filename>init/main.c</filename> in
+the &linux; directory) starts as follows:</para>
+
+<programlisting>asmlinkage void __init start_kernel(void)
+{
+	char * command_line;
+	extern struct kernel_param __start___param[], __stop___param[];
+
+	smp_setup_processor_id();
+
+	/*
+	 * Need to run as early as possible, to initialize the
+	 * lockdep hash:
+	 */
+	unwind_init();
+	lockdep_init();
+
+	local_irq_disable();
+	early_boot_irqs_off();
+	early_init_irq_lock_class();
+
+</programlisting>
+
+<para>Use &or1k; &gdb; to disassemble the binary code. In the utility window
+run the following commands from the main directory of the &linux;
+distribution:</para>
+
+<screen>or32-uclinux-gdb vmlinux
+   ...
+(gdb) disas start_kernel
+Dump of assembler code for function start_kernel:
+0xc026a690 &lt;start_kernel&gt;:      l.addi r1,r1,0xffffffd8
+0xc026a694 &lt;start_kernel+4&gt;:    l.sw 0xc(r1),r9
+0xc026a698 &lt;start_kernel+8&gt;:    l.sw 0x10(r1),r12
+0xc026a69c &lt;start_kernel+12&gt;:   l.sw 0x14(r1),r14
+0xc026a6a0 &lt;start_kernel+16&gt;:   l.jal 0xfffffffa
+0xc026a6a4 &lt;start_kernel+20&gt;:   l.nop 0x0
+0xc026a6a8 &lt;start_kernel+24&gt;:   l.jal 0xfff672aa
+0xc026a6ac &lt;start_kernel+28&gt;:   l.nop 0x0
+   ...
+</screen>
+
+<para>To understand the code as it runs, familiarity with application binary
+interface, and in particular the function calling sequence is essential. This
+is in chapter 16 of the &or1k; Architecture Manual, which can be downloaded from
+&or_doc_arch;. The sequence above shows a new stack frame of 40 bytes
+(0xffffffd8 is -40 decimal) being created and three registers, r9 (the link
+register), r12 and r14 being saved there, before a function call to location
+0xc026a688 (the offset 0xfffffffa is decimal -6
+<emphasis>words</emphasis>).</para>
+
+<para>With the breakpoint set, &or1ksim; can now be restarted. Just 5
+instructions in this initial example. First continue &gdb;</para>
+
+<screen>(gdb) cont
+Continuing.
+</screen>
+
+<para>Then in the &or1ksim; window run for 5 instructions</para>
+
+<programlisting>(sim) run 5 hush
+</programlisting>
+
+<para>&gdb; immediately hits the first breakpoint at the head of
+<function>cpu_clock</function>.</para>
+
+<screen>Breakpoint 1, cpu_clock () at execute.c:672
+672       except_pending = 0;
+10: /x cpu_state.iqueue.insn = 0x24000000
+9: /x cpu_state.pc = 0xc026a690
+8: /t cpu_state.sprs[17] = 1000001001110001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc026a000
+</screen>
+
+<para>Continuing brings &or1ksim; to the point where it is about to execute
+the instruction.</para>
+
+<screen>(gdb) cont
+Continuing.
+
+Breakpoint 2, cpu_clock () at execute.c:692
+692       decode_execute_wrapper (&amp;cpu_state.iqueue);
+10: /x cpu_state.iqueue.insn = 0x9c21ffd8
+9: /x cpu_state.pc = 0xc026a690
+8: /t cpu_state.sprs[17] = 1000001001110001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc026a000
+(gdb) 
+</screen>
+
+<para>The instruction has been fetched (0x9c21ffd8). The top 6-bits are 0x27,
+the <literal>l.addi</literal> instruction as expected. Continuing executes the
+instruction.</para>
+
+<screen>(gdb) cont
+Continuing.
+
+Breakpoint 3, cpu_clock () at execute.c:693
+693       update_pc();
+10: /x cpu_state.iqueue.insn = 0x9c21ffd8
+9: /x cpu_state.pc = 0xc026a690
+8: /t cpu_state.sprs[17] = 1000011001110001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc0269fd8
+(gdb) 
+</screen>
+
+<para>The stack pointer (r1) has been reduced by 40 decimal (0x28) as
+expected. Continuing again brings execution to the start of the next
+instruction:</para>
+
+<screen>(gdb) cont
+Continuing.
+
+Breakpoint 1, cpu_clock () at execute.c:672
+672       except_pending = 0;
+10: /x cpu_state.iqueue.insn = 0x9c21ffd8
+9: /x cpu_state.pc = 0xc026a694
+8: /t cpu_state.sprs[17] = 1000011001110001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc0269fd8
+(gdb) 
+</screen>
+
+<para>The program counter is now pointing at the next location (0xc026a694),
+where r9 should be pushed onto the stack. Continuing fetches the
+instruction, ready for execution:</para>
+
+<screen>(gdb) cont
+Continuing.
+
+Breakpoint 2, cpu_clock () at execute.c:692
+692       decode_execute_wrapper (&amp;cpu_state.iqueue);
+10: /x cpu_state.iqueue.insn = 0xd401480c
+9: /x cpu_state.pc = 0xc026a694
+8: /t cpu_state.sprs[17] = 1000011001110001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc0269fd8
+(gdb) 
+</screen>
+
+<para>Continuing again executes the store instruction onto the stack:</para>
+
+<screen>(gdb) cont
+Continuing.
+
+Breakpoint 3, cpu_clock () at execute.c:693
+693       update_pc();
+10: /x cpu_state.iqueue.insn = 0xd401480c
+9: /x cpu_state.pc = 0xc026a694
+8: /t cpu_state.sprs[17] = 1000011000010001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc0269fd8
+(gdb) 
+</screen>
+
+<para>The next continuation should lead to the start of the next instruction,
+which reveals a surprise:</para>
+
+<screen>(gdb) cont
+Continuing.
+
+Breakpoint 1, cpu_clock () at execute.c:672
+672       except_pending = 0;
+10: /x cpu_state.iqueue.insn = 0xd401480c
+9: /x cpu_state.pc = 0x900
+8: /t cpu_state.sprs[17] = 1000011000010001
+7: /x cpu_state.reg[12] = 0x0
+6: /x cpu_state.reg[11] = 0x0
+5: /x cpu_state.reg[9] = 0x0
+4: /x cpu_state.reg[4] = 0x0
+3: /x cpu_state.reg[3] = 0x0
+2: /x cpu_state.reg[2] = 0x0
+1: /x cpu_state.reg[1] = 0xc0269fd8
+(gdb) 
+</screen>
+
+<para>The next instruction to be executed is not at location 0xc026a694, but
+at location 0x900, the data TLM miss exception vector. The previous
+instruction attempting to write to the stack found the TLB entry was not set
+up for the stack location, so triggered an exception.</para>
+
+<para>The exercise can be repeated as much as necessary. A careful balancing
+between &or1ksim; breakpoints and &gdb; breakpoints can make debugging
+possible in this environment. However it is a labour intensive
+occupation!</para>
+
+</sect3>
+
+<!-- ===== Debugging Linux ===== -->
+
+<sect3><title>Debugging Linux</title>
+
+<para>The technique of section <xref linkend="sec_or1ksim_debug" /> can be
+used to debug Linux if required. However sometimes just inserting
+<function>printf()</function> statements is sufficient.</para>
+
+<para>The problem is that the kernel print function,
+<function>printk()</function> does not work. The solution is to patch
+<function>printk()</function> to use the internal simulator print routine,
+<function>simprintf</function>. This is trigged by a
+<literal>l.nop&nbsp;3</literal> instruction.</para>
+
+<para>The implementation of the <function>printk()</function> can be found in
+<filename>kernel/printk.c</filename> in the &linux; directory.</para>
+
+<programlisting>asmlinkage int printk(const char *fmt, ...)
+{
+	va_list args;
+	int r;
+
+	va_start(args, fmt);
+	r = vprintk(fmt, args);
+	va_end(args);
+
+	return r;
+}
+</programlisting>
+
+<para>Replace the call to <function>vprintk(fmt, args)</function> with
+assembly code to trigger <function>simprintf()</function> as follows:</para>
+
+<programlisting>asmlinkage int printk(const char *fmt, ...)
+{
+	va_list args;
+	int r;
+
+	va_start(args, fmt);
+	__asm__ __volatile__ ("l.addi\tr3,%0,0\n\t"
+			      "l.addi\tr4,%1,0\n\t"
+			      "l.nop\t3"
+			      : : "r" (fmt), "r" (args)
+			      : "r3", "r4");
+	r = 1;
+	va_end(args);
+
+	return r;
+}
+</programlisting>
+
+<para>It is a slight cheat to always return 1. It is left as an exercise for
+the reader to fix this to return the actual number of arguments
+printed!</para>
+
+<para>Rebuild &linux; (see <xref linkend="sec_linux" />) and run again under
+the simulator. The &linux; kernel output will be redirected to the file
+<filename>stdout.txt</filename>, which can be monitored in a separate window
+with <command>tail -f</command>.</para>
+
+<screen>Mount-cache hash table entries: -1071210588
+&lt;6&gt;checking if image is initramfs...it isn't ( / ); looks like an initrd
+&lt;6&gt;NET: Registered protocol family -1068294276
+&lt;6&gt;NET: Registered protocol family -1068294272
+ N, hash table entries: -1068294364 (order: -1071421199, 0 bytes)
+&lt;6&gt;TCP: Hash tables configured (established -1068294284 bind -1068294284)
+   ...
+&lt;5&gt;RAMDISK: Loading -1068294364KiB [-1068294364 disk&lt;5&gt;RAMDISK:
+Loading %dKiB [%
+ld disk%s] into ram disk... ] into ram disk... VFS: Mounted root (  @ )    filesystem)  @ ).
+&lt;6&gt;Freeing unused kernel memory: 3226673028k freed
+</screen>
+
+<para>There is a problem. The initial <function>printk()</function> messages
+are still not appearing. The reason is that although
+<function>simprintf()</function> looks at virtual addresses, it cannot take a
+TLB miss exception if the address required is not currently available.</para>
+
+<para>The rough and ready solution is to hack the code for
+<function>simprintf()</function> (which is in
+<filename>support/simprintf.c</filename> in the &or1ksim; directory, to
+automatically subtract 0xc0000000 from each address it is given and then read
+from the physical address. This only works for Linux as configured here, but
+is much simpler than a full solution to the problem. This is after all only a
+debugging trick.</para>
+
+<para>The changes required are to:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>the address of the string itself (<literal>fmtaddr</literal> in
+    <function>simgetstr()</function>);</para></listitem>
+  <listitem>
+    <para>the address of the stack (the initialization of
+    <literal>argaddr</literal>;</para></listitem>
+  <listitem>
+    <para>the address of any string arguments; and</para></listitem>
+  <listitem>
+    <para>the second argument of each call to
+    <function>eval_direct8</function> and <function>eval_direct32</function>,
+    which should be changed to 0 (physical address) rather than 1 (virtual
+    address);</para></listitem>
+</itemizedlist>
+
+<para>This should ensure that kernel print messages can be seen
+immediately.</para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="sec_ramdisk_setup"><title>Creating a Custom RAMDisk</title>
+<para></para>
+</sect2>
+
+</sect1>
+
+</article>
+ 
