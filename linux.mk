@@ -38,7 +38,7 @@ EMB_IMAGE_HOME = ../../local_images
 
 # Info for this document
 
-DOCNAME          = orpsoc_setup
+DOCNAME          = or1k_setup
 CSSFILE          = appnote_style.css
 IMAGE_DIR        = images
 CHUNK_DIR        = html
@@ -63,15 +63,50 @@ embecosm_files:
 
 
 # ----------------------------------------------------------------------------
+# Make a directory with everything needed for the distribution
+
+.PHONY: dist
+dist: clean distdir all $(DOCNAME).sf.html.zip $(DOCNAME).sf.html.tar.bz2 \
+		$(DOCNAME).mf.html.zip $(DOCNAME).mf.html.tar.bz2 \
+		$(DOCNAME).docbook.zip $(DOCNAME).docbook.tar.bz2
+	cp -r $(CSSFILE) $(DOCNAME).docbook $(DOCNAME).html $(DOCNAME).pdf \
+		$(DOCNAME).sf.html.zip $(DOCNAME).sf.html.tar.bz2 \
+		$(DOCNAME).mf.html.zip $(DOCNAME).mf.html.tar.bz2 \
+		$(DOCNAME).docbook.zip $(DOCNAME).docbook.tar.bz2 \
+		html legalnotice.html $(IMAGE_DIR) distdir
+
+distdir:
+	mkdir -p $@
+
+$(DOCNAME).sf.html.zip:
+	zip $@ ./$(DOCNAME).html ./legalnotice.html
+
+$(DOCNAME).sf.html.tar.bz2:
+	tar jcf $@ ./$(DOCNAME).html ./legalnotice.html
+
+$(DOCNAME).mf.html.zip:
+	zip $@ ./html
+
+$(DOCNAME).mf.html.tar.bz2:
+	tar jcf $@ ./html
+
+$(DOCNAME).docbook.zip:
+	zip $@ ./$(DOCNAME).docbook
+
+$(DOCNAME).docbook.tar.bz2:
+	tar jcf $@ ./$(DOCNAME).docbook
+
+
+# ----------------------------------------------------------------------------
 # Make the single chunk HTML version. Note that we use XHTML
 
 $(DOCNAME).html: $(DOCNAME).docbook
-	xsltproc --stringparam html.stylesheet      "./$(CSSFILE)" \
+	xsltproc --stringparam root.filename        "./$(DOCNAME)" \
+		 --stringparam html.stylesheet      "./$(CSSFILE)" \
 		 --stringparam img.src.path         "./$(IMAGE_DIR)/" \
 		 --stringparam admon.graphics.path  "./$(IMAGE_DIR)/" \
 		 --stringparam navig.graphics.path  "./$(IMAGE_DIR)/" \
 		$(ONECHUNK_STYLE) $(DOCNAME).docbook
-	mv index.html $(DOCNAME).html \
 
 
 # ----------------------------------------------------------------------------
@@ -113,9 +148,10 @@ clean:
 	ls $(EMB_IMAGE_HOME) | (cd images ; xargs $(RM) -r)
 	$(RM)    $(CSSFILE)
 	$(RM) -r $(CHUNK_DIR)
-	$(RM)    index.html
-	$(RM)    $(DOCNAME).html
+	$(RM) -r distdir
+	$(RM)    *.html
+	$(RM)    *.zip
+	$(RM)    *.tar.bz2
 	$(RM)    $(DOCNAME).fo
-	$(RM)    $(DOCNAME)_tidy.fo
 	$(RM)    $(DOCNAME).pdf
 	$(RM)     *~

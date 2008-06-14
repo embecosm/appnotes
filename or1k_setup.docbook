@@ -172,30 +172,78 @@ $Id$
     <corpauthor>
       &embecosm;
     </corpauthor>
-    <pubdate>8 March 2008</pubdate>
-    <releaseinfo>Issue 1, draft A</releaseinfo>
+    <pubdate>14 June 2008</pubdate>
+    <releaseinfo>Application Note 1. Issue 1, draft A</releaseinfo>
     <copyright>
       <year>2008</year>
       <holder>Embecosm</holder>
     </copyright>
-    <legalnotice>
+    <legalnotice id="legalnotice">
       <title>Legal Notice</title>
-      <para>Unpublished copyright (c) 2008 &embecosm;. All Rights
-      Reserved.</para>
 
-      <para>This file contains confidential and proprietary information of
-      Embecosm and is protected by copyright, trade secret and other regional,
-      national and international laws, and may be embodied in patents issued
-      or pending.</para>
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, &embecosm;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      licence terms of this work; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
 
-      <para>Receipt or possession of this file does not convey any rights to
-      use, reproduce, disclose its contents, or to manufacture, or sell
-      anything it may describe.</para>
+      <para>
+	The software examples written by &embecosm; and used in this document
+	are licensed under the &lgpl;. For detailed licensing information see
+	the source code of the examples.
+      </para>
 
-      <para>Reproduction, disclosure or use without specific written
-      authorization of Embecosm is strictly forbidden.</para>
+      <para>
+	Embecosm is the business name of Embecosm Limited, a private limited
+	company registered in England and Wales. Registration number 6577021.
+      </para>
 
-      <para>Reverse engineering is prohibited.</para>
     </legalnotice>
   </articleinfo>
       
