@@ -20,73 +20,17 @@
 
 # ----------------------------------------------------------------------------
 
-# Linux makefile for the System TLM 2.0 for ORPSoC application note
+# Linux makefile for the System TLM 2.0 simple transactions for OR1K
+# application note.
 
 # $Id$
 
-# File locations and names
+# We just specify the root of the document name. Everything else is done for
+# us (we use all the defaults).
 
-STYLESHEET_HOME = /usr/share/sgml/docbook/xsl-stylesheets-1.73.2
-CUSTOM_HOME    = ../../local_xsl
-FONT_HOME      = ../../local_fonts
-DOCBOOK_IMAGES = /usr/share/doc/docbook-style-xsl-1.73.2/doc/images
-DOCROOT        = systemc_tlm-2.0_for_orpsoc
-SRC            = $(DOCROOT).docbook
-
+DOCROOT        = sysc_tlm2_simple_or1k
 
 # ----------------------------------------------------------------------------
-# Make HTML, chunked HTML and PDF versions of the documentation
+# Others do all the hard work
 
-.PHONY: all
-all: images $(DOCROOT).html html/index.html $(DOCROOT).pdf
-
-images:
-	mkdir -p images
-	cp -r $(DOCBOOK_IMAGES)/* images
-
-
-# ----------------------------------------------------------------------------
-# Make the single chunk HTML version. Note that we use XHTML
-
-$(DOCROOT).html: $(SRC)
-	xsltproc $(CUSTOM_HOME)/xhtml/embecosm_onechunk.xsl $(SRC)
-	mv index.html $(DOCROOT).html \
-
-
-# ----------------------------------------------------------------------------
-# Make the chunked HTML version. Note that we use XHTML
-
-html/index.html: html $(SRC)
-	xsltproc $(CUSTOM_HOME)/xhtml/embecosm_chunk.xsl $(SRC)
-
-html:
-	mkdir -p html
-
-
-# ----------------------------------------------------------------------------
-# Make the PDF version
-
-$(DOCROOT).pdf: $(DOCROOT).fo
-	$(HOME)/tools/fop/fop-0.95beta/fop -c $(FONT_HOME)/config.xml \
-		-fo $(DOCROOT).fo -pdf $(DOCROOT).pdf
-
-$(DOCROOT).fo: $(SRC)
-	xsltproc --output $(DOCROOT).fo \
-		$(CUSTOM_HOME)/fo/embecosm.xsl $(SRC)
-#	$(HOME)/tools/xmlindent/xmlindent-0.2.17/xmlindent \
-#		< $(DOCROOT).fo > $(DOCROOT)_tidy.fo
-
-
-# ----------------------------------------------------------------------------
-# Clean up
-
-.PHONY: clean
-clean:
-	$(RM) -r images
-	$(RM)    index.html
-	$(RM)    $(DOCROOT).html
-	$(RM) -r html
-	$(RM)    $(DOCROOT).fo
-	$(RM)    $(DOCROOT)_tidy.fo
-	$(RM)    $(DOCROOT).pdf
-	$(RM)     *~
+include ../../local_scripts/linux_appnote.mk

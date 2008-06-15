@@ -70,65 +70,6 @@ Useful entities
   GNU Toolchain Port</ulink> project page">
 <!ENTITY busybox "<ulink url='http://www.busybox.net'>BusyBox</ulink>" >
 
-<!-- ===== Source, patch and config files ===== -->
-
-<!-- = OpenRISC -->
-
-<!ENTITY or_doc_arch "<ulink
-  url='http://www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf'>www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf</ulink>" >
-
-<!-- = Binutils = -->
-
-<!ENTITY binutils_clean "<ulink
-  url='http://ftp.gnu.org/gnu/binutils/binutils-2.16.1.tar.bz2'>ftp.gnu.org/gnu/binutils/binutils-2.16.1.tar.bz2</ulink>" >
-<!ENTITY binutils_mof_patch "<ulink
-  url='http://www.meansoffreedom.com/binutils_2.16.1_unified.diff_rgd_fixed.bz2?do_download=now'><filename>binutils_2.16.1_unified.diff_rgd_fixed.bz2</filename></ulink>" >
-
-<!-- = GCC = -->
-
-<!ENTITY gcc_clean "<ulink
-  url='http://ftp.gnu.org/gnu/gcc/gcc-3.4.4/gcc-3.4.4.tar.bz2'>ftp.gnu.org/gnu/gcc/gcc-3.4.4/gcc-3.4.4.tar.bz2</ulink>" >
-<!ENTITY gcc_mof_patch "<ulink
-  url='http://www.meansoffreedom.com/gcc-3.4.4-or32-unified.diff.bz2?do_download=now'><filename>gcc-3.4.4-or32-unified.diff.bz2</filename></ulink>" >
-
-<!-- = GDB = -->
-
-<!ENTITY gdb_clean "<ulink
-  url='http://ftp.gnu.org/gnu/gdb/gdb-5.3.tar.gz'>ftp.gnu.org/gnu/gdb/gdb-5.3.tar.gz</ulink>" >
-<!ENTITY gdb_emb_patch "<ulink
-  url='http://www.embecosm.com/patches/embecosm-or32-gdb-5.3-patch.bz2'><filename>embecosm-or32-gdb-5.3-patch.bz2</filename></ulink>" >
-
-<!-- = Linux = -->
-
-<!ENTITY linux_clean "<ulink
-  url='ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.19.tar.bz2'>ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.19.tar.bz2</ulink>" >
-<!ENTITY linux_mof_patch "<ulink
-  url='http://www.meansoffreedom.com/linux_2.6.19_or32_unified_simtested.bz2?do_download=now'><filename>linux_2.6.19_or32_unified_simtested.bz2</filename></ulink>" >
-<!ENTITY linux_emb_patch "<ulink
-  url='http://www.embecosm.com/patches/embecosm-or32-linux-2.6.19-modpost-patch.bz2'><filename>embecosm-or32-linux-2.6.19-modpost-patch.bz2</filename></ulink>" >
-<!ENTITY linux_mof_ramdisk "<ulink
-  url='http://www.meansoffreedom.com/rgd_initrd-fb-03.ext2.bz2?do_download=now'><filename>rgd_initrd-fb-03.ext2.bz2</filename></ulink>" >
-
-<!-- = uClibc = -->
-
-<!ENTITY uclibc_clean "<ulink
-  url='http://www.uclibc.org/downloads/uClibc-0.9.28.3.tar.bz2'>www.uclibc.org/downloads/uClibc-0.9.28.3.tar.bz2</ulink>" >
-<!ENTITY uclibc_mof_patch_main "<ulink
-  url='http://www.meansoffreedom.com/uClibc-0.9.28-or32-unified.bz2?do_download=now'><filename>uClibc-0.9.28-or32-unified.bz2</filename></ulink>" >
-<!ENTITY uclibc_mof_patch_supp "<ulink
-  url='http://www.meansoffreedom.com/uClibc-0.9.28-or32-libc-support.bz2?do_download=now'><filename>uClibc-0.9.28-or32-libc-support.bz2</filename></ulink>" >
-<!ENTITY uclibc_emb_patch "<ulink
-  url='http://www.embecosm.com/patches/embecosm-or32-uClibc-0.9.28.3-stdio-patch.bz2'><filename>embecosm-or32-uClibc-0.9.28.3-stdio-patch.bz2</filename></ulink>" >
-<!ENTITY uclibc_mof_config "<ulink
-  url='http://www.meansoffreedom.com/rgd_dot_config_example_uclibc.html'>suggested configuration file</ulink>" >
-
-<!-- = Or1ksim = -->
-
-<!ENTITY or1ksim_clean "<ulink
-  url='http://www.opencores.org/projects.cgi/web/or1k/or1ksim-0.2.0.tar.gz'>www.opencores.org/projects.cgi/web/or1k/or1ksim-0.2.0.tar.gz</ulink>" >
-<!ENTITY or1ksim_emb_patch "<ulink
-  url='http://www.embecosm.com/patches/embecosm-or32-or1ksim-0.2.0-patch.bz2'><filename>embecosm-or32-or1ksim-0.2.0-patch.bz2</filename></ulink>" >
-
 ]>
 
 <!-- ==========================================================================
@@ -172,7 +113,7 @@ $Id$
       <year>2008</year>
       <holder>Embecosm</holder>
     </copyright>
-    <legalnotice>
+    <legalnotice id="legalnotice">
       <title>Legal Notice</title>
       <para>Unpublished copyright (c) 2008 &embecosm;. All Rights
       Reserved.</para>
