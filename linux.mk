@@ -22,52 +22,59 @@
 
 # Linux makefile for the System TLM 2.0 for ORPSoC application note
 
-# $Id
+# $Id$
 
+# File locations and names
 
-ROOTNAME = systemc_tlm-2.0_for_orpsoc
-SRC      = $(ROOTNAME).docbook
+STYLESHEET_HOME = /usr/share/sgml/docbook/xsl-stylesheets-1.73.2
+CUSTOM_HOME    = ../../local_xsl
+FONT_HOME      = ../../local_fonts
+DOCBOOK_IMAGES = /usr/share/doc/docbook-style-xsl-1.73.2/doc/images
+DOCROOT        = systemc_tlm-2.0_for_orpsoc
+SRC            = $(DOCROOT).docbook
 
 
 # ----------------------------------------------------------------------------
 # Make HTML, chunked HTML and PDF versions of the documentation
 
 .PHONY: all
-all: html html_chunked pdf txt
+all: images $(DOCROOT).html html/index.html $(DOCROOT).pdf
+
+images:
+	mkdir -p images
+	cp -r $(DOCBOOK_IMAGES)/* images
 
 
 # ----------------------------------------------------------------------------
-# Make the HTML version. Note that we use XHTML
+# Make the single chunk HTML version. Note that we use XHTML
 
-.PHONY: html
-html:
-	xmlto xhtml-nochunks $(SRC)
+$(DOCROOT).html: $(SRC)
+	xsltproc $(CUSTOM_HOME)/xhtml/embecosm_onechunk.xsl $(SRC)
+	mv index.html $(DOCROOT).html \
 
 
 # ----------------------------------------------------------------------------
 # Make the chunked HTML version. Note that we use XHTML
 
-.PHONY: html_chunked
-html_chunked:
-	mkdir -p html
-	xmlto -o html html $(SRC)
+html/index.html: html $(SRC)
+	xsltproc $(CUSTOM_HOME)/xhtml/embecosm_chunk.xsl $(SRC)
 
+html:
+	mkdir -p html
 
 
 # ----------------------------------------------------------------------------
 # Make the PDF version
 
-.PHONY: pdf
-pdf:
-	xmlto pdf $(SRC)
+$(DOCROOT).pdf: $(DOCROOT).fo
+	$(HOME)/tools/fop/fop-0.95beta/fop -c $(FONT_HOME)/config.xml \
+		-fo $(DOCROOT).fo -pdf $(DOCROOT).pdf
 
-
-# ----------------------------------------------------------------------------
-# Make the text version
-
-.PHONY: txt
-txt:
-	xmlto txt $(SRC)
+$(DOCROOT).fo: $(SRC)
+	xsltproc --output $(DOCROOT).fo \
+		$(CUSTOM_HOME)/fo/embecosm.xsl $(SRC)
+#	$(HOME)/tools/xmlindent/xmlindent-0.2.17/xmlindent \
+#		< $(DOCROOT).fo > $(DOCROOT)_tidy.fo
 
 
 # ----------------------------------------------------------------------------
@@ -75,8 +82,11 @@ txt:
 
 .PHONY: clean
 clean:
-	$(RM)    *.html
+	$(RM) -r images
+	$(RM)    index.html
+	$(RM)    $(DOCROOT).html
 	$(RM) -r html
-	$(RM)    *.pdf
-	$(RM)    *.txt
+	$(RM)    $(DOCROOT).fo
+	$(RM)    $(DOCROOT)_tidy.fo
+	$(RM)    $(DOCROOT).pdf
 	$(RM)     *~

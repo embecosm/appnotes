@@ -1,0 +1,215 @@
+/* We match the Embecosm main page, with a white 1024px page surrounded by
+   whitesmoke. Within the white page, there is a 10px padding. */
+
+body {
+    background : whitesmoke;
+    color : #000000;
+    font : medium 'Luxi Serif','Bitstream Vera Serif','Georgia',serif;
+    padding : 0px;
+    margin : 0 auto;
+    max-width : 1024px;
+    min-height : 100%;
+  }
+
+/* Hyperlinks are just shown in Embecosm blue or dark red if visited. Underline
+   is so clunk, and reserved for hoverring. */
+
+
+a {
+    text-decoration : none;
+  }
+
+a:link {
+    color : #25217f;
+  }
+
+
+a:visited {
+    color : darkred;
+  }
+
+
+a:hover {
+    text-decoration : underline;
+  }
+
+/* Make sure everything has white as a background */
+
+div {
+    background : white;
+    border-color : white ;
+    border-style : dashed ;
+    border-width : 1px ;
+  }
+
+/* Make all the header use a bold sans-serif font in Embecosm blue. */
+
+div.caution th {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+div.important th {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+div.note th {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+div.tip th {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+div.warning th {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+div.toc p {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+h1 {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+
+h2 {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+
+h3 {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+h4 {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+  }
+
+/* For the Embecosm header we also specify the 10px padding */
+
+div.embnavheader table {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+    background : white;
+    padding-top : 10px;
+    padding-left : 10px;
+    padding-right : 10px;
+    padding-bottom : 10px;
+  }
+
+img.embnoborder {
+    border-width : 0px;
+    margin-right : 20px
+  }
+
+td.emblogo {
+    padding : 0px;
+    margin : 0px;
+    min-height : 66px;
+    min-width : 154px;
+    line-height : 0px;
+    vertical-align : bottom;
+  }
+
+td.embstrapline {
+    font : bold large 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    padding : 0px;
+    margin : 0;
+    color : #25217f;
+    text-align : right;
+    vertical-align : bottom;
+    width : 870px;
+  }
+
+/* For the footer we also specify the 10px padding */
+
+div.navfooter table {
+    font-family : 'Luxi Sans','Bitstream Vera Sans','Trebuchet MS','sans-serif';
+    font-weight : bold;
+    color : #25217f;
+    background : white;
+    padding-top : 10px;
+    padding-left : 10px;
+    padding-right : 10px;
+    padding-bottom : 10px;
+  }
+
+/* Add the 10px left and right padding to all the body entities that need it */
+
+div.titlepage h1,h2,h3,h4,h5 {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+div.appendix p {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+
+div.sect1 p {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+
+div.sect2 p {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+
+div.sect3 p, table {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+
+div.informalexample {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+div.informalfigure  {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+div.toc p,dl {
+    padding-left : 10px;
+    padding-right : 10px;
+}
+
+/* Make program listings stand out */
+
+pre.programlisting {
+    padding-top : 10px;
+    padding-left : 10px;
+    padding-right : 10px;
+    padding-bottom : 10px;
+    border : thin dashed ;
+    background-color: whitesmoke ;
+    border: thin dashed black ;
+}
