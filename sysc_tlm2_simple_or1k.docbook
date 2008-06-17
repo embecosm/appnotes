@@ -6,26 +6,35 @@
 Useful entities
 ========================================================================== -->
 
-<!-- ========== Applications ========== -->
+<!-- ========== Acronyms and abbreviations ========== -->
 
-<!-- ===== Software applications ===== -->
+<!ENTITY hdl "<acronym>HDL</acronym>">
+<!ENTITY iss "<acronym>ISS</acronym>">
+<!ENTITY osci "<acronym>OSCI</acronym>">
+<!ENTITY tlm "<acronym>TLM</acronym>">
+<!ENTITY tlm2 "<acronym>TLM</acronym>&nbsp;2.0">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
 
 <!ENTITY binutils "<application class='software'>Binutils</application>">
 <!ENTITY gcc "<application class='software'>GCC</application>">
 <!ENTITY gdb "<application class='software'>GDB</application>">
 <!ENTITY ddd "<application class='software'>DDD</application>" >
 <!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY systemc "<application class='software'>SystemC</application>" >
 <!ENTITY uclinux "<application class='software'>uClinux</application>" >
 <!ENTITY uclibc "<application class='software'>uClibc</application>">
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
 
-<!-- ===== Hardware applications ===== -->
+<!-- = Hardware applications = -->
 
 <!ENTITY or1k "<application class='hardware'>OpenRISC 1000</application>">
 <!ENTITY or1200 "<application class='hardware'>OpenRISC 1200</application>">
 <!ENTITY orpsoc "<application class='hardware'>ORPSoC</application>">
 
-<!-- ===== Commands ===== -->
+<!-- = Commands = -->
 
 <!ENTITY patch "<command>patch</command>" >
 <!ENTITY diff "<command>diff</command>" >
@@ -45,30 +54,29 @@ Useful entities
 <!ENTITY nm "<command>nm</command>" >
 <!ENTITY grep "<command>grep</command>" >
 
-<!-- ===== Libraries ===== -->
+<!-- = Libraries = -->
 
 <!ENTITY readline "<systemitem class='library'>readline</systemitem>" >
 <!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
 
 <!-- ========== Cross references ========== -->
 
-<!-- ===== Internal cross references ===== -->
+<!-- = Internal cross references = -->
 
 <!ENTITY patchref "See <xref linkend='sec_binutils_download' /> for an example
   of how to apply a &patch; file." >
 
-<!-- ===== Web pages ===== -->
+<!-- = Web pages = -->
 
 <!ENTITY embecosm "<ulink
   url='http://www.embecosm.com'>Embecosm</ulink>">
 <!ENTITY opencores "<ulink
   url='http://www.opencores.org'>OpenCores</ulink>">
-<!ENTITY mof "<ulink
-  url='http://www.meansoffreedom.com'><acronym>MOF</acronym></ulink>">
-<!ENTITY toolpage "<ulink
-  url='http://www.opencores.org/projects.cgi/web/or1k/gnu_toolchain_port'>&or1k;:
-  GNU Toolchain Port</ulink> project page">
-<!ENTITY busybox "<ulink url='http://www.busybox.net'>BusyBox</ulink>" >
+<!ENTITY gnu "<ulink url='http://www.gnu.org'>GNU</ulink>">
+<!ENTITY gpl "<ulink url='http://www.gnu.org/licenses/gpl.html'>
+  GNU General Public License</ulink>">
+<!ENTITY lgpl "<ulink url='http://www.gnu.org/licenses/lgpl.html'>
+  GNU Lesser General Public License</ulink>">
 
 ]>
 
@@ -77,1773 +85,2120 @@ Useful entities
                   CONFIDENTIAL AND PROPRIETARY INFORMATION
                   ========================================
 
-Unpublished copyright (c) 2008 Embecosm. All Rights Reserved.
+Copyright (c) 2008 Embecosm.
 
-This file contains confidential and proprietary information of Embecosm and
-is protected by copyright, trade secret and other regional, national and
-international laws, and may be embodied in patents issued or pending.
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
 
-Receipt or possession of this file does not convey any rights to use,
-reproduce, disclose its contents, or to manufacture, or sell anything it may
-describe.
-
-Reproduction, disclosure or use without specific written authorization of
-Embecosm is strictly forbidden.
-
-Reverse engineering is prohibited.
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
 
 ===============================================================================
 
-Application note describing the conversion of an ISS to use OSCI TLM 2.0
+Application note describing the first stage in the conversion of an ISS to use
+OSCI TLM 2.0, convenience ports.
 
 $Id$
 
 =========================================================================== -->
 
 <article class="whitepaper" lang="en_GB">
-  <title>Converting an ISS to use OSCI TLM 2.0</title>
-  <subtitle>A Case Study Using the &opencores; &or1k; Simulator</subtitle>
+  <title>
+    Converting an &iss; to use &osci; TLM 2.0 Convenience Ports
+  </title>
+  <subtitle>
+    A Case Study Using &or1k; &or1ksim;
+  </subtitle>
+
   <articleinfo>
+
     <corpauthor>
       &embecosm;
     </corpauthor>
-    <pubdate>8 March 2008</pubdate>
-    <releaseinfo>Issue 1, draft A</releaseinfo>
+
+    <pubdate>
+      14 June 2008
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 2. Issue 1, draft A
+    </releaseinfo>
+
     <copyright>
-      <year>2008</year>
-      <holder>Embecosm</holder>
+      <year>
+	2008
+      </year>
+      <holder>
+	Embecosm Limited
+      </holder>
     </copyright>
+
     <legalnotice id="legalnotice">
-      <title>Legal Notice</title>
-      <para>Unpublished copyright (c) 2008 &embecosm;. All Rights
-      Reserved.</para>
+      <title>
+	Legal Notice
+      </title>
 
-      <para>This file contains confidential and proprietary information of
-      Embecosm and is protected by copyright, trade secret and other regional,
-      national and international laws, and may be embodied in patents issued
-      or pending.</para>
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, &embecosm;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
 
-      <para>Receipt or possession of this file does not convey any rights to
-      use, reproduce, disclose its contents, or to manufacture, or sell
-      anything it may describe.</para>
+      <para>
+	The software examples written by &embecosm; and used in this document
+	are licensed under the &lgpl;. For detailed licensing information see
+	the source code of the examples.
+      </para>
 
-      <para>Reproduction, disclosure or use without specific written
-      authorization of Embecosm is strictly forbidden.</para>
+      <para>
+	Embecosm is the business name of Embecosm Limited, a private limited
+	company registered in England and Wales. Registration number 6577021.
+      </para>
 
-      <para>Reverse engineering is prohibited.</para>
     </legalnotice>
   </articleinfo>
+
+
+  <!-- ========================================================================
+       Introduction
+       ==================================================================== -->
+
+  <sect1>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      The Open <firstterm>&systemc;</firstterm> Initiative
+      (<firstterm>&osci;</firstterm>) has recently issued the second version
+      of its standard for
+      <firstterm>Transaction&#32;Level&#32;Modeling</firstterm> (&tlm;). This
+      provides an interface for writing high level software models of
+      hardware.
+    </para>
+
+    <para>
+      One of the most important components in any SoC system model is the
+      processor core <firstterm>Instruction Set Simulator</firstterm>
+      (&iss;). With the standardization of &osci; &tlm2; for &systemc;, many
+      &iss;, providers will wish to convert to offer the
+      <firstterm>&tlm2;</firstterm> interface
+    </para>
+
+    <para>
+      This application note is the first in a series from &embecosm;,
+      providing case studies in &osci; &tlm2; use, based on an open source
+      &iss;, the &or1ksim; for the &opencores; &or1200; architecture.
+    </para>
+
+    <para>
+      The objective is to provide an introduction to using &tlm2; within a
+      practical context. Examples are provided throughout, which are freely
+      available under the &lgpl;.
+    </para>
+
+    <!-- ========== Justification ========== -->
+
+    <sect2>
+      <title>
+	About the &embecosm; TLM 2.0 Application Note Series
+      </title>
+
+      <para>
+	The &osci; &tlm2; standard represents a signficant advance in
+	standardizing the creation of fast software models of
+	hardware. However the &osci; reference implementation lacks training
+	material and examples to introduce new users to the technology.
+      </para>
+
+      <para>
+	These users are often trained hardware engineers, who may be
+	relatively new to both C++ and transaction level modeling (&tlm;).
+      </para>
+
+      <para>
+	This series of &embecosm; Application Notes was prompted by a customer
+	requesting assistance in porting an existing &iss; to the &tlm2;
+	standard. This first application note in the series introduces &tlm2;
+	in its simplest form, using &tlm2;
+	<firstterm>convenience&#32;socket</firstterm>s.
+      </para>
+
+    </sect2>
+
+    <!-- ========== Target Audience ========== -->
+
+    <sect2>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+  </sect1>
+
+
+  <!-- ========================================================================
+       Background to TLM
+       ==================================================================== -->
+
+  <sect1>
+    <title>
+      Background to &tlm; and &systemc;
+    </title>
+
+    <para>
       
-<!-- =========================================================================
-Introduction
-========================================================================== -->
-
-<sect1><title>Introduction</title>
-<para>One of the most important components in any SoC system model is the
-processor core ISS. With the standardization of OSCI TLM 2.0 for SystemC, many
-ISS will wish to convert to offer the TLM 2.0 interface.</para>
-
-<para>This paper provides a case study with an open source ISS, the &or1ksim;
-for the &opencores; &or1200; architecture.
-</para>
-</sect1>
-
-<!-- =========================================================================
-Appendix: Using OpenRISC
-========================================================================== -->
-
-<appendix><title>Appendix: Using the OpenRISC ISS, ork1sim</title>
-
-<para>The OpenRISC 1000 project forms part of the OpenCores organization
-(<ulink url="http://www.opencores.org">www.opencores.org</ulink>). Its aim
-is to create a free open source computing platform, comprising:</para>
-
-<itemizedlist>
-  <listitem>
-    <para>An open source 32/64 bit RISC/DSP architecture;</para></listitem>
-  <listitem>
-    <para>A set of open source implementations of the architecture;
-    and</para></listitem>
-  <listitem>
-    <para>A complete open source toolchain and operating
-    system.</para></listitem>
-</itemizedlist>
-
-<para>The project has yielded Verilog for a 32 processor core, the &or1200;
-(sometimes known as <abbrev>OR1200</abbrev>) and a complete reference System
-on Chip design using that core, &orpsoc;.
-</para>
-
-<!-- ========== OpenRISC 1000 Components Used ========== -->
-
-<sect1><title>OpenRISC 1000 Components Used</title>
-
-<para>The examples described in the main paper use several components of the
-OpenRISC 1000 project:</para>
-
-<itemizedlist>
-  <listitem>
-    <para>GNU &binutils;, &gcc; and &gdb; from the GNU toolchain
-    port;</para></listitem>
-  <listitem>
-    <para>the &linux; kernel;</para></listitem>
-  <listitem>
-    <para>the &uclibc; library and</para></listitem>
-  <listitem>
-    <para>the &or1ksim; architectural simulator.</para></listitem>
-</itemizedlist>
-
-<note>
-  <para>The GNU toolchain (&binutils;, &gcc;, &gdb;) is built for a
-  <emphasis>cross-compiling</emphasis> environment. In other words the tools
-  are designed to run on the development workstation, but generate code for
-  the target (&or1200;) architecture.</para></note>
-</sect1>
-
-<!-- ========== Building the Components ========== -->
-
-<sect1><title>Building the Components</title>
-
-<para>In general the &opencores; website (<ulink
-url="http://www.opencores.org">www.opencores.org</ulink>) only provides
-&patch; files for tools from third parties (e.g. &gcc;) (&patchref;).</para>
-
-<para>The &opencores; website provides basic instructions for building the
-various components (see the &toolpage;). These can be slightly out-of-date,
-and are usefully supplemented by Rich D'Addio's <ulink
-url="http://www.meansoffreedom.com/">Meansoffreedom (MOF)</ulink>
-website. This Appendix aims to bring all these instructions together and
-update them for 2008.</para>
-
-<note>
-  <para>The details vary depending on the environment used. The examples given
-  below were all verified on a workstation using &gcc; 4.3.0 under Fedora 9
-  &linux;. The procedure should be very similar under other &linux;
-  versions.</para></note>
-
-<!-- ===== Binutils ===== -->
-
-<sect2 id="sec_binutils"><title>GNU &binutils; Version 2.16.1</title>
-
-<para>&binutils; provides the basic GNU utilities required by the remainder of
-the toolchain. The tools are
-<simplelist type="inline">
-  <member><command>addr2line</command></member>
-  <member><command>ar</command></member>
-  <member><command>as</command></member>
-  <member><command>c++filt</command></member>
-  <member><command>ld</command></member>
-  <member><command>nm</command></member>
-  <member><command>objcopy</command></member>
-  <member><command>objdump</command></member>
-  <member><command>ranlib</command></member>
-  <member><command>readelf</command></member>
-  <member><command>size</command></member>
-  <member><command>strings</command></member>
-  <member><command>strip</command></member>
-</simplelist>.</para>
-
-<important>
-  <para>Having built and installed &binutils;, don't forget to follow the
-  &binutils; specific instructions in <xref linkend="sec_binutils_setup" />.
-  </para></important>
-
-<!-- = Binutils download = -->
-
-<sect3 id="sec_binutils_download"><title>Generating the &binutils; Source Code</title>
-
-<para>Obtain a clean version from &binutils_clean;.</para>
-
-<important>
-  <para>Ensure the the version number (2.16.1) is <emphasis>exactly</emphasis>
-  the same</para></important>
-
-<para>Obtain the &or1k; &patch; file for &binutils; 2.16.1. A basic version is
-available on the &toolpage;. However a better version (&binutils_mof_patch;),
-which fixes a major bug in &binutils;, is available from the &mof;
-website. Unpack the downloaded source code and apply the patches.</para>
-
-<note>
-  <para>A &patch; file is the output from a recursive use of &diff; between
-  two file hierarchies&mdash;typically the original file hierarchy and the
-  file hierarchy with changes. The &patch; utility provides the inverse
-  functions, allowing the new file hierarchy to be generated from the
-  original.</para>
-
-  <para>Since the names of the top of the hierachy may not be identical,
-  &patch; includes an option <option>-p</option> to specify the amount of the
-  file hierarchy to be stripped off. A value of 1 is common, to remove just
-  the top level directory name.</para>
-
-  <para>For example if the source code has been downloaded as
-  <filename>binutils-2.16.1.tar.bz2</filename> with the &patch; file in the
-  same directory, the following commands would be appropriate</para>
-
-<programlisting>bunzip2 binutils-2.16.1.tar.bz2
-cd binutils-2.16.1
-bzcat -dc ../binutils_2.16.1_unified.diff_rgd_fixed.bz2 | patch -p1
-</programlisting>
-
-</note>
-
-</sect3>
-
-<!-- = Binutils config = -->
-
-<sect3 id="sec_binutils_config"><title>Configuring &binutils;</title>
-
-<para>All the GNU components build in a directory
-<emphasis>separate</emphasis> from the original source tree. A &configure;
-script is used from within this build directory to generate a &makefile;
-suitable for the particular component.</para>
-
-<para>The &configure; script has a huge number of parameters (try &configure;
-<option>--help</option>). Two are common to building the OpenRISC 1200
-toolchain.
-<variablelist>
-  <varlistentry>
-    <term><option>--target=</option><parameter>architecture</parameter></term>
-    <listitem><para>The configuration has been extended to understand the
-    OpenRISC 32 bit architecture if the <option>--target</option> option is
-    set to <parameter>or32-uclinux</parameter>. The name of the target
-    architecture was chosen, since the work was originally aimed at supporting
-    &uclinux;.</para></listitem>
-  </varlistentry>
-  <varlistentry>
-    <term><option>--prefix=</option><parameter>installdir</parameter></term>
-    <listitem><para>This specifies the directory in which all the components
-    will be installed. The default (typically <filename>/usr/local</filename>)
-    is not appropriate, since these are not tools for the workstation, but to
-    cross-compile for the &or1200; core. It is important that the same
-    installation directory is used for all the components built. The examples
-    here all use <filename>/opt/or32</filename> as the install
-    directory.</para></listitem>
-  </varlistentry>
-</variablelist>
-</para>
-
-<para>For example if the source code has been downloaded and patched in a
-subdirectory, <filename>binutils-2.16.1</filename>, then from the parent
-directory (i.e. the one containing <filename>binutils-2.16.1</filename>), the
-following commands would be appropriate.</para>
-
-<programlisting>mkdir buildir_binutils cd buildir_binutils ../binutils-2.16.1/configure
---target==or32-uclinux --prefix=/opt/or32
-</programlisting>
-
-</sect3>
-
-<!-- = Binutils build/install = -->
-
-<sect3 id="sec_binutils_build_install"><title>Building and Installing &binutils;</title>
-
-<para>Having configured the component, there are then three steps to building
-and installing the component.
-<variablelist>
-  <varlistentry>
-    <term>&makeall;</term>
-    <listitem><para>Build the component in the build
-    directory.</para></listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>&makecheck;</term>
-    <listitem><para>Carry out tests to ensure the component has built
-    correctly. This will be of limited use here, since the goal is to build a
-    cross compiling toolchain, the results of which will not run in the
-    development environment.</para></listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>&makeinstall;</term>
-    <listitem><para>Install the component in the directory specified when
-    configuring.</para></listitem>
-  </varlistentry>
-</variablelist>
-</para>
-
-<para>For example if a build directory has been created as in <xref
-linkend="sec_binutils_config" />, then the following commands would be
-appropriate.</para>
-
-<programlisting>make all
-make install
-</programlisting>
-
-<para>The result is a set of cross platform commands installed in
-<filename>/opt/or32/bin</filename>:
-<simplelist type="inline">
-  <member><command>or32-uclinux-addr2line</command></member>
-  <member><command>or32-uclinux-ar</command></member>
-  <member><command>or32-uclinux-as</command></member>
-  <member><command>or32-uclinux-c++filt</command></member>
-  <member><command>or32-uclinux-ld</command></member>
-  <member><command>or32-uclinux-nm</command></member>
-  <member><command>or32-uclinux-objcopy</command></member>
-  <member><command>or32-uclinux-objdump</command></member>
-  <member><command>or32-uclinux-ranlib</command></member>
-  <member><command>or32-uclinux-readelf</command></member>
-  <member><command>or32-uclinux-size</command></member>
-  <member><command>or32-uclinux-strings</command></member>
-  <member><command>or32-uclinux-strip</command></member>
-</simplelist>.
-</para>
-
-<para>In addition there is also a further sub-directory,
-<filename>/opt/or32/or32-uclinux/bin</filename> (observe the extra
-<filename>or32-uclinx</filename>), which provides the main cross-platform
- commands <emphasis>without</emphasis> their prefix
-(<simplelist type="inline">
-  <member><command>ar</command></member>
-  <member><command>as</command></member>
-  <member><command>ld</command></member>
-  <member><command>nm</command></member>
-  <member><command>objdump</command></member>
-  <member><command>ranlib</command></member>
-  <member><command>strip</command></member>
-</simplelist>). This will be required by later component builds.</para>
-
-</sect3>
-
-<!-- = Binutils setup = -->
-
-<sect3 id="sec_binutils_setup"><title>Setting up &binutils;</title>
-
-<para>The key final stage is to add the new cross-platform utilities to the
-search path, so they can be found in subsequent stages. For &sh; and &bash;
-users:</para>
-
-<programlisting>export PATH=/opt/or32/bin:$PATH
-</programlisting>
-
-<para>For &csh; and &tcsh; users:</para>
-
-<programlisting>setenv PATH /opt/or32/bin:$PATH
-</programlisting>
-
-<tip>
-  <para> It is useful to add these environment setup commands to
-  <filename>.profile</filename> (&sh; users),
-  <filename>.bash_profile</filename> (&bash; users) or
-  <filename>.login</filename> (&csh; and &tcsh;), to ensure they are set up
-  for subsequent sessions.</para>
-</tip>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== GCC (Phase 1) ===== -->
-
-<sect2><title>GNU C Compiler Version 3.4.4 (Initial Version)</title>
-
-<para>A compiler is closely tied to its associated operating system and
-libraries, in this case &linux; and &uclibc;. Eventually the &gcc; compiler
-has to be built in parallel with both of these (see <xref linkend="sec_gcc_2"
-/>). However to get started, we build a plain compiler without knowledge of
-operating system or libraries.</para>
-
-<!-- = GCC download = -->
-
-<sect3 id="sec_gcc_download"><title>Generating the &gcc; Source Code</title>
-
-<para>Obtain a clean version from &gcc_clean;.</para>
-
-<important>
-  <para>Ensure the the version number (3.4.4) is <emphasis>exactly</emphasis>
-  the same</para>
-</important>
-
-<para>The &patch; file is available on the &toolpage;, but the &mof; website
-has a compressed version, &gcc_mof_patch;, which saves bandwidth. Apply the
-&patch; file to the top level &gcc; directory (&patchref;).</para>
-
-</sect3>
-
-<!-- = GCC config = -->
-
-<sect3 id="sec_gcc_config"><title>Configuring &gcc;</title>
-
-<para>Like &binutils;, &gcc; is built in a separate build directory. It is
-configured to create just a cross-compiler for C.</para>
-
-<programlisting>mkdir builddir-gcc
-cd builddir-gcc
-../gcc-3.4.4/configure --target=or32-uclinux --prefix=/opt/or32 --enable-languages=c
-</programlisting>
-
-<para>The configuration will automatically assume that the various &binutils;
-utilities are prefixed by the target name, so finds
-<command>or32-uclinux-as</command> as the assembler and
-<command>or32-uclinux-ld</command> as the linker, so long as they are on the
-search path (in this example <filename>/opt/or32/bin</filename>).</para>
-
-<note>
-  <para>These instructions are simpler than those given on the &mof; website;
-  and &toolpage;. At this stage the objective is a vanilla cross-compiler,
-  without reference to the &linux; operating system or &uclibc; libraries. No
-  additional configuration flags are required.</para>
-</note>
-
-</sect3>
-
-<!-- = GCC build/install = -->
-
-<sect3 id="sec_gcc_build_install"><title>Building and Installing &gcc;</title>
-
-<para>The procedure is the same as that from &binutils; (see <xref
-linkend="sec_binutils_build_install" />). As before the use of &makecheck; is
-omitted, since it is of little meaning in a cross-compiling
-environment.</para>
-
-<programlisting>make all
-make install
-</programlisting>
-
-<para>Five new commands are now available in the installation
-<filename>bin</filename> subdirectory:
-<simplelist type="inline">
-  <member><command>or32-uclinux-cpp</command></member>
-  <member><command>or32-uclinux-gcc</command></member>
-  <member><command>or32-uclinux-gcc-3.4.4</command></member>
-  <member><command>or32-uclinux-gccbug</command></member>
-  <member><command>or32-uclinux-gcov</command></member>
-</simplelist>.</para>
-
-<para>In addition <command>gcc</command> without its prefix appears in the
-<filename>/opt/or32/or32-uclinux/bin</filename> directory.</para>
-
-<para>The installation has also set up a &gcc; library hierarchy in
-<filename>/opt/or32/lib/gcc/or32-uclinux/3.4.4</filename>. As well as the main
-&gcc; library, this includes fixed versions of include files. These are not of
-relevance at this stage, but will be important when the &linux; and &uclibc;
-installations are created and fixed versions of their header files are
-required.
-</para>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== GDB ===== -->
-
-<sect2 id="sec_gdb"><title><application>GNU Debugger</application> Version
-5.3</title>
-
-<para>&gdb; is not essential to getting a working &linux; environment for
-OpenRISC, so this step may be omitted initially.</para>
-
-<note>
-  <para>The porting of &gdb; to OpenRISC was design to allow debugging via the
-  &or1k; JTAG port. This does not appear to be fully functional, at least to
-  the JTAG port of the &or1ksim; simulator. The main value of &gdb; is as a
-  tool to provide disassembly of &or1k; binaries.</para>
-</note>
-
-<!-- = GDB download -->
-
-<sect3><title>Generating the &gdb; Source Code</title>
-
-<para>Obtain a clean version from &gdb_clean;.</para>
-
-<important>
-  <para>Ensure the the version number (5.3) is <emphasis>exactly</emphasis>
-  the same</para>
-</important>
-
-<para>The &opencores; website provides a complete modified &gdb; hierarchy for
-versions 5.0 and 5.3. However this needs some patching to build with modern
-&gcc; compilers. As an alternative &embecosm; provides a comprehensive &patch;
-file, which can be applied to the clean &gdb; version 5.3,
-&gdb_emb_patch;. Apply this &patch; to the top level &gdb; directory
-(&patchref;).</para>
-
-</sect3>
-
-<!-- = GDB config = -->
-
-<sect3><title>Configuring &gdb;</title>
-
-<para>Like &binutils; and &gcc;, &gdb; is built in a separate build
-directory. It is configured to create just a cross-platform debugger for
-&or1k; programs compiled with <command>or32-uclinux-gcc</command>.</para>
-
-<programlisting>mkdir builddir-gdb
-cd builddir-gdb
-../gdb-5.3/configure --target=or32-uclinux
-</programlisting>
-
-<note>
-  <para>The <option>--prefix</option> option cannot be used with this
-  release of &gdb;, since it triggers a bug in &readline;. As a consequence,
-  &gdb; will have to be installed manually once built.</para>
-</note>
-
-</sect3>
-
-<!-- = GDB build/install = -->
-
-<sect3><title>Building and Installing &gdb;</title>
-
-<para>The procedure to build &gdb; is the same as that from &binutils; and
-&gcc;. As with these tools, the use of &makecheck; is omitted, since it is of
-little meaning in a cross-compiling environment.</para>
-
-<para>Since the <option>--prefix</option> option was not used, &makeinstall;
-cannot be used. The compiled <command>gdb</command> must be copied manually to
-<command>or32-uclinux-gdb</command> in the installation
-<filename>bin</filename> directory. If the installation directory is
-<filename>/opt/or32</filename>, then from the build directory, a suitable set
-of commands would be:
-</para>
-
-<programlisting>make all
-cp gdb/gdb /opt/or32/bin/or32-uclinux-gdb
-</programlisting>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== Linux ===== -->
-
-<sect2 id="sec_linux"><title>&linux; Kernel Version 2.6.19</title>
-
-<!-- = Linux download = -->
-
-<sect3 id="sec_linux_download"><title>Generating the &linux; Source Code</title>
-
-<para>Obtain a clean version from &linux_clean;.</para>
-
-<important>
-  <para>Ensure the the version number (2.6.19) is <emphasis>exactly</emphasis>
-  the same</para>
-</important>
-
-<para>Apply the &mof; &patch; file, &linux_mof_patch; (&patchref;).</para>
-
-<para>Two additional changes, not covered by the &mof; &patch; file are needed
-to successfully build &linux;. The first of these is a missing header,
-<filename>limits.h</filename> in the modversion script, needed by &gcc; 4.3.0
-(this is a program compiled on the local workstation, not using the
-cross-compiler). The second is a patch to the calculation of section sizes in
-vmlinux. This appears to be a known problem in version 2.6.19 &linux;. A
-&patch; file, &linux_emb_patch;, to fix both these problems is available from
-&embecosm;.</para>
-
-</sect3>
-
-<!-- = Linux config = -->
-
-<sect3 id="sec_linux_config"><title>Configuring &linux;</title>
-
-<para>The configuration options for a &linux; kernel are held in the
-<filename>.config</filename> file in the top directory of the kernel. The code
-patched for OpenRISC has a suitable file in
-<filename>rgd_dot_config</filename>, which should be copied to
-<filename>.config</filename>.</para>
-
-<para>The kenel can now be configured using its graphical configuration
-tool.</para>
-
-<programlisting>make menuconfig ARCH=or32 CROSS_COMPILE=/opt/or32/bin/or32-uclinux-
-</programlisting>
-
-<para>Use the cursor keys to move to the <computeroutput><guisubmenu>OpenRISC
-specific drivers</guisubmenu></computeroutput> submenu and select it. There is
-only one entry, <computeroutput><guimenuitem>OpenCores Ethernet
-support</guimenuitem></computeroutput>, which should be deselected (press
-<userinput><keycap>N</keycap></userinput>).</para>
-
-<note>
-  <para>The Ethernet code does not appear to work reliably in the simulator,
-  which is why it is deselected here.</para></note>
-
-<para>Having made this change, exit up through the menus and from the
-configuration system, saving the configuration file when prompted. As well as
-creating the <filename>.config</filename> file, this will have also linked in
-the correct include files for the &linux; kernel build.</para>
-
-<para>The build of &linux; makes use of a RAMdisk filing system. The
-instructions for making a customer disk can be found in <xref
-linkend="sec_ramdisk_setup" />. For initial building, the &mof; RAMDisk,
-&linux_mof_ramdisk;, is suitable. This provides a set of &busybox; utilities
-which can be used when Linux starts up. Download this, uncompress it with
-&bunzip2; and copy the resulting file to the file
-<filename>arch/or32/support/initrd-fb-03.ext2</filename> in the kernel.</para>
-
-</sect3>
-
-<!-- = Linux build = -->
-
-<sect3><title>Building &linux; for the OpenRISC 1200</title>
-
-<para>The configured &linux; is built from the configured &makefile;.</para>
-
-<programlisting>make vmlinux ARCH=or32 CROSS_COMPILE=/opt/or32/bin/or32-uclinux-
-</programlisting>
-
-<note>
-  <para>There will be a number of warnings at the end about section
-  mismatches. These are a known problem, which can be ignored.</para>
-</note>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== uClibc ===== -->
-
-<sect2><title> &uclibc; Version 0.9.28.3</title>
-
-<para><ulink url="http://www.uclibc.org">&uclibc;</ulink> is a C library for
-use particuarly in embedded environments. It is substantially smaller than the
-full <application>glibc</application> library.</para>
-
-<!-- = uClibc download = -->
-
-<sect3><title>Generating the &uclibc; Source</title>
-
-<para>Obtain a clean version from &uclibc_clean;.</para>
-
-<important>
-  <para>Ensure the the version number (0.9.28.3) is
-  <emphasis>exactly</emphasis> the same</para>
-</important>
-
-<para>In this case there are two sets of patches to apply, both provided by
-&mof;. Download the main &patch; file, &uclibc_mof_patch_main;, first and
-apply it to the main &uclibc; directory (&patchref;).</para>
-
-<para>Download the supplemental &patch; file, &uclibc_mof_patch_supp; and
-apply it to the <filename>libc</filename> subdirectory of the &uclibc;
-directory.</para>
-
-<para>A further fix is required to ensure &uclibc; will work correctly with
-the OpenRISC toolchain. The linker can get confused about the &stdio; library
-initialization and termination. To avoid this, dummy versions of
-<function>__stdio_init</function> and <function>__stdio_term</function> must
-be added. A &patch; file, &uclibc_emb_patch; to fix this problem is available
-from &embecosm;. It should be applied after the other patches to the top level
-&uclibc; directory.</para>
-
-<para>A typical set of commands would be:</para>
-
-<programlisting>cd uClibc-0.9.28.3
-bzcat -dc ../uClibc-0.9.28-or32-unified.bz2 | patch -p1
-cd libc
-bzcat -dc ../../uClibc-0.9.28-or32-libc-support.bz2 | patch -p1
-cd ..
-bzcat -dc ../embecosm-or32-uClibc-0.9.28.3-stdio-patch.bz2 | patch -p1
-</programlisting>
-
-</sect3>
-
-<!-- = uClibc config = -->
-
-<sect3><title>Configuring &uclibc;</title>
-
-<para>Additional configuration options specific to the OpenRISC core are
-provided in the patched source tree. Make these available by linking to
-<filename>Config</filename> in the main directory</para>
-
-<programlisting>ln -s extra/Configs/Config.or32 Config
-</programlisting>
-
- 
-<para>Configuration for &uclibc; is via a the file
-<filename>.config</filename> in the main directory. Like &linux;, &uclibc;
-also provides a graphical configuration tool to set up
-<filename>.config</filename>.</para>
-
-<para>The &mof; website provides a template &uclibc_mof_config;. Copy this
-into <filename>.config</filename>.</para>
-
-<caution>
-  <para>The patched source tree contains a file,
-  <filename>DOT_CONFIG_or32</filename>. This is a historical remnant, and
-  should not be used as the <filename>.config</filename> file.</para>
-</caution>
-
-<para>The configuration tool is not able to set every parameter, so edit
-<filename>.config</filename> with a text editor. Change the line setting
-<option>CROSS_COMPILER_PREFIX</option> option to read.</para>
-
-<programlisting>CROSS_COMPILER_PREFIX="or32-uclinux-"
-</programlisting>
-
-<important>
-  <para>This is a key change, and ensures the build of &uclibc; picks up the
-  OpenRISC 1200 toolchain and not the standard workstation
-  compiler</para>
-</important>
-
-<para>Run the configuration tool, so the remaining changes can be made with
-the graphical parameter editor.</para>
-
-<programlisting>make menuconfig
-</programlisting>
-
-<para>Use the cursor keys to move to the <computeroutput><guisubmenu>Target
-Architecture Features and Options</guisubmenu></computeroutput> submenu and
-select it. Move to the <computeroutput><guimenuitem>Target CPU has a floating
-point unit (FPU)</guimenuitem></computeroutput> entry and deselect it (press
-<userinput><keycap>N</keycap></userinput>). Then move further down to the last
-entry <computeroutput><guimenuitem>Linux kernel source
-location</guimenuitem></computeroutput> and set this to point to the main
-linux distribution directory.</para>
-
-<para>Return back to the main menu and select the
-<computeroutput><guisubmenu>General Library
-Settings</guisubmenu></computeroutput> submenu. Move to the
-<computeroutput><guimenuitem>Large File Support</guimenuitem></computeroutput>
-entry and deselect it.
-</para>
-
-<para>Return back to the main menu and select the
-<computeroutput><guisubmenu>Library Installation
-Options</guisubmenu></computeroutput> submenu. Set the entries for both the
-<option>RUNTIME_PREFIX</option> and <option>DEVEL_PREFIX</option> options to
-be the main installation directory (in the examples here
-<filename>/opt/or32</filename>).
-</para>
-
-</sect3>
-
-<!-- = uClibc build = -->
-
-<sect3><title>Building and installing &uclibc;</title>
-
-<para>The &uclibc; library is built and installed using &make;.</para>
-
-<programlisting>make all
-make install
-</programlisting>
-
-<note>
-  <para>There is no need to set the <envar>CC</envar> environment variable (as
-  suggested by the &mof; website). The use of the
-  <option>CROSS_COMPILER_PREFIX</option> parameter ensures the OpenRISC
-  toolchain is used.</para>
-</note>
-
-<important>
-  <para>The &uclibc; &makefile; dependencies are not complete. If any
-  parameters are changed, run &makeclean; before
-  rebuilding.</para>
-</important>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== GCC (Phase 2) ===== -->
-
-<sect2><title>GNU C Compiler Version 3.4.4 (&linux; and &uclibc;
-aware)</title>
-
-<para>The previous build of &gcc; was not aware of Operating System specific
-include files and libraries. The compiler can now be rebuilt, so that it
-correctly picks up the &linux; and &uclibc; include files and
-libraries.</para>
-
-<!-- = GCC reconfiguration = -->
-
-<sect3 id="sec_gcc_2"><title>Reconfiguring &gcc;</title>
-
-<para>Return to the build directory used to build the original &gcc; compiler
-(see <xref linkend="sec_gcc_config" />). Delete the contents and reconfigure
-&gcc; this time to include a local prefix for searching (using the
-<option>--with-local-prefix</option> option to &configure;).</para>
-
-<programlisting>cd builddir-gcc
-rm -rf *
-../gcc-3.4.4/configure --target=or32-uclinux --prefix=/opt/or32 --enable-languages=c \
-    --with-local-prefix=/opt/or32/or32-uclinux
-</programlisting>
-
-<para>The compiler will preferentially consider include and library files
-within the <filename>/opt/or32/or32-linux</filename> directory (in other words
-the target specific subdirectory of the installation directory), which can be
-used for all the &linux; and &uclibc; files.</para>
-
-</sect3>
-
-<!-- = GCC rebuild = -->
-
-<sect3><title>Rebuilding &gcc;</title>
-
-<para>The build and install process for the compiler is identical:</para>
-
-<programlisting>make all
-make install
-</programlisting>
-
-<para>The final stage is to populate the target specific directory. &gcc; will
-look here for a <filename>sys-include</filename> directory. This can be linked
-to the parent <filename>include</filename> directory, which will have been
-populated by the &uclibc; install process (including any &linux;
-<filename>include</filename> files used by &uclibc;).</para>
-
-<para>The <filename>lib</filename> subdirectory will be used by the linker
-from &gcc; to complete linking of compiled programs. This cannot be simply
-linked, since not all of the main library should appear here. Instead, the
-revelant library and object files are linked here.</para>
-
-<para>In the examples give here, the install directory is
-<filename>/opt/or32</filename>. The following commands would set the target
-specific directory up appropriately.</para>
-
-<programlisting>cd /opt/or32/or32-uclinux/
-ln -s ../include sys-include
-cd lib/
-ln -s ../../lib/*.* .
-</programlisting>
-
-<important>
-  <para>The &mof; instructions suggest copying the library files into the
-  <filename>lib</filename> directory. However linking is preferable, since
-  when the &uclibc; is rebuilt, any changes will also appear in the
-  <filename>lib</filename> directory.</para>
-</important>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== Ork1sim ===== -->
-
-<sect2><title>The &or1ksim; Simulator</title>
-
-<para>The OpenRISC architectural simulator, &or1ksim;, is a traditional
-interpreting ISS, which also models some of the standard &orpsoc; components
-(memory, UART etc). It represents work in progress, although it has not been
-actively developed for a year or two.</para>
-
-<!-- = Or1ksim download = -->
-
-<sect3><title>Generating the &or1ksim; Source</title>
-
-<para>Obtain a clean version from &or1ksim_clean;.</para>
-
-<important>
-  <para>Ensure the the version number (0.2.0) is <emphasis>exactly</emphasis>
-  the same</para>
-</important>
-
-<para>There are three bugs in this version of &or1ksim; which must be
-fixed. These rectify problems with connecting to the simulator from &gdb; via
-the JTAG port, in using the simulator for an &xterm; as UART and in using
-diagnostic printf (the <function>simprintf()</function> function).</para>
-
-<para>A &patch; file, &or1ksim_emb_patch;, to fix these bugs is available from
-&embecosm;. It should be applied to the main &or1ksim; directory
-(&patchref;).</para>
-
-</sect3>
-
-<!-- = Or1ksim config = -->
-
-<sect3><title>Configuring &or1ksim;</title>
-
-<para>Configuration is similar to that of the GNU toolchain, using a
-&configure; script, to set a target and an install directory. However unlike
-the GNU tools, configuration is done within the main &or1ksim; directory, not
-in a separate build directory. A typical configuration would be:</para>
-
-<programlisting>cd or1ksim-0.2.0
-./configure --target=or32-uclinux --prefix=/opt/or32
-</programlisting>
-
-<note>
-  <para>The configuration target, <parameter>or32-uclinux</parameter>, is
-  chosen for consistency with the main toolchain. It is not the same as that
-  suggested in the <filename>INSTALL</filename> instructions with the
-  distribution, but works perfectly satisfactorily.</para>
-</note>
-
-<note>
-  <para>The <filename>INSTALL</filename> instructions with the distribution do
-  not describe use of the <option>--prefix</option> option, but this
-  works very satisfactorily here.</para>
-</note>
-
-</sect3>
-
-<!-- = Or1ksim build/install = -->
-
-<sect3><title>Building and installing &uclibc;</title>
-
-<para>Building and installing uses the &makefile; generated by the
-configuration stage. There is no use of the &makecheck; command, since there
-is a separate test suite for use with the simulator (see <xref
-linkend="sec_or1ksim_test" />>). Assuming the install directory has been
-chosen as <filename>/opt/or32</filename>, suitable commands would be:</para>
-
-<programlisting>make
-make install
-</programlisting>
-
-<para>A new command, <command>or32-uclinux-sim</command> will now be present
-in the <filename>opt/or32/bin</filename> directory.</para>
-
-</sect3>
-
-</sect2>
-
-</sect1>
-
-<!-- ========== Running and Debugging the simulator ========== -->
-
-<sect1><title>Getting it All to Work!</title>
-
-<para>Or1ksim comes with a testsuite of small programs to exercise the
-simulator. As a big test, the &linux; 2.6.19 kernel can be run on the
-simulator.</para>
-
-<!-- ===== The Or1ksim test suite  ===== -->
-
-<sect2 id="sec_or1ksim_test"><title>Running the &or1ksim; Test Suite</title>
-
-<para>The testsuite is found in the <filename>testbench</filename>
-subdirectory of the main &or1ksim; distribution.</para>
-
-<!-- = Configuring the Or1ksim test suite = -->
-
-<sect3><title>Configuring the &or1ksim; Test Suite</title>
-
-<para>The test suite is configured using a &configure; script. This specifies
-both the target and the host (which forces cross-compilation for the OpenRISC
-1000 architecture). Since the tests are not to be installed, there is no need
-to use the <option>--prefix</option> option. The configuration command should
-therefore be as follows.</para>
-
-<programlisting>cd or1ksim-0.2.0/testbench
-./configure --target=or32-uclinux --host=or32
-</programlisting>
-
-<caution>
-  <para>There appears to be a timestamp problem with the &configure; script,
-  so that the first time it is run it attempts to regenerate itself (without
-  success). If this occurs, then just rerun the command&mdash;it only fails
-  once.</para
-></caution>
-
-</sect3>
-
-<!-- = Running the Or1ksim test suite = -->
-
-<sect3><title>Running the &or1ksim; Test Suite</title>
-
-<para>Configuration creates a &makefile;. &makeall; will build all the tests,
-followed by &makecheck; to run the tests.</para>
-
-<para>Each test, if successful should output the follow two lines.</para>
-
-<screen>report(0xdeaddead);
-exit(0)
-</screen>
-
-<para>In the event of a test failing, its output can be found in
-<filename>/tmp/<parameter>testname</parameter>_output</filename> and a count
-of the cycles executed in
-<filename>/tmp/<parameter>testname</parameter>_error</filename> .</para>
-
-<note>
-  <para>The &makecheck; command does a simple test that the last two lines of
-  output are as indicated above to determine success or failure. In practice,
-  one or two tests (commonly the multiplication test and framebuffer test) may
-  report failure, due to &or1ksim; warning messages being interspersed between
-  and after these two lines. Manual inspection of the relevant output files in
-  the <filename>/tmp</filename> directory can be used to verify correct
-  termination has actually occured.</para>
-</note>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== Linux with Or1ksim  ===== -->
-
-<sect2><title>Running &linux; with &or1ksim;</title>
-
-<!-- = Configuring Linux to run with Or1ksim = -->
-
-<sect3><title>Configuring &or1ksim; for use with &linux;</title>
-
-<para>&or1ksim; is configured via a configuration file, which is specified by
-the <option>-f</option>. This is used to specify the detailed behavior of the
-CPU (virtual memory, caches etc), the various memories to be attached and the
-behavior of the various peripherals modelled. The structure of the
-configuration file is described in comments within the default configuration
-file (<filename>sim.cfg</filename> supplied in the main directory of
-&or1ksim;.</para>
-
-<para>The &linux; distribution, as patched for OpenRISC, is supplied with a
-configuration file, <filename>sim.cfg</filename> in its main directory. Three
-changes are needed to this, for the &linux; kernel built in <xref
-linkend="sec_linux" />.</para>
-
-<caution><para>Do not attempt to use the <filename>sim.cfg</filename> supplied
-with &or1ksim; itself. It specifies a completely inappropriate memory
-configuration for &linux;.</para></caution>
-
-<para>Find <computeroutput>section sim</computeroutput>. &linux; was built to
-run at a notional 100Mhz. The specification of the time take by one clock
-cycle is out by a factor of 1000. Change the value of
-<option>clkcycle</option> option to <parameter>10ns</parameter>.</para>
-
-<para>Find <computeroutput>section uart</computeroutput>. This specifies that
-the channel for I/O should be via TCP port 84. This will probably fail, since
-the port is in the Well Known Ports range, requiring administrative
-priviledges. If it is desired to run &linux; through a telnet link, this
-should be changed to a value in the Dynamic Range (49152-65535). A separate
-window can then connect to this port using telnet.</para>
-
-<para>Rather more elegant is to use an &xterm; for output. For this change the
-channel specification to:</para>
-
-<programlisting>channel = "xterm:"
-</programlisting>
-
-<para>Find <computeroutput>section ethernet</computeroutput>. &linux; was
-built without Ethernet, so this should be disabled. Set the
-<option>enabled</option> option to 0.</para>
-
-</sect3>
-
-<!-- = Running Linux = -->
-
-<sect3><title>Running &linux; on &or1ksim;</title>
-
-<para>The &linux; kernel should now just boot up. Run &or1ksim; from the main
-&linux; directory:</para>
-
-<programlisting>cd linux-2.6.19
-or32-uclinux-sim -f sim.cfg vmlinux
-</programlisting>
-
-<para>&linux; will initially show that it is copying from ROM to main memory,
-and then booting.</para>
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="linux_copying.png" format="PNG" width="100%"
-		 contentwidth="100%" contentdepth="100%" align="center" />
-    </imageobject>
-  </mediaobject>
-</informalfigure>
-
-<para>There is then a pause of one or two minutes, while the &linux; kernel
-boots prior to configuring the UART I/O. Once that point is reached, then
-standard &linux; boot messages will begin to appear. At the end of boot, the
-terminal will prompt to initiate a console session.</para>
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="linux_ready.png" format="PNG" width="100%"
-		 contentwidth="100%" contentdepth="100%" align="center" />
-    </imageobject>
-  </mediaobject>
-</informalfigure>
-
-<para>The core &linux; commands are available, provided within a &busybox;
-environment. The default terminal behavior echoes back what is typed, so the
-initial command should be.</para>
-
-<programlisting>stty -echo
-</programlisting>
-
-<para>Normal &linux; behavior is then available.</para>
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="linux_commands.png" format="PNG" width="100%"
-		 contentwidth="100%" contentdepth="100%" align="center" />
-    </imageobject>
-  </mediaobject>
-</informalfigure>
-
-<para>Custom programs may be added to the &linux; environment by compiling
-them and adding them to the RAMDisk image (see <xref
-linkend="sec_ramdisk_setup" />.</para>
-
-</sect3>
-
-</sect2>
-
-<!-- ===== Debugging with Or1ksim ===== -->
-
-<sect2><title>Debugging Strategies</title>
-
-<para>Debugging with &or1ksim; is not particularly straightforward. The
-implementation of remote &gdb; debugging via JTAG is not complete, and so of
-limited use. These are some suggestions for approaches that work.</para>
-
-<!-- = Remote debugging using GDB = -->
-
-<sect3><title>Debugging using OpenRISC &gdb; via JTAG</title>
-
-<para>This requires the GNU debugger built for cross platform use with
-OpenRISC (see <xref linkend="sec_gdb" />). &or1ksim; contains some guidelines
-in the file <filename>README.gdb</filename> in its main directory, but these
-are incomplete.</para>
-
-<para>To use the remote debug feature of &or1ksim;, enable the
-<option>debug</option> section in the simulator configuration file. Set
-<option>enabled</option> option to 1 and <option>gdb_enabled</option> option to
-1. The server port is not chosen at random, but set by the
-<option>server_port</option> option here. Good practice would
-recommend using a value in the Dynamic Range (49152-65535) rather than the
-9999 used in the default configuration file.</para>
-
-<para>When starting, &or1ksim; will now report the value of the port for the
-JTAG proxy server. It should be started without specifying any image
-file.</para>
-
-<para>In a separate window start the &or1k; &gdb; command
-(<command>or32-uclinux-gdb</command>).</para>
-<tip><para> For those who like their debugging to be graphical, it is
-perfectly feasible to run &gdb; under &ddd;. The following would be a suitable
-&ddd; command line.</para>
-
-<programlisting>ddd --debugger or32-uclinux-gdb --gdb
-</programlisting>
-</tip>
-
-<para>There are three stages to setting up &gdb;.</para>
-<orderedlist>
-  <listitem><para>Load a local symbol table (using the
-  &gdb; <command>file</command>)
-  command.</para></listitem>
-
-  <listitem><para>Connect to the remote simulator via JTAG (using the
-  &gdb; <command>target</command>)
-  command.</para></listitem>
-
-  <listitem><para>Load the program on the remote simulator via JTAG (using
-  the&gdb; <command>load</command>)
-  command.</para></listitem>
-</orderedlist>
-
-<para>A typical set of commands (once inside &gdb;) to debug &linux; on a
-simulator running a JTAG server on port 49152 would be:</para>
-
-<programlisting>file vmlinux
-target jtag jtag://localhost:49152
-load vmlinux
-</programlisting>
-
-<para>At this point the <command>run</command> should jump to the reset
-location (0x100) and start executing the remote program. For some reason this
-does now work. Having executed <command>run</command>, interrupt the debugger
-(this may take two strikes of <keysym>ctrl-C</keysym>). Then force a jump to
-location 0x100 with the command <command>j *0x100</command>.</para>
-
-<para>On the whole the value is fairly limited, since breakpoints do not
-behave correctly (the target program will breakpoint, but not report back to
-the GDB session). There are a set of commands that allow you to inspect the
-special purpose registers (<command>spr</command> to set and <command>info
-spr</command> to read the values of special purpose registers).</para>
-
-<para>The most useful application of &or1k; &gdb; is not for remote debugging, but symbolic
-disassembly of OpenRISC binaries. This can be essential if forced into
-debugging via &or1ksim; itself (see <xref linkend="sec_or1ksim_debug"
-/>).</para>
-
-</sect3>
-
-<!-- = Debugging Using Or1ksim = -->
-
-<sect3 id="sec_or1ksim_debug"><title>Debugging Using &or1ksim;
-Directly</title>
-
-<para>The fallback is to use native debugging of &or1ksim; itself. The key is
-to combine the interactive breakpointing facilities of &or1ksim; itself with
-native &gdb; debugging of the &or1ksim; code and use of &nm; and &or1k; &gdb; to
-identify the values of key symbols in the source code.</para>
-
-<para>For this to be effective, &or1ksim; must be rebuilt for debugging. From
-the original &or1ksim; directory, the commands for this are:</para>
-
-<programlisting>make clean
-make all CFLAGS+=-ggdb
-make install
-</programlisting>
-
-<para>As an example consider running Linux to breakpoint as it enters the main
-<function>start_kernel</function> routine, and then single stepping through to
-see how the assembly code instructions are executed.</para>
-
-<para>In one window (referred to as the <emphasis>&or1ksim; window</emphasis>)
-start &linux; running on &or1ksim; in interactive mode. From the main &linux;
-directory use the command:</para>
-
-<programlisting>or32-uclinux-sim -i -f sim.cfg vmlinux
-</programlisting>
-
-<para>The simulator will start up and then halt with a prompt,
-<prompt>(sim)</prompt>.</para>
-
-<para>In a separate window (referred to as the <emphasis>&gdb;
-window</emphasis>) start up &gdb; and attach it to the running simulator
-process. For an example process id of 5109, the command would be:</para>
-
-<programlisting>gdb or32-uclinux-sim 5109
-</programlisting>
-
-<para>The GDB <command>bt</command> shows that &or1ksim; is in its
-<function>handle_sim_command()</function> function attempting to read input
-with &readline;. The program will have stopped once &gdb; attaches, so
-continue its execution, with the &gdb; <command>cont</command> command.</para>
-
-<screen>(gdb) bt
-#0  0x00110416 in __kernel_vsyscall ()
-#1  0x067d56ad in ___newselect_nocancel () from /lib/libc.so.6
-#2  0x00628dd0 in rl_gather_tyi () at ../input.c:195
-#3  0x00629033 in rl_read_key () at ../input.c:442
-#4  0x00614e1e in readline_internal_char () at ../readline.c:484
-#5  0x006152ed in readline (prompt=&lt;value optimized out&gt;) at ../readline.c:545
-#6  0x0804f4bc in handle_sim_command () at sim-cmd.c:609
-#7  0x08049863 in check_int (dat=0x0) at toplevel.c:118
-#8  0x0804a70e in main (argc=1, argv=0x0) at toplevel.c:322
-(gdb) cont
-Continuing.
-</screen>
-
-<para>In a third window (referred to as the <emphasis>utility</emphasis>
-window), use &or1k; &nm; to find the location for the
-<function>start_kernel()</function> function. Since this is a C function, it
-will have an underscore prefix. &grep; can usefully be applied to find the
-desired symbol. From the main &linux; directory use:</para>
-
-<programlisting>or32-uclinux-nm vmlinux | grep _start_kernel
-</programlisting>
-
-<para>A typical result is:</para>
-
-<screen>c00021fc t jump_start_kernel
-c026a690 T _start_kernel
-</screen>
-
-<para>This can then be used to breakpoint &or1ksim;. However it should be
-remember that this is the <emphasis>virtual</emphasis> address of
-<function>start_kernel()</function> in the Linux image. &or1ksim; works with
-physical addresses for breakpoints. For Linux during boot, this is an offset
-0xc0000000 below the virtual address. So the actual breakpoint required is
-0x0026a690.</para>
-
-<note>
-  <para> This is a factor that can make breakpoint handling with the MMU
-  enabled very difficult under &or1ksim; For small test programs it is less of
-  an issue, particularly if they work without the MMU enabled.</para>
-</note>
-
-<para>In the &or1ksim; window set a breakpoint and then run the simulator for
-enough cycles to ensure it reaches that end point (200,000,000 should be
-sufficient).</para>
-
-<screen>(sim) break 0x0026a690
-
-Breakpoint at 0x0026a690 set.
-(sim) run 200000000 hush
-
-
-
-
-
-Copying Linux... Ok, booting the kernel.
-****************** counters reset ******************
-cycles 145321226, insn #9988651
-****************** counters reset ******************
-Breakpoint hit.
-(sim) 
-</screen>
-
-<tip>
-  <para>By default the &or1ksim; <command>run</command> displays the register
-  state every 4 instructions. By specifying the <option>hush</option> option,
-  this is supressed.</para>
-</tip>
-
-<para>At this point it is time for the main &gdb; session controlling
-&or1ksim; to take over. The main program loop for &or1ksim; is in
-<filename>toplevel.c</filename> in the main &or1ksim; directory. Within the
-definition of the <function>main()</function> routine is a perpetual loop
-(<literal>while (1)</literal>), within which is a call to
-<function>cpu_clock()</function>.</para>
-
-<para><function>cpu_clock()</function> is responsible for executing the next
-instruction in turn. This can be found in the file
-<filename>cpu/or32/execute.c</filename> in the &or1ksim; directory.</para>
-
-<programlisting>inline int cpu_clock ()
+    </para>
+
+    <!-- ========== What is TLM ========== -->
+
+    <sect2 id="sec_what_is_tlm">
+      <title>
+	What is a &tlm;
+      </title>
+
+      <sect3>
+	<title>
+	  Hardware and Software Views of Parallelism
+	</title>
+
+	<para>
+	  At the heart of &tlm; is the difference in approach to parallelsim
+	  taken in hardware and software design.
+	</para>
+
+	<para>
+	  A hardware engineer, typically writing in a
+	  <firstterm>Hardware&#32;Description&#32;Language</firstterm> (&hdl;)
+	  such as Verilog or VHDL, describes a design as a collection of
+	  parallel activities, which communicate via shared data. The parallel
+	  activities are <literal>always</literal> (Verilog) or
+	  <literal>process</literal> (VHDL) blocks. The shared data structures
+	  are wires or signals.
+	</para>
+
+	<para>
+	  This follows very naturally the way that physical hardware
+	  behaves. There is no one <emphasis>flow of
+	  control</emphasis>&mdash;all parallel components are active on at
+	  the same time, with their individual flow of control.
+	</para>
+
+	<para>
+	  By contrast, a software engineer usually describes any parallelism
+	  as a number of threads or processes, which pass flow of control
+	  between them. The threads or processes by a number of mechanisms
+	  (message passing or remote procedure call for example), but although
+	  there is <emphasis>logical</emphasis> parallelism, only one thread
+	  or process is ever physically active at one time.
+	</para>
+
+	<para>
+	  This follows naturally the behavior on a conventional uni-processor
+	  CPU, where there is a single program counter indicating the next
+	  instruction to execute, and so only one flow of control. Even with
+	  modern multi-processors, this is still a natural way of programming
+	  for the software engineer, because the number or threads or
+	  processes will not generally match the number of processor cores
+	  available.
+	</para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  Modelling Hardware Parallelism in Software
+	</title>
+
+	<para>
+	  A simple way to model hardware is via a round-robin, which updates
+	  the state of each component as time advances. This is quite common
+	  with cycle accurate models. Each component is represented a software
+	  routine. A master clock routine calls each component routine each
+	  time the clock advances&mdash;for example on each clock edge. The
+	  wires between the components are represented as variables shared
+	  between the components. A number of tools (ARC VTOC, ARM RealView
+	  SoC Designer, Carbon SpeedCompiler, Verilator use this approach to
+	  cycle accurate modeling).
+	</para>
+
+	<para>
+	  This approach has its merits for detailed modeling, where very
+	  register and wire must be accurate, although
+	  combinatorial hardware logic can be difficult <footnote>
+	    <para>
+	      For example if I have two component routines,
+	      <function>A</function> and <function>B</function>, the master
+	      clock step routine would call <function>A</function> followed by
+	      <function>B</function>. However if there was a combinatorial
+	      output from <function>B</function> driving an input to
+	      <function>B</function> then I would need to call A again to
+	      ensure it was correctly updated in the light of the output from
+	      <function>B</function>. Sorting out which routines need to be
+	      called each time the master clock updates can be extremely
+	      complex for large models. Some systems (for example ARM RealView
+	      SoC Designer) get round this problem by requiring all
+	      combinatorial logic flows to be within a single component.
+	    </para>
+	  </footnote>. However for less detailed models, the overhead in
+	  calling each component whenever time advances cannot be justified.
+	</para>
+
+	<para>
+	  The solution is to model each component, only when it has something
+	  to do. The individual components communicate by sending messages
+	  over channels between each other. The exchange of messages is called
+	  a transaction, and the approach
+	  <firstterm>Transaction&#32;Level&#32;Modeling</firstterm> (&tlm;).
+	</para>
+
+	<para>
+	  This is the same way hardware behaves at the high level where
+	  functional blocks communicate by reading and writing across buses.
+	</para>
+      </sect3>
+
+    </sect2>
+
+    <!-- ========== What is SystemC ========== -->
+
+    <sect2>
+      <title>
+	What is &systemc;
+      </title>
+
+      <para>
+	Most software languages are not particularly suited to modeling
+	hardware systems<footnote>
+	  <para>
+	    There are some exceptions, most notably Simula67, one the
+	    languages which inspired C++. In some respects it is remarkably
+	    like &systemc;.
+	  </para>
+	</footnote>. <firstterm>&systemc;</firstterm> was developed to provide
+	features that facilite hardware modeling in a mainstream programming
+	language. It is now standardized as IEEE 1666-2007.
+      </para>
+
+      <para>
+	An important objective was that software engineers should be
+	comfortable with using &systemc; Rather than invent a new language,
+	&systemc; is based on the existing C++ language. &systemc; is a true
+	superset of C++, so any C++ program is automatically a valid &systemc;
+	program.
+      </para>
+
+      <para>
+	&systemc; uses the template, macro and library features of C++ to
+	extend the langauge. The key features it provides are:
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      A class, <type>sc_module</type>, suitable for defining hardware
+	      modules, with convenience macros <symbol>SC_MODULE</symbol> and
+	      <symbol>SC_CTOR</symbol> to define such classes.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      A mechanism to define methods for
+	      <type>sc_module</type> classes, which represent its logical
+	      parallel behavior, with convenience macros
+	      <symbol>SC_METHOD</symbol> and <symbol>SC_THREAD</symbol>
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      A class, <type>sc_port</type> to represent the interfaces to
+	      modules and a class, <type>sc_channel</type> to connect those
+	      ports.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      A comprehensive set of types to represent hardware wires and
+	      register both in <firstterm>2-state</firstterm> and
+	      <firstterm>4-state</firstterm> logic.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	These are the key features of &systemc;. The full specification is 441
+	pages long. However there is an excellent tutorial included with the
+	reference distribution.
+      </para>
+	
+    </sect2>
+
+    <!-- ========== Overview of TLM 2.0 ========== -->
+
+    <sect2>
+      <title>
+	Overview of OSCI TLM 2.0
+      </title>
+
+      <para>
+	The &tlm2; standard provides a standard way of building Transaction
+	Level Models.
+      </para>
+
+      <para>
+	At the simplest level a &tlm; is a set of &systemc; modules (i.e. C++
+	objects), each providing one or more <firstterm>socket</firstterm>s
+	through which the &systemc; modules may communicate.
+      </para>
+
+      <para>
+	The behavior of each module is provided by a number of parallel
+	<firstterm>thread</firstterm>s (methods of the C++ class), which
+	communicate with the threads in other modules by passing data
+	(i.e. reading or writing) through the sockets. This communication is
+	known as a <firstterm>Transaction</firstterm> and the data passed as a
+	<firstterm>payload</firstterm>. <xref linkend="fig_tlm_overview" />
+	shows the key components in a &tlm2; model.
+      </para>
+
+      <figure id="fig_tlm_overview">
+	<title>
+	  Key components in an &osci; &tlm2; model.
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="tlm_overview.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="tlm_overview.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <!-- = Payloads = -->
+
+      <sect3 id="sec_payload">
+	<title>
+	  Transaction Payload
+	</title>
+
+	<para>
+	  The data passed in a transaction may take any form. However the
+	  &tlm2; standard defines a <firstterm>Generic Payload</firstterm>
+	  which is suitable for many uses, and which can be extended if
+	  required. By using the Generic Payload, a &tlm2; model will maximize
+	  interoperability.
+	</para>
+
+	<para>
+	  The key features of the Generic Payload are:
+	</para>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>Command</term>
+	    <listitem>
+	      <para>
+		Is this a read or a write?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>Address</term>
+	    <listitem>
+	      <para>
+		What is the address (in the hardware sense of an address in
+		memory).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>Data</term>
+	    <listitem>
+	      <para>
+		A pointer to the physical data as an array of bytes
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+	<para>
+	  The payload includes in its structure whether it is a read or a
+	  write, and the address to which it refers. A &tlm2;
+	  <firstterm>transport&#32;method</firstterm> is used to pass this
+	  message between &systemc; modules.
+	</para>
+      </sect3>
+
+      <!-- = Initators and Targets = -->
+
+      <sect3>
+	<title>
+	  Initiators and Targets
+	</title>
+
+	<para>
+	  A module's threads may act as either
+	  <firstterm>initiator</firstterm>s or
+	  <firstterm>target</firstterm>s. An initiator is reponsible for
+	  creating a payload (see <xref linkend="sec_payload" />) and calling
+	  the transport routine to send it. A target receives payloads from
+	  the transport routine for processing and response.
+	</para>
+
+	<para>
+	  Initiator calls are made through initiator ports, target calls
+	  received through target ports. A module may implement both target
+	  and initiator ports, allowing its threads to both generate and
+	  receive traffic.
+	</para>
+      </sect3>
+
+      <!-- = Blocking and Non-Blocking -->
+
+      <sect3>
+	<title>
+	  Blocking and Non-Blocking Interfaces
+	</title>
+
+	<para>
+	  There are two types of &tlm2; transport method.
+	</para>
+
+	<para>
+	  The <firstterm>blocking</firstterm> transport methods are called by
+	  the initator thread, received by the target thread, which processes
+	  the request and then returns the result. Until the transaction has
+	  been processed and released the initiator thread is blocked.
+	</para>
+
+	<para>
+	  The <firstterm>non-blocking</firstterm> transport methods are called
+	  by the initiator thread, received by the target thread, which
+	  immediately returns, before processing the request. Subsequently the
+	  target, having processed the request makes a transport call back to
+	  the initator to return the result.
+	</para>
+
+	<para>
+	  In the non-blocking case there are actually two types of transport
+	  used. The <firstterm>forward&#32;transport&#32;path</firstterm> is
+	  used by the initiator to pass the request to the target and the
+	  <firstterm>backward&#32;transport&#32;path</firstterm> used by the
+	  target to return the response. The advantage of the non-blocking
+	  transport interface is that the initiator can carry on processing,
+	  while the target is processing the request originally made.
+	</para>
+      </sect3>
+
+      <!-- = Untimed, Loosely Timed and Approximately Timed = -->
+
+      <sect3>
+	<title>
+	  Loosely Timed, Approximately Timed and Untimed &tlm;
+	</title>
+
+	<para>
+	  &tlm2; considers two levels of timing detail. A
+	  <firstterm>loosely&#32;timed</firstterm> model uses transactions
+	  corresponding to a complete data read or write across a bus or
+	  network in physical hardware. It provides timing at the level of the
+	  individual transaction.
+	</para>
+
+	<para>
+	  An <firstterm>approximately&#32;timed</firstterm> model breaks down
+	  transactions into a number of <firstterm>phase</firstterm>s
+	  corresponding much more closely to the phasing of particular
+	  hardware protocols (for example the address and data phases of an
+	  AHB read or write).
+	</para>
+
+	<para>
+	  Typically loosely timed models are implemented with a blocking
+	  interface and approximately timed models with a non-blocking
+	  interface.
+	</para>
+
+	<para>
+	  &tlm2; also introduces the concept of
+	  <firstterm>temporal&#32;decoupling</firstterm>. Standard SystemC
+	  keeps a single synchronized view of time, which is used by all
+	  threads in all modules. However with temporal decoupling, each
+	  thread can keep its own local view of time, allowing the thread to
+	  run ahead in simulation time, until it needs to synchronize with
+	  another thread. This is particularly useful with loosely timed
+	  models, avoiding bottlenecks in processing.
+	</para>
+
+	<para>
+	  To ensure that one thread doesn't run away hogging all the
+	  processing, &tlm2; introduces the concept of the
+	  <firstterm>quantum</firstterm>, the greatest amount that a thread
+	  may differ in timing from the central view of time. This allows
+	  other threads a chance to catch up
+	</para>
+
+	<para>
+	  &tlm2; does not have an explicit concept of an untimed socket
+	  (something that was explicit in &tlm;&nbsp;1.0). The standardization
+	  group took the view that in practice all models need some concept of
+	  time, so purely untimed models are of little value.
+	</para>
+
+	<para>
+	  However, if required, untimed models are easily implemented as
+	  loosely timed models which ignore the timing parameters in the
+	  interface calls. If temporaly decoupled, then they ignore the
+	  quantum as well.
+	</para>
+      </sect3>
+
+      <!-- = Convenience sockets = -->
+
+      <sect3>
+	<title>
+	  &tlm2; Convenience Sockets
+	</title>
+
+	<para>
+	  The standard &tlm2; approach to modeling requires the user to
+	  derive their own classes from the standard &tlm2; sockets, so that
+	  those sockets can then implement the &tlm2; interfaces. Modules then
+	  instantiate these derived sockets and use the bind method to connect
+	  them to sockets on other modules.
+	</para>
+
+	<para>
+	  This is a very flexible method, but the need to define new
+	  sub-classes for sockets is an unnecessary layer of complexity for
+	  simple modeling. So the &tlm2; standard defines a number of
+	  <firstterm>convenience&#32;socket</firstterm>s which can be
+	  instantiated directly by modules, and which specify their inteface
+	  methods as callbacks.
+	</para>
+
+	<para>
+	  The first case study in this application note (see <xref
+	  linkend="sec_case_study_1" />>uses these convenience sockets to
+	  convert an &iss; for use with &tlm2; and connect it to a model of a
+	  simple SoC.
+	</para>
+
+      </sect3>
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Simple Loosely Timed Model with Convenience Ports
+       ==================================================================== -->
+
+  <sect1 id="sec_case_study_1">
+    <title>
+      Case Study One: A Synchronous Loosely Timed &tlm2; Model Using Convenience Ports
+    </title>
+
+    <para>
+      In this case study, the &tlm2; convenience ports are used to wrap an
+      existing &iss;, which is then built into a simple SoC using additional
+      hand-written &tlm2; components.
+    </para>
+
+    <para>
+      The modeling is at a high level of abstraction, using th &tlm2;
+      <glossterm>Generic Payload</glossterm> with no extensions. It is
+      completely independent of the actual bus architecture that will be used
+      in the implementation. The timing is kept synchronous
+      throughout&mdash;the model will be extended to use temporal decoupling
+      in a later case study (see <xref linkend="sec_case_study_3" />).
+    </para>
+
+    <!-- ========== Example Design ========== -->
+
+    <sect2>
+      <title>
+	The Example Design
+      </title>
+
+      <para>
+	The example is a simple SoC, based on the &or1ksim; &iss; for the &or1k;
+	architecture. The &or1k; architecture is a conventional 32-bit RISC
+	design, with optional instruction and data caches and an optional
+	MMU. &or1ksim; is an interpreting &iss; written in C, which in its
+	standard configuration models main memory and a number of peripherals
+	as well as the CPU itself.
+      </para>
+
+      <para>
+	Information on obtaining and setting up the open source &or1ksim;
+	simulator and its toolchain are given in <xref
+	linkend="big_app_note_1" />.
+      </para>
+
+      <para>
+	For this case study the CPU is deconfigured to remove all the
+	peripherals and the caches and MMU, so it models only the CPU and main
+	memory.
+      </para>
+
+      <para>
+	To build a simple SoC the &or1ksim; CPU/memory subsystem is
+	connected to a UART modeled in &systemc; using &tlm2;. The testbench
+	for the system will be a terminal, also modeled in &systemc; using
+	&tlm2;. <xref linkend="fig_simple_soc" /> shows the design.
+      </para>
+
+      <figure id="fig_simple_soc">
+	<title>
+	  Simple SoC based on the &or1k; &or1ksim;.
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="simple_soc.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="simple_soc.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </sect2>
+
+    <!-- ========== Wrapping the ISS ========== -->
+
+    <sect2>
+      <title>
+	Wrapping the &iss;
+      </title>
+
+      <!-- = Modifying the &iss; = -->
+
+      <sect3>
+	<title>
+	  Modifying the &iss; for &tlm2;
+	</title>
+
+	<para>
+	  Most &iss; need some modification before they can be incorporated into
+	  a &tlm2; framework. Like many &iss;, &or1ksim; is designed as a
+	  standalone program. The options are:
+	  <orderedlist>
+	    <listitem>
+	      <para>
+		Keep &or1ksim; as a standalone program, but modify it to call
+		out to a &systemc; model of the peripherals as required.
+	      </para>
+	    </listitem>
+
+	    <listitem id="or1ksim_lib_opt">
+	      <para>
+		Modify &or1ksim; to be a library with a set of public
+		interfaces that can be part of a larger system.
+	      </para>
+	    </listitem>
+	  </orderedlist>
+	</para>
+
+	<para>
+	  Given the choice, option <xref linkend="or1ksim_lib_opt" /> is more
+	  flexible, making the &iss; widely reusable in other environments. It
+	  is the approach adopted in this case study.
+	</para>
+
+	<para>
+	  The &or1ksim; <function>main()</function> routine first initializes
+	  the &iss;, then sits in a loop executing instructions. This
+	  <function>main()</function> is replaced by a series of functions
+	  which form the interface to the library. The interface functions
+	  needed are:
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>ork1sim_init()</function>
+	      </para>
+
+	      <para>
+		<programlisting>int  or1ksim_init( const char         *config_file,
+                   const char         *image_file,
+                   void               *class_ptr,
+                   unsigned long int (*upr)( void              *class_ptr,
+                                             unsigned long int  addr,
+                                             unsigned long int  mask),
+                   void              (*upw)( void              *class_ptr,
+                                             unsigned long int  addr,
+                                             unsigned long int  mask,
+                                             unsigned long int  wdata ) );</programlisting>
+	      </para>
+
+	      <para>
+		Initializes the simulator. For &or1ksim;, configuration data
+		is read from a file, which is passed as the first agument,
+		<literal>config_file</literal>. The program image is passed
+		as a second argument, <literal>image_file</literal>.
+	      </para>
+
+	      <para>
+		&or1ksim; also needs to be able to call up to the SystemC
+		model of which it is part&mdash;to read and write from the
+		peripheral address space. These are provided as the fourth
+		and fifth arguments, <literal>upr</literal> and
+		<literal>upw</literal>.
+	      </para>
+
+	      <para>
+		Procedure calls between C and C++ can be awkward. The upcall
+		routines form part of the SystemC module object, but are
+		written as static routines with C linkage. To enable these
+		routines to invoke methods in the SystemC module, they are
+		passed a pointer to the module class instance to use as a
+		handle. This pointer forms the third argument,
+		<literal>class_ptr</literal>.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1ksim_run()</function>
+	      </para>
+
+	      <para>
+		<programlisting>int  or1ksim_run( double  duration );</programlisting>
+	      </para>
+
+	      <para>
+		Runs the simulator for the specified time in seconds.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1ksim_is_le()</function>
+	      </para>
+
+	      <para>
+		<programlisting>int  or1ksim_is_le();</programlisting>
+	      </para>
+
+	      <para>
+		Returns 1 if &or1ksim; is modeling a
+		<firstterm>little&#32;endian</firstterm> architecture, 0
+		otherwise. Needed to ensure the payload is packed with the
+		correct byte ordering.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1ksim_time()</function>
+	      </para>
+
+	      <para>
+		<programlisting>double  or1ksim_time();</programlisting>
+	      </para>
+
+	      <para>
+		Returns the &or1ksim; view of how much time has elapsed while
+		simulating. This routine is not needed in the initial case
+		study, but will be needed when temporal decoupling is added
+		(see <xref linkend="sec_temporal_decoupling" />).
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </sect3>
+
+      <!-- = Wrapper Class definition = -->
+
+      <sect3>
+	<title>
+	  &or1ksim; SystemC Wrapper Definition
+	</title>
+
+	<para>
+	  The &or1ksim; SystemC wrapper module class,
+	  <literal>Or1ksimSC</literal>, is defined in the file
+	  <filename>Or1ksimSC.h</filename>. It will provide a single initiator
+	  socket, for data access, <literal>dataIni</literal> (at this stage,
+	  no instruction accesses are planned, so modeling an external
+	  instruction bus is unnecessary).
+	</para>
+
+	<para>
+	  The module includes the <literal>tlm.h</literal>
+	  header, which defines the core &tlm2; interface and the required
+	  convenience wrapper header&mdash;in this case for a simple initiator
+	  socket.
+	</para>
+
+	<para>
+	  The POSIX <literal>stdint.h</literal> header is also included, since
+	  the code will make use of the fixed width native types defined
+	  there.
+	</para>
+
+	<programlisting>#include &lt;stdint.h&gt;
+
+#include "tlm.h"
+#include "tlm_utils/simple_initiator_socket.h"
+#include "or1ksim.h"</programlisting>
+
+	<note>
+	  <para>
+	    There is no need to include the standard
+	    <literal>systemc.h</literal> header, since this is included
+	    automatically by <literal>tlm.h</literal>.
+	  </para>
+	</note>
+
+	<para>
+	  The module is declared as a standard &systemc; module, ie. as a
+	  derived class of <literal>sc_core::sc_module</literal>.
+	</para>
+
+	<programlisting>class Or1ksimSC
+: public sc_core::sc_module
+{</programlisting>
+
+	<note>
+	  <para>
+	    The &systemc; tutorial material teaches that a module should be
+	    defined using: <programlisting>SC_MODULE( Or1ksimSC
+	    )</programlisting> However this is identical to the C++ derived
+	    class declaration
+	    <programlisting>class Or1ksimSC
+: public sc_core::sc_module
+{</programlisting>
+
+	    This is the usual way classes are declared in the &systemc; and
+	    &tlm2; examples&mdash;<literal>SC_MODULE</literal> seems only to
+	    appear in tutorial material for beginners.
+	  </para>
+
+	  <para>
+	    Throughout this application note, the C++ derived class
+	    declaration style is used, rather than
+	    <literal>SC_MODULE</literal>.
+	  </para>
+	</note>
+
+	<para>
+	  The example needs a custom constructor, which can be passed the
+	  &or1ksim; configuration and image files. It will call the
+	  <function>or1ksim_init()</function> routine within the &or1ksim;
+	  library to initialize the &iss;.
+	</para>
+
+	<programlisting>  Or1ksimSC( sc_core::sc_module_name  name,
+             const char              *configFile,
+             const char              *imageFile );</programlisting>
+
+	<para>
+	  The module will have a single thread, which executes the
+	  instructions of the &iss;. The <function>run()</function> method
+	  implements this:
+	</para>
+
+	<programlisting>  void  run();</programlisting>
+
+	<para>
+	  Two methods are needed to implement the read and write upcalls from
+	  the &or1ksim; library. Both use the native SystemC type for the
+	  address (which is always 64 bits) and the
+	  <firstterm>POSIX</firstterm> fixed width data types for mask and
+	  data. The synchronized transport mechanism is common to both, so
+	  provided in a utility method, <function>syncTrans()</function>.
+	</para>
+
+	<programlisting>  uint32_t           readUpcall( sc_dt::uint64  addr,
+                                 uint32_t       mask );
+
+  void               writeUpcall( sc_dt::uint64  addr,
+                                  uint32_t       mask,
+                                  uint32_t       wdata );
+
+  void               syncTrans( tlm::tlm_generic_payload &amp;trans );</programlisting>
+
+        <caution>
+	  <para>
+	    It might seem logical to use the &systemc; limited precision types,
+	    rather than the POSIX types. However the &systemc; types are
+	    <emphasis>not</emphasis> native C++ types, so will not cast as
+	    expected.
+	  </para>
+	</caution>
+
+	<para>
+	  The initiator socket, <literal>dataIni</literal> is declared for the
+	  <literal>Or1ksimSC</literal> class. The convenience sockets are
+	  templated with the class of which any callbacks are members, bus
+	  width and protocol type. For this case study, the default bus width
+	  (32 bits) and default protocol types (the &tlm2; base protocol
+	  types) are appropriate and need not be specified. There is no
+	  default class for the template, so <literal>Or1ksimSC</literal> is
+	  used, although for a simple initiator, no callbacks are actually
+	  required.
+	</para>
+
+	  <programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataIni;</programlisting>
+
+	<para>
+	  Two time stamps are declared, one to hold the SystemC view of the
+	  time of the last upcall from &or1ksim;, the other to hold the
+	  &or1ksim; view of the time of the last upcall.
+	</para>
+
+	  <programlisting>  sc_core::sc_time  scLastTime;
+  sc_core::sc_time  or1kLastTime;</programlisting>
+
+      </sect3>
+
+      <!-- = Wrapper Class definition = -->
+
+      <sect3>
+	<title>
+	  &or1ksim; SystemC Wrapper Definition
+	</title>
+
+	<para>
+	  The class implementation for <literal>Or1ksimSC</literal> is found
+	  in the file <filename>Or1ksimSC.cpp</filename>. All the definitions
+	  required are obtained from the definition file:
+	</para>
+
+	<programlisting>#include "Or1ksimSC.h"</programlisting>
+
+	<para>
+	  The first two routines declared are not part of the class at all,
+	  but static routines which implement the upcalls from the &or1ksim;
+	  library. By declaring the routines static, they are visible only
+	  within this source file, and can use simple linkage.
+	</para>
+
+	<para>
+	  The static routines receive the pointer to the
+	  <literal>Or1ksim</literal> instance that is associate with the
+	  &or1ksim; (which was provided as part of the call to
+	  <function>or1ksim_init()</function> described below). This allows
+	  the routines to call the member function which implements the
+	  upcall, as shown here with <function>staticReadUpcall</function>:
+	</para>
+
+	<programlisting>static unsigned long int  staticReadUpcall( void              *instancePtr,
+                                            unsigned long int  addr,
+                                            unsigned long int  mask )
 {
-  except_pending = 0;
-  next_delay_insn = 0;
-  if(fetch()) {
-    PRINTF ("Breakpoint hit.\n");
-    return 1;
-  }
+  Or1ksimSC *classPtr = (Or1ksimSC *)instancePtr;
 
-  if(except_pending) {
-    update_pc();
-    except_pending = 0;
-    return 0;
-  }
+  return (unsigned long int)classPtr->readUpcall( (sc_dt::uint64)addr,
+                                                  (uint32_t)mask );
+}       // staticReadUpcall()</programlisting>
 
-  if(breakpoint) {
-    except_handle(EXCEPT_TRAP, cpu_state.sprs[SPR_EEAR_BASE]);
-    update_pc();
-    except_pending = 0;
-    return 0;
-  }
+        <para>
+	  The address is cast to the &systemc; native 64-bit type, which is
+	  always used for addresses. The mask and result (and write data for
+	  <function>staticWriteUpcall()</function> are cast to POSIX fixed
+	  length types to avoid any ambiguity. While
+	  <symbol>unsigned&nbsp;long&nbsp;int</symbol> is almost always 32
+	  bits long, it is not guaranteed to be so.
+	</para>
 
-  decode_execute_wrapper (&amp;cpu_state.iqueue);
-  update_pc();
-  return 0;
-}
-</programlisting>
+	<caution>
+	  <para>
+	    It might be thought that providing a direct upcall to the C++
+	    upcall methods of the class would be more efficient, using the C++
+	    member reference operator (<literal>::*</literal>). However the
+	    linkage to a member is much more complex (to cope with inheritance
+	    and overloading). Lack of standardization in the C++
+	    <firstterm>Application Binary Interface</firstterm> (ABI) mean
+	    that such linkage between C and C++ will not necessarily work.
+	  </para>
 
-<para>The call to <function>fetch()</function> gets the next instruction
-(which may trigger an exception if the address in memory is not
-available). The call to <function>decode_execute_wrapper()</function>
-evaluates the instruction and the call to <function>update_pc()</function>
-updates the PC to point to the next instruction to be executed. These all make
-very good points at which to set a breakpoint.</para>
+	  <para>
+	    Linkage to static routines is much simpler and usually works
+	    between C and C++. So the approach used here is much more likely
+	    to work.
+	  </para>
+	</caution>
 
-<screen>(gdb) b cpu_clock
-Breakpoint 1 at 0x8056bc1: file execute.c, line 672.
-(gdb) b execute.c:692
-Breakpoint 2 at 0x8056c63: file execute.c, line 692.
-(gdb) b execute.c:693
-Breakpoint 3 at 0x8056c6f: file execute.c, line 693.
-(gdb) 
-</screen>
+	<para>
+	  The implementation of a C++ class that is a &systemc; module
+	  requires a number of definitions that class to be set up using the
+	  <literal>SC_HAS_PROCESS</literal> macro.
+	</para>
 
-<para> To just trigger one breakpoint on an instruction, a breakpoint at the
-call to <function>decode_execute_wrapper()</function> is most useful, once the
-instruction has been fetched, but before it is executed.</para>
+	<programlisting>SC_HAS_PROCESS( Or1ksimSC );</programlisting>
 
-<para>The key information on the state of execution is in the global struture,
-<structname>cpu_state</structname>.</para>
+	<caution>
+	  <para>
+	    The <literal>SC_HAS_PROCESS</literal> macro is a common cause of
+	    confusion with new users to &systemc; It doesn't appear in the
+	    tutorial examples. The reason is that those examples use the
+	    <literal>SC_CTOR</literal> macro to define the constructor for the
+	    class, and the <literal>SC_CTOR</literal> macro provides the same
+	    definitions as the <literal>SC_HAS_PROCESS</literal> macro.
+	  </para>
 
-<programlisting>struct cpu_state {
-  uorreg_t             reg[MAX_GPRS];
-  uorreg_t             sprs[MAX_SPRS];
-  oraddr_t             insn_ea;
-  int                  delay_insn;
-  oraddr_t             pc;
-  oraddr_t             pc_delay;
-  struct iqueue_entry  iqueue;
-  struct iqueue_entry  icomplet;
-  struct dyn_page     *curr_page;
-  struct dyn_page    **dyn_pages;
-  struct op_queue     *opqs;
-  int                  ts_current;
-  uorreg_t             t0;
-  uorreg_t             t1;
-  uorreg_t             t2;
-};
-</programlisting>
+	  <para>
+	    However the SC_CTOR macro can only be used where the constructor's
+	    implementation is given within the class definition. It is not
+	    good programming practice to mix the definition of a class
+	    (i.e. what it is) with its implementation (i.e. how it does it).
+	  </para>
 
-<para>The most useful parts of this are:</para>
+	  <para>
+	    This application note follows the standard C++ practice of
+	    defining a class in a header (<filename>.cpp</filename>) file
+	    based on the class name and providing the implementation in a
+	    separate C++ source (<filename>.cpp</filename>) file also based on
+	    the class name.
+	  </para>
 
-<itemizedlist>
-  <listitem>
-    <para>The stack pointer (r1) in
-    <literal>cpu_state.reg[1]</literal>;</para></listitem>
-  <listitem>
-    <para>The frame pointer (r2) in
-    <literal>cpu_state.reg[2]</literal>;</para></listitem>
-  <listitem>
-    <para>The first couple of arguments to any function (r3, r4) in
-    <literal>cpu_state.reg[3]</literal> and
-    <literal>cpu_state.reg[4]</literal>;</para></listitem>
-  <listitem>
-    <para>The link register (r9) in
-    <literal>cpu_state.reg[9]</literal>;</para></listitem>
-  <listitem>
-    <para>The result registers (r11 and r12) in
-    <literal>cpu_state.reg[11]</literal> and
-    <literal>cpu_state.reg[12]</literal>;</para></listitem>
-  <listitem>
-    <para>The supervision register in
-    <literal>cpu_state.sprs[17]</literal>;</para></listitem>
-  <listitem>
-    <para>The program counter in
-    <literal>cpu_state.pc</literal>; and</para></listitem>
-  <listitem>
-    <para>The next instruction to be executed in
-    <literal>cpu_state.iqueue.insn</literal>.</para></listitem>
-</itemizedlist>
+	  <para>
+	    Where the constructor implementation is separate from the
+	    definition, &systemc; requires that the
+	    <literal>SC_HAS_PROCESS</literal> macro is used before the code of
+	    any class methods.
+	  </para>
+	</caution>
 
-<para>These can usefully be set up to display each time control returns to
-&gdb; as follows.</para>
+	<para>
+	  The constructor passes names to the constructors of its
+	  parent (<literal>sc_module</literal>) and simple initiator port
+	  (<literal>dataIni</literal>, then calls the
+	  <function>or1ksim_init()</function> routine in the &or1ksim; library
+	  to initialize the &iss;. The member function,
+	  <function>run()</function> is then initialized as a &systemc;
+	  thread, using the <literal>SC_THREAD</literal> macro.
+	</para>
 
-<screen>(gdb) display /x cpu_state.reg[1]
-1: /x cpu_state.reg[1] = 0xc026a000
-(gdb) display /x cpu_state.reg[2]
-2: /x cpu_state.reg[2] = 0x0
-(gdb) display /x cpu_state.reg[3]
-3: /x cpu_state.reg[3] = 0x0
-(gdb) display /x cpu_state.reg[4]
-4: /x cpu_state.reg[4] = 0x0
-(gdb) display /x cpu_state.reg[9]
-5: /x cpu_state.reg[9] = 0x0
-(gdb) display /x cpu_state.reg[11]
-6: /x cpu_state.reg[11] = 0x0
-(gdb) display /x cpu_state.reg[12]
-7: /x cpu_state.reg[12] = 0x0
-(gdb) display /t cpu_state.sprs[17]
-8: /t cpu_state.sprs[17] = 1000001001110001
-(gdb) display /x cpu_state.pc
-9: /x cpu_state.pc = 0xc026a690
-(gdb) display /x cpu_state.iqueue.insn
-10: /x cpu_state.iqueue.insn = 0x24000000
-(gdb) 
-</screen>
-
-<para>Before proceeding, it is useful to see exactly what the machine code at
-this location looks like. The source C (in <filename>init/main.c</filename> in
-the &linux; directory) starts as follows:</para>
-
-<programlisting>asmlinkage void __init start_kernel(void)
+	<programlisting>Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
+                       const char              *configFile,
+                       const char              *imageFile ) :
+  sc_module( name ),
+  dataIni( "data_initiator" )
 {
-	char * command_line;
-	extern struct kernel_param __start___param[], __stop___param[];
+  or1ksim_init( configFile, imageFile, this, staticReadUpcall,
+                staticWriteUpcall );
 
-	smp_setup_processor_id();
+  SC_THREAD( run );               // Thread to run the ISS
 
-	/*
-	 * Need to run as early as possible, to initialize the
-	 * lockdep hash:
-	 */
-	unwind_init();
-	lockdep_init();
+}       /* Or1ksimSC() */</programlisting>
 
-	local_irq_disable();
-	early_boot_irqs_off();
-	early_init_irq_lock_class();
+	<para>
+	  The main thread, <function>run()</function>, takes timestamps from a
+	  &systemc; and &or1ksim; perspective, then invokes the &iss; to run for
+	  ever (by passing a negative time argument). The &iss; will use the
+	  upcalls to request any I/O it requires into peripheral address
+	  space.
+	</para>
 
-</programlisting>
-
-<para>Use &or1k; &gdb; to disassemble the binary code. In the utility window
-run the following commands from the main directory of the &linux;
-distribution:</para>
-
-<screen>or32-uclinux-gdb vmlinux
-   ...
-(gdb) disas start_kernel
-Dump of assembler code for function start_kernel:
-0xc026a690 &lt;start_kernel&gt;:      l.addi r1,r1,0xffffffd8
-0xc026a694 &lt;start_kernel+4&gt;:    l.sw 0xc(r1),r9
-0xc026a698 &lt;start_kernel+8&gt;:    l.sw 0x10(r1),r12
-0xc026a69c &lt;start_kernel+12&gt;:   l.sw 0x14(r1),r14
-0xc026a6a0 &lt;start_kernel+16&gt;:   l.jal 0xfffffffa
-0xc026a6a4 &lt;start_kernel+20&gt;:   l.nop 0x0
-0xc026a6a8 &lt;start_kernel+24&gt;:   l.jal 0xfff672aa
-0xc026a6ac &lt;start_kernel+28&gt;:   l.nop 0x0
-   ...
-</screen>
-
-<para>To understand the code as it runs, familiarity with application binary
-interface, and in particular the function calling sequence is essential. This
-is in chapter 16 of the &or1k; Architecture Manual, which can be downloaded from
-&or_doc_arch;. The sequence above shows a new stack frame of 40 bytes
-(0xffffffd8 is -40 decimal) being created and three registers, r9 (the link
-register), r12 and r14 being saved there, before a function call to location
-0xc026a688 (the offset 0xfffffffa is decimal -6
-<emphasis>words</emphasis>).</para>
-
-<para>With the breakpoint set, &or1ksim; can now be restarted. Just 5
-instructions in this initial example. First continue &gdb;</para>
-
-<screen>(gdb) cont
-Continuing.
-</screen>
-
-<para>Then in the &or1ksim; window run for 5 instructions</para>
-
-<programlisting>(sim) run 5 hush
-</programlisting>
-
-<para>&gdb; immediately hits the first breakpoint at the head of
-<function>cpu_clock</function>.</para>
-
-<screen>Breakpoint 1, cpu_clock () at execute.c:672
-672       except_pending = 0;
-10: /x cpu_state.iqueue.insn = 0x24000000
-9: /x cpu_state.pc = 0xc026a690
-8: /t cpu_state.sprs[17] = 1000001001110001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc026a000
-</screen>
-
-<para>Continuing brings &or1ksim; to the point where it is about to execute
-the instruction.</para>
-
-<screen>(gdb) cont
-Continuing.
-
-Breakpoint 2, cpu_clock () at execute.c:692
-692       decode_execute_wrapper (&amp;cpu_state.iqueue);
-10: /x cpu_state.iqueue.insn = 0x9c21ffd8
-9: /x cpu_state.pc = 0xc026a690
-8: /t cpu_state.sprs[17] = 1000001001110001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc026a000
-(gdb) 
-</screen>
-
-<para>The instruction has been fetched (0x9c21ffd8). The top 6-bits are 0x27,
-the <literal>l.addi</literal> instruction as expected. Continuing executes the
-instruction.</para>
-
-<screen>(gdb) cont
-Continuing.
-
-Breakpoint 3, cpu_clock () at execute.c:693
-693       update_pc();
-10: /x cpu_state.iqueue.insn = 0x9c21ffd8
-9: /x cpu_state.pc = 0xc026a690
-8: /t cpu_state.sprs[17] = 1000011001110001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc0269fd8
-(gdb) 
-</screen>
-
-<para>The stack pointer (r1) has been reduced by 40 decimal (0x28) as
-expected. Continuing again brings execution to the start of the next
-instruction:</para>
-
-<screen>(gdb) cont
-Continuing.
-
-Breakpoint 1, cpu_clock () at execute.c:672
-672       except_pending = 0;
-10: /x cpu_state.iqueue.insn = 0x9c21ffd8
-9: /x cpu_state.pc = 0xc026a694
-8: /t cpu_state.sprs[17] = 1000011001110001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc0269fd8
-(gdb) 
-</screen>
-
-<para>The program counter is now pointing at the next location (0xc026a694),
-where r9 should be pushed onto the stack. Continuing fetches the
-instruction, ready for execution:</para>
-
-<screen>(gdb) cont
-Continuing.
-
-Breakpoint 2, cpu_clock () at execute.c:692
-692       decode_execute_wrapper (&amp;cpu_state.iqueue);
-10: /x cpu_state.iqueue.insn = 0xd401480c
-9: /x cpu_state.pc = 0xc026a694
-8: /t cpu_state.sprs[17] = 1000011001110001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc0269fd8
-(gdb) 
-</screen>
-
-<para>Continuing again executes the store instruction onto the stack:</para>
-
-<screen>(gdb) cont
-Continuing.
-
-Breakpoint 3, cpu_clock () at execute.c:693
-693       update_pc();
-10: /x cpu_state.iqueue.insn = 0xd401480c
-9: /x cpu_state.pc = 0xc026a694
-8: /t cpu_state.sprs[17] = 1000011000010001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc0269fd8
-(gdb) 
-</screen>
-
-<para>The next continuation should lead to the start of the next instruction,
-which reveals a surprise:</para>
-
-<screen>(gdb) cont
-Continuing.
-
-Breakpoint 1, cpu_clock () at execute.c:672
-672       except_pending = 0;
-10: /x cpu_state.iqueue.insn = 0xd401480c
-9: /x cpu_state.pc = 0x900
-8: /t cpu_state.sprs[17] = 1000011000010001
-7: /x cpu_state.reg[12] = 0x0
-6: /x cpu_state.reg[11] = 0x0
-5: /x cpu_state.reg[9] = 0x0
-4: /x cpu_state.reg[4] = 0x0
-3: /x cpu_state.reg[3] = 0x0
-2: /x cpu_state.reg[2] = 0x0
-1: /x cpu_state.reg[1] = 0xc0269fd8
-(gdb) 
-</screen>
-
-<para>The next instruction to be executed is not at location 0xc026a694, but
-at location 0x900, the data TLM miss exception vector. The previous
-instruction attempting to write to the stack found the TLB entry was not set
-up for the stack location, so triggered an exception.</para>
-
-<para>The exercise can be repeated as much as necessary. A careful balancing
-between &or1ksim; breakpoints and &gdb; breakpoints can make debugging
-possible in this environment. However it is a labour intensive
-occupation!</para>
-
-</sect3>
-
-<!-- = Debugging Linux = -->
-
-<sect3><title>Debugging Linux</title>
-
-<para>The technique of section <xref linkend="sec_or1ksim_debug" /> can be
-used to debug Linux if required. However sometimes just inserting
-<function>printf()</function> statements is sufficient.</para>
-
-<para>The problem is that the kernel print function,
-<function>printk()</function> does not work. The solution is to patch
-<function>printk()</function> to use the internal simulator print routine,
-<function>simprintf</function>. This is trigged by a
-<literal>l.nop&nbsp;3</literal> instruction.</para>
-
-<para>The implementation of the <function>printk()</function> can be found in
-<filename>kernel/printk.c</filename> in the &linux; directory.</para>
-
-<programlisting>asmlinkage int printk(const char *fmt, ...)
+	<programlisting>void
+Or1ksimSC::run()
 {
-	va_list args;
-	int r;
+  scLastUpTime   = sc_core::sc_time_stamp();
+  or1kLastUpTime = or1ksim_time();
 
-	va_start(args, fmt);
-	r = vprintk(fmt, args);
-	va_end(args);
+  (void)or1ksim_run( -1.0 );
 
-	return r;
-}
+}       // Or1ksimSC()
 </programlisting>
 
-<para>Replace the call to <function>vprintk(fmt, args)</function> with
-assembly code to trigger <function>simprintf()</function> as follows:</para>
+	<para>
+	  The upcalls from the &iss; generate the transactional activity. These
+	  routines set up the payload, execute the transaction (i.e exchange
+	  the payload and result with the target) and return the result to the
+	  &iss;.
+	</para>
 
-<programlisting>asmlinkage int printk(const char *fmt, ...)
-{
-	va_list args;
-	int r;
+	<para>
+	  The example here is coded in a very simple fashion, in the knowledge
+	  that the requests to read are always four bytes long (the &or1k; has
+	  a simple 32 bit bus), possibly with some bytes masked out for byte
+	  and half-word reads. This matches the default
+	  <symbol>BUSWIDTH</symbol> of the simple initiator socket.
+	</para>
 
-	va_start(args, fmt);
-	__asm__ __volatile__ ("l.addi\tr3,%0,0\n\t"
-			      "l.addi\tr4,%1,0\n\t"
-			      "l.nop\t3"
-			      : : "r" (fmt), "r" (args)
-			      : "r3", "r4");
-	r = 1;
-	va_end(args);
+	<para>
+	  Both payload and data are local (automatic) variables, i.e. on the
+	  stack. This is fine with a blocking transport method, since they
+	  will remain valid for the duration of the transaction. The data and
+	  mask are both encoded in the four bytes of a POSIX
+	  <symbol>uint32_t</symbol>.
+	</para>
 
-	return r;
-}
-</programlisting>
+	<caution>
+	  <para>
+	    Using local variables would not be appropriate with a non-blocking
+	    socket, since the initiator routine could return before the result
+	    of the transaction is received back from the target.
+	  </para>
 
-<para>It is a slight cheat to always return 1. It is left as an exercise for
-the reader to fix this to return the actual number of arguments
-printed!</para>
+	  <para>
+	    &tlm2; requires that the payload, data and mask fields all remain
+	    valid for the duration of the complete transaction, so heap
+	    allocation and deletion would be required in this case.
+	  </para>
+	</caution>
 
-<para>Rebuild &linux; (see <xref linkend="sec_linux" />) and run again under
-the simulator. The &linux; kernel output will be redirected to the file
-<filename>stdout.txt</filename>, which can be monitored in a separate window
-with <command>tail -f</command>.</para>
+	<para>
+	  Once the fields are set up, the <function>syncTrans()</function>
+	  method (which is used for both read and write) is called to
+	  synchronize with the SystemC clock, transport the payload to the
+	  target and return the result.
+	</para>
 
-<screen>Mount-cache hash table entries: -1071210588
-&lt;6&gt;checking if image is initramfs...it isn't ( / ); looks like an initrd
-&lt;6&gt;NET: Registered protocol family -1068294276
-&lt;6&gt;NET: Registered protocol family -1068294272
- N, hash table entries: -1068294364 (order: -1071421199, 0 bytes)
-&lt;6&gt;TCP: Hash tables configured (established -1068294284 bind -1068294284)
-   ...
-&lt;5&gt;RAMDISK: Loading -1068294364KiB [-1068294364 disk&lt;5&gt;RAMDISK:
-Loading %dKiB [%
-ld disk%s] into ram disk... ] into ram disk... VFS: Mounted root (  @ )    filesystem)  @ ).
-&lt;6&gt;Freeing unused kernel memory: 3226673028k freed
-</screen>
+	<para>
+	  There are two components to the time taken in this model, the time
+	  taken by the &or1ksim; &iss; and the time taken in any peripherals. At
+	  the time of an upcall, the SystemC wrapper thread will not have
+	  yielded control since the last upcall. It needs to wait for the
+	  &systemc; clock to catch up to this time point.
+	</para>
 
-<para>There is a problem. The initial <function>printk()</function> messages
-are still not appearing. The reason is that although
-<function>simprintf()</function> looks at virtual addresses, it cannot take a
-TLB miss exception if the address required is not currently available.</para>
+	<para>
+	  The &systemc; time at which the last upcall was made was recorded in
+	  <symbol>scLastUpTime</symbol>. The timestamp of the &or1ksim; &iss; at
+	  the last upcall (i.e. the number of cycles it has executed,
+	  multiplied by the time taken for each cycle) was recorded in the
+	  <symbol>or1kLastUpTime</symbol>.
+	</para>
 
-<para>The rough and ready solution is to hack the code for
-<function>simprintf()</function> (which is in
-<filename>support/simprintf.c</filename> in the &or1ksim; directory, to
-automatically subtract 0xc0000000 from each address it is given and then read
-from the physical address. This only works for Linux as configured here, but
-is much simpler than a full solution to the problem. This is after all only a
-debugging trick.</para>
+	<para>
+	  A call of <function>or1ksim_time()</function> gives the current time
+	  of the &iss;, and hence the time that has elapsed since the last up
+	  call. This is used to advance both<symbol>scLastUpTime</symbol> and
+	  <symbol>or1kLastUpTime</symbol>. The thread then calls
+	  <function>wait</function> to allow any other threads in the
+	  &systemc; world to run until the calculated simulation time is
+	  reached.
+	</para>
 
-<para>The changes required are to:</para>
+	<para>
+	  At this time the blocking transport method of the simple initiator
+	  port is called with the payload and specifying a zero time offset
+	  (since the call to <function>wait()</function> means the thread is
+	  synchronized with the &systemc; clock).
+	</para>
 
-<itemizedlist>
-  <listitem>
-    <para>the address of the string itself (<literal>fmtaddr</literal> in
-    <function>simgetstr()</function>);</para></listitem>
-  <listitem>
-    <para>the address of the stack (the initialization of
-    <literal>argaddr</literal>;</para></listitem>
-  <listitem>
-    <para>the address of any string arguments; and</para></listitem>
-  <listitem>
-    <para>the second argument of each call to
-    <function>eval_direct8</function> and <function>eval_direct32</function>,
-    which should be changed to 0 (physical address) rather than 1 (virtual
-    address);</para></listitem>
-</itemizedlist>
+	<para>
+	  On return, the <symbol>delay</symbol> parameter will have been
+	  updated with any additional delay due to the transaction&mdash;in
+	  this case an estimate of the number of cycles to read or write the
+	  relevant UART register.
+	</para>
 
-<para>This should ensure that kernel print messages can be seen
-immediately.</para>
+	<para>
+	  It would be possible to make another call to
+	  <function>wait()</function> immediately to synchronize locally for
+	  this delay. However there will be no more processing on this thread
+	  until the next upcall from the &or1ksim; &iss;, so the delay is added
+	  to the <symbol>scLastUpTime</symbol> and will be added to the
+	  <function>wait()</function> on the next upcall.
+	</para>
 
-</sect3>
+      </sect3>
 
-</sect2>
+      <!-- = Compiling the Wrapper Module = -->
 
-<sect2 id="sec_ramdisk_setup"><title>Creating a Custom RAMDisk</title>
-<para></para>
-</sect2>
+      <sect3>
+	<title>
+	  &or1ksim; SystemC Wrapper Definition
+	</title>
 
-</sect1>
+    </sect2>
 
-</appendix> 
+    <!-- ========== Connecting to Peripherals ========== -->
+
+    <sect2>
+      <title>
+	Connecting to Periperhals
+      </title>
+
+      <!-- = The UART and Terminal Emulator = -->
+
+      <sect3>
+	<title>
+	  The UART and Terminal Emulator
+	</title>
+
+	<para>
+	</para>
+
+      </sect3>
+
+      <!-- = Connecting the system = -->
+
+      <sect3>
+	<title>
+	  Connecting the Complete System
+	</title>
+
+	<para>
+	</para>
+
+      </sect3>
+
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Adding an Arbiter
+       ==================================================================== -->
+
+  <sect1 id="sec_case_study_2">
+    <title>
+      Case Study Two: Adding an Arbiter
+    </title>
+
+    <para>
+      In this case study, the &tlm2; model from the first case study an
+      arbiter is added to illustrate the use of the
+      <firstterm>passthrough</firstterm> convenience socket and
+      <firstterm>tagged&#32;socket</firstterm>s.
+    </para>
+
+    <!-- ========== Example Design ========== -->
+
+    <sect2>
+      <title>
+	The Example Design
+      </title>
+
+      <para>
+	The example is extended to add further peripherals (another UART,
+	connected to a second terminal). An arbiter is introduced, which will
+	route traffic to the correct UART, depending on address. <xref
+	linkend="fig_arbiter_soc" /> shows the design.
+      </para>
+
+      <figure id="fig_arbiter_soc">
+	<title>
+	  Simple SoC based on the &or1k; &or1ksim;.
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="arbiter_soc.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="arbiter_soc.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+    </sect2>
+
+    <!-- ========== Design of the Arbiter ========== -->
+
+    <sect2>
+      <title>
+	The Aribiter &tlm2; Model
+      </title>
+
+      <!-- = Interface = -->
+
+      <sect3>
+	<title>
+	  Adding a &tlm2; Passthrough Socket
+	</title>
+
+	<para>
+	</para>
+
+      </sect3>
+
+      <!-- = Interface = -->
+
+      <sect3>
+	<title>
+	  Using Tagging with Initiator Sockets
+	</title>
+
+	<para>
+	</para>
+
+      </sect3>
+
+    </sect2>
+
+    <!-- ========== Connecting to Peripherals ========== -->
+
+    <sect2>
+      <title>
+	Connecting the SoC
+      </title>
+
+	<para>
+	</para>
+
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Adding an Temporal Decoupling
+       ==================================================================== -->
+
+  <sect1 id="sec_case_study_3">
+    <title>
+      Case Study Three: Temporal Decoupling of the Model
+    </title>
+
+    <para>
+      In this case study temporal decoupling is added to the &tlm2; model of
+      an SoC. The SoC model with arbiter from the previous example is reused.
+    </para>
+
+    <!-- ========== The Quantum Keeper ========== -->
+
+    <sect2>
+      <title>
+	The Quantum Keeper
+      </title>
+
+      <!-- = Basic Interface = -->
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== Temporal Decoupling ========== -->
+
+    <sect2 id="sec_temporal_decoupling">
+      <title>
+	Temporal Decoupling Each Component
+      </title>
+
+      <!-- = Basic Interface = -->
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== Connecting the System ========== -->
+
+    <sect2>
+      <title>
+	Connecting the Complete System
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Non-Blocking Interfaces
+       ==================================================================== -->
+
+  <sect1>
+    <title>
+      Case Study Two: Non-Blocking Interfaces
+    </title>
+
+    <!-- ========== Justification ========== -->
+
+    <sect2>
+      <title>
+	Loosely Timed Non-Blocking Interface
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== Justification ========== -->
+
+    <sect2>
+      <title>
+	Approximately Timed Non-Blocking Interface
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+
+  </sect1>
+
+  <!-- ========================================================================
+       Appendix: Introduction to C++
+       ==================================================================== -->
+
+  <appendix>
+    <title>
+      Introduction to C++ for Hardware Engineers
+    </title>
+
+    <para>
+    </para>
+
+  </appendix>
+
+  <!-- ========================================================================
+       Glossary
+       ==================================================================== -->
+
+  <glossary>
+    <title>
+      Glossary
+    </title>
+
+    <glossentry>
+      <glossterm>2-state</glossterm>
+      <glossdef>
+	<para>
+	  Hardware logic model which is based only on logic high and logic low
+	  (binary 0 and binary 1) values.
+	</para>
+
+	<glossseealso>4-state</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>4-state</glossterm>
+      <glossdef>
+	<para>
+	  Hardware logic model which considers unknown (<symbol>X</symbol>)
+	  and undriven (<symbol>Z</symbol>) values as well as logic high and
+	  logic low (binary 0 and binary 1).
+	</para>
+
+	<glossseealso>4-state</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Application&#32;Binary&#32;Interface</glossterm>
+      <glossdef>
+	<para>
+	  The low-level interface between an application program and the
+	  operating system, thus ensuring binary compatibility between programs.
+	</para>
+
+	<para>
+	  C++ notoriously suffers from lack of agreed standards in this area.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>approximately&#32;timed</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; a modeling style, where timing information is provided
+	  at the level of transactions representing the phases of data
+	  transfer in a specific bus protocol (for example the address and
+	  data phases of an <acronym>AHD</acronym> read or write).
+	</para>
+
+	<glossseealso>loosely&#32;timed</glossseealso>
+	<glossseealso>phase</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>backward&#32;transport&#32;path</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; non-blocking transport, the transport method which
+	  returns the resonse transaction from target to initiator.
+	</para>
+
+	<glossseealso>transport&#32;method</glossseealso>
+	<glossseealso>forward&#32;transport&#32;path</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>big&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a big endian architecture, the
+	  least significant byte in a data word resides at the highest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+
+	<para>
+	  The alternative is little endian addressing.
+	</para>
+
+	<glossseealso>big&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>blocking</glossterm>
+      <glossdef>
+	<para>
+	  Within the context of TLM, a transaction which blocks the flow of
+	  control in the initiator until the target has completed the
+	  transaction request and responded.
+	</para>
+
+	<glossseealso>non-blocking</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>convenience&#32;socket</glossterm>
+      <glossdef>
+	<para>
+	  A &tlm2; wrapper, providing for simple TLM communication based on
+	  C++ callbacks.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>forward&#32;transport&#32;path</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; non-blocking transport, the transport method, which
+	  passes the opening transaction from initiator to target.
+	</para>
+
+	<glossseealso>transport&#32;method</glossseealso>
+	<glossseealso>backward&#32;transport&#32;path</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Generic Payload</glossterm>
+      <glossdef>
+	<para>
+	  Within &tlm2;, a class suitable for use as payload for
+	  transactions. Recommended to maximize the interoperability of TLMs.
+	</para>
+
+	<glossseealso>payload</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Hardware&#32;Description&#32;Language</glossterm>
+      <glossdef>
+	<para>
+	  A language (<glossterm>Verilog</glossterm> and
+	  <glossterm>VHDL</glossterm> are the best known), which describes
+	  hardware. Can be used to describe both an actual chip and its
+	  testbench.
+	</para>
+
+	<glossseealso>Verilog</glossseealso>
+	<glossseealso>VHDL</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>initiator</glossterm>
+      <glossdef>
+	<para>
+	  The initiator of a transactional exchange to a target. In &tlm2; an
+	  initiator module must implement an initiator socket of the
+	  appropriate type (blocking or non-blocking).
+	</para>
+
+	<glossseealso>target</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Instruction&#32;Set&#32;Simulator</glossterm>
+      <glossdef>
+	<para>
+	  A software model of a CPU core instruction set. Typically completely
+	  models the instruction semantics, but not the full micorarchitecture
+	  of a particular CPU implementation. Timing information may be just
+	  an instruction count, or may (as with the &or1ksim;) offer some
+	  estimate of timing delays due to memory accesses, cacheing and
+	  virtual memory access.
+	</para>
+      </glossdef>
+
+    </glossentry>
+
+    <glossentry>
+      <glossterm>&iss;</glossterm>
+      <glosssee>Instruction&#32;Set&#32;Simulator</glosssee>
+    </glossentry>
+
+    <glossentry>
+      <glossterm><acronym>&osci;</acronym></glossterm>
+      <glosssee>Open &systemc; Initiative</glosssee>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a little endian architecture, the
+	  least significant byte in a data word resides at the lowest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+
+	<para>
+	  The alternative is big endian addressing.
+	</para>
+
+	<glossseealso>big&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>loosely&#32;timed</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; a modeling style, where timing information is provided
+	  at the level of transactions representing a complete data transfer
+	  across a hardware bus.
+	</para>
+
+	<glossseealso>approximately&#32;timed</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Open&#32;SystemC&#32;Initiative</glossterm>
+      <glossdef>
+	<para>
+	  The industry body standardizing the SystemC language and
+	  applications of those language for particular purposes, such as
+	  <glossterm>Transaction&#32;Level&#32;Modeling</glossterm>,
+	  verification and synthesis. More information is available on their
+	  <ulink url="http://www.systemc.org">website</ulink>.
+	</para>
+
+	<glossseealso>SystemC</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>non-blocking</glossterm>
+      <glossdef>
+	<para>
+	  Within the context of TLM, a transaction which allows the flow of
+	  control in the initiator to continue immediately the transaction is
+	  sent. The response will be provided later by a transport call from
+	  the target back to the initiator..
+	</para>
+
+	<glossseealso>blocking</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>passthrough</glossterm>
+      <glossdef>
+	<para>
+	  A term describing a &tlm2; convenience socket which reuses the
+	  payload, thereby eliminating the computational cost of allocation
+	  and deallocation. Typically used in modules which perform a routing
+	  or arbitration function.
+	</para>
+
+	<glossseealso>payload</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>payload</glossterm>
+      <glossdef>
+	<para>
+	  The data passed between threads by a transaction.
+	</para>
+
+	<glossseealso>Generic Payload</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>phase</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; approximately timed modeling, a transaction exchange
+	  representing a single phase of the specific bus protocol being
+	  modelled (for example the address phase of an <acronym>AHD</acronym>
+	  read or write).
+	</para>
+
+	<glossseealso>approximately&#32;timed</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>POSIX</glossterm>
+      <glossdef>
+	<para>
+	  An IEEE standard for application programming interfaces and
+	  utilities for Unix/Linux operating systems.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>quantum</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; with temporal decoupling, the maximum time a thread may
+	  run ahead of the main system clock. This may be regulated by a
+	  quantum keeper.
+	</para>
+
+	<glossseealso>temporal&#32;decoupling</glossseealso>
+	<glossseealso>quantum keeper</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>quantum keeper</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; with temporal decoupling, an object which enforces the
+	  rule that threads may not run more than the quantum ahead of the
+	  main system clock
+	</para>
+
+	<glossseealso>temporal&#32;decoupling</glossseealso>
+	<glossseealso>quantum</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>socket</glossterm>
+      <glossdef>
+	<para>
+	  Within the context of &tlm2;, a &systemc; port and export combined
+	  with the associated interfaces for blocking and non-blocking
+	  transport, direct memory access and debug.
+	</para>
+
+	<glossseealso>&systemc;</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>&systemc;</glossterm>
+      <glossdef>
+	<para>
+	  A set of libraries and macros, which extend the C++ programming
+	  language to facilitate modeling of hardware.
+	</para>
+
+	<para>
+	  Standardized by the <glossterm>Open SystemC Initiative</glossterm>,
+	  who provide an open source reference implementation.
+	</para>
+
+	<glossseealso>Open&#32;&systemc;&#32;Initiative</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>tagged&#32;socket</glossterm>
+      <glossdef>
+	<para>
+	  A &tlm2; convenience socket, which incorporates a numerical
+	  <emphasis>tag</emphasis> to identify the socket in use. This allows
+	  a single callback routine to handle multiple sockets, with the tag
+	  identifying the socket which caused the callback to be invoked.
+	</para>
+
+	<glossseealso>socket</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>target</glossterm>
+      <glossdef>
+	<para>
+	  The responder to a transactional exchange initiated by an
+	  initiator. In &tlm2; a target module must implement a target socket
+	  of the appropriate type (blocking or non-blocking).
+	</para>
+
+	<glossseealso>initiator</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>temporal&#32;decoupling</glossterm>
+      <glossdef>
+	<para>
+	  In &tlm2; the concept of allowing individual threads to run ahead of
+	  the main simulation timestamp. The maximum permitted time of run
+	  ahead is known as the <glossterm>quantum</glossterm> and may be
+	  regulated by a quantum keeper.
+	</para>
+
+	<glossseealso>quantum</glossseealso>
+	<glossseealso>quantum keeper</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>thread</glossterm>
+      <glossdef>
+	<para>
+	  In software, a logical parallel flow of control. In the context of
+	  &systemc;, the main method of such a thread can be specified with
+	  the <literal>SC_THREAD</literal> macro. In &systemc; a
+	  <literal>SC_THREAD</literal> is distinguished from a
+	  <literal>SC_METHOD</literal> because it can suspend execution with
+	  <function>wait()</function> calls.
+	</para>
+
+	<glossseealso>&systemc;</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm><acronym>TLM</acronym></glossterm>
+      <glossdef>
+	<para>
+	  An abbreviation for (depending on context)
+	  <glossterm>Transaction&#32;Level&#32;Model</glossterm> or
+	  <glossterm>Transaction&#32;Level&#32;Modeling</glossterm>.
+	</para>
+
+	<glossseealso>Transaction&#32;Level&#32;Model</glossseealso>
+	<glossseealso>Transaction&#32;Level&#32;Modeling</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm><acronym>TLM</acronym>&nbsp;2.0</glossterm>
+      <glossdef>
+	<para>
+	  The &osci; standard interface for writing
+	  <glossterm>Transaction&#32;Level&#32;Model</glossterm>s in
+	  &systemc;.
+	</para>
+
+	<glossseealso>Transaction&#32;Level&#32;Model</glossseealso>
+	<glossseealso>SystemC</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>transport&#32;method</glossterm>
+      <glossdef>
+	<para>
+	  The C++ procedure which transfers data from an initiator to a
+	  target, and (for a non-blocking interface), the response back from
+	  the target to the initiator. Within the context of &tlm2; blocking
+	  and non-blocking transport interfaces are defined.
+	</para>
+
+	<glossseealso>&systemc;</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Transaction</glossterm>
+      <glossdef>
+	<para>
+	  An exchange of data (the payload) between two parallel processes. In
+	  &tlm2; this transaction occurs through &systemc; ports implementing
+	  the &tlm2; interfaces, which are known as sockets.
+	</para>
+
+	<para>
+	  A full description is provided in <xref linkend="sec_what_is_tlm" />.
+	</para>
+
+	<glossseealso>payload</glossseealso>
+	<glossseealso>socket</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Transaction&#32;Level&#32;Model</glossterm>
+      <glossdef>
+	<para>
+	  A software model in which the components of the model communicate by
+	  transferring information to and from each other (transactions).
+	</para>
+
+	<para>
+	  A full description is provided in <xref linkend="sec_what_is_tlm" />.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Transaction&#32;Level&#32;Modeling</glossterm>
+      <glossdef>
+	<para>
+	  The process of writing software models using
+	  <glossterm>Transaction&#32;Level&#32;Model</glossterm>
+	</para>
+
+	<glossseealso>Transaction&#32;Level&#32;Model</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Verilog</glossterm>
+      <glossdef>
+	<para>
+	  A <glossterm>Hardware&#32;Description&#32;Language</glossterm> (HDL).
+	</para>
+
+	<glossseealso>Hardware&#32;Description&#32;Languages</glossseealso>
+	<glossseealso><acronym>VHDL</acronym></glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm><acronym>VHDL</acronym></glossterm>
+      <glossdef>
+	<para>
+	  A <glossterm>Hardware&#32;Description&#32;Language</glossterm> (HDL).
+	</para>
+
+	<glossseealso>Hardware&#32;Description&#32;Languages</glossseealso>
+	<glossseealso>Verilog</glossseealso>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <!-- ========================================================================
+       References
+       ==================================================================== -->
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <biblioentry id="big_app_note_1">
+      <title>
+	&embecosm; Application Note 1. The &opencores; &or1k; Simulator and
+	Tool Chain: Installation Guide
+      </title>
+
+      <publisher>
+	<publishername>
+	  Embecosm
+	</publishername>
+	<address>
+	  <city>
+	    Bournemouth
+	  </city>
+	  <country>
+	    UK
+	  </country>
+	</address>
+      </publisher>
+
+      <pubdate>
+	June, 2008
+      </pubdate>
+    </biblioentry>
+
+  </bibliography>
+
+  <!-- ========================================================================
+       Index
+       ==================================================================== -->
+
+  <index />
 
 </article>
  
