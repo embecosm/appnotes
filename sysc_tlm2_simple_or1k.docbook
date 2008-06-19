@@ -13,6 +13,7 @@ Useful entities
 <!ENTITY osci "<acronym>OSCI</acronym>">
 <!ENTITY tlm "<acronym>TLM</acronym>">
 <!ENTITY tlm2 "<acronym>TLM</acronym>&nbsp;2.0">
+<!ENTITY uart "<acronym>UART</acronym>">
 
 <!-- ========== applications ========== -->
 
@@ -454,7 +455,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      A class, <type>sc_module</type>, suitable for defining hardware
+	      A class, <literal>sc_module</literal>, suitable for defining hardware
 	      modules, with convenience macros <symbol>SC_MODULE</symbol> and
 	      <symbol>SC_CTOR</symbol> to define such classes.
 	    </para>
@@ -463,7 +464,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      A mechanism to define methods for
-	      <type>sc_module</type> classes, which represent its logical
+	      <literal>sc_module</literal> classes, which represent its logical
 	      parallel behavior, with convenience macros
 	      <symbol>SC_METHOD</symbol> and <symbol>SC_THREAD</symbol>
 	    </para>
@@ -471,8 +472,8 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      A class, <type>sc_port</type> to represent the interfaces to
-	      modules and a class, <type>sc_channel</type> to connect those
+	      A class, <literal>sc_port</literal> to represent the interfaces to
+	      modules and a class, <literal>sc_channel</literal> to connect those
 	      ports.
 	    </para>
 	  </listitem>
@@ -753,10 +754,10 @@ $Id$
 	</para>
 
 	<para>
-	  The first case study in this application note (see <xref
-	  linkend="sec_case_study_1" />>uses these convenience sockets to
-	  convert an &iss; for use with &tlm2; and connect it to a model of a
-	  simple SoC.
+	  Convenience sockets are used throughout most of the case study in
+	  this application note. In the final section (see <xref
+	  linkend="sec_standard_tlm" />) the conversion from convenience
+	  sockets to standard &tlm2; sockets and interfaces is demonstrated.
 	</para>
 
       </sect3>
@@ -764,16 +765,17 @@ $Id$
   </sect1>
 
   <!-- ========================================================================
-       Simple Loosely Timed Model with Convenience Ports
+       The Case Study
        ==================================================================== -->
 
-  <sect1 id="sec_case_study_1">
+  <sect1 id="sec_case_study">
     <title>
-      Case Study One: A Synchronous Loosely Timed &tlm2; Model Using Convenience Ports
+      Case Study: Wrapping an Existing ISS with &tlm2; Sockets and Building a
+      Complete SoC
     </title>
 
     <para>
-      In this case study, the &tlm2; convenience ports are used to wrap an
+      In this case study, the &tlm2; sockets are used to wrap an
       existing &iss;, which is then built into a simple SoC using additional
       hand-written &tlm2; components.
     </para>
@@ -782,16 +784,74 @@ $Id$
       The modeling is at a high level of abstraction, using th &tlm2;
       <glossterm>Generic Payload</glossterm> with no extensions. It is
       completely independent of the actual bus architecture that will be used
-      in the implementation. The timing is kept synchronous
-      throughout&mdash;the model will be extended to use temporal decoupling
-      in a later case study (see <xref linkend="sec_case_study_3" />).
+      in the implementation.
     </para>
 
-    <!-- ========== Example Design ========== -->
+    <para>
+      The model is constructed in a number of stages:
+    </para>
+
+    <orderedlist>
+
+      <listitem>
+	<para>
+	  The basic wrapper for the &or1ksim; &iss; is built using &tlm2;
+	  convenience sockets and tested with a simple logger. In this first
+	  stage, the timing is kept synchronous throughout. See <xref
+	  linkend="sec_iss_wrapper" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  A model &uart; is added as an example peripheral, demonstrating how
+	  &tlm2; and existing &systemc; technologies can be mixed. See <xref
+	  linkend="sec_uart" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  A model of a terminal is added, demonstrating how to add &systemc;
+	  components which use operating system I/O without blocking the
+	  &systemc; thread. See <xref linkend="sec_terminal" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Temporal decoupling is added to the &or1ksim; &iss;, &uart; and
+	  terminal. See <xref linkend="sec_temporal_decoupling" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  A second &uart; is added to the system and a &tlm2; arbiter added,
+	  demonstrating the use of &tlm2; convenience passthrough sockets. See
+	  <xref linkend="sec_arbiter" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  The entire model is reimplemented using the standard &tlm2; sockets
+	  and interfaces. See <xref linkend="sec_standard_tlm" />
+	</para>
+      </listitem>
+    </orderedlist>
+
+    <para>
+      Throughout the model is demonstrated with simple applications to
+      exercise the relevant system components. At the final stage, a full
+      Linux 2.6 kernel is able to run on the SoC.
+    </para>
+
+    <!-- ========== Example Designs ========== -->
 
     <sect2>
       <title>
-	The Example Design
+	The Example Designs
       </title>
 
       <para>
@@ -806,100 +866,243 @@ $Id$
       <para>
 	Information on obtaining and setting up the open source &or1ksim;
 	simulator and its toolchain are given in <xref
-	linkend="big_app_note_1" />.
+	linkend="ref_app_note_1" />.
       </para>
 
       <para>
-	For this case study the CPU is deconfigured to remove all the
-	peripherals and the caches and MMU, so it models only the CPU and main
-	memory.
+	In general the CPU is deconfigured to remove all the peripherals and
+	the caches and MMU, so it models only the CPU and main memory.
       </para>
 
-      <para>
-	To build a simple SoC the &or1ksim; CPU/memory subsystem is
-	connected to a UART modeled in &systemc; using &tlm2;. The testbench
-	for the system will be a terminal, also modeled in &systemc; using
-	&tlm2;. <xref linkend="fig_simple_soc" /> shows the design.
-      </para>
-
-      <figure id="fig_simple_soc">
-	<title>
-	  Simple SoC based on the &or1k; &or1ksim;.
-	</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="simple_soc.svg"
-		       format="SVG"
-		       width="14cm"
-		       scalefit="1"
-		       align="center" />
-	  </imageobject>
-	  <imageobject>
-	    <imagedata fileref="simple_soc.png"
-		       format="PNG"
-		       width="80%"
-		       scalefit="1"
-		       align="center" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
-    </sect2>
-
-    <!-- ========== Wrapping the ISS ========== -->
-
-    <sect2>
-      <title>
-	Wrapping the &iss;
-      </title>
-
-      <!-- = Modifying the &iss; = -->
+      <!-- = Plain ISS Wrapper = -->
 
       <sect3>
 	<title>
-	  Modifying the &iss; for &tlm2;
+	  &or1ksim; &iss; &tlm2; Wrapper
 	</title>
 
 	<para>
-	  Most &iss; need some modification before they can be incorporated into
-	  a &tlm2; framework. Like many &iss;, &or1ksim; is designed as a
-	  standalone program. The options are:
-	  <orderedlist>
-	    <listitem>
-	      <para>
-		Keep &or1ksim; as a standalone program, but modify it to call
-		out to a &systemc; model of the peripherals as required.
-	      </para>
-	    </listitem>
-
-	    <listitem id="or1ksim_lib_opt">
-	      <para>
-		Modify &or1ksim; to be a library with a set of public
-		interfaces that can be part of a larger system.
-	      </para>
-	    </listitem>
-	  </orderedlist>
+	  The first stage is to just test the &tlm2; wrapper for the &or1ksim;
+	  &iss;. The wrapped &iss; is connected to a simple &tlm2; logger
+	  module which records transactions sent to it on standard output as
+	  shown in <xref linkend="fig_iss_test" />.
 	</para>
+
+	<figure id="fig_iss_test">
+	  <title>
+	    Simple SoC based on the &or1k; &or1ksim;.
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="iss_test.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="iss_test.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect3>
+
+      <!-- = Simple SoC Example = -->
+
+      <sect3>
+	<title>
+	  Simple SoC Design
+	</title>
 
 	<para>
-	  Given the choice, option <xref linkend="or1ksim_lib_opt" /> is more
-	  flexible, making the &iss; widely reusable in other environments. It
-	  is the approach adopted in this case study.
+	  To build a simple SoC the &or1ksim; CPU/memory subsystem is
+	  connected to a &uart; modeled in &systemc; using &tlm2;. The
+	  testbench for the system will be a terminal, also modeled in
+	  &systemc; using &tlm2;. This model is built up in stages in <xref
+	  linkend="sec_iss_wrapper" />, <xref linkend="sec_uart" /> and <xref
+	  linkend="sec_terminal" />. <xref linkend="fig_simple_soc" /> shows the
+	  design.
 	</para>
+
+	<figure id="fig_simple_soc">
+	  <title>
+	    Simple SoC based on the &or1k; &or1ksim;.
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="simple_soc.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="simple_soc.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect3>
+
+      <!-- = More complex SoC = -->
+
+      <sect3>
+	<title>
+	  SoC with Arbiter
+	</title>
+
+	<para>
+	  For <xref linkend="sec_arbiter" />, the example is extended to add
+	  further peripherals (another &uart;, connected to a second
+	  terminal). An arbiter is introduced, which will route traffic to the
+	  correct &uart;, depending on address. <xref linkend="fig_arbiter_soc"
+	  /> shows the design.
+	</para>
+
+	<figure id="fig_arbiter_soc">
+	  <title>
+	    Simple SoC based on the &or1k; &or1ksim;.
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="arbiter_soc.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="arbiter_soc.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect3>
+
+      <!-- = SoC for Linux = -->
+
+      <sect3>
+	<title>
+	  SoC to run Linux
+	</title>
+
+	<para>
+	  To demonstrate the SoC running Linux <xref linkend="sec_linux" />,
+	  the example is that shown in <xref linkend="fig_arbiter_soc"
+	  />. However the non-UART peripheral modeling capabilities of the
+	  underlying xISS are turned on, to provided the required functionality.
+	</para>
+
+      </sect3>
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Wrapping the ISS
+       ==================================================================== -->
+
+  <sect1 id="sec_iss_wrapper">
+    <title>
+      Wrapping the &iss;
+    </title>
+
+    <para>
+      The conversion of an existing &iss; to a  &systemc;
+      module with &tlm2; sockets involves several steps:
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Modify the existing &iss; (in this example &or1ksim; written in C)
+	  so it  behaves in a manner suitable for wrapping (see <xref
+	  linkend="sec_iss_mods" />.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Define a &systemc; module for the wrapper (see <xref
+	  linkend="sec_iss_wrapper_def" />) and provide its implementation
+	  (see <xref linkend="sec_iss_wrapper_impl" />).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Test the wrapper with a simple logger module attached to the &tlm2;
+	  port and a suitable test application running as embedded code on the
+	  &iss; (see <xref linkend="sec_iss_wrapper_test" />).
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <!-- ========== Modifying the &iss; ========== -->
+
+    <sect2 id="sec_iss_mods">
+      <title>
+	Modifying the &iss; for &tlm2;
+      </title>
+
+      <para>
+	Most &iss; need some modification before they can be incorporated into
+	a &tlm2; framework. Like many &iss;, &or1ksim; is designed as a
+	standalone program. The options are:
+	<orderedlist>
+	  <listitem>
+	    <para>
+	      Keep the &iss; as a standalone program, but modify it to call
+	      out to a &systemc; model of the peripherals as required.
+	    </para>
+	  </listitem>
+
+	  <listitem id="or1ksim_lib_opt">
+	    <para>
+	      Modify the &iss; to be a library with a set of public interfaces
+	      that can be part of a larger system.
+	    </para>
+	  </listitem>
+	</orderedlist>
+      </para>
+
+      <para>
+	Given the choice, option <xref linkend="or1ksim_lib_opt" /> is more
+	flexible, making the &iss; widely reusable in other environments. It
+	is the approach adopted in this case study.
+      </para>
+
+      <!-- = Library Functions -->
+
+      <sect3 id="sec_or1ksim_libcals">
+	<title>
+	  Converting &or1ksim; to a Library
+	</title>
 
 	<para>
 	  The &or1ksim; <function>main()</function> routine first initializes
 	  the &iss;, then sits in a loop executing instructions. This
-	  <function>main()</function> is replaced by a series of functions
-	  which form the interface to the library. The interface functions
-	  needed are:
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		<function>ork1sim_init()</function>
-	      </para>
+	  <function>main()</function> routine is replaced by a series of
+	  functions which form the interface to the library. The interface
+	  functions needed are:
+	</para>
 
-	      <para>
-		<programlisting>int  or1ksim_init( const char         *config_file,
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <programlisting>int  or1ksim_init( const char         *config_file,
                    const char         *image_file,
                    void               *class_ptr,
                    unsigned long int (*upr)( void              *class_ptr,
@@ -909,188 +1112,227 @@ $Id$
                                              unsigned long int  addr,
                                              unsigned long int  mask,
                                              unsigned long int  wdata ) );</programlisting>
-	      </para>
+	    </para>
 
-	      <para>
-		Initializes the simulator. For &or1ksim;, configuration data
-		is read from a file, which is passed as the first agument,
-		<literal>config_file</literal>. The program image is passed
-		as a second argument, <literal>image_file</literal>.
-	      </para>
+	    <para>
+	      <function>or1ksim_init()</function> initializes the
+	      simulator. For &or1ksim;, configuration data is read from a
+	      file, which is passed as the first agument,
+	      <literal>config_file</literal>. The program image is passed as
+	      a second argument, <literal>image_file</literal>.
+	    </para>
 
-	      <para>
-		&or1ksim; also needs to be able to call up to the SystemC
-		model of which it is part&mdash;to read and write from the
-		peripheral address space. These are provided as the fourth
-		and fifth arguments, <literal>upr</literal> and
-		<literal>upw</literal>.
-	      </para>
+	    <para>
+	      &or1ksim; also needs to be able to call up to the SystemC
+	      model of which it is part&mdash;to read and write from the
+	      peripheral address space. These are provided as the fourth
+	      and fifth arguments, <literal>upr</literal> and
+	      <literal>upw</literal>. More explanation of the upcall
+	      mechanism can be found in <xref linkend="sec_upcall" />.
+	    </para>
 
-	      <para>
-		Procedure calls between C and C++ can be awkward. The upcall
-		routines form part of the SystemC module object, but are
-		written as static routines with C linkage. To enable these
-		routines to invoke methods in the SystemC module, they are
-		passed a pointer to the module class instance to use as a
-		handle. This pointer forms the third argument,
-		<literal>class_ptr</literal>.
-	      </para>
-	    </listitem>
+	    <para>
+	      Procedure calls between C and C++ can be awkward. The upcall
+	      routines form part of the SystemC module object, but are
+	      written as static routines with C linkage. To enable these
+	      routines to invoke methods in the SystemC module, they are
+	      passed a pointer to the module class instance to use as a
+	      handle. This pointer forms the third argument,
+	      <literal>class_ptr</literal>.
+	    </para>
+	  </listitem>
 
-	    <listitem>
-	      <para>
-		<function>or1ksim_run()</function>
-	      </para>
+	  <listitem>
+	    <para>
+	      <programlisting>int  or1ksim_run( double  duration );</programlisting>
+	    </para>
+	    <para>
+	      <function>or1ksim_run()</function> runs the simulator for the
+	      specified time in seconds.
+	    </para>
+	  </listitem>
 
-	      <para>
-		<programlisting>int  or1ksim_run( double  duration );</programlisting>
-	      </para>
+	  <listitem>
+	    <para>
+	      <programlisting>int  or1ksim_is_le();</programlisting>
+	    </para>
 
-	      <para>
-		Runs the simulator for the specified time in seconds.
-	      </para>
-	    </listitem>
+	    <para>
+	      <function>or1ksim_is_le()</function> returns 1 if &or1ksim; is
+	      modeling a <firstterm>little&#32;endian</firstterm>
+	      architecture, 0 otherwise. It is needed to ensure the payload is
+	      packed with the correct byte ordering.
+	    </para>
+	  </listitem>
 
-	    <listitem>
-	      <para>
-		<function>or1ksim_is_le()</function>
-	      </para>
+	  <listitem>
+	    <para>
+	      <programlisting>double  or1ksim_time();</programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_time()</function> returns the &or1ksim; view
+	      of how much time has elapsed while simulating. This routine is
+	      needed to keep the SystemC model of time due to instruction set
+	      processing accurate, both in the synchronous SoC and when
+	      temporal decoupling is added (see <xref
+	      linkend="sec_temporal_decoupling" />).
+	    </para>
+	  </listitem>
+	</itemizedlist>
 
-	      <para>
-		<programlisting>int  or1ksim_is_le();</programlisting>
-	      </para>
-
-	      <para>
-		Returns 1 if &or1ksim; is modeling a
-		<firstterm>little&#32;endian</firstterm> architecture, 0
-		otherwise. Needed to ensure the payload is packed with the
-		correct byte ordering.
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		<function>or1ksim_time()</function>
-	      </para>
-
-	      <para>
-		<programlisting>double  or1ksim_time();</programlisting>
-	      </para>
-
-	      <para>
-		Returns the &or1ksim; view of how much time has elapsed while
-		simulating. This routine is not needed in the initial case
-		study, but will be needed when temporal decoupling is added
-		(see <xref linkend="sec_temporal_decoupling" />).
-	      </para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
       </sect3>
 
-      <!-- = Wrapper Class definition = -->
+      <!-- Additional -->
 
-      <sect3>
+      <sect3 id="sec_upcall">
 	<title>
-	  &or1ksim; SystemC Wrapper Definition
+	  Additional Functionality for &or1ksim;
 	</title>
 
 	<para>
-	  The &or1ksim; SystemC wrapper module class,
-	  <literal>Or1ksimSC</literal>, is defined in the file
-	  <filename>Or1ksimSC.h</filename>. It will provide a single initiator
-	  socket, for data access, <literal>dataIni</literal> (at this stage,
-	  no instruction accesses are planned, so modeling an external
-	  instruction bus is unnecessary).
+	  The standard &or1ksim; &iss; incorporates the functionality of
+	  standard peripherals. The objective of this application note is to
+	  demonstrate the &iss; driving external peripherals modelled in
+	  &systemc; using &tlm2; interfaces.
 	</para>
 
 	<para>
-	  The module includes the <literal>tlm.h</literal>
-	  header, which defines the core &tlm2; interface and the required
-	  convenience wrapper header&mdash;in this case for a simple initiator
-	  socket.
+	  &or1ksim; peripherals are configured in a texual configuration file,
+	  with a section (introduced by the keyword
+	  <literal>section</literal>) for each device attached. This
+	  configuration specifies the memory mapped addresses of the
+	  peripheral. Any reads or writes to those addresses will be directed
+	  to the code of the peripheral within &or1ksim;.
 	</para>
 
 	<para>
-	  The POSIX <literal>stdint.h</literal> header is also included, since
-	  the code will make use of the fixed width native types defined
-	  there.
+	  &or1ksim; is extended with a new class of peripheral,
+	  <literal>generic</literal>, which specifies an external peripheral. The
+	  specification in the configuration file specifies the memory mapped
+	  address range covered and whether byte, half word or full word access
+	  are enabled. Multiple <literal>generic</literal> sections may be defined
+	  (for different address ranges) in the configuration file.
 	</para>
 
-	<programlisting>#include &lt;stdint.h&gt;
+	<para>
+	  Code is added to &or1ksim;, so that any read or write is redirected
+	  back to the wrapper code via the upcalls specified as arguments to
+	  <function>or1ksim_init()</function> (see <xref
+	  linkend="sec_or1ksim_libcals" />).
+	</para>
+      </sect3>
+    </sect2>
+
+    <!-- ========== Wrapper Class definition ========== -->
+
+    <sect2 id="sec_iss_wrapper_def">
+      <title>
+	&or1ksim; SystemC Wrapper Definition
+      </title>
+
+      <para>
+	The &or1ksim; SystemC wrapper module class,
+	<literal>Or1ksimSC</literal>, is defined in the file
+	<filename>Or1ksimSC.h</filename>. It will provide a single initiator
+	socket, for data access, <literal>dataIni</literal> (no instruction
+	accesses are planned, so modeling an external instruction bus is
+	unnecessary).
+      </para>
+
+      <para>
+	The module includes the <literal>tlm.h</literal>
+	header, which defines the core &tlm2; interface and the required
+	convenience wrapper header&mdash;in this case for a simple initiator
+	socket.
+      </para>
+
+      <para>
+	The POSIX <literal>stdint.h</literal> header is also included, since
+	the code will make use of the fixed width native types defined
+	there.
+      </para>
+
+      <programlisting>#include &lt;stdint.h&gt;
 
 #include "tlm.h"
 #include "tlm_utils/simple_initiator_socket.h"
 #include "or1ksim.h"</programlisting>
 
-	<note>
-	  <para>
-	    There is no need to include the standard
-	    <literal>systemc.h</literal> header, since this is included
-	    automatically by <literal>tlm.h</literal>.
-	  </para>
-	</note>
+      <note>
+	<para>
+	  There is no need to include the standard
+	  <literal>systemc.h</literal> header, since this is included
+	  automatically by <literal>tlm.h</literal>.
+	</para>
+      </note>
+
+      <para>
+	The module is declared as a standard &systemc; module, ie. as a
+	derived class of <literal>sc_core::sc_module</literal>.
+      </para>
+
+      <programlisting>class Or1ksimSC
+: public sc_core::sc_module
+{</programlisting>
+
+      <note>
+	<para>
+	  The &systemc; tutorial material teaches that a module should be
+	  defined using:
+	</para>
+
+	<programlisting>SC_MODULE( Or1ksimSC )</programlisting>
 
 	<para>
-	  The module is declared as a standard &systemc; module, ie. as a
-	  derived class of <literal>sc_core::sc_module</literal>.
+	  However this is identical to the C++ derived class declaration
 	</para>
 
 	<programlisting>class Or1ksimSC
 : public sc_core::sc_module
 {</programlisting>
 
-	<note>
-	  <para>
-	    The &systemc; tutorial material teaches that a module should be
-	    defined using: <programlisting>SC_MODULE( Or1ksimSC
-	    )</programlisting> However this is identical to the C++ derived
-	    class declaration
-	    <programlisting>class Or1ksimSC
-: public sc_core::sc_module
-{</programlisting>
-
-	    This is the usual way classes are declared in the &systemc; and
-	    &tlm2; examples&mdash;<literal>SC_MODULE</literal> seems only to
-	    appear in tutorial material for beginners.
-	  </para>
-
-	  <para>
-	    Throughout this application note, the C++ derived class
-	    declaration style is used, rather than
-	    <literal>SC_MODULE</literal>.
-	  </para>
-	</note>
-
-	<para>
-	  The example needs a custom constructor, which can be passed the
-	  &or1ksim; configuration and image files. It will call the
-	  <function>or1ksim_init()</function> routine within the &or1ksim;
-	  library to initialize the &iss;.
+        <para>
+	  This is the usual way classes are declared in the &systemc; and
+	  &tlm2; examples&mdash;<literal>SC_MODULE</literal> seems only to
+	  appear in tutorial material for beginners.
 	</para>
 
-	<programlisting>  Or1ksimSC( sc_core::sc_module_name  name,
+	<para>
+	  Throughout this application note, the C++ derived class
+	  declaration style is used, rather than
+	  <literal>SC_MODULE</literal>.
+	</para>
+      </note>
+
+      <para>
+	The example needs a custom constructor, which can be passed the
+	&or1ksim; configuration and image files. It will call the
+	<function>or1ksim_init()</function> routine within the &or1ksim;
+	library to initialize the &iss;.
+      </para>
+
+      <programlisting>Or1ksimSC( sc_core::sc_module_name  name,
              const char              *configFile,
              const char              *imageFile );</programlisting>
 
-	<para>
-	  The module will have a single thread, which executes the
-	  instructions of the &iss;. The <function>run()</function> method
-	  implements this:
-	</para>
+      <para>
+	The module will has a single thread, which executes the instructions
+	of the &iss;. The <function>run()</function> method implements this:
+      </para>
 
-	<programlisting>  void  run();</programlisting>
+      <programlisting>  void  run();</programlisting>
 
-	<para>
-	  Two methods are needed to implement the read and write upcalls from
-	  the &or1ksim; library. Both use the native SystemC type for the
-	  address (which is always 64 bits) and the
-	  <firstterm>POSIX</firstterm> fixed width data types for mask and
-	  data. The synchronized transport mechanism is common to both, so
-	  provided in a utility method, <function>syncTrans()</function>.
-	</para>
+      <para>
+	Two methods are needed to implement the read and write upcalls from
+	the &or1ksim; library. Both use the native SystemC type for the
+	address (which is always 64 bits) and the
+	<firstterm>POSIX</firstterm> fixed width data types for mask and
+	data. The synchronized transport mechanism is common to both, so
+	provided in a utility method, <function>syncTrans()</function>.
+      </para>
 
-	<programlisting>  uint32_t           readUpcall( sc_dt::uint64  addr,
+      <programlisting>uint32_t           readUpcall( sc_dt::uint64  addr,
                                  uint32_t       mask );
 
   void               writeUpcall( sc_dt::uint64  addr,
@@ -1099,72 +1341,94 @@ $Id$
 
   void               syncTrans( tlm::tlm_generic_payload &amp;trans );</programlisting>
 
-        <caution>
+      <caution>
+	<para>
+	  It might seem logical to use the &systemc; limited precision types,
+	  rather than the POSIX types. However the &systemc; types are
+	  <emphasis>not</emphasis> native C++ types, so will not cast as
+	  expected.
+	</para>
+      </caution>
+
+      <para>
+	The initiator socket, <literal>dataIni</literal> is declared for the
+	<literal>Or1ksimSC</literal> class. The convenience sockets are
+	templated with
+      </para>
+
+      <itemizedlist>
+	<listitem>
 	  <para>
-	    It might seem logical to use the &systemc; limited precision types,
-	    rather than the POSIX types. However the &systemc; types are
-	    <emphasis>not</emphasis> native C++ types, so will not cast as
-	    expected.
+	    with the class of which any callbacks are members;
 	  </para>
-	</caution>
+	</listitem>
 
-	<para>
-	  The initiator socket, <literal>dataIni</literal> is declared for the
-	  <literal>Or1ksimSC</literal> class. The convenience sockets are
-	  templated with the class of which any callbacks are members, bus
-	  width and protocol type. For this case study, the default bus width
-	  (32 bits) and default protocol types (the &tlm2; base protocol
-	  types) are appropriate and need not be specified. There is no
-	  default class for the template, so <literal>Or1ksimSC</literal> is
-	  used, although for a simple initiator, no callbacks are actually
-	  required.
-	</para>
+	<listitem>
+	  <para>
+	    bus (default <literal>BUSWIDTH</literal>, 32); and
+	  </para>
+	</listitem>
 
-	  <programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataIni;</programlisting>
+	<listitem>
+	  <para>
+	    protocol type (default the &tlm2; base protocol types).
+	  </para>
+	</listitem>
+      </itemizedlist>
 
-	<para>
-	  Two time stamps are declared, one to hold the SystemC view of the
-	  time of the last upcall from &or1ksim;, the other to hold the
-	  &or1ksim; view of the time of the last upcall.
-	</para>
+      <para>
+	For this case study, the default bus width and protocol are
+	appropriate and need not be specified. There is no default class for
+	the template, so <literal>Or1ksimSC</literal> is used. A class must be
+	specified, even where (as in this case for a simple blocking
+	initiator) no callbacks are actually required.
+      </para>
 
-	  <programlisting>  sc_core::sc_time  scLastTime;
-  sc_core::sc_time  or1kLastTime;</programlisting>
+      <programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataIni;</programlisting>
 
-      </sect3>
+      <para>
+	Two time stamps are declared, one to hold the SystemC view of the
+	time of the last upcall from &or1ksim;, the other to hold the
+	&or1ksim; view of the time of the last upcall.
+      </para>
 
-      <!-- = Wrapper Class definition = -->
+      <programlisting>  sc_core::sc_time  scLastTime;
+      sc_core::sc_time  or1kLastTime;</programlisting>
 
-      <sect3>
-	<title>
-	  &or1ksim; SystemC Wrapper Definition
-	</title>
+    </sect2>
 
-	<para>
-	  The class implementation for <literal>Or1ksimSC</literal> is found
-	  in the file <filename>Or1ksimSC.cpp</filename>. All the definitions
-	  required are obtained from the definition file:
-	</para>
+    <!-- ========== Wrapper Class simplementation ========== -->
 
-	<programlisting>#include "Or1ksimSC.h"</programlisting>
+    <sect2 id="sec_iss_wrapper_impl">
+      <title>
+	&or1ksim; SystemC Wrapper Implementation
+      </title>
 
-	<para>
-	  The first two routines declared are not part of the class at all,
-	  but static routines which implement the upcalls from the &or1ksim;
-	  library. By declaring the routines static, they are visible only
-	  within this source file, and can use simple linkage.
-	</para>
+      <para>
+	The class implementation for <literal>Or1ksimSC</literal> is found
+	in the file <filename>Or1ksimSC.cpp</filename>. All the definitions
+	required are obtained from the definition file:
+      </para>
 
-	<para>
-	  The static routines receive the pointer to the
-	  <literal>Or1ksim</literal> instance that is associate with the
-	  &or1ksim; (which was provided as part of the call to
-	  <function>or1ksim_init()</function> described below). This allows
-	  the routines to call the member function which implements the
-	  upcall, as shown here with <function>staticReadUpcall</function>:
-	</para>
+      <programlisting>#include "Or1ksimSC.h"</programlisting>
 
-	<programlisting>static unsigned long int  staticReadUpcall( void              *instancePtr,
+      <para>
+	The first two routines declared are not part of the class at all,
+	but static routines which implement the upcalls from the &or1ksim;
+	library. By declaring the routines static, they are visible only
+	within this source file, and can use simple linkage.
+      </para>
+
+      <para>
+	The static routines receive the pointer to the
+	<literal>Or1ksimSC</literal> instance that is associated with the
+	underlying &or1ksim; &iss; (which was provided as part of the call to
+	<function>or1ksim_init()</function> described below). This allows
+	the routines to call the member function which implements the
+	upcall, as shown here with <function>staticReadUpcall</function>:
+      </para>
+
+      <programlisting>static unsigned long int  staticReadUpcall( void              *instancePtr,
                                             unsigned long int  addr,
                                             unsigned long int  mask )
 {
@@ -1174,85 +1438,83 @@ $Id$
                                                   (uint32_t)mask );
 }       // staticReadUpcall()</programlisting>
 
-        <para>
-	  The address is cast to the &systemc; native 64-bit type, which is
-	  always used for addresses. The mask and result (and write data for
-	  <function>staticWriteUpcall()</function> are cast to POSIX fixed
-	  length types to avoid any ambiguity. While
-	  <symbol>unsigned&nbsp;long&nbsp;int</symbol> is almost always 32
-	  bits long, it is not guaranteed to be so.
+      <para>
+	The address is cast to the &systemc; native 64-bit type, which is
+	always used for addresses. The mask and result (and write data for
+	<function>staticWriteUpcall()</function> are cast to POSIX fixed
+	length types to avoid any ambiguity. While
+	<literal>unsigned&nbsp;long&nbsp;int</literal> is almost always 32
+	bits long, it is not guaranteed to be so.
+      </para>
+
+      <caution>
+	<para>
+	  It might be thought that providing a direct upcall to the C++
+	  upcall methods of the class would be more efficient, using the C++
+	  member reference operator (<literal>::*</literal>). However the
+	  linkage to a member is much more complex (to cope with inheritance
+	  and overloading). Lack of standardization in the C++
+	  <firstterm>Application Binary Interface</firstterm> (ABI) means
+	  that such linkage between C and C++ will not necessarily work.
 	</para>
-
-	<caution>
-	  <para>
-	    It might be thought that providing a direct upcall to the C++
-	    upcall methods of the class would be more efficient, using the C++
-	    member reference operator (<literal>::*</literal>). However the
-	    linkage to a member is much more complex (to cope with inheritance
-	    and overloading). Lack of standardization in the C++
-	    <firstterm>Application Binary Interface</firstterm> (ABI) mean
-	    that such linkage between C and C++ will not necessarily work.
-	  </para>
-
-	  <para>
-	    Linkage to static routines is much simpler and usually works
-	    between C and C++. So the approach used here is much more likely
-	    to work.
-	  </para>
-	</caution>
 
 	<para>
-	  The implementation of a C++ class that is a &systemc; module
-	  requires a number of definitions that class to be set up using the
-	  <literal>SC_HAS_PROCESS</literal> macro.
+	  Linkage to static routines is much simpler and usually works
+	  between C and C++. So the approach used here is more reliable.
 	</para>
+      </caution>
 
-	<programlisting>SC_HAS_PROCESS( Or1ksimSC );</programlisting>
+      <para>
+	The implementation of a C++ class that is a &systemc; module
+	requires a number of definitions for that class to be set up using the
+	<literal>SC_HAS_PROCESS</literal> macro.
+      </para>
 
-	<caution>
-	  <para>
-	    The <literal>SC_HAS_PROCESS</literal> macro is a common cause of
-	    confusion with new users to &systemc; It doesn't appear in the
-	    tutorial examples. The reason is that those examples use the
-	    <literal>SC_CTOR</literal> macro to define the constructor for the
-	    class, and the <literal>SC_CTOR</literal> macro provides the same
-	    definitions as the <literal>SC_HAS_PROCESS</literal> macro.
-	  </para>
+      <programlisting>SC_HAS_PROCESS( Or1ksimSC );</programlisting>
 
-	  <para>
-	    However the SC_CTOR macro can only be used where the constructor's
-	    implementation is given within the class definition. It is not
-	    good programming practice to mix the definition of a class
-	    (i.e. what it is) with its implementation (i.e. how it does it).
-	  </para>
-
-	  <para>
-	    This application note follows the standard C++ practice of
-	    defining a class in a header (<filename>.cpp</filename>) file
-	    based on the class name and providing the implementation in a
-	    separate C++ source (<filename>.cpp</filename>) file also based on
-	    the class name.
-	  </para>
-
-	  <para>
-	    Where the constructor implementation is separate from the
-	    definition, &systemc; requires that the
-	    <literal>SC_HAS_PROCESS</literal> macro is used before the code of
-	    any class methods.
-	  </para>
-	</caution>
+      <caution>
+	<para>
+	  The <literal>SC_HAS_PROCESS</literal> macro is a common cause of
+	  confusion with new users to &systemc; It doesn't appear in the
+	  tutorial examples. The reason is that those examples use the
+	  <literal>SC_CTOR</literal> macro to define the constructor for the
+	  class, and the <literal>SC_CTOR</literal> macro provides the same
+	  definitions as the <literal>SC_HAS_PROCESS</literal> macro.
+	</para>
 
 	<para>
-	  The constructor passes names to the constructors of its
-	  parent (<literal>sc_module</literal>) and simple initiator port
-	  (<literal>dataIni</literal>, then calls the
-	  <function>or1ksim_init()</function> routine in the &or1ksim; library
-	  to initialize the &iss;. The member function,
-	  <function>run()</function> is then initialized as a &systemc;
-	  thread, using the <literal>SC_THREAD</literal> macro.
+	  The SC_CTOR macro can only be used where the constructor's
+	  implementation is given within the class definition. However, it is
+	  not good programming practice to mix the definition of a class
+	  (i.e. what it is) with its implementation (i.e. how it does it).
 	</para>
 
-	<programlisting>Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
+	<para>
+	  This application note follows the standard C++ practice of defining
+	  a class in a header (<filename>.h</filename>) file based on the
+	  class name and providing the implementation in a separate C++ source
+	  (<filename>.cpp</filename>) file also based on the class name.
+	</para>
+
+	<para>
+	  In cases such as this, where the constructor implementation is
+	  separate from the definition, &systemc; requires that the
+	  <literal>SC_HAS_PROCESS</literal> macro is used before the code of
+	  any class methods.
+	</para>
+      </caution>
+
+      <para>
+	The constructor passes names to the constructors of its parent
+	(<literal>sc_module</literal>) and simple initiator port
+	(<literal>dataIni</literal>), then calls the
+	<function>or1ksim_init()</function> routine in the &or1ksim; library
+	to initialize the &iss;. The member function,
+	<function>run()</function> is initialized as a &systemc; thread, using
+	the <literal>SC_THREAD</literal> macro.
+      </para>
+
+      <programlisting>Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
                        const char              *configFile,
                        const char              *imageFile ) :
   sc_module( name ),
@@ -1265,15 +1527,15 @@ $Id$
 
 }       /* Or1ksimSC() */</programlisting>
 
-	<para>
-	  The main thread, <function>run()</function>, takes timestamps from a
-	  &systemc; and &or1ksim; perspective, then invokes the &iss; to run for
-	  ever (by passing a negative time argument). The &iss; will use the
-	  upcalls to request any I/O it requires into peripheral address
-	  space.
-	</para>
+      <para>
+	The main thread, <function>run()</function>, takes timestamps from a
+	&systemc; and &or1ksim; perspective, then invokes the &or1ksim; &iss;
+	to run for ever (by passing a negative time argument). The &iss; will
+	use the upcalls to request any I/O it requires into peripheral address
+	space.
+      </para>
 
-	<programlisting>void
+      <programlisting>void
 Or1ksimSC::run()
 {
   scLastUpTime   = sc_core::sc_time_stamp();
@@ -1281,143 +1543,948 @@ Or1ksimSC::run()
 
   (void)or1ksim_run( -1.0 );
 
-}       // Or1ksimSC()
-</programlisting>
+}       // Or1ksimSC()</programlisting>
 
+      <para>
+	The upcalls from the &iss; generate the transactional activity. These
+	routines set up the payload, execute the transaction (i.e exchange
+	the payload and result with the target) and return the result to the
+	&iss;.
+      </para>
+
+      <para>
+	The example here is coded in a very simple fashion, in the knowledge
+	that the requests to read are always four bytes long (the &or1k; has
+	a simple 32 bit bus), possibly with some bytes masked out for byte
+	and half-word reads. This matches the default
+	<literal>BUSWIDTH</literal> of the simple initiator socket.
+      </para>
+
+      <para>
+	Both payload and data are declared as local (automatic) variables,
+	i.e. on the stack. This is fine with a blocking transport method,
+	since they will remain valid for the duration of the transaction. The
+	data and mask are both encoded in the four bytes of a POSIX
+	<literal>uint32_t</literal>.
+      </para>
+
+      <caution>
 	<para>
-	  The upcalls from the &iss; generate the transactional activity. These
-	  routines set up the payload, execute the transaction (i.e exchange
-	  the payload and result with the target) and return the result to the
-	  &iss;.
+	  Using local variables would not be appropriate with a non-blocking
+	  socket, since the initiator routine could return before the result
+	  of the transaction is received back from the target.
 	</para>
 
 	<para>
-	  The example here is coded in a very simple fashion, in the knowledge
-	  that the requests to read are always four bytes long (the &or1k; has
-	  a simple 32 bit bus), possibly with some bytes masked out for byte
-	  and half-word reads. This matches the default
-	  <symbol>BUSWIDTH</symbol> of the simple initiator socket.
+	  &tlm2; requires that the payload, data and mask fields all remain
+	  valid for the duration of the complete transaction, so heap
+	  allocation and deletion would be required in this case.
 	</para>
+      </caution>
 
-	<para>
-	  Both payload and data are local (automatic) variables, i.e. on the
-	  stack. This is fine with a blocking transport method, since they
-	  will remain valid for the duration of the transaction. The data and
-	  mask are both encoded in the four bytes of a POSIX
-	  <symbol>uint32_t</symbol>.
-	</para>
+      <para>
+	Once the fields are set up, the <function>syncTrans()</function>
+	method (which is used for both read and write) is called to
+	synchronize with the SystemC clock, transport the payload to the
+	target and return the result.
+      </para>
 
-	<caution>
-	  <para>
-	    Using local variables would not be appropriate with a non-blocking
-	    socket, since the initiator routine could return before the result
-	    of the transaction is received back from the target.
-	  </para>
+      <para>
+	There are two components to the time taken in this model, the time
+	taken by the &or1ksim; &iss; and the time taken in any peripherals. At
+	the time of an upcall, the SystemC wrapper thread will not have
+	yielded control since the last upcall. It needs to wait for the
+	&systemc; clock to catch up to this time point.
+      </para>
 
-	  <para>
-	    &tlm2; requires that the payload, data and mask fields all remain
-	    valid for the duration of the complete transaction, so heap
-	    allocation and deletion would be required in this case.
-	  </para>
-	</caution>
+      <para>
+	The &systemc; time at which the last upcall was made was recorded in
+	<literal>scLastUpTime</literal>. The timestamp of the &or1ksim; &iss; at
+	the last upcall (i.e. the number of cycles it has executed,
+	multiplied by the time taken for each cycle) was recorded in the
+	<literal>or1kLastUpTime</literal>.
+      </para>
 
-	<para>
-	  Once the fields are set up, the <function>syncTrans()</function>
-	  method (which is used for both read and write) is called to
-	  synchronize with the SystemC clock, transport the payload to the
-	  target and return the result.
-	</para>
+      <para>
+	A call of <function>or1ksim_time()</function> gives the current time
+	of the &iss;, and hence the time that has elapsed since the last up
+	call. This is used to advance both<literal>scLastUpTime</literal> and
+	<literal>or1kLastUpTime</literal>. The thread then calls
+	<function>wait()</function> to allow any other threads in the
+	&systemc; world to run until the calculated simulation time is
+	reached.
+      </para>
 
-	<para>
-	  There are two components to the time taken in this model, the time
-	  taken by the &or1ksim; &iss; and the time taken in any peripherals. At
-	  the time of an upcall, the SystemC wrapper thread will not have
-	  yielded control since the last upcall. It needs to wait for the
-	  &systemc; clock to catch up to this time point.
-	</para>
+      <para>
+	At this time the blocking transport method of the simple initiator
+	port is called with the payload and specifying a zero time offset
+	(since the call to <function>wait()</function> means the thread is
+	synchronized with the &systemc; clock).
+      </para>
 
-	<para>
-	  The &systemc; time at which the last upcall was made was recorded in
-	  <symbol>scLastUpTime</symbol>. The timestamp of the &or1ksim; &iss; at
-	  the last upcall (i.e. the number of cycles it has executed,
-	  multiplied by the time taken for each cycle) was recorded in the
-	  <symbol>or1kLastUpTime</symbol>.
-	</para>
+      <para>
+	On return, the <literal>delay</literal> parameter will have been
+	updated with any additional delay due to the transaction&mdash;in
+	this case an estimate of the number of cycles to read or write the
+	relevant &uart; register.
+      </para>
 
-	<para>
-	  A call of <function>or1ksim_time()</function> gives the current time
-	  of the &iss;, and hence the time that has elapsed since the last up
-	  call. This is used to advance both<symbol>scLastUpTime</symbol> and
-	  <symbol>or1kLastUpTime</symbol>. The thread then calls
-	  <function>wait</function> to allow any other threads in the
-	  &systemc; world to run until the calculated simulation time is
-	  reached.
-	</para>
-
-	<para>
-	  At this time the blocking transport method of the simple initiator
-	  port is called with the payload and specifying a zero time offset
-	  (since the call to <function>wait()</function> means the thread is
-	  synchronized with the &systemc; clock).
-	</para>
-
-	<para>
-	  On return, the <symbol>delay</symbol> parameter will have been
-	  updated with any additional delay due to the transaction&mdash;in
-	  this case an estimate of the number of cycles to read or write the
-	  relevant UART register.
-	</para>
-
-	<para>
-	  It would be possible to make another call to
-	  <function>wait()</function> immediately to synchronize locally for
-	  this delay. However there will be no more processing on this thread
-	  until the next upcall from the &or1ksim; &iss;, so the delay is added
-	  to the <symbol>scLastUpTime</symbol> and will be added to the
-	  <function>wait()</function> on the next upcall.
-	</para>
-
-      </sect3>
-
-      <!-- = Compiling the Wrapper Module = -->
-
-      <sect3>
-	<title>
-	  &or1ksim; SystemC Wrapper Definition
-	</title>
+      <para>
+	It would be possible to make another call to
+	<function>wait()</function> immediately to synchronize locally for
+	this delay. However there will be no more processing on this thread
+	until the next upcall from the &or1ksim; &iss;, so the delay is added
+	to the <literal>scLastUpTime</literal> and will be added to the
+	<function>wait()</function> on the next upcall.
+      </para>
 
     </sect2>
 
-    <!-- ========== Connecting to Peripherals ========== -->
+    <!-- ========== Testing ========== -->
+
+    <sect2 id="sec_iss_wrapper_test">
+      <title>
+	Testing the &or1ksim; &iss; &tlm2; Wrapper
+      </title>
+
+      <para>
+	The test configuration was shown earlier in <xref
+	linkend="fig_iss_test" />. For this a simple logger is needed, which
+	must implement a &tlm2; simple target socket.
+      </para>
+
+      <para>
+	A simple embedded application is needed, which will make memory mapped
+	reads and writes, from and to the logger.
+      </para>
+
+      <!-- = Logger Definition = -->
+
+      <sect3>
+	<title>
+	  Definition of the &tlm2; Logger Module
+	</title>
+
+	<para>
+	  The logger is based on the &tlm2; convenience simple target socket,
+	  so needs the appropriate header:
+	</para>
+
+	<programlisting>#include "tlm.h"
+#include "tlm_utils/simple_target_socket.h"</programlisting>
+
+        <para>
+	  The class is a standard &systemc; module:
+	</para>
+
+	<programlisting>class LoggerSC
+: public sc_core::sc_module</programlisting>
+
+        <para>
+	  Two methods are needed, a constructor, which will register the
+	  second method as the blocking callback for the target port
+	</para>
+
+	 <programlisting>  LoggerSC( sc_core::sc_module_name  name );
+
+  tlm_utils::simple_target_socket&lt;LoggerSC&gt;  loggerPort;</programlisting>
+
+      </sect3>
+
+      <!-- = Logger Implementation = -->
+
+      <sect3>
+	<title>
+	  Implementation of the &tlm2; Logger Module
+	</title>
+
+	<para>
+	  The logger will be doing a certain amount of stream IO, so includes
+	  the C++ headers that define stream manipulation functions. The POSIX
+	  standard integer types are also included.
+	</para>
+
+	<programlisting>#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;stdint.h&gt;
+
+#include "LoggerSC.h"</programlisting>
+
+	<para>
+	  The constructor passes its argument (the module) name to the parent
+	  <literal>sc_module</literal>literal> constructor. The body of the
+	  routine then registers the <function>loggerReadWrite()</function>
+	  method as the callback for blocking transport to this convenience
+	  socket. This means that any initiator which requests blocking
+	  transport (by calling the initiator socket's
+	  <function>b_transport</function> method) will invoke this callback
+	  routine in the target.
+	</para>
+
+	<programlisting>LoggerSC::LoggerSC( sc_core::sc_module_name  name ) :
+  sc_module( name )
+{
+  loggerPort.register_b_transport( this, &amp;LoggerSC::loggerReadWrite );
+
+}       // Or1ksimSC()
+</programlisting>
+
+        <para>
+	  The callback method, <function>loggerReadWrite</function> records
+	  the key information regarding any transaction it receives. The
+	  payload is a &tlm2; Generic Payload, with appropriate access
+	  routines. In this simple implementation, a length of 4 bytes is
+	  assumed for the data in the payload.
+	</para>
+
+	<para>
+	  To get at the data and byte enable mask, the pointers to
+	  <literal>unsigned char</literal> are cast to pointers to the POSIX
+	  fixed width type, <literal>uint32_t</literal>, as was used with
+	  <classname>Or1ksimSC</classname>. Endianism issues due to the byte
+	  pointers not being word aligned are not an issue, because the
+	  <classname>Or1ksimSC</classname> module also declared them as
+	  <literal>uint32_t</literal>.
+	</para>
+
+	<programlisting>void
+LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
+                           sc_core::sc_time         &amp;delayTime )
+{
+  // Break out the address, mask and data pointer.
+
+  tlm::tlm_command   comm    = payload.get_command();
+  sc_dt::uint64      addr    = payload.get_address();
+  unsigned char     *maskPtr = payload.get_byte_enable_ptr();
+  unsigned char     *dataPtr = payload.get_data_ptr();
+
+  // Which command?
+
+  const char *commStr;
+
+  switch( comm ) {
+  case tlm::TLM_READ_COMMAND:   commStr = "Read";   break;
+  case tlm::TLM_WRITE_COMMAND:  commStr = "Write";  break;
+  case tlm::TLM_IGNORE_COMMAND: commStr = "Ignore"; break;
+  }
+
+  // Log the lot (data only if its a write)
+
+  std::cout &lt;&lt; "Logging" &lt;&lt; std::endl;
+  std::cout &lt;&lt; "  Command:      "   &lt;&lt; commStr &lt;&lt; std::endl;
+  std::cout &lt;&lt; "  Address:      0x" &lt;&lt; std::setw( 8 ) &lt;&lt; std::setfill( '0' )
+            &lt;&lt;std::hex &lt;&lt; (uint64_t)addr &lt;&lt; std::endl;
+  std::cout &lt;&lt; "  Byte enables: 0x" &lt;&lt; std::setw( 8 ) &lt;&lt; std::setfill( '0' )
+            &lt;&lt;std::hex &lt;&lt; *((uint32_t *)maskPtr) &lt;&lt; std::endl;
+
+  if( tlm::TLM_WRITE_COMMAND == comm ) {
+    std::cout &lt;&lt; "  Data:         0x" &lt;&lt; std::setw( 8 ) &lt;&lt; std::setfill( '0' )
+              &lt;&lt;std::hex &lt;&lt; *((uint32_t *)dataPtr) &lt;&lt; std::endl;
+  }
+
+  std::cout &lt;&lt; "  Delay:        " &lt;&lt; std::setprecision( 9 ) &lt;&lt; std::fixed
+            &lt;&lt; delayTime.to_seconds() &lt;&lt; "s" &lt;&lt; std::endl;
+  std::cout &lt;&lt; std::endl;
+
+  // Set a response before returning
+
+  payload.set_response_status( tlm::TLM_OK_RESPONSE );
+
+}       // loggerReadWrite()</programlisting>
+
+      </sect3>
+
+      <!-- = Main Program = -->
+
+      <sect3>
+	<title>
+	  The Model Main Program
+	</title>
+
+	<para>
+	  The logger module and the &or1ksim; wrapper module must be connected
+	  in the main program (<function>sc_main</function> since this is
+	  &systemc;), and the simulation invoked.
+	</para>
+
+	<para>
+	  The program includes the main &tlm2; header and the header of the
+	  two modules which will be used:
+	</para>
+
+	<programlisting>#include "tlm.h"
+#include "Or1ksimSC.h"
+#include "LoggerSC.h"</programlisting>
+
+	<para>
+	  The program takes two arguments, an &or1ksim; configuration file
+	  (described further in <xref linkend="sec_iss_run_test" />) and a
+	  binary image to execute on the &or1ksim; &iss; (see <xref
+	  linkend="sec_iss_or32_prog" />).
+	</para>
+
+	<programlisting>int  sc_main( int   argc,
+              char *argv[] )
+{
+  if( argc != 3 ) {
+    fprintf( stderr, "Usage: TestSC &lt;config_file&gt; &lt;image_file&gt;\n" );
+    exit( 1 );
+  }</programlisting>
+
+	<para>
+	  An instance of the &or1ksim; &iss; and the logger are created, the
+	  &iss; being passed the two program arguments for its initialization.
+	</para>
+
+	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
+  LoggerSC   logger( "logger" );</programlisting>
+
+	<para>
+	  The target socket of the logger (<literal>loggerPort</literal>) is
+	  connected by passing it as argument to the initiator socke of the
+	  &iss; (<literal>dataIni</literal>). The C++ function application
+	  operator <literal>operator()</literal> is overloaded for initiator
+	  sockets to provide this binding function.
+	</para>
+
+	<programlisting>  iss.dataIni( logger.loggerPort );</programlisting>
+
+	<para>
+	  Once the model is instantiated, simulation is invoked to run
+	  forever.
+	</para>
+	  
+	<programlisting>  sc_core::sc_start();</programlisting>
+
+      </sect3>
+
+      <!-- = Embedded test program = -->
+
+      <sect3 id="sec_iss_or32_prog">
+	<title>
+	  Test Program to Run on the &or1ksim;
+	</title>
+
+	<para>
+	  The test program (in <filename>logger_test.c</filename> defines a
+	  memory mapped volatile data structure and then writes to and reads
+	  from each element of that structure. Compilation of this program
+	  requires the &or1k; GNU tool chain (see <xref
+	  linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> for details
+	  of installing this).
+	</para>
+
+	<para>
+	  The test program uses some simple utilities which can write
+	  characters, words and hexadecimal numbers. Its header is included:
+	</para>
+
+	<programlisting>#include "utils.h"</programlisting>
+	<para>
+	  The memory mapped address is defined in the configuration of
+	  &or1ksim; (see <xref linkend="sec_iss_run_test" />) to be
+	  0x90000000. This is set as a defined constant in the test program.
+	</para>
+
+	<programlisting>#define BASEADDR  0x90000000</programlisting>
+
+	<para>
+	  The memory mapped structure consists of a byte, halfword (16 bits)
+	  and full word (32 bits), all declared as <literal>volatile</literal>
+	  within the <literal>struct</literal>. These are all declared with
+	  the C types, which for the &or1k; tool chain are known to correspond
+	  to these sizes.
+	</para>
+
+	<programlisting>struct  testdev
+{
+  volatile unsigned char       byte;
+  volatile unsigned short int  halfword;
+  volatile unsigned long  int  fullword;
+};</programlisting>
+
+        <para>
+	  The main program declares a pointer to this struct at the
+	  <literal>BASEADDR</literal>, along with 3 variables to hold the
+	  results of the various sized results when reading.
+	</para>
+
+	<programlisting>main()
+{
+  struct testdev *dev = (struct testdev *)BASEADDR;
+
+  unsigned char       byteRes;
+  unsigned short int  halfwordRes;
+  unsigned long int   fullwordRes;</programlisting>
+
+	<para>
+	  The details of each write are logged and the value then written. In
+	  the absence of <function>printf</function>, the logging is
+	  necessarily cumbersome).
+	</para>
+
+	<programlisting>  simputs( "Writing byte 0xa5 to address 0x" );
+  simputh( (unsigned long int)(&amp;(dev->byte)) );
+  simputs( "\n" );
+  dev->byte     =       0xa5;
+
+  simputs( "Writing half word 0xbeef to address 0x" );
+  simputh( (unsigned long int)(&amp;(dev->halfword)) );
+  simputs( "\n" );
+  dev->halfword =     0xbeef;
+
+  simputs( "Writing full word 0xdeadbeef to address 0x" );
+  simputh( (unsigned long int)(&amp;(dev->fullword)) );
+  simputs( "\n" );
+  dev->fullword = 0xdeadbeef;</programlisting>
+
+	<para>
+	  The values are then read back. No results are expected (the logger
+	  does not set any values), but this should check the process behaves
+	  as expected.
+	</para>
+
+	<programlisting>  byteRes = dev->byte;
+  simputs( "Read 0x" );
+  simputh(  byteRes );
+  simputs( " from address 0x" );
+  simputh( (unsigned long int)(&amp;(dev->byte)) );
+  simputs( "\n" );
+
+  halfwordRes = dev->halfword;
+  simputs( "Read 0x" );
+  simputh( halfwordRes );
+  simputs( " from address 0x" );
+  simputh( (unsigned long int)(&amp;(dev->halfword)) );
+  simputs( "\n" );
+
+  fullwordRes = dev->fullword;
+  simputs( "Read 0x" );
+  simputh( fullwordRes );
+  simputs( " from address 0x" );
+  simputh( (unsigned long int)(&amp;(dev->fullword)) );
+  simputs( "\n" );
+</programlisting>
+
+	<para>
+	  At the end of the program, the utilty <function>simexit()</function>
+	  is used. This not only terminates the program, but will also exit
+	  the simulation.
+	</para>
+
+	<para>
+	  The program is compiled with the utility routines (in
+	  <filename>utils.c</filename>) and a small bootloader (in
+	  <filename>start.s</filename>) which defines a
+	  <literal>_start</literal> routine which invokes
+	  <function>main()</function>. The linker arguments are chosen to make
+	  the program load from start of memory, with the
+	  <literal>_start</literal> routine sitting at the &or1k; reset vector
+	  (0x100).
+	</para>
+
+      </sect3>
+
+      <!-- = Running the Test = -->
+
+      <sect3 id="sec_iss_run_test">
+	<title>
+	  Running the Test
+	</title>
+
+	<para>
+	  The &or1ksim; &iss; is configured using a textual configuration
+	  file, described in more detail in <xref linkend="ref_app_note_1"
+	  endterm="ref_app_note_1_xr" />. For the modified &or1ksim;,
+	  <literal>generic</literal> peripherals can be added, which will
+	  cause code to call out via the upcall mechansim to the &or1ksim;
+	  &systemc; wrapper module (see <xref linkend="sec_upcall" />).
+	</para>
+
+	<para>
+	  The configuration file for &or1ksim; disables all the standard
+	  peripherals, apart from one block of memory from address 0x0. It
+	  adds a <literal>generic</literal> peripheral allowing byte, half word
+	  and full word access to addresses mapped from 0x90000000 to
+	  0x90000007, with the following configuration file entry
+	</para>
+
+	<programlisting>section generic
+  enabled      =          1
+  byte_enabled =          1
+  hw_enabled   =          1
+  word_enabled =          1
+  name         = "External UART"
+  baseaddr     = 0x90000000
+  size         = 0x8
+end</programlisting>
+
+	<para>
+	  The SystemC modules are each compiled with access to the &or1ksim;,
+	  &systemc; and &tlm2; header directories. It is also essential that
+	  <literal>SC_INCLUDE_DYNAMIC_PROCESSES</literal> is defined when
+	  using &tlm2;:
+	</para>
+
+	<programlisting>g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
+    -I$SYSTEMC_HOME/include -I$TLM_HOME/include/tlm -c TestSC.cpp
+g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
+    -I$SYSTEMC_HOME/include -I$TLM_HOME/include/tlm -c Or1ksimSC.cpp
+g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
+    -I$SYSTEMC_HOME/include -I$TLM_HOME/include/tlm -c LoggerSC.cpp</programlisting>
+
+	<para>
+	  The final linking must include the &systemc; library, and since the
+	  &or1ksim; library includes some shared objects, linker directions to
+	  find those shared objects
+	  (<literal>-Wl,--rpath,$OR1KSIM_HOME</literal>).
+	</para>
+
+	<programlisting>g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES TestSC.o Or1ksimSC.o LoggerSC.o \
+    -Wl,--rpath,$OR1KSIM_HOME/lib -L$OR1KSIM_HOME/lib \
+    -L$SYSTEMC_HOME/lib-linux -lsim -lsystemc -o TestSC</programlisting>
+
+        <para>
+	  The compiled program can then be executed by passing in as arguments
+	  the &or1ksim; configuration file and the &or1k; binary. The result
+	  is shown in <xref linkend="fig_logger_test" />.
+	</para>
+
+	<figure id="fig_logger_test">
+	  <title>
+	    Output from the logger test of the &or1ksim; wrapper module.
+	  </title>
+
+	  <screen>$ ./TestSC ../simple.cfg ../progs_or32/logger_test
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Reading script file from '../simple.cfg'...
+
+   ... &lt;Or1ksim initialization messages&gt;
+
+Writing byte 0xa5 to address 0x090000000
+Logging
+  Command:      Write
+  Address:      0x90000000
+  Byte enables: 0x000000ff
+  Data:         0x000000a5
+  Delay:        0.000000000s
+
+Writing half word 0xbeef to address 0x090000002
+Logging
+  Command:      Write
+  Address:      0x90000000
+  Byte enables: 0xffff0000
+  Data:         0xbeef0000
+  Delay:        0.000000000s
+
+   ... &lt;More test program output&gt;
+
+Logging
+  Command:      Read
+  Address:      0x90000004
+  Byte enables: 0xffffffff
+  Delay:        0.000000000s
+
+Read full word 0x0 from address 0x090000004
+exit(0)
+@reset : cycles 0, insn #0
+@exit  : cycles 26921, insn #13854
+ diff  : cycles 26921, insn #13854
+$ </screen>
+	</figure>
+
+	<para>
+	  Each access from the application program generates the expected
+	  transactional access. All accesses are 32 bits wide, but for the
+	  byte and half-word accesse the relevant bytes are masked off.
+	</para>
+
+	<note>
+	  <para>
+	    The &or1ksim; can be configured to model big-endian
+	    architectures. The &tlm2; payloads are always packed with data
+	    with the endianism of the model.
+	  </para>
+
+	  <para>
+	    If the exercise were repeated
+	    with a big-endian version of &or1ksim; the addresses of the access
+	    would be unchanged (they are word aligned), but the byte enable
+	    masks for the byte and half word accesses would be inverted.
+	  </para>
+	</note>
+
+      </sect3>
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Connecting to Peripherals
+       ==================================================================== -->
+
+  <sect1 id="sec_uart">
+    <title>
+      Modeling the &uart; Perihperal
+    </title>
+
+    <para>
+      This example uses a single peripheral, a &uart;. The &uart; model is based
+      on National Semiconductor 16450 design.
+    </para>
+
+    <!-- ========== The &uart; ========== -->
 
     <sect2>
       <title>
-	Connecting to Periperhals
+	Modeling the 16450 &uart;
       </title>
 
-      <!-- = The UART and Terminal Emulator = -->
+      <para>
+	The 16450 &uart; specifies a set of registers that control the &uart;
+	behavior as shown in <xref linkend="tab_ns_16450_regs" />.
+      </para>
 
-      <sect3>
+      <table id="tab_ns_16450_regs" frame='all'>
 	<title>
-	  The UART and Terminal Emulator
+	  NS 16450 &uart; Registers
 	</title>
+	<tgroup cols='4' align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="2*" colname="address" />
+	  <colspec colwidth="2*" colname="register" />
+	  <colspec colwidth="1*" colname="rw" />
+	  <colspec colwidth="8*" colname="description" />
 
-	<para>
-	</para>
+	  <thead>
+	    <row>
+	      <entry>
+		Address
+	      </entry>
+	      <entry>
+		Register
+	      </entry>
+	      <entry align="center">
+		R/W
+	      </entry>
+	      <entry>
+		Description
+	      </entry>
+	    </row>
+	  </thead>
 
-      </sect3>
+	  <tbody>
+	    <row>
+	      <entry morerows="2">
+		0
+	      </entry>
+	      <entry>
+		<literal>RXBUF</literal>
+	      </entry>
+	      <entry align="center">
+		R
+	      </entry>
+	      <entry>
+		<para>
+		  When the <literal>DLAB</literal> bit is 0 (see register
+		  <literal>LCR</literal>, this is the buffer for read data.
+		</para>
+	      </entry>
+	    </row>
 
-      <!-- = Connecting the system = -->
+	    <row>
+	      <entry>
+		<literal>TXBUF</literal>
+	      </entry>
+	      <entry align="center">
+		W
+	      </entry>
+	      <entry>
+		<para>
+		  When the <literal>DLAB</literal> bit is 0 (see register
+		  <literal>LCR</literal>, this is the buffer for data to be
+		  written.
+		</para>
+	      </entry>
+	    </row>
 
-      <sect3>
-	<title>
-	  Connecting the Complete System
-	</title>
+	    <row>
+	      <entry>
+		<literal>DLL</literal>
+	      </entry>
+	      <entry align="center">
+		R
+	      </entry>
+	      <entry>
+		<para>
+		  When the <literal>DLAB</literal> bit is 1 (see register
+		  <literal>LCR</literal>, this is the low byte of the divisor
+		  latch (which controls &uart; performance)
+		</para>
+	      </entry>
+	    </row>
 
-	<para>
-	</para>
+	    <row>
+	      <entry morerows="1">
+		1
+	      </entry>
+	      <entry>
+		<literal>IER</literal>
+	      </entry>
+	      <entry align="center">
+		R/W
+	      </entry>
+	      <entry>
+		<para>
+		  The interrupt enable register. The lower 4 bits control
+		  which events generate an interrupt.
+		</para>
+	      </entry>
+	    </row>
 
-      </sect3>
+	    <row>
+	      <entry>
+		<literal>DLH</literal>
+	      </entry>
+	      <entry align="center">
+		R/W
+	      </entry>
+	      <entry>
+		<para>
+		  When the <literal>DLAB</literal> bit is 1 (see register
+		  <literal>LCR</literal>, this is the high byte of the divisor
+		  latch (which controls &uart; performance)
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		2
+	      </entry>
+	      <entry>
+		<literal>IIR</literal>
+	      </entry>
+	      <entry align="center">
+		R
+	      </entry>
+	      <entry>
+		<para>
+		  Interrupt identification register. Bit 0 indicates if an
+		  interrupt is pending, bits 1-2 the reason for the
+		  interrupt.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		3
+	      </entry>
+	      <entry>
+		<literal>LCR</literal>
+	      </entry>
+	      <entry align="center">
+		R/W
+	      </entry>
+	      <entry>
+		<para>
+		  Line control register. Various bits controlling the
+		  behavior of the &uart;. Of these, DLAB, bit 7, the divisor
+		  latch access bit is important, because it controls the
+		  behavior of registers 0
+		  (<literal>RXBUF</literal>/<literal>TXBUF</literal>/<literal>DLL</literal>)
+		  and 1 (<literal>IER</literal>/<literal>DLH</literal>).
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		4
+	      </entry>
+	      <entry>
+		<literal>MCR</literal>
+	      </entry>
+	      <entry align="center">
+		W
+	      </entry>
+	      <entry>
+		<para>
+		  Modem control register. Bits 0-4 control the
+		  behavior of the modem.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		5
+	      </entry>
+	      <entry>
+		<literal>LSR</literal>
+	      </entry>
+	      <entry align="center">
+		R
+	      </entry>
+	      <entry>
+		<para>
+		  Line status register. Bits 0-6 report the status of the
+		  &uart;. Of these, DR, bit 0, receiver data ready is
+		  important, indicating there is valid data in
+		  <literal>RXBUF</literal>.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		6
+	      </entry>
+	      <entry>
+		<literal>MSR</literal>
+	      </entry>
+	      <entry align="center">
+		R
+	      </entry>
+	      <entry>
+		<para>
+		  Modem Status Register. Bits reporting the state of the
+		  modem.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		7
+	      </entry>
+	      <entry>
+		<literal>SCR</literal>
+	      </entry>
+	      <entry align="center">
+		R/W
+	      </entry>
+	      <entry>
+		<para>
+		  Scratch register. Not used by the &uart;, but may be used by
+		  the application to store an 8-bit value.
+		</para>
+	      </entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== UART Definition ========== -->
+
+    <sect2>
+      <title>
+	&uart; Module Structure
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== UART Definition ========== -->
+
+    <sect2>
+      <title>
+	&uart; Module Definition
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== UART Implementation ========== -->
+
+    <sect2>
+      <title>
+	&uart; Module Implementation
+      </title>
+
+      <para>
+      </para>
+
+    </sect2>
+
+  </sect1>
+
+  <!-- ========================================================================
+       a Testbench
+       ==================================================================== -->
+
+  <sect1 id="sec_terminal">
+    <title>
+      Adding a Terminal as Testbench
+    </title>
+
+    <para>
+    </para>
+
+  </sect1>
+
+  <!-- ========================================================================
+       Adding an Temporal Decoupling
+       ==================================================================== -->
+
+  <sect1 id="sec_temporal_decoupling">
+    <title>
+      Adding Temporal Decoupling of the Model
+    </title>
+
+    <para>
+      In this case study temporal decoupling is added to the &tlm2; model of
+      an SoC. The SoC model with arbiter from the previous example is reused.
+    </para>
+
+    <!-- ========== The Quantum Keeper ========== -->
+
+    <sect2>
+      <title>
+	The Quantum Keeper
+      </title>
+
+      <!-- = Basic Interface = -->
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== Temporal Decoupling ========== -->
+
+    <sect2>
+      <title>
+	Temporal Decoupling Each Component
+      </title>
+
+      <!-- = Basic Interface = -->
+
+      <para>
+      </para>
+
+    </sect2>
+
+    <!-- ========== Connecting the System ========== -->
+
+    <sect2>
+      <title>
+	Connecting the Complete System
+      </title>
+
+      <para>
+      </para>
 
     </sect2>
   </sect1>
@@ -1426,9 +2493,9 @@ Or1ksimSC::run()
        Adding an Arbiter
        ==================================================================== -->
 
-  <sect1 id="sec_case_study_2">
+  <sect1 id="sec_arbiter">
     <title>
-      Case Study Two: Adding an Arbiter
+      Adding an Arbiter
     </title>
 
     <para>
@@ -1437,44 +2504,6 @@ Or1ksimSC::run()
       <firstterm>passthrough</firstterm> convenience socket and
       <firstterm>tagged&#32;socket</firstterm>s.
     </para>
-
-    <!-- ========== Example Design ========== -->
-
-    <sect2>
-      <title>
-	The Example Design
-      </title>
-
-      <para>
-	The example is extended to add further peripherals (another UART,
-	connected to a second terminal). An arbiter is introduced, which will
-	route traffic to the correct UART, depending on address. <xref
-	linkend="fig_arbiter_soc" /> shows the design.
-      </para>
-
-      <figure id="fig_arbiter_soc">
-	<title>
-	  Simple SoC based on the &or1k; &or1ksim;.
-	</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="arbiter_soc.svg"
-		       format="SVG"
-		       width="14cm"
-		       scalefit="1"
-		       align="center" />
-	  </imageobject>
-	  <imageobject>
-	    <imagedata fileref="arbiter_soc.png"
-		       format="PNG"
-		       width="80%"
-		       scalefit="1"
-		       align="center" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
-
-    </sect2>
 
     <!-- ========== Design of the Arbiter ========== -->
 
@@ -1523,92 +2552,30 @@ Or1ksimSC::run()
   </sect1>
 
   <!-- ========================================================================
-       Adding an Temporal Decoupling
+       Using standard TLM2
        ==================================================================== -->
 
-  <sect1 id="sec_case_study_3">
+  <sect1 id="sec_standard_tlm">
     <title>
-      Case Study Three: Temporal Decoupling of the Model
+      Using Standard &tlm2; Sockets and Interfaces
     </title>
 
     <para>
-      In this case study temporal decoupling is added to the &tlm2; model of
-      an SoC. The SoC model with arbiter from the previous example is reused.
     </para>
-
-    <!-- ========== The Quantum Keeper ========== -->
-
-    <sect2>
-      <title>
-	The Quantum Keeper
-      </title>
-
-      <!-- = Basic Interface = -->
-
-      <para>
-      </para>
-
-    </sect2>
-
-    <!-- ========== Temporal Decoupling ========== -->
-
-    <sect2 id="sec_temporal_decoupling">
-      <title>
-	Temporal Decoupling Each Component
-      </title>
-
-      <!-- = Basic Interface = -->
-
-      <para>
-      </para>
-
-    </sect2>
-
-    <!-- ========== Connecting the System ========== -->
-
-    <sect2>
-      <title>
-	Connecting the Complete System
-      </title>
-
-      <para>
-      </para>
-
-    </sect2>
   </sect1>
 
   <!-- ========================================================================
-       Non-Blocking Interfaces
+       Running Linux
        ==================================================================== -->
 
-  <sect1>
+  <sect1 id="sec_linux">
     <title>
-      Case Study Two: Non-Blocking Interfaces
+      Running Linux on the Example SoC
     </title>
 
-    <!-- ========== Justification ========== -->
-
-    <sect2>
-      <title>
-	Loosely Timed Non-Blocking Interface
-      </title>
-
-      <para>
-      </para>
-
-    </sect2>
-
-    <!-- ========== Justification ========== -->
-
-    <sect2>
-      <title>
-	Approximately Timed Non-Blocking Interface
-      </title>
-
-      <para>
-      </para>
-
-    </sect2>
+    <para>
+      
+    </para>
 
   </sect1>
 
@@ -1651,8 +2618,8 @@ Or1ksimSC::run()
       <glossterm>4-state</glossterm>
       <glossdef>
 	<para>
-	  Hardware logic model which considers unknown (<symbol>X</symbol>)
-	  and undriven (<symbol>Z</symbol>) values as well as logic high and
+	  Hardware logic model which considers unknown (<literal>X</literal>)
+	  and undriven (<literal>Z</literal>) values as well as logic high and
 	  logic low (binary 0 and binary 1).
 	</para>
 
@@ -2167,8 +3134,8 @@ Or1ksimSC::run()
       References
     </title>
 
-    <biblioentry id="big_app_note_1">
-      <title>
+    <biblioentry id="ref_app_note_1">
+      <title id="ref_app_note_1_xr">
 	&embecosm; Application Note 1. The &opencores; &or1k; Simulator and
 	Tool Chain: Installation Guide
       </title>
