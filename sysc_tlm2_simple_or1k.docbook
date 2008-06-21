@@ -116,10 +116,10 @@ $Id$
 
 <article class="whitepaper" lang="en_GB">
   <title>
-    Converting an &iss; to use &osci; TLM 2.0 Convenience Ports
+    Building a Loosely Timed SoC Model with &osci; TLM 2.0
   </title>
   <subtitle>
-    A Case Study Using &or1k; &or1ksim;
+    A Case Study Reusing the &or1k; &or1ksim; &iss;
   </subtitle>
 
   <articleinfo>
@@ -216,7 +216,6 @@ $Id$
     </legalnotice>
   </articleinfo>
 
-
   <!-- ========================================================================
        Introduction
        ==================================================================== -->
@@ -263,7 +262,7 @@ $Id$
       </title>
 
       <para>
-	The &osci; &tlm2; standard represents a signficant advance in
+	The &osci; &tlm2; standard represents a significant advance in
 	standardizing the creation of fast software models of
 	hardware. However the &osci; reference implementation lacks training
 	material and examples to introduce new users to the technology.
@@ -324,7 +323,7 @@ $Id$
 	</title>
 
 	<para>
-	  At the heart of &tlm; is the difference in approach to parallelsim
+	  At the heart of &tlm; is the difference in approach to parallelism
 	  taken in hardware and software design.
 	</para>
 
@@ -358,7 +357,7 @@ $Id$
 	  This follows naturally the behavior on a conventional uni-processor
 	  CPU, where there is a single program counter indicating the next
 	  instruction to execute, and so only one flow of control. Even with
-	  modern multi-processors, this is still a natural way of programming
+	  modern multiprocessors, this is still a natural way of programming
 	  for the software engineer, because the number or threads or
 	  processes will not generally match the number of processor cores
 	  available.
@@ -436,7 +435,7 @@ $Id$
 	    like &systemc;.
 	  </para>
 	</footnote>. <firstterm>&systemc;</firstterm> was developed to provide
-	features that facilite hardware modeling in a mainstream programming
+	features that facilitate hardware modeling in a mainstream programming
 	language. It is now standardized as IEEE 1666-2007.
       </para>
 
@@ -444,13 +443,13 @@ $Id$
 	An important objective was that software engineers should be
 	comfortable with using &systemc; Rather than invent a new language,
 	&systemc; is based on the existing C++ language. &systemc; is a true
-	superset of C++, so any C++ program is automatically a valid &systemc;
+	super-set of C++, so any C++ program is automatically a valid &systemc;
 	program.
       </para>
 
       <para>
 	&systemc; uses the template, macro and library features of C++ to
-	extend the langauge. The key features it provides are:
+	extend the language. The key features it provides are:
 	<itemizedlist>
 
 	  <listitem>
@@ -615,7 +614,7 @@ $Id$
 	<para>
 	  A module's threads may act as either
 	  <firstterm>initiator</firstterm>s or
-	  <firstterm>target</firstterm>s. An initiator is reponsible for
+	  <firstterm>target</firstterm>s. An initiator is responsible for
 	  creating a payload (see <xref linkend="sec_payload" />) and calling
 	  the transport routine to send it. A target receives payloads from
 	  the transport routine for processing and response.
@@ -642,7 +641,7 @@ $Id$
 
 	<para>
 	  The <firstterm>blocking</firstterm> transport methods are called by
-	  the initator thread, received by the target thread, which processes
+	  the initiator thread, received by the target thread, which processes
 	  the request and then returns the result. Until the transaction has
 	  been processed and released the initiator thread is blocked.
 	</para>
@@ -652,7 +651,7 @@ $Id$
 	  by the initiator thread, received by the target thread, which
 	  immediately returns, before processing the request. Subsequently the
 	  target, having processed the request makes a transport call back to
-	  the initator to return the result.
+	  the initiator to return the result.
 	</para>
 
 	<para>
@@ -724,7 +723,7 @@ $Id$
 	<para>
 	  However, if required, untimed models are easily implemented as
 	  loosely timed models which ignore the timing parameters in the
-	  interface calls. If temporaly decoupled, then they ignore the
+	  interface calls. If temporarily decoupled, then they ignore the
 	  quantum as well.
 	</para>
       </sect3>
@@ -749,7 +748,7 @@ $Id$
 	  sub-classes for sockets is an unnecessary layer of complexity for
 	  simple modeling. So the &tlm2; standard defines a number of
 	  <firstterm>convenience&#32;socket</firstterm>s which can be
-	  instantiated directly by modules, and which specify their inteface
+	  instantiated directly by modules, and which specify their interface
 	  methods as callbacks.
 	</para>
 
@@ -770,8 +769,7 @@ $Id$
 
   <sect1 id="sec_case_study">
     <title>
-      Case Study: Wrapping an Existing ISS with &tlm2; Sockets and Building a
-      Complete SoC
+      Case Study: A SoC Using &tlm2;
     </title>
 
     <para>
@@ -781,7 +779,7 @@ $Id$
     </para>
 
     <para>
-      The modeling is at a high level of abstraction, using th &tlm2;
+      The modeling is at a high level of abstraction, using the &tlm2;
       <glossterm>Generic Payload</glossterm> with no extensions. It is
       completely independent of the actual bus architecture that will be used
       in the implementation.
@@ -865,12 +863,12 @@ $Id$
 
       <para>
 	Information on obtaining and setting up the open source &or1ksim;
-	simulator and its toolchain are given in <xref
+	simulator and its tool chain are given in <xref
 	linkend="ref_app_note_1" />.
       </para>
 
       <para>
-	In general the CPU is deconfigured to remove all the peripherals and
+	In general the CPU is configured to remove all the peripherals and
 	the caches and MMU, so it models only the CPU and main memory.
       </para>
 
@@ -922,7 +920,7 @@ $Id$
 	<para>
 	  To build a simple SoC the &or1ksim; CPU/memory subsystem is
 	  connected to a &uart; modeled in &systemc; using &tlm2;. The
-	  testbench for the system will be a terminal, also modeled in
+	  test bench for the system will be a terminal, also modeled in
 	  &systemc; using &tlm2;. This model is built up in stages in <xref
 	  linkend="sec_iss_wrapper" />, <xref linkend="sec_uart" /> and <xref
 	  linkend="sec_terminal" />. <xref linkend="fig_simple_soc" /> shows the
@@ -1117,7 +1115,7 @@ $Id$
 	    <para>
 	      <function>or1ksim_init()</function> initializes the
 	      simulator. For &or1ksim;, configuration data is read from a
-	      file, which is passed as the first agument,
+	      file, which is passed as the first argument,
 	      <literal>config_file</literal>. The program image is passed as
 	      a second argument, <literal>image_file</literal>.
 	    </para>
@@ -1198,7 +1196,7 @@ $Id$
 	</para>
 
 	<para>
-	  &or1ksim; peripherals are configured in a texual configuration file,
+	  &or1ksim; peripherals are configured in a textual configuration file,
 	  with a section (introduced by the keyword
 	  <literal>section</literal>) for each device attached. This
 	  configuration specifies the memory mapped addresses of the
@@ -1235,7 +1233,7 @@ $Id$
 	The &or1ksim; SystemC wrapper module class,
 	<literal>Or1ksimSC</literal>, is defined in the file
 	<filename>Or1ksimSC.h</filename>. It will provide a single initiator
-	socket, for data access, <literal>dataIni</literal> (no instruction
+	socket, for data access, <literal>dataBus</literal> (no instruction
 	accesses are planned, so modeling an external instruction bus is
 	unnecessary).
       </para>
@@ -1268,7 +1266,7 @@ $Id$
       </note>
 
       <para>
-	The module is declared as a standard &systemc; module, ie. as a
+	The module is declared as a standard &systemc; module, i.e. as a
 	derived class of <literal>sc_core::sc_module</literal>.
       </para>
 
@@ -1351,7 +1349,7 @@ $Id$
       </caution>
 
       <para>
-	The initiator socket, <literal>dataIni</literal> is declared for the
+	The initiator socket, <literal>dataBus</literal> is declared for the
 	<literal>Or1ksimSC</literal> class. The convenience sockets are
 	templated with
       </para>
@@ -1384,7 +1382,7 @@ $Id$
 	initiator) no callbacks are actually required.
       </para>
 
-      <programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataIni;</programlisting>
+      <programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataBus;</programlisting>
 
       <para>
 	Two time stamps are declared, one to hold the SystemC view of the
@@ -1507,7 +1505,7 @@ $Id$
       <para>
 	The constructor passes names to the constructors of its parent
 	(<literal>sc_module</literal>) and simple initiator port
-	(<literal>dataIni</literal>), then calls the
+	(<literal>dataBus</literal>), then calls the
 	<function>or1ksim_init()</function> routine in the &or1ksim; library
 	to initialize the &iss;. The member function,
 	<function>run()</function> is initialized as a &systemc; thread, using
@@ -1599,7 +1597,7 @@ Or1ksimSC::run()
 
       <para>
 	The &systemc; time at which the last upcall was made was recorded in
-	<literal>scLastUpTime</literal>. The timestamp of the &or1ksim; &iss; at
+	<literal>scLastUpTime</literal>. The time stamp of the &or1ksim; &iss; at
 	the last upcall (i.e. the number of cycles it has executed,
 	multiplied by the time taken for each cycle) was recorded in the
 	<literal>or1kLastUpTime</literal>.
@@ -1796,7 +1794,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 
       <!-- = Main Program = -->
 
-      <sect3>
+      <sect3 id="sec_logger_main_prog">
 	<title>
 	  The Model Main Program
 	</title>
@@ -1841,13 +1839,13 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 
 	<para>
 	  The target socket of the logger (<literal>loggerPort</literal>) is
-	  connected by passing it as argument to the initiator socke of the
-	  &iss; (<literal>dataIni</literal>). The C++ function application
+	  connected by passing it as argument to the initiator socket of the
+	  &iss; (<literal>dataBus</literal>). The C++ function application
 	  operator <literal>operator()</literal> is overloaded for initiator
 	  sockets to provide this binding function.
 	</para>
 
-	<programlisting>  iss.dataIni( logger.loggerPort );</programlisting>
+	<programlisting>  iss.dataBus( logger.loggerPort );</programlisting>
 
 	<para>
 	  Once the model is instantiated, simulation is invoked to run
@@ -1889,7 +1887,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	<programlisting>#define BASEADDR  0x90000000</programlisting>
 
 	<para>
-	  The memory mapped structure consists of a byte, halfword (16 bits)
+	  The memory mapped structure consists of a byte, half word (16 bits)
 	  and full word (32 bits), all declared as <literal>volatile</literal>
 	  within the <literal>struct</literal>. These are all declared with
 	  the C types, which for the &or1k; tool chain are known to correspond
@@ -1967,14 +1965,14 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 </programlisting>
 
 	<para>
-	  At the end of the program, the utilty <function>simexit()</function>
+	  At the end of the program, the utility <function>simexit()</function>
 	  is used. This not only terminates the program, but will also exit
 	  the simulation.
 	</para>
 
 	<para>
 	  The program is compiled with the utility routines (in
-	  <filename>utils.c</filename>) and a small bootloader (in
+	  <filename>utils.c</filename>) and a small boot loader (in
 	  <filename>start.s</filename>) which defines a
 	  <literal>_start</literal> routine which invokes
 	  <function>main()</function>. The linker arguments are chosen to make
@@ -1997,7 +1995,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	  file, described in more detail in <xref linkend="ref_app_note_1"
 	  endterm="ref_app_note_1_xr" />. For the modified &or1ksim;,
 	  <literal>generic</literal> peripherals can be added, which will
-	  cause code to call out via the upcall mechansim to the &or1ksim;
+	  cause code to call out via the upcall mechanism to the &or1ksim;
 	  &systemc; wrapper module (see <xref linkend="sec_upcall" />).
 	</para>
 
@@ -2098,8 +2096,8 @@ $ </screen>
 
 	<para>
 	  Each access from the application program generates the expected
-	  transactional access. All accesses are 32 bits wide, but for the
-	  byte and half-word accesse the relevant bytes are masked off.
+	  transactional access. All accesses are 32 bits wide, but for byte
+	  and half-word access the relevant bytes are masked off.
 	</para>
 
 	<note>
@@ -2127,7 +2125,7 @@ $ </screen>
 
   <sect1 id="sec_uart">
     <title>
-      Modeling the &uart; Perihperal
+      Modeling the &uart; Peripheral
     </title>
 
     <para>
@@ -2135,16 +2133,54 @@ $ </screen>
       on National Semiconductor 16450 design.
     </para>
 
-    <!-- ========== The &uart; ========== -->
+    <!-- ========== Details of the &uart; ========== -->
 
     <sect2>
       <title>
-	Modeling the 16450 &uart;
+	Details of the 16450 &uart;
       </title>
 
       <para>
-	The 16450 &uart; specifies a set of registers that control the &uart;
-	behavior as shown in <xref linkend="tab_ns_16450_regs" />.
+	The 16450 &uart; is a very long established industry component. Data
+	written a byte at a time into the transmit buffer is converted to
+	serial pulses on the output (Tx) pin. Serial pulses on the input (Rx)
+	pin are recognized and converted to byte values, which can be read
+	from the receive buffer. Typically Rx and Tx are connected to a
+	terminal and keyboard which can generate and recognize the pulses of
+	data. The &uart; can also generate additional signals for terminals and
+	keyboards to provide physical flow control, but that is beyond the
+	scope of this model. The key interfaces are shown in <xref
+	linkend="fig_uart" />.
+      </para>
+
+	<figure id="fig_uart">
+	  <title>
+	    Simple SoC based on the &or1k; &or1ksim;16450 &uart;: Key interfaces.
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="uart.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="uart.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+      <para>
+	The 16450 &uart; specifies a set of registers which control the &uart;
+	behavior. On the Tx/Rx side, this includes setting the board rate and
+	the pattern of stop, start and data bits. On the CPU side this
+	includes configuring interrupt behavior (if any) and setting flags to
+	show the status of transmit and receive buffers. The registers are
+	shown in <xref linkend="tab_ns_16450_regs" />.
       </para>
 
       <table id="tab_ns_16450_regs" frame='all'>
@@ -2214,7 +2250,7 @@ $ </screen>
 		<literal>DLL</literal>
 	      </entry>
 	      <entry align="center">
-		R
+		R/W
 	      </entry>
 	      <entry>
 		<para>
@@ -2386,12 +2422,107 @@ $ </screen>
 
     <sect2>
       <title>
-	&uart; Module Structure
+	&uart; Module Design
       </title>
 
       <para>
+	A transaction level model cannot model all the detail of a
+	&uart;&mdash;the whole point is to simplify and remove detail.
       </para>
 
+      <para>
+	The &tlm; should allow the CPU to read and write registers, a terminal
+	to send and receive characters and should generate interrupts as
+	appropriate. While all writable registers can be written and all
+	readable registers read, only those registers and bits of registers
+	which are relevant to this level of modeling will have any impact on
+	behavior.
+      </para>
+
+      <!-- = UART Model Interfaces = -->
+
+      <sect3>
+	<title>
+	  &uart; Model Interfaces
+	</title>
+
+	<para>
+	  A &tlm2; socket is the natural model for the bus interface to the
+	  CPU. However the interface to the terminal is much simpler. A standard
+	  &systemc; one byte FIFO will be suitable. The time taken for the
+	  serial pules (start, data, parity, stop bits) on the real &uart; will be
+	  modeled as a delay before writing data into the FIFO.
+	</para>
+
+	<caution>
+	  <para>
+	    It might be thought that an 8-bit signal port would be
+	    suitable. However &systemc; signal ports model physical wires, and
+	    only notify changes to the value on the wire. This would be suitable
+	    if the &uart; were to model the pulses signalled across the wire.
+	  </para>
+
+	  <para>
+	    At this level of modeling, complete bytes are being transferred. It
+	    is quite possible that two identical bytes would follow each
+	    other. A signal port would not notify any change to the recipient,
+	    while a FIFO will signal that data has been written.
+	  </para>
+	</caution>
+
+	<para>
+	  The interrupts is modelled as a signal, active high for the
+	  16450. &systemc; static sensitivity to this signal is a natural way
+	  for connected modules to detect the interrupt.
+	</para>
+
+      </sect3>
+
+      <!-- = UART Model Registers = -->
+
+      <sect3>
+	<title>
+	  &uart; Model Registers
+	</title>
+
+	<para>
+	  The modem control and status registers are irrelevant to this model
+	  and do not influence its behavior, nor are their values set.
+	</para>
+
+	<para>
+	  In the Line Control Register, the <literal>Set Break</literal> bit is
+	  ignored (in principle it could be modeled as a change in timing of a
+	  transfer). The parity control bits are ignored, apart from
+	  <literal>Parity Enable</literal>s influence on the timing of a
+	  transfer. Similarly the <literal>Stop Bit</literal> and <literal>Word
+	  Length Enable</literal>bits are only relevant to timing of a transfer.
+	</para>
+
+	<para>
+	  In the Line Status Register, the <literal>Data Ready</literal> and
+	  <literal>Transmitter Holding Empty</literal>/<literal>Transmitter
+	  Empty</literal> bits are the only ones modeled (the last two of these
+	  will move in step in the model).
+	</para>
+
+      </sect3>
+
+      <!-- = &uart; Model Interrupts = -->
+
+      <sect3>
+	<title>
+	  &uart; Model Interrupts
+	</title>
+
+	<para>
+	  Only two interrupts are relevant, <literal>Register Data
+	  Empty</literal> and <literal>Transmit Holding Register
+	  Empty</literal>. Only the corresponding bits of the interrupt enable
+	  and identification registers are relevant.
+	</para>
+
+      </sect3>
     </sect2>
 
     <!-- ========== UART Definition ========== -->
@@ -2402,20 +2533,492 @@ $ </screen>
       </title>
 
       <para>
+	The &uart; module uses the &tlm2; simple target Convenience Socket
+	(described earlier in <xref linkend="sec_iss_wrapper_test" />) and
+	includes the appropriate headers
       </para>
 
+      <programlisting>#include "tlm.h"
+#include "tlm_utils/simple_target_socket.h"</programlisting>
+
+      <para>
+	Convenience constants for the address mask, &uart; read and write
+	delays, named register offsets and bit fields are then defined. The
+	address mask is needed, since in this simple SoC model there is no
+	arbiter/decoder to strip out the higher order bits from the address
+	before the transaction is sent to the &uart;.
+      </para>
+
+      <para>
+	The main class is a standard &systemc; module class derived from
+	<classname>sc_core::sc_module</classname>.
+      </para>
+
+      <programlisting>class UartSC
+: public sc_core::sc_module
+{</programlisting>
+
+      <!-- = Public Methods # -->
+
+      <sect3>
+	<title>
+	  Public Methods
+	</title>
+
+	<para>
+	  The module has a customized constructor, specifying an input clock
+	  rate (which in the SoC example will be the SoC clock rate), and a flag
+	  to indicate the endianism of the model.
+	</para>
+
+	<programlisting>  UartSC( sc_core::sc_module_name  name,
+          unsigned long int        _clockRate,
+          bool                     _isLittleEndian );</programlisting>
+
+      </sect3>
+
+      <!-- = Public Attributes # -->
+
+      <sect3>
+	<title>
+	  Public Attributes: Sockets and Ports
+	</title>
+
+	<para>
+	  The interfaces to the &uart; model are the simple target convenience
+	  port (<literal>bus</literal>), the two &systemc; <literal>unsigned
+	  char</literal> FIFO ports for Rx and Tx (<literal>rx</literal> and
+	  <literal>tx</literal>) and a &systemc; boolean signal for the
+	  interrupt (<literal>intr</literal>).
+	</para>
+
+      </sect3>
+
+      <!-- = Private Functions = -->
+
+      <sect3>
+	<title>
+	  Private Methods
+	</title>
+
+	<para>
+	  The two threads are <function>busThread()</function> waiting for
+	  bytes written to the transmit buffer and
+	  <function>rxThread()</function> waiting for bytes on the Rx FIFO.
+	</para>
+	
+	<para>
+	  The blocking transport callback routine is
+	  <function>busReadWrite()</function>. This in turn calls for two
+	  separate routines which implement read specific
+	  (<function>busRead()</function>) and write specific
+	  (<function>busWrite()</function>) behavior.
+	</para>
+      </sect3>
+
+      <!-- = Private Utilities = -->
+
+      <sect3>
+	<title>
+	  Private Utility Methods
+	</title>
+
+	<para>
+	  Two utility routines are provided to generate an interrupt signal
+	  (<function>genInt()</function>) and clear an interrupt
+	  (<function>clearInt()</function>). A utility routine is also
+	  provided to calculate the character delay, based on the baud rate
+	  and number of stop, data, parity and start bits
+	  (<function>resetCharDelay()</function>).
+	</para>
+
+	<para>
+	  A set of convenience utilities are provided to set and clear flags
+	  in registers (<function>set()</function>) and
+	  <function>clear()</function>) and to test the state of a flag bit in
+	  a register (<function>isSet()</function>) and
+	  <function>isClear()</function>).
+	</para>
+
+      </sect3>
+
+      <!-- = Private Attributes  = -->
+
+      <sect3>
+	<title>
+	  Private Attributes
+	</title>
+
+	<para>
+	  A struct, <literal>regs</literal> is used to hold the value of each
+	  register. There are nine of these, since register 0 is really two
+	  registers, depending on whether it is being read
+	  (<literal>rbr</literal>) or written (<literal>thr</literal>).
+	</para>
+
+	<programlisting>  struct {
+    unsigned char  rbr;         // R: Rx buffer,
+    unsigned char  thr;         // R: Tx hold reg,
+    unsigned char  ier;         // R/W: Interrupt Enable Register
+    unsigned char  iir;         // R: Interrupt ID Register
+    unsigned char  lcr;         // R/W: Line Control Register
+    unsigned char  mcr;         // W: Modem Control Register
+    unsigned char  lsr;         // R: Line Status Register
+    unsigned char  msr;         // R: Modem Status Register
+    unsigned char  scr;         // R/W: Scratch Register            
+  } regs;</programlisting>
+
+	<para>
+	  Additional state info is held for the clock rate
+	  (<literal>clockRate</literal>), the 16-bit clock divisor
+	  (<literal>divLatch</literal>), the delay modeling the time taken to
+	  put bits on the Tx pin (<literal>charDelay</literal>) and the flag
+	  indicating model endianism (<literal>isLittleEndian</literal>).
+	</para>
+
+	<note>
+	  <para>
+	    The divisor latch for a 16450 is applied to the input clock to
+	    yield an internal clock <emphasis>16x</emphasis> the baud rate
+	    (i.e. not the actual baud rate itself)<footnote>
+	      <para>
+	        The 16450 input clock is specified to a maximum of 24 MHz, so
+	        that a 16 bit divisor latch can yield an internal clock for
+	        rates down to 50 baud. However for a software model this
+	        limitation is ignored. Faster input clocks can be specified,
+	        but it will not be possible to configure a divisor latch for
+	        very low baud rates
+	      </para>
+	    </footnote>.
+	  </para>
+	</note>
+
+      </sect3>
     </sect2>
 
     <!-- ========== UART Implementation ========== -->
 
-    <sect2>
+    <sect2 id="sec_uart_impl">
       <title>
 	&uart; Module Implementation
       </title>
 
-      <para>
-      </para>
+      <!-- = Constructor = -->
 
+      <sect3>
+	<title>
+	  &uart; Constructor
+	</title>
+	
+	<para>
+	  Declaration of the constructor is preceded, like
+	  <classname>Or1ksim</classname>, by the SystemC macro
+	</para>
+
+	<programlisting>SC_HAS_PROCESS( UartSC );</programlisting>
+
+	<para>
+	  The constructor sets the clock rate and endianism member variables
+	  from the parameters supplied and then registers the two threads
+	</para>
+
+	<programlisting>  SC_THREAD( busThread );
+  SC_THREAD( rxThread );</programlisting>
+
+        <para>
+	  The blocking transport callback is registered for the
+	  <literal>bus</literal> socket, in the same manner as was used for
+	  the logger, <classname>LoggerSC</classname>.
+	</para>
+
+	<para>
+	  Finally the registers (<literal>regs</literal>) are cleared. There
+	  is no initialization of the divisor latch or character delay, since
+	  these are undefined until set.
+	</para>
+      </sect3>
+
+      <!-- = Threads = -->
+
+      <sect3>
+	<title>
+	  &uart; Threads
+	</title>
+	
+	<para>
+	  <literal>busThread</literal> sits in a perpetual loop. It first
+	  marks the transmit buffer as empty (on reset the flags are cleared,
+	  so the buffer will appear full).
+	</para>
+
+	<note>
+	  <para>
+	    The 16450 &uart; describes two flags for transmit buffer status, one
+	    to indicate that the transmit holding register is empty and a
+	    second to indicate that the internal transmit buffer register is
+	    empty.
+	  </para>
+
+	  <para>
+	    For simplicity, this model does not model a separate internal
+	    register (effectively a one byte FIFO), so both flags are set and
+	    cleared together.
+	  </para>
+	</note>
+
+	<para>
+	  If the transmit buffer empty interrupt is enabled, the thread
+	  generates an interrupt to indicate that the buffer is empty.
+	</para>
+
+	<para>
+	  The thread then waits until it is notified via the SystemC event
+	  <literal>txReceived</literal> that a byte is in the buffer to be
+	  sent. This event will be triggered by the
+	  <literal>busWrite()</literal> callback when a value is written into
+	  the transmit holding register.
+	</para>
+
+	<para>
+	  The character is not sent immediately. The thread waits for a
+	  period, <literal>charDelay</literal> to model the time taken to push
+	  the bits (start, data, parity and stop) onto the Tx wire. Only then
+	  is the value written onto the Tx FIFO.
+	</para>
+
+	<para>
+	  The second thread, <function>rxThread()</function> sits in a
+	  perpetual loop, waiting for
+	  characters to be received on the Rx FIFO. The character is read into
+	  the read buffer register and the line status data ready flag is set
+	  to indicate availability.
+	</para>
+
+	<note>
+	  <para>
+	    There is no modeling of line delay here. That is the
+	    responsibility of the entity (a terminal writing to the Rx pin.
+	  </para>
+	</note>
+
+	<para>
+	  If the receive data interrupt is enabled, an interrupt is asserted
+	  to indicate data availability.
+	</para>
+
+      </sect3>
+
+      <!-- = Blocking Transport = -->
+
+      <sect3>
+	<title>
+	  &uart; Blocking Transport Callback
+	</title>
+	
+	<para>
+	  The registered callback routine is <literal>busReadWrite</literal>,
+	  which breaks out the address, byte enable mask pointer and data
+	  pointer. A <literal>switch</literal> statement on the mask is used
+	  to determine the offset of the actual byte requested and hence the
+	  exact byte address, allowing for the endianism of the model. This
+	  also provides a check that only a single byte is being requested.
+	</para>
+
+	<programlisting>  switch( *((uint32_t *)maskPtr) ) {
+  case 0x000000ff: offset = isLittleEndian ? 0 : 3; break;
+  case 0x0000ff00: offset = isLittleEndian ? 1 : 2; break;
+  case 0x00ff0000: offset = isLittleEndian ? 2 : 1; break;
+  case 0xff000000: offset = isLittleEndian ? 3 : 0; break;
+
+  default:              // Invalid request
+
+    std::cerr &lt;&lt; "Uart: busRead: multiple byte read - ignored\n" &lt;&lt; std::endl;
+    payload.set_response_status( tlm::TLM_GENERIC_ERROR_RESPONSE );
+    return;
+  }</programlisting>
+
+	<para>
+	  In a perfect world, the router/arbiter function would have masked
+	  the address to the range handled by the &uart;. However for this
+	  simple model, the full address is received, so masking with
+	  <literal>UART_ADDR_MASK</literal> is carried out here, to give the
+	  address of the &uart; register being read.
+	</para>
+
+	<para>
+	  Separate routines, <function>busRead()</function> and
+	  <function>busWrite()</function> are used to implement the register
+	  specific behavior, selected as appropriate based on the payload
+	  command field.
+	</para>
+
+	<para>
+	  In each case the delay time is then advanced (neither read nor write
+	  has yielded the thread by calling <function>wait()</function>
+	  explicitly or implicitly). This is a measure of how far in advance
+	  of central &systemc; time the module has progressed.
+	</para>
+
+	<para>
+	  Single byte reads and writes always succeed, so the response is set
+	  to <literal>tlm::TLM_OK_RESPONSE</literal> in all cases.
+	</para>
+
+      </sect3>
+
+      <!-- = Read Behavior = -->
+	
+      <sect3>
+	<title>
+	  &uart; Read Behavior
+	</title>
+	
+	<para>
+	  Read behavior is handled by <function>busRead()</function>.  A
+	  switch on the address is used to identify the result to be
+	  returned. The interesting cases are:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      If the <literal>DLAB</literal> bit is set in the line control
+	      register, then reads to the first two registers (read buffer and
+	      interrupt enable) yield instead the low and high bytes of the
+	      divisor latch.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Reading the read buffer (when <literal>DLAB=0</literal>) yields
+	      the byte just read, if flag <literal>DR</literal> is set in the
+	      line status register. The act of reading causes the
+	      <literal>DR</literal> flag to be cleared
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Reading the interrupt indicator register clears the highest
+	      priority interrupt currently pending. If no interrupts remain
+	      pending then the interrupt pending flag is cleared.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+	
+      </sect3>
+
+      <!-- = Write Behavior = -->
+	
+      <sect3>
+	<title>
+	  &uart; Write Behavior
+	</title>
+	
+	<para>
+	  Write behavior is handled by <function>busWrite()</function>.  A
+	  switch on the address is used to identify the action required. The
+	  interesting cases are:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      If the <literal>DLAB</literal> bit is set in the line control
+	      register, then writes to the first two registers (read buffer and
+	      interrupt enable) update the low and high bytes of the
+	      divisor latch respectively. This update may cause a change in
+	      the character delay on transmit, so this is updated via
+	      <function>resetCharDelay()</function>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Writing the transmit hold register (when
+	      <literal>DLAB=0</literal>) triggers a new transfer. The flags
+	      are set to indicate data is in the register, and the bus thread
+	      (<function>busThread()</function>) notified via the &systemc;
+	      event <literal>txReceived</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Updating the line control register may affect the character
+	      delay on transmit (due to change in number of data, parity or
+	      stop bits), so this is updated via
+	      <function>resetCharDelay()</function>.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect3>
+
+      <!-- = Utilities = -->
+
+      <sect3>
+	<title>
+	  &uart; Utility routines
+	</title>
+	
+	<para>
+	  <function>genInt()</function> generates an interrupt by setting the
+	  relevant interrupt indicator flag and the interrupt pending flag and
+	  then asserting the <literal>intr</literal> signal.
+	</para>
+
+	<para>
+	  <function>clearInt()</function> is more complex, since there may be
+	  more than one interrupt currently asserted (the model uses both the
+	  transmit buffer empty and data received interrupt). Only one
+	  interrupt is cleared by each read of the interrupt indicator
+	  register, with the data received interrupt having higher
+	  priority. This function clears the highest priority interrupt
+	  currently asserted, and if no interrupts remain clears the pending
+	  flag and deasserts the <literal>intr</literal> signal.
+	</para>
+
+	<para>
+	  The time to send a character depends on the baud rate and the number
+	  of bits required to send each character. The baud rate in turn
+	  depends on the input clock rate and divisor latch, remembering that
+	  this generates a clock 16x baud rate. The total number of bits
+	  comprises the start bit, data bits (5-8), optional parity bit and
+	  stop bits (1, 1.5 or 2). The function
+	  <function>charDelay()</function> calculates this character delay
+	  whenever one of these parameters is changed.
+	</para>
+
+	<para>
+	  Finally a set of functions are provided to set, clear and test bits
+	  in registers. Using these makes the code much more readable.
+	</para>
+
+	<tip>
+	  <para>
+	    Many programmers use <literal>#define</literal>d macros for
+	    functions such as these. However such macros have no encapsulation
+	    (they can be used by anyone including the header) and have a nasty
+	    habit of clashing with other peoples macros. By using functions,
+	    the routines can be made private to the
+	    <classname>UartSC</classname> class alone.
+	  </para>
+
+	  <para>
+	    The functions are declared in line, and a modern C++ compiler will
+	    generate code as efficiently as if they had been
+	    <literal>#define</literal>d as macros. Indeed the added type
+	    information gives the potential for greater optimization.
+	  </para>
+	</tip>
+
+      </sect3>
     </sect2>
 
   </sect1>
@@ -2426,16 +3029,584 @@ $ </screen>
 
   <sect1 id="sec_terminal">
     <title>
-      Adding a Terminal as Testbench
+      Adding a Terminal as Test Bench
     </title>
 
     <para>
+      The &iss; described in <xref linkend="sec_iss_wrapper" /> and the &uart;
+      described in described in <xref linkend="sec_uart" /> can be put
+      together as a minimal SoC. However a test bench is needed to exercise
+      that SoC
     </para>
 
+    <para>
+      The natural way of exercising a SoC with a &uart; is to connect a
+      terminal to the &uart;. This section describes a suitable &systemc;
+      model of a terminal and how to connect it to create the complete SoC.
+    </para>
+
+    <para>
+      This is not a &tlm2; component&mdash;the interfaces are standard
+      &systemc; FIFOs, so the description is less detailed. However it serves
+      to illustrate an important general technique when using
+      &systemc;&mdash;how to interact with the operating system routines.
+    </para>
+
+    <para>
+      The problem is that many operating system calls block. Consider
+      modelling the terminal as a thread which reads characters from a console
+      window. This will block until characters are typed. However the block
+      does not use the &systemc; <function>wait()</function> call, so
+      &systemc; is not aware that the thread has yielded. The simulation
+      will hang until characters are received.
+    </para>
+
+    <para>
+      The implementation of the terminal will show how to wrap non-blocking
+      versions of operating system routines with &systemc; events, to give
+      versions that block correctly using &systemc;
+      <function>wait()</function>, so allowing the thread to yield.
+    </para>
+
+    <!-- ========== Terminal Design ========== -->
+
+    <sect2>
+      <title>
+	Design of the &systemc; Terminal Model
+      </title>
+
+      <para>
+	The terminal provides &systemc; FIFO interfaces to model the Rx and Tx
+	pins of a serial connection. The visualization is provided by a &linux;
+	&xterm; running in a child process, with
+	communication through a pseudo-TTY<footnote>
+	  <para>
+	    The description here is specific to &linux;. A future version of
+	    this application note will describe use under Microsoft Windows.
+	  </para>
+        </footnote>.
+      </para>
+
+      <para>
+	Two threads are used, one waiting for bytes from the UART on the Rx
+	FIFO, the other waiting for bytes from the &xterm;. When bytes are
+	received on the Rx pin, they are immediately written to the
+	&xterm;. When bytes are received from the &xterm;,
+	<function>wait()</function> is used to model the delay in placing the
+	bits on the serial line. This exactly mirrors the implementation in
+	the &uart; (see <xref linkend="sec_uart_impl" />).
+      </para>
+
+      <para>
+	The difficulty is in waiting for the xterm. As described above,
+	reading from the pseudo TTY is an operating system call, and does not
+	use the &systemc; <function>wait()</function>, so the thread will not
+	yield and the simulation will block. Instead the pseudo-TTY is set up
+	to use asynchronous I/O, which will cause a &linux;
+	<literal>SIGIO</literal> to be raised whenever data is available to
+	read. The event handler for <literal>SIGIO</literal> will then notify
+	a &systemc; event, and it is this &systemc; event on which the thread
+	can safely wait.
+      </para>
+
+    </sect2>
+
+    <!-- ========== Terminal Module Definition ========== -->
+
+    <sect2>
+      <title>
+	Class Definition of the Terminal Module
+      </title>
+
+      <!-- = Signal mapping = -->
+      
+      <sect3>
+	<title>
+	  Mapping Signals to Class Instances
+	</title>
+
+	<para>
+	  The operating system signal handlers require C style linkage, so
+	  cannot be used with C++ member functions. Thus the
+	  <literal>SIGIO</literal> handler will be a static function. However
+	  there is one &systemc; event for each instance (there could be
+	  multiple terminals in a simulation). Each will have a different file
+	  descriptor, which can be used to identify the owning class instance.
+	</para>
+
+	<para>
+	  The set of these mappings is held in a static list. The
+	  <literal>struct Fd2Inst</literal> is provided for that list, with
+	  entries for the file descriptor, instance and a pointer to the next
+	  in the list.
+	</para>
+
+      </sect3>
+
+      <!-- = SystemC Class = -->
+      
+      <sect3>
+	<title>
+	  The SystemC Class
+	</title>
+
+	<para>
+	  <classname>TermSC</classname> is declared as a standard &systemc;
+	  class, with two FIFO ports (one in, one out) to talk to the
+	  &uart;. Unusually for &systemc; it has a destructor, which will be
+	  used to kill the child process running the &xterm; on termination.
+	</para>
+
+      </sect3>
+
+      <!-- = xterm = -->
+      
+      <sect3>
+	<title>
+	  Setting up the &xterm;
+	</title>
+
+	<para>
+	  A set of utility routines are provided to set up the &xterm;, with
+	  two routines to read from, (<function>xtermRead()</function>) and
+	  write to (<function>xtermWrite()</function>) it. Both these routines
+	  are blocking, so the read routine will only be called when the
+	  signal handler has determined input is available.
+	</para>
+
+	<para>
+	  There is some internal state to hold the pseudo TTY file descriptors
+	  and the process ID of the &xterm; (so it can be killed by the
+	  destructor). It is the slave file descriptor that is used for both
+	  input and output.
+	</para>
+      </sect3>
+
+      <!-- = Signals & events = -->
+      
+      <sect3>
+	<title>
+	  Signal and event handling
+	</title>
+
+	<para>
+	  The <literal>SIGIO</literal> signal handler
+	  (<function>ioHandler()</function>) is declared static as noted
+	  above. The static <literal>instList</literal> of type
+	  <literal>Fd2Inst</literal> points to the list of mappings from file
+	  descriptor to class instance.
+	</para>
+
+	<para>
+	  The &systemc; event used to signal when input is available is pointed
+	  to by <literal>ioEvent</literal>.
+	</para>
+
+	<caution>
+	  <para>
+	    It is essential that the event is declared as a pointer. If the
+	    event itself were declared here, it would be available at
+	    elaboration, and would crash the system (try it!).
+	  </para>
+
+	  <para>
+	    The solution is to declare the pointer and allocate the event
+	    instance dynamically when the &xterm; is created. The memory can be
+	    freed from the destructor on termination.
+	  </para>
+	</caution>
+      </sect3>
+
+    </sect2>
+
+    <!-- ========== Terminal Module Implementation ========== -->
+
+    <sect2>
+      <title>
+	Implementation of the Terminal Module
+      </title>
+
+      <para>
+	The implementation is a standard &systemc; module communicating via
+	the two FIFOs, and with the two threads, one listening to the Rx from
+	the &uart; the other listening to the &xterm;.
+      </para>
+
+      <para>
+	The setup of the pseudo TTYs and the &xterm; in a separate process
+	uses standard operating system routines, not described further
+	here. The key factor is that the pseudo TTY to the &xterm; is declared
+	asynchronous, with <literal>SIGIO</literal> raised when input is
+	available and handled by <literal>ioHandler</literal>.
+      </para>
+
+      <!-- = Threads = -->
+      
+      <sect3>
+	<title>
+	  Threads
+	</title>
+
+	<para>
+	  The thread listening to the &uart;, <function>rxThread()</function>
+	  sits in a perpetual loop, reading from the input FIFO. This blocks
+	  until a character is received. Any baud-rate delay modeling has been
+	  done by the UART, so this character is immediately copied to the
+	  &xterm;. This is a blocking write, but should return immediately.
+	</para>
+
+	<para>
+	  The thread listening to the &xterm;,
+	  <function>xtermThread()</function> sits in a perpetual loop, waiting
+	  on the &systemc; event pointed to by
+	  <literal>ioEvent</literal>. This will safely allow the thread to
+	  yield to the &systemc; scheduler until a character is ready.
+	</para>
+
+	<para>
+	  When input is available, the event is notified (see <xref
+	  linkend="sec_xterm_sig_hand" />>). The thread can safely make a
+	  blocking operating system read to get the character, knowing that
+	  data is definitely available. The baud rate delay is modelled with a
+	  further <function>wait()</function> call and the character then
+	  written to the Tx FIFO.
+	</para>
+      </sect3>
+
+      <!-- = Signals & events = -->
+      
+      <sect3 id="sec_xterm_sig_hand">
+	<title>
+	  Signal and event handling
+	</title>
+
+	<para>
+	  During the initialization the &systemc; event,
+	  <literal>ioEvent</literal> is allocated:
+	</para>
+
+	<programlisting>  ioEvent = new sc_core::sc_event();</programlisting>
+
+	<para>
+	  When <literal>ioHandler</literal> is called it does not know which
+	  pseudo TTY was responsible. The file descriptor responsible is
+	  identified by using an operating system select call. From this the
+	  corresponding class instance can be identified and its
+	  <literal>ioEvent</literal> notified.
+	</para>
+
+	<programlisting>  for( Fd2Inst *cur = instList; cur != NULL ; cur = cur->next ) {
+    if( FD_ISSET( cur->fd, &amp;readFdSet )) {
+      (cur->inst)->ioEvent->notify();
+    }
+  }</programlisting>
+
+        <para>
+	  This event then allows the <literal>xtermThread()</literal> to run
+	  and read a character.
+	</para>
+      </sect3>
+    </sect2>
+
+    <!-- ========== The SoC ========== -->
+
+    <sect2>
+      <title>
+	The Complete SoC
+      </title>
+
+      <!-- = Main program = -->
+      
+      <sect3>
+	<title>
+	  The Model Main Program
+	</title>
+
+	<para>
+	  The structure of the main program
+	  (<filename>SimpleSoC.cpp</filename>) is similar to that for the
+	  logger test program (see <xref linkend="sec_logger_main_prog"
+	  />). The &tlm2; header and the headers for each module (&or1ksim;
+	  &iss;, &uart; and terminal) are included.
+	</para>
+
+	<programlisting>#include "tlm.h"
+#include "Or1ksimSC.h"
+#include "UartSC.h"
+#include "TermSC.h"</programlisting>
+
+	<para>
+	  The baud rate for the terminal is defined as a constant for
+	  convenience.
+	</para>
+
+	<programlisting>#define BAUD_RATE  9600UL               // Baud rate of the terminal</programlisting>
+
+	<para>
+	  As before the main program (<function>sc_main()</function>) takes as
+	  arguments the &or1ksim; configuration file and &or1k;
+	  image. Instances of the three modules are declared.
+	</para>
+
+	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
+  UartSC     uart( "uart", iss.getClockRate(), iss.isLittleEndian() );
+  TermSC     term( "terminal", BAUD_RATE );</programlisting>
+
+	<para>
+	  The clock rate and endianism for the &uart; are set using the public
+	  utility methods for the &or1ksim; &iss;. The &tlm; ports of &uart;
+	  and &iss; can be connected:
+	</para>
+
+	<programlisting>  iss.dataBus( uart.bus );</programlisting>
+
+	<para>
+	  Two one byte FIFOs are needed to connect the &uart; and terminal.
+	</para>
+
+	<programlisting>  sc_core::sc_fifo&lt;unsigned char&gt;  u2t(1);
+  sc_core::sc_fifo&lt;unsigned char&gt;  t2u(1);
+
+  uart.rx( t2u );
+  uart.tx( u2t );
+  term.rx( u2t );
+  term.tx( t2u );</programlisting>
+
+	<para>
+	  Finally the &uart; interrupt is connected to a &systemc;
+	  <literal>bool</literal> signal. The signal goes nowhere, but for now
+	  the interrupts are not required.
+	</para>
+
+	<programlisting>sc_core::sc_signal&lt;bool&gt;  intWire;
+
+  uart.intr( intWire );</programlisting>
+
+        <para>
+	  The simulation can then be started with a call to
+	  <function>sc_start()</function>.
+	</para>
+      </sect3>
+
+      <!-- = Main program = -->
+      
+      <sect3>
+	<title>
+	  Test Program to Run on the &or1ksim; &iss;
+	</title>
+
+	<para>
+	  The test program, <filename>uartloop.c</filename> is a simple
+	  polling loop back driver of the UART. Characters are read and
+	  immediately echoed back.
+	</para>
+
+	<para>
+	  A <literal>volatile</literal> structure is declared for the &uart;
+	  registers, with <literal>#define</literal>d constants for the base
+	  address and the register bits of interest
+	</para>
+
+	<programlisting>#define BASEADDR   0x90000000
+#define BAUD_RATE        9600
+#define CLOCK_RATE  100000000           // 100 Mhz
+
+struct uart16450
+{
+  volatile unsigned char  buf;          // R/W: Rx &amp; Tx buffer when DLAB=0  
+  volatile unsigned char  ier;          // R/W: Interrupt Enable Register   
+  volatile unsigned char  iir;          // R: Interrupt ID Register         
+  volatile unsigned char  lcr;          // R/W: Line Control Register       
+  volatile unsigned char  mcr;          // W: Modem Control Register        
+  volatile unsigned char  lsr;          // R: Line Status Register          
+  volatile unsigned char  msr;          // R: Modem Status Register         
+  volatile unsigned char  scr;          // R/W: Scratch Register            
+};
+
+#define UART_LSR_TEMT   0x40            // Transmitter serial register empty
+#define UART_LSR_THRE   0x20            // Transmitter holding register empty
+#define UART_LSR_DR     0x01            // Receiver data ready
+
+#define UART_LCR_DLAB   0x80            // Divisor latch access bit</programlisting>
+
+	<para>
+	  The utility routines to set and clear flags in the &uart; (see <xref
+	  linkend="sec_uart_impl" />) are reused here, modified for C rather
+	  than C++ and <literal>volatile</literal> register arguments.
+	</para>
+
+	<para>
+	  The main program declares a pointer to the UART register structure,
+	  <literal>uart</literal>, at the base address. Initialization
+	  requires setting the divisor latch, to divide the main clock down to
+	  16 x the baud rate.
+	</para>
+
+	<programlisting>  volatile struct uart16450 *uart = (struct uart16450 *)BASEADDR;
+  unsigned short int         divisor;
+
+  divisor = CLOCK_RATE/16/BAUD_RATE;            // DL is for 16x baud rate
+
+  set( &amp;(uart->lcr), UART_LCR_DLAB );           // Set the divisor latch
+  uart->buf  = (unsigned char)( divisor       &amp; 0x00ff);
+  uart->ier  = (unsigned char)((divisor >> 8) &amp; 0x00ff);
+  clr( &amp;(uart->lcr), UART_LCR_DLAB );</programlisting>
+
+	<para>
+	  The remainder of the program is a perpetual loop:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      Wait for a character in the read buffer (flag
+	      <literal>DR</literal> of the line status register is set).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Read the character from the buffer.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Wait for the transmit buffer to clear (flags
+	      <literal>TEMT</literal> and <literal>THRE</literal> of the line
+	      status register are set).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Write the character back.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<programlisting>  while( 1 ) {
+    unsigned char  ch;
+
+    do {                        // Loop until a char is available
+      ;
+    } while( is_clr(uart->lsr, UART_LSR_DR) );
+
+    ch = uart->buf;
+
+    simputs( "Read: '" );       // Log what was read
+    simputc( ch );
+    simputs( "'\n" );
+
+    do {                        // Loop until the transmit register is free
+      ;
+    } while( is_clr( uart->lsr, UART_LSR_TEMT | UART_LSR_THRE ) );
+      
+    uart->buf = ch;
+  }</programlisting>
+
+      </sect3>
+
+      <!-- = Compiling the model = -->
+      
+      <sect3>
+	<title>
+	  Compiling and Running the Model
+	</title>
+
+	<para>
+	  Compilation uses exactly the same command lines as the
+	  standalone test of the &or1ksim; wrapper with the logger (see <xref
+	  linkend="sec_iss_run_test" />), but this time links in the &uart;
+	  and terminal; rather than the logger.
+	</para>
+
+	<para>
+	  The &or1ksim; configuration is also unchanged. Like the logger, the
+	  &uart; registers start at address 0x90000000 and are 8 bytes long.
+	</para>
+
+	<para>
+	  Running the model requires specifying the configuration file
+	  (unchanged) and the binary executable (this time the &uart; loop
+	  back program).
+	</para>
+
+	<programlisting>./SimpleSocSC ../simple.cfg ../progs_or32/uart_loop</programlisting>
+
+	<para>
+	  The &xterm; terminal should appear. Select it and type some
+	  characters. The window running the model, will show the logged
+	  output from the terminal, reporting the same characters being
+	  written, as shown in <xref linkend="fig_uart_loopback_log" />.
+	</para>
+
+	<figure id="fig_uart_loopback_log">
+	  <title>
+	    &uart; loop back program log output.
+	  </title>
+
+          <screen>$ ./SimpleSocSC ../simple.cfg ../progs_or32/uart_loop
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Reading script file from '../simple.cfg'...
+
+   ... &lt;Or1ksim initialization messages&gt;
+
+Read: 'F'
+Read: 'a'
+Read: 'r'
+Read: 'e'
+Read: 'w'
+Read: 'e'
+Read: 'l'
+Read: 'l'
+Read: ' '
+Read: 'G'
+Read: 'a'
+Read: 'l'
+Read: 'a'
+Read: 'x'
+Read: 'y'
+Read: '!'
+Read: '!'
+Read: '!'</screen>
+	</figure>
+
+	<para>
+	  At the same time the characters will be echoed on the xterm, as
+	  shown in figure <xref linkend="fig_uart_loopback_screen" />.
+	</para>
+
+	<figure id="fig_uart_loopback_screen">
+	  <title>
+	    &xterm; with the &uart; loop back program running.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="uart_xterm.png"
+			 format="PNG"
+			 width="13.754cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  Well it makes a change from "Hello World!".
+	</para>
+
+      </sect3>
+    </sect2>
   </sect1>
 
   <!-- ========================================================================
-       Adding an Temporal Decoupling
+       Adding Temporal Decoupling
        ==================================================================== -->
 
   <sect1 id="sec_temporal_decoupling">
@@ -2509,7 +3680,7 @@ $ </screen>
 
     <sect2>
       <title>
-	The Aribiter &tlm2; Model
+	The Arbiter &tlm2; Model
       </title>
 
       <!-- = Interface = -->
@@ -2580,20 +3751,6 @@ $ </screen>
   </sect1>
 
   <!-- ========================================================================
-       Appendix: Introduction to C++
-       ==================================================================== -->
-
-  <appendix>
-    <title>
-      Introduction to C++ for Hardware Engineers
-    </title>
-
-    <para>
-    </para>
-
-  </appendix>
-
-  <!-- ========================================================================
        Glossary
        ==================================================================== -->
 
@@ -2619,7 +3776,7 @@ $ </screen>
       <glossdef>
 	<para>
 	  Hardware logic model which considers unknown (<literal>X</literal>)
-	  and undriven (<literal>Z</literal>) values as well as logic high and
+	  and unproven (<literal>Z</literal>) values as well as logic high and
 	  logic low (binary 0 and binary 1).
 	</para>
 
@@ -2648,7 +3805,7 @@ $ </screen>
 	  In &tlm2; a modeling style, where timing information is provided
 	  at the level of transactions representing the phases of data
 	  transfer in a specific bus protocol (for example the address and
-	  data phases of an <acronym>AHD</acronym> read or write).
+	  data phases of an <acronym>AHB</acronym> read or write).
 	</para>
 
 	<glossseealso>loosely&#32;timed</glossseealso>
@@ -2661,7 +3818,7 @@ $ </screen>
       <glossdef>
 	<para>
 	  In &tlm2; non-blocking transport, the transport method which
-	  returns the resonse transaction from target to initiator.
+	  returns the response transaction from target to initiator.
 	</para>
 
 	<glossseealso>transport&#32;method</glossseealso>
@@ -2742,7 +3899,7 @@ $ </screen>
 	  A language (<glossterm>Verilog</glossterm> and
 	  <glossterm>VHDL</glossterm> are the best known), which describes
 	  hardware. Can be used to describe both an actual chip and its
-	  testbench.
+	  test bench.
 	</para>
 
 	<glossseealso>Verilog</glossseealso>
@@ -2768,10 +3925,10 @@ $ </screen>
       <glossdef>
 	<para>
 	  A software model of a CPU core instruction set. Typically completely
-	  models the instruction semantics, but not the full micorarchitecture
+	  models the instruction semantics, but not the full microarchitecture
 	  of a particular CPU implementation. Timing information may be just
 	  an instruction count, or may (as with the &or1ksim;) offer some
-	  estimate of timing delays due to memory accesses, cacheing and
+	  estimate of timing delays due to memory accesses, caching and
 	  virtual memory access.
 	</para>
       </glossdef>
@@ -2879,7 +4036,7 @@ $ </screen>
 	<para>
 	  In &tlm2; approximately timed modeling, a transaction exchange
 	  representing a single phase of the specific bus protocol being
-	  modelled (for example the address phase of an <acronym>AHD</acronym>
+	  modelled (for example the address phase of an <acronym>AHB</acronym>
 	  read or write).
 	</para>
 
@@ -2987,7 +4144,7 @@ $ </screen>
       <glossdef>
 	<para>
 	  In &tlm2; the concept of allowing individual threads to run ahead of
-	  the main simulation timestamp. The maximum permitted time of run
+	  the main simulation time stamp. The maximum permitted time of run
 	  ahead is known as the <glossterm>quantum</glossterm> and may be
 	  regulated by a quantum keeper.
 	</para>
@@ -3160,12 +4317,5 @@ $ </screen>
     </biblioentry>
 
   </bibliography>
-
-  <!-- ========================================================================
-       Index
-       ==================================================================== -->
-
-  <index />
-
 </article>
  
