@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   viewBox="0 0 16000 12000"
+   preserveAspectRatio="xMidYMid"
+   id="svg3702"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   width="496.06299"
+   height="159.99998"
+   sodipodi:docname="terminal.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   style="fill-rule:evenodd"
+   inkscape:export-filename="/home/jeremy/svntrunk/Documentation/appnotes/sysc_tlm2_simple_or1k/images/terminal.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
+  <metadata
+     id="metadata4086">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>SystemC Terminal Modeled as 2 Processes</dc:title>
+        <dc:date>22 June 08</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:language>en-GB</dc:language>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>UART</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>Diagram showing the SystemC model as two communicating processes
+</dc:description>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="1151"
+     inkscape:window-width="1600"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="true"
+     units="cm"
+     inkscape:snap-guide="true"
+     showguides="true"
+     inkscape:showpageshadow="false"
+     inkscape:zoom="2.3162381"
+     inkscape:cx="248.03149"
+     inkscape:cy="64.40003"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:current-layer="svg3702"
+     inkscape:guide-bbox="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4253"
+       visible="true"
+       enabled="true"
+       empspacing="10"
+       dotted="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs3704">
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutM"
+       style="overflow:visible">
+      <path
+         id="path4632"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         transform="scale(0.4)" />
+    </marker>
+  </defs>
+  <g
+     id="g6896"
+     transform="translate(602.35514,0)">
+    <path
+       d="M 7453.8883,56.250803 L 19341.389,56.250803 L 19341.389,11943.751 L 7453.8883,11943.751 L 7453.8883,56.250803 z"
+       id="path3779"
+       style="fill:#d2d1e7;fill-rule:evenodd;stroke:#000000;stroke-width:112.50003052;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;visibility:visible" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text5809"
+       y="5598.5605"
+       x="13420.453"
+       style="font-size:1050.00012207px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       xml:space="preserve"><tspan
+         y="5598.5605"
+         x="13420.453"
+         id="tspan6892"
+         sodipodi:role="line">Terminal Module</tspan><tspan
+         y="6911.0605"
+         x="13420.453"
+         id="tspan6894"
+         sodipodi:role="line">(parent process)</tspan></text>
+    <path
+       id="path2660"
+       d="M 1453.8873,2999.9991 L 7109.8763,2999.9991"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="150%"
+       id="text3466"
+       y="2666.4541"
+       x="4380.5239"
+       style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       xml:space="preserve"><tspan
+         id="tspan6864"
+         sodipodi:role="line"
+         x="4380.5239"
+         y="2666.4541">Read</tspan><tspan
+         id="tspan6866"
+         sodipodi:role="line"
+         x="4380.5239"
+         y="3903.9541">Pseudo-TTY</tspan></text>
+    <text
+       sodipodi:linespacing="150%"
+       id="text3508"
+       y="8657.3906"
+       x="22397.848"
+       style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       xml:space="preserve"><tspan
+         y="8657.3906"
+         x="22397.848"
+         id="tspan6876"
+         sodipodi:role="line">Rx</tspan><tspan
+         y="9894.8906"
+         x="22397.848"
+         id="tspan6878"
+         sodipodi:role="line">FIFO</tspan></text>
+    <text
+       sodipodi:linespacing="150%"
+       id="text3514"
+       y="2666.8569"
+       x="22397.848"
+       style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       xml:space="preserve"><tspan
+         y="2666.8569"
+         x="22397.848"
+         id="tspan6872"
+         sodipodi:role="line">Tx</tspan><tspan
+         y="3904.3569"
+         x="22397.848"
+         id="tspan6874"
+         sodipodi:role="line">FIFO</tspan></text>
+    <rect
+       y="1556.2489"
+       x="-10546.113"
+       height="8887.501"
+       width="11887.501"
+       id="rect3901"
+       style="fill:#748ba4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:112.50000763;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="2128.1238"
+       x="-10424.239"
+       height="8193.751"
+       width="11643.751"
+       id="rect4412"
+       style="fill:#b3b3b3;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:56.25000381;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="2128.124"
+       x="-9824.2383"
+       height="8193.751"
+       width="11043.751"
+       id="rect4414"
+       style="fill:#eae8e3;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:56.25;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="1668.749"
+       x="835.13727"
+       height="375.00003"
+       width="375.00003"
+       id="rect4416"
+       style="fill:#f3f2f0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="cc"
+       id="path4418"
+       d="M 900.76226,1734.3741 L 1144.5123,1978.1241"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:56.25000381;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="cc"
+       id="path4420"
+       d="M 1144.5124,1734.374 L 900.76226,1978.1241"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:56.25000381;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="1668.749"
+       x="385.13721"
+       height="375.00003"
+       width="375.00003"
+       id="rect4422"
+       style="fill:#f3f2f0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="1715.624"
+       x="432.01221"
+       height="281.25003"
+       width="281.25003"
+       id="rect4424"
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:18.74999809;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="1706.2844"
+       x="422.63721"
+       height="74.964661"
+       width="299.99979"
+       id="rect4426"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.25000003;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="1668.749"
+       x="-64.862831"
+       height="375.00003"
+       width="375.00003"
+       id="rect4428"
+       style="fill:#f3f2f0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       y="1931.2844"
+       x="-27.362825"
+       height="74.964661"
+       width="299.99979"
+       id="rect4430"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.25000003;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path6856"
+       d="M 7341.4013,8999.9997 L 1685.4123,8999.9997"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="150%"
+       id="text6858"
+       y="8666.4551"
+       x="4380.5239"
+       style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       xml:space="preserve"><tspan
+         y="8666.4551"
+         x="4380.5239"
+         id="tspan6860"
+         sodipodi:role="line">Write</tspan><tspan
+         y="9903.9551"
+         x="4380.5239"
+         id="tspan6862"
+         sodipodi:role="line">Pseudo-TTY</tspan></text>
+    <path
+       id="path6868"
+       d="M 19453.889,2999.9991 L 25109.878,2999.9991"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path6870"
+       d="M 25341.403,8999.9997 L 19685.414,8999.9997"
+       style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text6880"
+       y="5557.0303"
+       x="-4602.1064"
+       style="font-size:1050.00012207px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       xml:space="preserve"><tspan
+         y="5557.0303"
+         x="-4602.1064"
+         id="tspan6888"
+         sodipodi:role="line">xterm</tspan><tspan
+         y="6869.5303"
+         x="-4602.1064"
+         id="tspan6890"
+         sodipodi:role="line">(child process)</tspan></text>
+  </g>
+</svg>

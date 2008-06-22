@@ -795,8 +795,8 @@ $Id$
 	<para>
 	  The basic wrapper for the &or1ksim; &iss; is built using &tlm2;
 	  convenience sockets and tested with a simple logger. In this first
-	  stage, the timing is kept synchronous throughout. See <xref
-	  linkend="sec_iss_wrapper" />
+	  stage timing is ignored&mdash;this is effectively an untimed
+	  model. See <xref linkend="sec_iss_wrapper" />
 	</para>
       </listitem>
 
@@ -810,9 +810,17 @@ $Id$
 
       <listitem>
 	<para>
-	  A model of a terminal is added, demonstrating how to add &systemc;
-	  components which use operating system I/O without blocking the
-	  &systemc; thread. See <xref linkend="sec_terminal" />
+	  A model of a terminal is added as a testbench for the SoC. This
+	  demonstrates how to add &systemc; components which use operating
+	  system I/O without blocking the &systemc; thread. See <xref
+	  linkend="sec_terminal" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Synchronous is added to each component, making the model loosely
+	  timed. See <xref linkend="sec_sync" />
 	</para>
       </listitem>
 
@@ -1052,7 +1060,7 @@ $Id$
 
     <sect2 id="sec_iss_mods">
       <title>
-	Modifying the &iss; for &tlm2;
+	Modifying the &or1ksim; &iss; for &tlm2;
       </title>
 
       <para>
@@ -1081,9 +1089,6 @@ $Id$
 	flexible, making the &iss; widely reusable in other environments. It
 	is the approach adopted in this case study.
       </para>
-
-      <!-- = Library Functions -->
-
       <sect3 id="sec_or1ksim_libcals">
 	<title>
 	  Converting &or1ksim; to a Library
@@ -1150,48 +1155,18 @@ $Id$
 	    </para>
 	  </listitem>
 
-	  <listitem>
-	    <para>
-	      <programlisting>int  or1ksim_is_le();</programlisting>
-	    </para>
-
-	    <para>
-	      <function>or1ksim_is_le()</function> returns 1 if &or1ksim; is
-	      modeling a <firstterm>little&#32;endian</firstterm>
-	      architecture, 0 otherwise. It is needed to ensure the payload is
-	      packed with the correct byte ordering.
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      <programlisting>double  or1ksim_time();</programlisting>
-	    </para>
-	    
-	    <para>
-	      <function>or1ksim_time()</function> returns the &or1ksim; view
-	      of how much time has elapsed while simulating. This routine is
-	      needed to keep the SystemC model of time due to instruction set
-	      processing accurate, both in the synchronous SoC and when
-	      temporal decoupling is added (see <xref
-	      linkend="sec_temporal_decoupling" />).
-	    </para>
-	  </listitem>
 	</itemizedlist>
 
       </sect3>
-
-      <!-- Additional -->
-
-      <sect3 id="sec_upcall">
+      <sect3>
 	<title>
 	  Additional Functionality for &or1ksim;
 	</title>
 
 	<para>
 	  The standard &or1ksim; &iss; incorporates the functionality of
-	  standard peripherals. The objective of this application note is to
-	  demonstrate the &iss; driving external peripherals modelled in
+	  several common peripherals. The objective of this application note
+	  is to demonstrate the &iss; driving external peripherals modelled in
 	  &systemc; using &tlm2; interfaces.
 	</para>
 
@@ -1206,18 +1181,20 @@ $Id$
 
 	<para>
 	  &or1ksim; is extended with a new class of peripheral,
-	  <literal>generic</literal>, which specifies an external peripheral. The
-	  specification in the configuration file specifies the memory mapped
-	  address range covered and whether byte, half word or full word access
-	  are enabled. Multiple <literal>generic</literal> sections may be defined
-	  (for different address ranges) in the configuration file.
+	  <literal>generic</literal>, which specifies an external
+	  peripheral. The specification in the configuration file specifies
+	  the memory mapped address range covered and whether byte, half word
+	  or full word access are enabled. Multiple <literal>generic</literal>
+	  sections may be defined (for different address ranges) in the
+	  configuration file.
 	</para>
 
 	<para>
-	  Code is added to &or1ksim;, so that any read or write is redirected
-	  back to the wrapper code via the upcalls specified as arguments to
+	  Code is added to &or1ksim;, so that any read or write to a
+	  <literal>generic</literal> peripheral is redirected back to the
+	  wrapper code via the upcalls specified as arguments to
 	  <function>or1ksim_init()</function> (see <xref
-	  linkend="sec_or1ksim_libcals" />).
+	  linkend="sec_or1ksim_libcals" /> and <xref linkend="sec_upcall" />).
 	</para>
       </sect3>
     </sect2>
@@ -1226,293 +1203,433 @@ $Id$
 
     <sect2 id="sec_iss_wrapper_def">
       <title>
-	&or1ksim; SystemC Wrapper Definition
+	&or1ksim; Wrapper Module Class Definition
       </title>
 
       <para>
-	The &or1ksim; SystemC wrapper module class,
-	<literal>Or1ksimSC</literal>, is defined in the file
-	<filename>Or1ksimSC.h</filename>. It will provide a single initiator
-	socket, for data access, <literal>dataBus</literal> (no instruction
-	accesses are planned, so modeling an external instruction bus is
-	unnecessary).
+	The class definition for the &or1ksim; wrapper module is found in
+	<filename>Or1ksimSC.h</filename>.
       </para>
 
       <para>
-	The module includes the <literal>tlm.h</literal>
-	header, which defines the core &tlm2; interface and the required
-	convenience wrapper header&mdash;in this case for a simple initiator
-	socket.
+	All the examples in this application note separate the definition of a
+	class (i.e. <emphasis>what</emphasis> it does) in a
+	<filename>.h</filename> file, from the implementation
+	(i.e. <emphasis>how</emphasis> it does it) in a
+	<filename>.cpp</filename> file. This is considered good programming
+	practice.
       </para>
 
       <para>
-	The POSIX <literal>stdint.h</literal> header is also included, since
-	the code will make use of the fixed width native types defined
-	there.
+	The examples use the convention that classes and other typenames start
+	with an Upper Case letter (e.g. <literal>Or1ksimSC</literal>),
+	variables and functions start with a lower case letter
+	(e.g. <literal>dataBus</literal>) and defined or enumerated constants
+	are all in UPPER CASE (e.g. <literal>#define BAUD_RATE
+	9600</literal>).
       </para>
 
-      <programlisting>#include &lt;stdint.h&gt;
+      <para>
+	Those routines and variables which other classes will use are declared
+	as <literal>public</literal>. For &systemc; modules this usually means
+	the constructor and any &systemc; ports or sockets. Occasionally there
+	are some utility routines which are also made public (see for example
+	<literal>Or1ksimExt::isLittleEndian()</literal> in <xref
+	linkend="sec_uart_or1ksim_libext" />)<footnote>
+	  <para>
+	    Object oriented purists prefer to expose only procedures as the
+	    <literal>public</literal> interface, so hiding all state from
+	    external view. There is considerable merit in this, but the common
+	    &systemc; convention is to expose actual ports or sockets, rather
+	    than accessor routines for those objects. This application note
+	    sticks with that practice.
+	  </para>
+	</footnote>.
+      </para>
+
+      <para>
+	Some non-public parts of the module are declared as
+	<literal>protected</literal> (i.e. visible to derived classes). This
+	application note develops the example design by subclassing the
+	SystemC module classes to add further functionality. Functions and
+	objects declared <literal>protected</literal> are those which are
+	expected to be reused in later derived classes.
+      </para>
+
+      <para>
+	The remaining functions and variables, which are for use only by this
+	class, are declared <literal>private</literal> (visible only to this
+	class). This avoids any unplanned reuse by derived classes.
+      </para>
+
+      <para>
+	Some of the functions are replaced in later derived classes, so are
+	also declared <literal>virtual</literal>.
+      </para>
+
+      <para>
+	In summary <literal>public</literal> functions and variables may be
+	used by any other class, <literal>protected</literal> functions and
+	variables may be <emphasis>used</emphasis> only by this class and any
+	derived classes and <literal>private</literal> functions and variables
+	may be used only by this class. <literal>virtual</literal> functions
+	may be <emphasis>replaced</emphasis> in derived classes.
+      </para>
+
+      <!-- = Include files and definitions = -->
+
+      <sect3 id="sec_Or1ksimSC_def_inc">
+	<title>
+	  Included Headers
+	</title>
+
+	<para>
+	  The &or1ksim; SystemC wrapper module class,
+	  <literal>Or1ksimSC</literal>, is defined in the file
+	  <filename>Or1ksimSC.h</filename>. It will provide a single initiator
+	  socket, for data access, <literal>dataBus</literal> (no instruction
+	  accesses are planned, so modeling an external instruction bus is
+	  unnecessary).
+	</para>
+
+	<para>
+	  The module includes the <literal>tlm.h</literal> header, which
+	  defines the core &tlm2; interface and the required convenience
+	  wrapper header&mdash;in this case for a simple initiator socket.
+	</para>
+
+	<para>
+	  The POSIX <literal>stdint.h</literal> header is also included, since
+	  the definitions and code will make use of the fixed width native
+	  types defined there.
+	</para>
+
+	<programlisting>#include &lt;stdint.h&gt;
 
 #include "tlm.h"
 #include "tlm_utils/simple_initiator_socket.h"
 #include "or1ksim.h"</programlisting>
 
-      <note>
-	<para>
-	  There is no need to include the standard
-	  <literal>systemc.h</literal> header, since this is included
-	  automatically by <literal>tlm.h</literal>.
-	</para>
-      </note>
+        <note>
+	  <para>
+	    There is no need to include the standard
+	    <literal>systemc.h</literal> header, since this is included
+	    automatically by <literal>tlm.h</literal>.
+	  </para>
+	</note>
 
-      <para>
-	The module is declared as a standard &systemc; module, i.e. as a
-	derived class of <literal>sc_core::sc_module</literal>.
-      </para>
+      </sect3>
 
-      <programlisting>class Or1ksimSC
-: public sc_core::sc_module
-{</programlisting>
+      <!-- = Module declaration = -->
 
-      <note>
-	<para>
-	  The &systemc; tutorial material teaches that a module should be
-	  defined using:
-	</para>
-
-	<programlisting>SC_MODULE( Or1ksimSC )</programlisting>
+      <sect3 id="sec_Or1ksimSC_def_module">
+	<title>
+	  Module Declaration
+	</title>
 
 	<para>
-	  However this is identical to the C++ derived class declaration
+	  The module is declared as a standard &systemc; module, i.e. as a
+	  derived class of <literal>sc_core::sc_module</literal>.
 	</para>
 
 	<programlisting>class Or1ksimSC
 : public sc_core::sc_module
 {</programlisting>
 
-        <para>
-	  This is the usual way classes are declared in the &systemc; and
-	  &tlm2; examples&mdash;<literal>SC_MODULE</literal> seems only to
-	  appear in tutorial material for beginners.
-	</para>
+        <note>
+	  <para>
+	    The &systemc; tutorial material teaches that a module should be
+	    defined using:
+	  </para>
+
+	  <programlisting>SC_MODULE( Or1ksimSC )</programlisting>
+
+	  <para>
+	    However this is equivalent (IEEE 1666-2005 section 5.2.5) to the
+	    C++ derived class declaration
+	  </para>
+
+	  <programlisting>class Or1ksimSC
+: public sc_core::sc_module
+{
+ public:</programlisting>
+
+          <para>
+	    This is the usual way classes are declared in the &systemc; and
+	    &tlm2; examples&mdash;<literal>SC_MODULE</literal> seems only to
+	    appear in tutorial material for beginners. It has the effect that
+	    unless there is a subsequent <literal>protected:</literal> or
+	    <literal>private:</literal> all functions and variables will be
+	    visible to all other classes.
+	  </para>
+
+	  <para>
+	    Throughout this application note, the C++ derived class
+	    declaration style is used with explicit declarations of
+	    <literal>public:</literal>, <literal>protected:</literal> or
+	    <literal>private:</literal> as required, rather than
+	    <literal>SC_MODULE</literal>.
+	  </para>
+	</note>
+
+      </sect3>
+
+      <!-- = Constructor and destructor = -->
+
+      <sect3 id="sec_Or1ksimSC_def_constructor">
+	<title>
+	  Constructor and Destructor
+	</title>
 
 	<para>
-	  Throughout this application note, the C++ derived class
-	  declaration style is used, rather than
-	  <literal>SC_MODULE</literal>.
+	  <classname>Or1ksimSC</classname> needs a custom constructor, which
+	  can be passed the &or1ksim; &iss; configuration and image files. It
+	  will call the <function>or1ksim_init()</function> routine within the
+	  &or1ksim; library (see <xref linkend="sec_or1ksim_libcals" />) to
+	  initialize the &iss;.
 	</para>
-      </note>
 
-      <para>
-	The example needs a custom constructor, which can be passed the
-	&or1ksim; configuration and image files. It will call the
-	<function>or1ksim_init()</function> routine within the &or1ksim;
-	library to initialize the &iss;.
-      </para>
-
-      <programlisting>Or1ksimSC( sc_core::sc_module_name  name,
+	<programlisting>Or1ksimSC( sc_core::sc_module_name  name,
              const char              *configFile,
              const char              *imageFile );</programlisting>
 
-      <para>
-	The module will has a single thread, which executes the instructions
-	of the &iss;. The <function>run()</function> method implements this:
-      </para>
-
-      <programlisting>  void  run();</programlisting>
-
-      <para>
-	Two methods are needed to implement the read and write upcalls from
-	the &or1ksim; library. Both use the native SystemC type for the
-	address (which is always 64 bits) and the
-	<firstterm>POSIX</firstterm> fixed width data types for mask and
-	data. The synchronized transport mechanism is common to both, so
-	provided in a utility method, <function>syncTrans()</function>.
-      </para>
-
-      <programlisting>uint32_t           readUpcall( sc_dt::uint64  addr,
-                                 uint32_t       mask );
-
-  void               writeUpcall( sc_dt::uint64  addr,
-                                  uint32_t       mask,
-                                  uint32_t       wdata );
-
-  void               syncTrans( tlm::tlm_generic_payload &amp;trans );</programlisting>
-
-      <caution>
 	<para>
-	  It might seem logical to use the &systemc; limited precision types,
-	  rather than the POSIX types. However the &systemc; types are
-	  <emphasis>not</emphasis> native C++ types, so will not cast as
-	  expected.
+	  The default destructor is sufficient here. The module has no tidying
+	  up to do on termination.
 	</para>
-      </caution>
 
-      <para>
-	The initiator socket, <literal>dataBus</literal> is declared for the
-	<literal>Or1ksimSC</literal> class. The convenience sockets are
-	templated with
-      </para>
+      </sect3>
 
-      <itemizedlist>
-	<listitem>
+      <!-- = Public Interface = -->
+
+      <sect3 id="sec_Or1ksimSC_def_pub_if">
+	<title>
+	  Public Interface
+	</title>
+
+	<para>
+	  The only public interface is the &tlm2; simple initiator convenience
+	  socket, <literal>dataBus</literal>. The &tlm2; convenience sockets are
+	  templated with
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      the class of which any callbacks are members;
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      a bus width (default <literal>BUSWIDTH</literal>, 32); and
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      a protocol type (default the &tlm2; base protocol types).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  For this case study, the default bus width and protocol are
+	  appropriate and need not be specified. There is no default class for
+	  the template, so <literal>Or1ksimSC</literal> is used. A class must be
+	  specified, even where (as in this case for a simple blocking
+	  initiator) no callbacks are actually required.
+	</para>
+
+	<programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataBus;</programlisting>
+
+      </sect3>
+
+      <!-- = Threads = -->
+
+      <sect3 id="sec_Or1ksimSC_def_threads">
+	<title>
+	  Threads
+	</title>
+      
+        <para>
+	  The module has a single thread, which executes the instructions of
+	  the &iss;. The <function>run()</function> procedure implements this:
+	</para>
+
+	<programlisting>  void  run();</programlisting>
+
+	<para>
+	  The thread is not part of the public interface, but will but will be
+	  reused and replaced in derived classes later in the application
+	  note, so it is declared <literal>protected</literal> and
+	  <literal>virtual</literal>.
+	</para>
+      </sect3>
+
+      <!-- = Upcalls = -->
+
+      <sect3 id="sec_upcall">
+	<title>
+	  Upcalls
+	</title>
+
+	<para>
+	  The &or1ksim; &iss; makes requests to read and write peripherals via
+	  the upcalls passed as arguments to <function>or1ksim_init</function>
+	  (see <xref linkend="sec_or1ksim_libcals" />).
+	</para>
+
+	<para>
+	  The &or1ksim; &iss; is implemented in C, which cannot easily call
+	  C++ class instance functions. The solution is to declare two
+	  <emphasis>static</emphasis> member functions which can be called
+	  from C. The call to <function>or1ksim_init()</function> also passed
+	  the address of the actual C++ class instance (cast to
+	  <literal>void&nbsp;*</literal>). This pointer is passed back with
+	  the upcall, so the static function can call the corresponding
+	  instance function.
+	</para>
+
+	<para>
+	  A total of 4 functions are needed, one static and one instance each
+	  for read and write. The static functions use the native C/C++ types
+	  (unsigned long int), but convert to defined fixed width types for
+	  the instance functions. The native SystemC 64-bit unsigned type is
+	  used for the address (which is always 64 bits in &tlm2; function
+	  calls) and the <firstterm>POSIX</firstterm> 32-bit unsigned data
+	  type is used for byte enable mask and data.
+	</para>
+
+	<para>
+	  These upcall functions are not changed throughout this application
+	  note, so are declared private.
+	</para>
+
+	<programlisting>  static unsigned long int  staticReadUpcall( void              *instancePtr,
+                                              unsigned long int  addr,
+                                              unsigned long int  mask );
+
+  static void               staticWriteUpcall( void              *instancePtr,
+                                               unsigned long int  addr,
+                                               unsigned long int  mask,
+                                               unsigned long int  wdata );
+
+  uint32_t                  readUpcall( sc_dt::uint64  addr,
+                                        uint32_t       mask );
+
+  void                      writeUpcall( sc_dt::uint64  addr,
+                                         uint32_t       mask,
+                                         uint32_t       wdata );</programlisting>
+
+        <caution>
 	  <para>
-	    with the class of which any callbacks are members;
+	    It might seem logical to use the &systemc; limited precision
+	    types, rather than the POSIX types. However the &systemc; types
+	    are <emphasis>not</emphasis> native C++ types, so will not cast as
+	    expected.
 	  </para>
-	</listitem>
+	</caution>
 
-	<listitem>
-	  <para>
-	    bus (default <literal>BUSWIDTH</literal>, 32); and
-	  </para>
-	</listitem>
+	<para>
+	  The transport mechanism is common to both, so provided in a utility
+	  method, <function>doTrans()</function>. However this function will
+	  be used and replaced in derived classes later in this application
+	  note, so is declared <literal>protected</literal> and
+	  <literal>virtual</literal>.
+	</para>
 
-	<listitem>
-	  <para>
-	    protocol type (default the &tlm2; base protocol types).
-	  </para>
-	</listitem>
-      </itemizedlist>
-
-      <para>
-	For this case study, the default bus width and protocol are
-	appropriate and need not be specified. There is no default class for
-	the template, so <literal>Or1ksimSC</literal> is used. A class must be
-	specified, even where (as in this case for a simple blocking
-	initiator) no callbacks are actually required.
-      </para>
-
-      <programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataBus;</programlisting>
-
-      <para>
-	Two time stamps are declared, one to hold the SystemC view of the
-	time of the last upcall from &or1ksim;, the other to hold the
-	&or1ksim; view of the time of the last upcall.
-      </para>
-
-      <programlisting>  sc_core::sc_time  scLastTime;
-      sc_core::sc_time  or1kLastTime;</programlisting>
-
+      </sect3>
     </sect2>
 
     <!-- ========== Wrapper Class simplementation ========== -->
 
     <sect2 id="sec_iss_wrapper_impl">
       <title>
-	&or1ksim; SystemC Wrapper Implementation
+	&or1ksim; Wrapper Module Class Implementation
       </title>
 
       <para>
 	The class implementation for <literal>Or1ksimSC</literal> is found
-	in the file <filename>Or1ksimSC.cpp</filename>. All the definitions
-	required are obtained from the definition file:
+	in the file <filename>Or1ksimSC.cpp</filename>.
       </para>
+<sect3>
+	<title>
+	  Headers and Macros
+	</title>
 
-      <programlisting>#include "Or1ksimSC.h"</programlisting>
-
-      <para>
-	The first two routines declared are not part of the class at all,
-	but static routines which implement the upcalls from the &or1ksim;
-	library. By declaring the routines static, they are visible only
-	within this source file, and can use simple linkage.
-      </para>
-
-      <para>
-	The static routines receive the pointer to the
-	<literal>Or1ksimSC</literal> instance that is associated with the
-	underlying &or1ksim; &iss; (which was provided as part of the call to
-	<function>or1ksim_init()</function> described below). This allows
-	the routines to call the member function which implements the
-	upcall, as shown here with <function>staticReadUpcall</function>:
-      </para>
-
-      <programlisting>static unsigned long int  staticReadUpcall( void              *instancePtr,
-                                            unsigned long int  addr,
-                                            unsigned long int  mask )
-{
-  Or1ksimSC *classPtr = (Or1ksimSC *)instancePtr;
-
-  return (unsigned long int)classPtr->readUpcall( (sc_dt::uint64)addr,
-                                                  (uint32_t)mask );
-}       // staticReadUpcall()</programlisting>
-
-      <para>
-	The address is cast to the &systemc; native 64-bit type, which is
-	always used for addresses. The mask and result (and write data for
-	<function>staticWriteUpcall()</function> are cast to POSIX fixed
-	length types to avoid any ambiguity. While
-	<literal>unsigned&nbsp;long&nbsp;int</literal> is almost always 32
-	bits long, it is not guaranteed to be so.
-      </para>
-
-      <caution>
 	<para>
-	  It might be thought that providing a direct upcall to the C++
-	  upcall methods of the class would be more efficient, using the C++
-	  member reference operator (<literal>::*</literal>). However the
-	  linkage to a member is much more complex (to cope with inheritance
-	  and overloading). Lack of standardization in the C++
-	  <firstterm>Application Binary Interface</firstterm> (ABI) means
-	  that such linkage between C and C++ will not necessarily work.
+	  All the definitions required are obtained from the definition file:
+	</para>
+
+	<programlisting>#include "Or1ksimSC.h"</programlisting>
+
+	<para>
+	  The implementation of a C++ class that is a &systemc; module with
+	  &systemc; threads (<literal>SC_THREAD</literal>), methods
+	  (<literal>SC_METHOD</literal>) or clocked threads
+	  (<literal>SC_CTHREAD</literal>) requires a number of definitions for
+	  that class to be set up using the <literal>SC_HAS_PROCESS</literal>
+	  macro.
+	</para>
+
+	<programlisting>SC_HAS_PROCESS( Or1ksimSC );</programlisting>
+
+	<caution>
+	  <para>
+	    The <literal>SC_HAS_PROCESS</literal> macro is a common cause of
+	    confusion with new users to &systemc; It doesn't appear in the
+	    tutorial examples. The reason is that those examples use the
+	    <literal>SC_CTOR</literal> macro to define the constructor for the
+	    class, and the <literal>SC_CTOR</literal> macro provides the same
+	    definitions as the <literal>SC_HAS_PROCESS</literal> macro.
+	  </para>
+
+	  <para>
+	    The SC_CTOR macro can only be used where the constructor's
+	    implementation is given within the class definition. However, it
+	    is not good programming practice to mix the definition of a class
+	    (i.e. what it is) with its implementation (i.e. how it does it).
+	  </para>
+
+	  <para>
+	    This application note follows the standard C++ practice of
+	    defining a class in a header (<filename>.h</filename>) file based
+	    on the class name and providing the implementation in a separate
+	    C++ source (<filename>.cpp</filename>) file also based on the
+	    class name.
+	  </para>
+
+	  <para>
+	    In cases such as this, where the constructor implementation is
+	    separate from the definition, &systemc; requires that the
+	    <literal>SC_HAS_PROCESS</literal> macro is used before the code of
+	    any class methods.
+	  </para>
+	</caution>
+
+      </sect3>
+<sect3>
+	<title>
+	  Constructor
+	</title>
+
+	<para>
+	  The constructor passes names to the constructors of its parent
+	  (<literal>sc_module</literal>) and simple initiator port
+	  (<literal>dataBus</literal>), then calls the
+	  <function>or1ksim_init()</function> routine in the &or1ksim; library
+	  to initialize the &iss;.
 	</para>
 
 	<para>
-	  Linkage to static routines is much simpler and usually works
-	  between C and C++. So the approach used here is more reliable.
-	</para>
-      </caution>
-
-      <para>
-	The implementation of a C++ class that is a &systemc; module
-	requires a number of definitions for that class to be set up using the
-	<literal>SC_HAS_PROCESS</literal> macro.
-      </para>
-
-      <programlisting>SC_HAS_PROCESS( Or1ksimSC );</programlisting>
-
-      <caution>
-	<para>
-	  The <literal>SC_HAS_PROCESS</literal> macro is a common cause of
-	  confusion with new users to &systemc; It doesn't appear in the
-	  tutorial examples. The reason is that those examples use the
-	  <literal>SC_CTOR</literal> macro to define the constructor for the
-	  class, and the <literal>SC_CTOR</literal> macro provides the same
-	  definitions as the <literal>SC_HAS_PROCESS</literal> macro.
+	  The member function, <function>run()</function> is initialized as a
+	  &systemc; thread, using the <literal>SC_THREAD</literal> macro. It
+	  will be called automatically by the &systemc; kernel after
+	  elaboration (i.e &systemc; initialization).
 	</para>
 
-	<para>
-	  The SC_CTOR macro can only be used where the constructor's
-	  implementation is given within the class definition. However, it is
-	  not good programming practice to mix the definition of a class
-	  (i.e. what it is) with its implementation (i.e. how it does it).
-	</para>
-
-	<para>
-	  This application note follows the standard C++ practice of defining
-	  a class in a header (<filename>.h</filename>) file based on the
-	  class name and providing the implementation in a separate C++ source
-	  (<filename>.cpp</filename>) file also based on the class name.
-	</para>
-
-	<para>
-	  In cases such as this, where the constructor implementation is
-	  separate from the definition, &systemc; requires that the
-	  <literal>SC_HAS_PROCESS</literal> macro is used before the code of
-	  any class methods.
-	</para>
-      </caution>
-
-      <para>
-	The constructor passes names to the constructors of its parent
-	(<literal>sc_module</literal>) and simple initiator port
-	(<literal>dataBus</literal>), then calls the
-	<function>or1ksim_init()</function> routine in the &or1ksim; library
-	to initialize the &iss;. The member function,
-	<function>run()</function> is initialized as a &systemc; thread, using
-	the <literal>SC_THREAD</literal> macro.
-      </para>
-
-      <programlisting>Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
+	<programlisting>Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
                        const char              *configFile,
                        const char              *imageFile ) :
   sc_module( name ),
@@ -1525,12 +1642,23 @@ $Id$
 
 }       /* Or1ksimSC() */</programlisting>
 
+
+      </sect3>
+<sect3 id="sec_Or1ksimSC_impl_thread">
+	<title>
+	  Thread
+	</title>
+
       <para>
-	The main thread, <function>run()</function>, takes timestamps from a
-	&systemc; and &or1ksim; perspective, then invokes the &or1ksim; &iss;
-	to run for ever (by passing a negative time argument). The &iss; will
-	use the upcalls to request any I/O it requires into peripheral address
-	space.
+	The main thread, <function>run()</function>, invokes the &or1ksim;
+	&iss; to run for ever (by passing a negative time argument). The &iss;
+	will use the upcalls (see <xref linkend="sec_upcall" />> to request
+	reads from and writes to the peripheral address space.
+      </para>
+
+      <para>
+	The thread is called automatically when the &systemc; kernel has
+	completed elaboration (i.e. is initialized).
       </para>
 
       <programlisting>void
@@ -1543,133 +1671,200 @@ Or1ksimSC::run()
 
 }       // Or1ksimSC()</programlisting>
 
-      <para>
-	The upcalls from the &iss; generate the transactional activity. These
-	routines set up the payload, execute the transaction (i.e exchange
-	the payload and result with the target) and return the result to the
-	&iss;.
-      </para>
-
-      <para>
-	The example here is coded in a very simple fashion, in the knowledge
-	that the requests to read are always four bytes long (the &or1k; has
-	a simple 32 bit bus), possibly with some bytes masked out for byte
-	and half-word reads. This matches the default
-	<literal>BUSWIDTH</literal> of the simple initiator socket.
-      </para>
-
-      <para>
-	Both payload and data are declared as local (automatic) variables,
-	i.e. on the stack. This is fine with a blocking transport method,
-	since they will remain valid for the duration of the transaction. The
-	data and mask are both encoded in the four bytes of a POSIX
-	<literal>uint32_t</literal>.
-      </para>
-
-      <caution>
-	<para>
-	  Using local variables would not be appropriate with a non-blocking
-	  socket, since the initiator routine could return before the result
-	  of the transaction is received back from the target.
-	</para>
-
-	<para>
-	  &tlm2; requires that the payload, data and mask fields all remain
-	  valid for the duration of the complete transaction, so heap
-	  allocation and deletion would be required in this case.
-	</para>
-      </caution>
-
-      <para>
-	Once the fields are set up, the <function>syncTrans()</function>
-	method (which is used for both read and write) is called to
-	synchronize with the SystemC clock, transport the payload to the
-	target and return the result.
-      </para>
-
-      <para>
-	There are two components to the time taken in this model, the time
-	taken by the &or1ksim; &iss; and the time taken in any peripherals. At
-	the time of an upcall, the SystemC wrapper thread will not have
-	yielded control since the last upcall. It needs to wait for the
-	&systemc; clock to catch up to this time point.
-      </para>
-
-      <para>
-	The &systemc; time at which the last upcall was made was recorded in
-	<literal>scLastUpTime</literal>. The time stamp of the &or1ksim; &iss; at
-	the last upcall (i.e. the number of cycles it has executed,
-	multiplied by the time taken for each cycle) was recorded in the
-	<literal>or1kLastUpTime</literal>.
-      </para>
-
-      <para>
-	A call of <function>or1ksim_time()</function> gives the current time
-	of the &iss;, and hence the time that has elapsed since the last up
-	call. This is used to advance both<literal>scLastUpTime</literal> and
-	<literal>or1kLastUpTime</literal>. The thread then calls
-	<function>wait()</function> to allow any other threads in the
-	&systemc; world to run until the calculated simulation time is
-	reached.
-      </para>
-
-      <para>
-	At this time the blocking transport method of the simple initiator
-	port is called with the payload and specifying a zero time offset
-	(since the call to <function>wait()</function> means the thread is
-	synchronized with the &systemc; clock).
-      </para>
-
-      <para>
-	On return, the <literal>delay</literal> parameter will have been
-	updated with any additional delay due to the transaction&mdash;in
-	this case an estimate of the number of cycles to read or write the
-	relevant &uart; register.
-      </para>
-
-      <para>
-	It would be possible to make another call to
-	<function>wait()</function> immediately to synchronize locally for
-	this delay. However there will be no more processing on this thread
-	until the next upcall from the &or1ksim; &iss;, so the delay is added
-	to the <literal>scLastUpTime</literal> and will be added to the
-	<function>wait()</function> on the next upcall.
-      </para>
-
-    </sect2>
-
-    <!-- ========== Testing ========== -->
-
-    <sect2 id="sec_iss_wrapper_test">
-      <title>
-	Testing the &or1ksim; &iss; &tlm2; Wrapper
-      </title>
-
-      <para>
-	The test configuration was shown earlier in <xref
-	linkend="fig_iss_test" />. For this a simple logger is needed, which
-	must implement a &tlm2; simple target socket.
-      </para>
-
-      <para>
-	A simple embedded application is needed, which will make memory mapped
-	reads and writes, from and to the logger.
-      </para>
-
-      <!-- = Logger Definition = -->
-
-      <sect3>
+      </sect3>
+<sect3>
 	<title>
-	  Definition of the &tlm2; Logger Module
+	  Upcalls
+	</title>
+
+      <para>
+	As noted in <xref linkend="sec_upcall" />, the first two functions
+	declared are static member functions which implement the upcalls from
+	the &or1ksim; library.
+      </para>
+
+      <para>
+	The static functions receive the pointer to the
+	<literal>Or1ksimSC</literal> instance which originally started the
+	&or1ksim; &iss; (provided as an argument to
+	<function>or1ksim_init()</function> described in <xref
+	linkend="sec_Or1ksimSC_impl_thread" />).
+      </para>
+
+      <para>
+	This allows the each function to call the member function which
+	implements the upcall, as shown here with
+	<function>staticReadUpcall</function>:
+      </para>
+
+      <programlisting>unsigned long int
+Or1ksimSC::staticReadUpcall( void              *instancePtr,
+			     unsigned long int  addr,
+			     unsigned long int  mask )
+{
+  Or1ksimSC *classPtr = (Or1ksimSC *)instancePtr;
+
+  return (unsigned long int)classPtr->readUpcall( (sc_dt::uint64)addr,
+						  (uint32_t)mask );
+}	// staticReadUpcall()</programlisting>
+
+        <para>
+	  The address is cast to the &systemc; native 64-bit type, which is
+	  always used in &tlm2; for addresses. The mask and result (and write
+	  data for <function>staticWriteUpcall()</function> are cast to the
+	  POSIX <literal>uint32_t</literal> fixed length type to avoid any
+	  ambiguity over size<footnote>
+	    <para>
+	      While <literal>unsigned&nbsp;long&nbsp;int</literal> is almost
+	      always 32 bits long, it is not guaranteed to be so.
+	    </para>
+	  </footnote>.
+	</para>
+
+	<caution>
+	  <para>
+	    It might be thought that providing a direct upcall to the C++
+	    upcall methods of the class would be more efficient, using the C++
+	    member reference operator (<literal>::*</literal>). However the
+	    linkage to a member is much more complex (to cope with inheritance
+	    and overloading). Lack of standardization in the C++
+	    <firstterm>Application Binary Interface</firstterm> (ABI) means
+	    that such linkage between C and C++ will not necessarily work.
+	  </para>
+
+	  <para>
+	    Linkage to static routines is much simpler and usually works
+	    between C and C++. So the approach used here is more reliable.
+	  </para>
+	</caution>
+
+	<para>
+	  The upcalls from the &iss; generate the transactional
+	  activity. These routines set up the payload, execute the transaction
+	  (i.e exchange the payload and result with the target) and return the
+	  result to the &iss;.
+	</para>
+
+	<para>
+	  The example here is coded in a very simple fashion, in the knowledge
+	  that the requests to read are always four bytes long (the &or1k; has
+	  a simple 32 bit bus), possibly with some bytes masked out for byte
+	  and half-word reads. This matches the default
+	  <literal>BUSWIDTH</literal> of the simple initiator socket.
+	</para>
+
+	<para>
+	  Both payload and data are declared as local (automatic) variables,
+	  i.e. on the stack. This is fine with a blocking transport method,
+	  since they will remain valid for the duration of the
+	  transaction. The data and mask are both encoded in the four bytes of
+	  a POSIX <literal>uint32_t</literal>.
+	</para>
+
+	<caution>
+	  <para>
+	    Using local variables would not be appropriate with a non-blocking
+	    socket, since the initiator routine could return before the result
+	    of the transaction is received back from the target.
+	  </para>
+
+	  <para>
+	    &tlm2; requires that the payload, data and mask fields all remain
+	    valid for the duration of the complete transaction, so heap
+	    allocation and deletion would be required in this case.
+	  </para>
+	</caution>
+
+      </sect3>
+      <sect3 id="sec_Or1ksimSC_impl_btrans">
+	<title>
+	  Blocking Transport
 	</title>
 
 	<para>
-	  The logger is based on the &tlm2; convenience simple target socket,
-	  so needs the appropriate header:
+	  Once the payload fields are set up, the
+	  <function>doTrans()</function> function (which is used for both read
+	  and write) is called to transport the payload to the target and
+	  return the result.
+	</para>
+
+	<para>
+	  The transport method requires a time to be supplied, even when
+	  timing is not being used (as in this case). This must be time
+	  variable, since the target can update the value, so a dummy variable
+	  is declared with zero time and passed to the blocking transport
+	  method of the socket with the payload.
+	</para>
+
+        <programlisting>  sc_core::sc_time  dummyDelay = sc_core::sc_time( 0.0, sc_core::SC_SEC );
+
+  dataBus->b_transport( trans, dummyDelay );</programlisting>
+
+        <para>
+	  This implementation is sufficient for modeling just the &or1ksim;
+	  &iss; in &systemc;. However at no time does the thread execute a
+	  &systemc; <function>wait()</function> call. In the absence of any such
+	  yield, no other thread would be able to execute. This will be remedied
+	  in <xref linkend="sec_uart" /> when other threads are added to model
+	  peripherals.
+	</para>
+
+      </sect3>
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Testing the Wrapper
+       ==================================================================== -->
+
+  <sect1 id="sec_iss_wrapper_test">
+    <title>
+      Testing the &or1ksim; &iss; &tlm2; Wrapper
+    </title>
+
+    <para>
+      The test configuration was shown earlier in <xref linkend="fig_iss_test"
+      />. For this a simple logger is needed, which must implement a &tlm2;
+      simple target socket.
+    </para>
+
+    <para>
+      In addition, a simple embedded application is needed to run on the
+      &or1ksim; &iss;, which will make reads and writes to peripheral address
+      space, which can be detected by the loggerfrom and to the logger.
+    </para>
+
+    <para>
+      All the behavior is in the calback function&mdash;there are no &systemc;
+      threads. This means the logger will be suitable for testing the
+      <classname>Or1ksimSC</classname> wrapper module, even though its thread
+      never yields.
+    </para>
+
+    <sect2>
+      <title>
+	Definition of the &tlm2; Logger Module
+      </title>
+
+      <sect3>
+	<title>
+	  Include Files
+	</title>
+
+	<para>
+	  The logger is based on the &tlm2; convenience simple target socket, so
+	  needs the appropriate header:
 	</para>
 
 	<programlisting>#include "tlm.h"
 #include "tlm_utils/simple_target_socket.h"</programlisting>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Module Declaration and Constructor
+	</title>
 
         <para>
 	  The class is a standard &systemc; module:
@@ -1679,36 +1874,79 @@ Or1ksimSC::run()
 : public sc_core::sc_module</programlisting>
 
         <para>
-	  Two methods are needed, a constructor, which will register the
-	  second method as the blocking callback for the target port
+	  A custom constructor is needed, which will be used to register the
+	  callback function for the simple target convenience socket blocking
+	  transport.
 	</para>
 
-	 <programlisting>  LoggerSC( sc_core::sc_module_name  name );
-
-  tlm_utils::simple_target_socket&lt;LoggerSC&gt;  loggerPort;</programlisting>
+	<programlisting>  LoggerSC( sc_core::sc_module_name  name );</programlisting>
 
       </sect3>
 
-      <!-- = Logger Implementation = -->
+      <sect3>
+	<title>
+	  Public Interface
+	</title>
+
+	<para>
+	  The public interface is the single simple target convenience
+	  socket.
+	</para>
+
+	<programlisting>  tlm_utils::simple_target_socket&lt;LoggerSC&gt;  loggerPort;</programlisting>
+
+      </sect3>
 
       <sect3>
 	<title>
-	  Implementation of the &tlm2; Logger Module
+	  Blocking Transport
+	</title>
+
+	<para>
+	  Blocking transport is via a callback routine:
+	</para>
+
+        <programlisting>  void  loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
+                         sc_core::sc_time         &amp;delay );</programlisting>
+
+        <para>
+	  All the behavior of the module is captured in this callback
+	  routine. There are no &systemc; threads required.
+	</para>
+
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>
+	Implementation of the &tlm2; Logger Module
+      </title>
+
+      <sect3>
+	<title>
+	  Included Headers
 	</title>
 
 	<para>
 	  The logger will be doing a certain amount of stream IO, so includes
 	  the C++ headers that define stream manipulation functions. The POSIX
 	  standard integer types are also included.
-	</para>
+      </para>
 
-	<programlisting>#include &lt;iostream&gt;
+      <programlisting>#include &lt;iostream&gt;
 #include &lt;iomanip&gt;
 #include &lt;stdint.h&gt;
 
 #include "LoggerSC.h"</programlisting>
 
-	<para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  Constructor
+	</title>
+
+        <para>
 	  The constructor passes its argument (the module) name to the parent
 	  <literal>sc_module</literal>literal> constructor. The body of the
 	  routine then registers the <function>loggerReadWrite()</function>
@@ -1724,17 +1962,23 @@ Or1ksimSC::run()
 {
   loggerPort.register_b_transport( this, &amp;LoggerSC::loggerReadWrite );
 
-}       // Or1ksimSC()
-</programlisting>
+}       // Or1ksimSC()</programlisting>
 
-        <para>
-	  The callback method, <function>loggerReadWrite</function> records
+      </sect3>
+
+      <sect3>
+	<title>
+	  Blocking Transport Callback
+	</title>
+
+	<para>
+	  The callback function, <function>loggerReadWrite()</function> records
 	  the key information regarding any transaction it receives. The
 	  payload is a &tlm2; Generic Payload, with appropriate access
 	  routines. In this simple implementation, a length of 4 bytes is
 	  assumed for the data in the payload.
 	</para>
-
+	
 	<para>
 	  To get at the data and byte enable mask, the pointers to
 	  <literal>unsigned char</literal> are cast to pointers to the POSIX
@@ -1745,9 +1989,9 @@ Or1ksimSC::run()
 	  <literal>uint32_t</literal>.
 	</para>
 
-	<programlisting>void
+        <programlisting>void
 LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
-                           sc_core::sc_time         &amp;delayTime )
+                           sc_core::sc_time         &amp;delay )
 {
   // Break out the address, mask and data pointer.
 
@@ -1756,7 +2000,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   unsigned char     *maskPtr = payload.get_byte_enable_ptr();
   unsigned char     *dataPtr = payload.get_data_ptr();
 
-  // Which command?
+  // Record the payload fields (data only if it's a write)
 
   const char *commStr;
 
@@ -1765,8 +2009,6 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   case tlm::TLM_WRITE_COMMAND:  commStr = "Write";  break;
   case tlm::TLM_IGNORE_COMMAND: commStr = "Ignore"; break;
   }
-
-  // Log the lot (data only if its a write)
 
   std::cout &lt;&lt; "Logging" &lt;&lt; std::endl;
   std::cout &lt;&lt; "  Command:      "   &lt;&lt; commStr &lt;&lt; std::endl;
@@ -1780,30 +2022,30 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
               &lt;&lt;std::hex &lt;&lt; *((uint32_t *)dataPtr) &lt;&lt; std::endl;
   }
 
-  std::cout &lt;&lt; "  Delay:        " &lt;&lt; std::setprecision( 9 ) &lt;&lt; std::fixed
-            &lt;&lt; delayTime.to_seconds() &lt;&lt; "s" &lt;&lt; std::endl;
   std::cout &lt;&lt; std::endl;
 
-  // Set a response before returning
-
-  payload.set_response_status( tlm::TLM_OK_RESPONSE );
+  payload.set_response_status( tlm::TLM_OK_RESPONSE );  // Always OK
 
 }       // loggerReadWrite()</programlisting>
 
       </sect3>
+    </sect2>
 
-      <!-- = Main Program = -->
+    <sect2 id="sec_logger_main_prog">
+      <title>
+	The Model Main Program
+      </title>
 
-      <sect3 id="sec_logger_main_prog">
+      <para>
+	The logger module and the &or1ksim; wrapper module must be connected
+	in the main program (<function>sc_main</function> since this is
+	&systemc;), and the simulation invoked.
+      </para>
+
+      <sect3>
 	<title>
-	  The Model Main Program
+	  Included Headers
 	</title>
-
-	<para>
-	  The logger module and the &or1ksim; wrapper module must be connected
-	  in the main program (<function>sc_main</function> since this is
-	  &systemc;), and the simulation invoked.
-	</para>
 
 	<para>
 	  The program includes the main &tlm2; header and the header of the
@@ -1813,6 +2055,13 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	<programlisting>#include "tlm.h"
 #include "Or1ksimSC.h"
 #include "LoggerSC.h"</programlisting>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Argument Processing
+	</title>
 
 	<para>
 	  The program takes two arguments, an &or1ksim; configuration file
@@ -1829,55 +2078,93 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
     exit( 1 );
   }</programlisting>
 
-	<para>
-	  An instance of the &or1ksim; &iss; and the logger are created, the
+      </sect3>
+
+      <sect3>
+	<title>
+	  Module Instantiation
+	</title>
+
+        <para>
+	  Instances of the &or1ksim; &iss; and the logger are created, the
 	  &iss; being passed the two program arguments for its initialization.
 	</para>
 
 	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
   LoggerSC   logger( "logger" );</programlisting>
 
-	<para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  Connecting the Modules
+	</title>
+
+        <para>
 	  The target socket of the logger (<literal>loggerPort</literal>) is
 	  connected by passing it as argument to the initiator socket of the
 	  &iss; (<literal>dataBus</literal>). The C++ function application
-	  operator <literal>operator()</literal> is overloaded for initiator
-	  sockets to provide this binding function.
+	  operator, <literal>()</literal>, is overloaded for initiator sockets
+	  to provide this binding function.
 	</para>
 
 	<programlisting>  iss.dataBus( logger.loggerPort );</programlisting>
 
+      </sect3>
+
+      <sect3>
+	<title>
+	  Model Execution
+	</title>
+
 	<para>
-	  Once the model is instantiated, simulation is invoked to run
-	  forever.
+	  Once the model is instantiated, simulation is invoked to run forever.
 	</para>
 	  
 	<programlisting>  sc_core::sc_start();</programlisting>
 
       </sect3>
+    </sect2>
 
-      <!-- = Embedded test program = -->
+    <sect2 id="sec_iss_or32_prog">
+      <title>
+	Test Program to Run on the &or1ksim;
+      </title>
 
-      <sect3 id="sec_iss_or32_prog">
+      <para>
+	The test program (in <filename>logger_test.c</filename> defines a
+	memory mapped volatile data structure and then writes to and reads
+	from each element of that structure. Compilation of this program
+	requires the &or1k; GNU tool chain (see <xref linkend="ref_app_note_1"
+	endterm="ref_app_note_1_xr" /> for details of installing this).
+      </para>
+
+      <sect3>
 	<title>
-	  Test Program to Run on the &or1ksim;
+	  The Utility Functions
 	</title>
 
 	<para>
-	  The test program (in <filename>logger_test.c</filename> defines a
-	  memory mapped volatile data structure and then writes to and reads
-	  from each element of that structure. Compilation of this program
-	  requires the &or1k; GNU tool chain (see <xref
-	  linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> for details
-	  of installing this).
-	</para>
-
-	<para>
-	  The test program uses some simple utilities which can write
-	  characters, words and hexadecimal numbers. Its header is included:
+	  The test program uses some simple utility functions which can write
+	  characters (<function>simputc()</function>), string
+	  (<function>simputs()</function>) and hexadecimal numbers
+	  (<function>simputh()</function>). Its header is included:
 	</para>
 
 	<programlisting>#include "utils.h"</programlisting>
+
+	<para>
+	  The utilies' implementation can be found in
+	  <filename>utils.c</filename>.
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Memory Mapped Data Structure
+	</title>
+
 	<para>
 	  The memory mapped address is defined in the configuration of
 	  &or1ksim; (see <xref linkend="sec_iss_run_test" />) to be
@@ -1915,9 +2202,16 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   unsigned short int  halfwordRes;
   unsigned long int   fullwordRes;</programlisting>
 
+      </sect3>
+
+      <sect3>
+	<title>
+	  Checking Write Access
+	</title>
+
 	<para>
-	  The details of each write are logged and the value then written. In
-	  the absence of <function>printf</function>, the logging is
+	  The details of each write are logged and the value then written. (In
+	  the absence of a <function>printf()</function>, the logging is
 	  necessarily cumbersome).
 	</para>
 
@@ -1936,7 +2230,14 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   simputs( "\n" );
   dev->fullword = 0xdeadbeef;</programlisting>
 
-	<para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  Checking Read Access
+	</title>
+
+        <para>
 	  The values are then read back. No results are expected (the logger
 	  does not set any values), but this should check the process behaves
 	  as expected.
@@ -1961,14 +2262,20 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   simputh( fullwordRes );
   simputs( " from address 0x" );
   simputh( (unsigned long int)(&amp;(dev->fullword)) );
-  simputs( "\n" );
-</programlisting>
+  simputs( "\n" );</programlisting>
 
-	<para>
-	  At the end of the program, the utility <function>simexit()</function>
-	  is used. This not only terminates the program, but will also exit
-	  the simulation.
+        <para>
+	  At the end of the program, the utility
+	  <function>simexit()</function> is used. This not only terminates the
+	  program, but will also exit the simulation.
 	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Program Compilation
+	</title>
 
 	<para>
 	  The program is compiled with the utility routines (in
@@ -1982,40 +2289,16 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	</para>
 
       </sect3>
+    </sect2>
 
-      <!-- = Running the Test = -->
-
-      <sect3 id="sec_iss_run_test">
+    <sect2 id="sec_iss_run_test">
+      <title>
+	Running the Test
+      </title>
+      <sect3>
 	<title>
-	  Running the Test
+	  Compiling the &systemc; Model
 	</title>
-
-	<para>
-	  The &or1ksim; &iss; is configured using a textual configuration
-	  file, described in more detail in <xref linkend="ref_app_note_1"
-	  endterm="ref_app_note_1_xr" />. For the modified &or1ksim;,
-	  <literal>generic</literal> peripherals can be added, which will
-	  cause code to call out via the upcall mechanism to the &or1ksim;
-	  &systemc; wrapper module (see <xref linkend="sec_upcall" />).
-	</para>
-
-	<para>
-	  The configuration file for &or1ksim; disables all the standard
-	  peripherals, apart from one block of memory from address 0x0. It
-	  adds a <literal>generic</literal> peripheral allowing byte, half word
-	  and full word access to addresses mapped from 0x90000000 to
-	  0x90000007, with the following configuration file entry
-	</para>
-
-	<programlisting>section generic
-  enabled      =          1
-  byte_enabled =          1
-  hw_enabled   =          1
-  word_enabled =          1
-  name         = "External UART"
-  baseaddr     = 0x90000000
-  size         = 0x8
-end</programlisting>
 
 	<para>
 	  The SystemC modules are each compiled with access to the &or1ksim;,
@@ -2031,7 +2314,7 @@ g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
 g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
     -I$SYSTEMC_HOME/include -I$TLM_HOME/include/tlm -c LoggerSC.cpp</programlisting>
 
-	<para>
+        <para>
 	  The final linking must include the &systemc; library, and since the
 	  &or1ksim; library includes some shared objects, linker directions to
 	  find those shared objects
@@ -2042,8 +2325,47 @@ g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
     -Wl,--rpath,$OR1KSIM_HOME/lib -L$OR1KSIM_HOME/lib \
     -L$SYSTEMC_HOME/lib-linux -lsim -lsystemc -o TestSC</programlisting>
 
+      </sect3>
+      <sect3>
+	<title>
+	  Configuring the &or1k; &or1ksim; &iss;
+	</title>
+
+	<para>
+	  The &or1ksim; &iss; is configured using a textual configuration
+	  file, described in more detail in <xref linkend="ref_app_note_1"
+	  endterm="ref_app_note_1_xr" />. For the modified &or1ksim;,
+	  <literal>generic</literal> peripherals can be added, which will
+	  cause code to call out via the upcall mechanism to the &or1ksim;
+	  &systemc; wrapper module (see <xref linkend="sec_upcall" />).
+	</para>
+
+	<para>
+	  The configuration file for &or1ksim; disables all the standard
+	  peripherals, apart from one block of memory from address 0x0. It
+	  adds a <literal>generic</literal> peripheral allowing byte, half
+	  word and full word access to addresses mapped from 0x90000000 to
+	  0x90000007, with the following configuration file entry
+	</para>
+
+	<programlisting>section generic
+  enabled      =          1
+  byte_enabled =          1
+  hw_enabled   =          1
+  word_enabled =          1
+  name         = "External UART"
+  baseaddr     = 0x90000000
+  size         = 0x8
+end</programlisting>
+
+      </sect3>
+      <sect3>
+	<title>
+	  Running the Compiled Model
+	</title>
+
         <para>
-	  The compiled program can then be executed by passing in as arguments
+	  The compiled program can be executed by passing in as arguments
 	  the &or1ksim; configuration file and the &or1k; binary. The result
 	  is shown in <xref linkend="fig_logger_test" />.
 	</para>
@@ -2104,14 +2426,14 @@ $ </screen>
 	  <para>
 	    The &or1ksim; can be configured to model big-endian
 	    architectures. The &tlm2; payloads are always packed with data
-	    with the endianism of the model.
+	    using the endianism of the model.
 	  </para>
 
 	  <para>
-	    If the exercise were repeated
-	    with a big-endian version of &or1ksim; the addresses of the access
-	    would be unchanged (they are word aligned), but the byte enable
-	    masks for the byte and half word accesses would be inverted.
+	    If the exercise were repeated with a big-endian version of
+	    &or1ksim; the addresses of the access would be unchanged (they are
+	    word aligned), but the byte enable masks for the byte and half
+	    word accesses would be inverted.
 	  </para>
 	</note>
 
@@ -2123,17 +2445,16 @@ $ </screen>
        Connecting to Peripherals
        ==================================================================== -->
 
+
   <sect1 id="sec_uart">
     <title>
-      Modeling the &uart; Peripheral
+      Modeling Peripherals
     </title>
 
     <para>
-      This example uses a single peripheral, a &uart;. The &uart; model is based
-      on National Semiconductor 16450 design.
+      This example uses a single peripheral, a &uart;. The &uart; model is
+      based on National Semiconductor 16450 design.
     </para>
-
-    <!-- ========== Details of the &uart; ========== -->
 
     <sect2>
       <title>
@@ -2174,6 +2495,7 @@ $ </screen>
 	    </imageobject>
 	  </mediaobject>
 	</figure>
+
       <para>
 	The 16450 &uart; specifies a set of registers which control the &uart;
 	behavior. On the Tx/Rx side, this includes setting the board rate and
@@ -2418,15 +2740,13 @@ $ </screen>
 
     </sect2>
 
-    <!-- ========== UART Definition ========== -->
-
     <sect2>
       <title>
 	&uart; Module Design
       </title>
 
       <para>
-	A transaction level model cannot model all the detail of a
+	A transaction level model cannot show all the intricacies of a
 	&uart;&mdash;the whole point is to simplify and remove detail.
       </para>
 
@@ -2439,8 +2759,6 @@ $ </screen>
 	behavior.
       </para>
 
-      <!-- = UART Model Interfaces = -->
-
       <sect3>
 	<title>
 	  &uart; Model Interfaces
@@ -2448,15 +2766,13 @@ $ </screen>
 
 	<para>
 	  A &tlm2; socket is the natural model for the bus interface to the
-	  CPU. However the interface to the terminal is much simpler. A standard
-	  &systemc; one byte FIFO will be suitable. The time taken for the
-	  serial pules (start, data, parity, stop bits) on the real &uart; will be
-	  modeled as a delay before writing data into the FIFO.
+	  CPU. However the interface to the terminal is much simpler. A
+	  standard &systemc; one byte FIFO will be suitable.
 	</para>
 
 	<caution>
 	  <para>
-	    It might be thought that an 8-bit signal port would be
+	    It might be thought that an 8-bit &systemc; signal port would be
 	    suitable. However &systemc; signal ports model physical wires, and
 	    only notify changes to the value on the wire. This would be suitable
 	    if the &uart; were to model the pulses signalled across the wire.
@@ -2471,14 +2787,12 @@ $ </screen>
 	</caution>
 
 	<para>
-	  The interrupts is modelled as a signal, active high for the
+	  The interrupt is modelled as a signal, active high for the
 	  16450. &systemc; static sensitivity to this signal is a natural way
 	  for connected modules to detect the interrupt.
 	</para>
 
       </sect3>
-
-      <!-- = UART Model Registers = -->
 
       <sect3>
 	<title>
@@ -2486,31 +2800,45 @@ $ </screen>
 	</title>
 
 	<para>
-	  The modem control and status registers are irrelevant to this model
-	  and do not influence its behavior, nor are their values set.
+	  The divisor latch affects the baud rate, which will affect timing of
+	  transfers. This will be covered in a later section (see <xref
+	  linkend="sec_sync" />), but is not needed for the current untimed
+	  model. The value can be written and read, but does not affect
+	  behavior.
 	</para>
 
 	<para>
-	  In the Line Control Register, the <literal>Set Break</literal> bit is
-	  ignored (in principle it could be modeled as a change in timing of a
-	  transfer). The parity control bits are ignored, apart from
-	  <literal>Parity Enable</literal>s influence on the timing of a
-	  transfer. Similarly the <literal>Stop Bit</literal> and <literal>Word
-	  Length Enable</literal>bits are only relevant to timing of a transfer.
+	  Only two interrupts are relevant (see <xref
+	  linkend="sec_uart_interrupts" />), and only the corresponding bits
+	  in the interrupt enable and interrupt identification registers are
+	  modelled.
+	</para>
+
+	<para>
+	  The modem control and status registers are irrelevant to this model
+	  and do not influence its behavior, the modem control register can be
+	  written and the status register read, but their contents are not
+	  affected by the behavior of the modem.
+	</para>
+
+	<para>
+	  The line control register sets details of the bit transfers. In a
+	  later section (see <xref linkend="sec_sync" />), this will affect
+	  the timing of transfers, but it is not relevant to the current
+	  untimed model, and is ignored.
 	</para>
 
 	<para>
 	  In the Line Status Register, the <literal>Data Ready</literal> and
 	  <literal>Transmitter Holding Empty</literal>/<literal>Transmitter
-	  Empty</literal> bits are the only ones modeled (the last two of these
-	  will move in step in the model).
+	  Empty</literal> bits are the only ones modeled. The model does not
+	  distinguish a separate buffer and holding transmit register, so the
+	  last two of these will move in step in the model.
 	</para>
 
       </sect3>
 
-      <!-- = &uart; Model Interrupts = -->
-
-      <sect3>
+      <sect3 id="sec_uart_interrupts">
 	<title>
 	  &uart; Model Interrupts
 	</title>
@@ -2525,45 +2853,272 @@ $ </screen>
       </sect3>
     </sect2>
 
+    <sect2 id="sec_uart_or1ksim_libext">
+      <title>
+	Updating the <classname>Or1ksimSC</classname> Wrapper Module
+      </title>
+
+      <para>
+	For a larger system, the
+	&or1ksim; wrapper module must be extended. A public function is
+	required for peripheral models to establish the CPU endianism.
+      </para>
+
+      <para>
+	The function must be added to the underlying &or1ksim; library and
+	then a wrapper function added to the <classname>Or1ksimSC</classname>
+	wrapper module.
+      </para>
+
+      <para>
+	In <xref linkend="sec_Or1ksimSC_impl_btrans" /> it was noted that the
+	absence of any call to <function>wait()</function> meant the &or1ksim;
+	&iss; could be the only thread in the model. The
+	<function>doTrans()</function> function must be extended to yield
+	after each transaction to allow other threads to run.
+      </para>
+
+      <para>
+	These extensions are achieved by defining a new
+	class, <classname>Or1ksimExtSC</classname> derived from the existing
+	<classname>Or1ksimSC</classname> class. It inherits all the
+	functionality of the existing class, replaces that of the transport
+	function, <function>doTrans()</function> and adds an additional public
+	interface function, <function>isLittleEndian()</function>.
+      </para>
+      <sect3 id="sec_or1ksim_extlib">
+	<title>
+	  Adding an Edianism Test Function to the &or1ksim; Library
+	</title>
+
+	<para>
+	  The additional function is straightforward, since endianism is a
+	  compile time constant in the &or1ksim; &iss;.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <programlisting>int  or1ksim_is_le();</programlisting>
+	    </para>
+
+	    <para>
+	      <function>or1ksim_is_le()</function> returns 1 if &or1ksim; is
+	      modeling a <firstterm>little&#32;endian</firstterm>
+	      architecture, 0 otherwise. It is needed to ensure the payload is
+	      packed with the correct byte ordering.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect3>
+      <sect3>
+	<title>
+	  Extended &or1ksim; Wrapper Module Class Definition
+	</title>
+
+	<para>
+	  The new class, <classname>Or1ksimExtSC</classname> is derived from
+	  <classname>Or1ksimSC</classname>, so the definition file includes
+	  its header. The module class can then inherit from that class.
+	</para>
+
+	<programlisting>#include "Or1ksimSC.h"
+
+class Or1ksimExtSC
+: public Or1ksimSC
+{</programlisting>
+
+	<para>
+	  A custom constructor must be defined. Custom constructors do not
+	  inherit, so a new custom constructor is defined just to pass the
+	  arguments on to the parent.
+	</para>
+
+	<programlisting>  Or1ksimExtSC( sc_core::sc_module_name  name,
+                const char              *configFile,
+                const char              *imageFile );</programlisting>
+
+	<para>
+	  A new public function to report the endianism of the underlying CPU
+	  model is defined
+	</para>
+
+	<programlisting>bool  isLittleEndian();</programlisting>
+
+	<para>
+	  The <function>doTrans()</function> is reimplemented here, to allow
+	  the thread to yield. The function remains protected and virtual,
+	  since it will be redefined again later in this application note.
+	</para>
+
+	<programlisting>virtual void  doTrans( tlm::tlm_generic_payload &amp;trans );</programlisting>
+
+      </sect3>
+      <sect3>
+	<title>
+	  Extended &or1ksim; Wrapper Module Class Implementation
+	</title>
+
+	<para>
+	  The constructor just passes its arguments to its parent
+	</para>
+
+	<programlisting>Or1ksimExtSC::Or1ksimExtSC ( sc_core::sc_module_name  name,
+                             const char              *configFile,
+                             const char              *imageFile ) :
+  Or1ksimSC( name, configFile, imageFile )
+{
+ }      // Or1ksimExtSC()</programlisting>
+
+	<para>
+	  <function>isLittleEndian()</function> is a simple wrapper for the
+	  underlying &or1ksim; &iss; library function<footnote>
+	    <para>
+	      A technicality is that the &or1ksim; library function,
+	      <function>is_little_endian()</function> returns an
+	      <literal>int</literal>, since C does not have a
+	      <literal>bool</literal> type. A C++ compiler would automatically
+	      convert one to the other, but making the comparison explicit is
+	      good for clarity. The same code will be generated, so there is
+	      no loss of performance.
+	    </para>
+	  </footnote>.
+	</para>
+
+	<programlisting>bool
+Or1ksimExtSC::isLittleEndian()
+{
+  return (1 == or1ksim_is_le());
+
+}	// or1ksimIsLe()</programlisting>
+
+	<para>
+	  The majority of the code for <function>doTrans()</function> is
+	  unchanged from its implmentation in
+	  <classname>Or1ksimSC</classname>. The addition is a
+	  <function>wait()</function> for zero time immediately after the
+	  transaction has completed. This allows the &systemc; thread to
+	  yield, so that any other threads that are ready can take a turn.
+	</para>
+
+	<programlisting>  wait( sc_core::sc_time( 0.0, sc_core::SC_SEC ));</programlisting>
+
+	<caution>
+	  <para>
+	    The call to <function>wait()</function> is essential. &systemc; is
+	    not preemptive. Other threads are only considered for execution
+	    when the currently executing thread yields. If the code were to
+	    return here, control would pass back to the underlying &or1ksim;
+	    &iss; until its next upcall, with no opportunity for another
+	    &systemc; thread to execute.
+	  </para>
+
+	  <para>
+	    The implementation currently is untimed, so a zero delay wait is
+	    perfectly acceptable. That just gives all the other untimed
+	    threads a turn at execution.
+	  </para>
+
+	  <para>
+	    The logger described in <xref linkend="sec_iss_wrapper_test" />
+	    worked without this call to <function>wait()</function>, because
+	    it had no thread&mdash;all its functionality was in the blocking
+	    transaction callback function.
+	  </para>
+	</caution>
+
+      </sect3>
+    </sect2>
+
     <!-- ========== UART Definition ========== -->
 
     <sect2>
       <title>
-	&uart; Module Definition
+	&uart;: Module Class Definition
       </title>
 
       <para>
-	The &uart; module uses the &tlm2; simple target Convenience Socket
-	(described earlier in <xref linkend="sec_iss_wrapper_test" />) and
-	includes the appropriate headers
+	The &uart; module class, <classname>UartSC</classname> is defined in
+	<filename>UartSC.h</filename>. It uses the &tlm2; simple target
+	convenience socket (described earlier in <xref
+	linkend="sec_iss_wrapper_test" />).
+      </para>
+
+      <sect3>
+	<title>
+	  Headers and Constant Definitions
+	</title>
+
+	<para>
+	  The header files for &tlm2; and the simple target convenience
+	  socket are included.
       </para>
 
       <programlisting>#include "tlm.h"
 #include "tlm_utils/simple_target_socket.h"</programlisting>
 
       <para>
-	Convenience constants for the address mask, &uart; read and write
-	delays, named register offsets and bit fields are then defined. The
-	address mask is needed, since in this simple SoC model there is no
-	arbiter/decoder to strip out the higher order bits from the address
-	before the transaction is sent to the &uart;.
+	Convenience constants for the address mask, named register offsets and
+	bit fields are then defined. The address mask is needed, since in this
+	simple SoC model there is no arbiter/decoder to strip out the higher
+	order bits from the address before the transaction is sent to the
+	&uart;.
       </para>
 
-      <para>
-	The main class is a standard &systemc; module class derived from
-	<classname>sc_core::sc_module</classname>.
-      </para>
+      <programlisting>#define UART_ADDR_MASK      7     // Mask for addresses (3 bit bus)
 
-      <programlisting>class UartSC
-: public sc_core::sc_module
-{</programlisting>
+// Offsets for the 16450 UART registers
 
-      <!-- = Public Methods # -->
+#define UART_BUF  0             // R/W: Rx/Tx buffer, DLAB=0
+#define UART_IER  1             // R/W: Interrupt Enable Register, DLAB=0
+#define UART_IIR  2             // R: Interrupt ID Register
+#define UART_LCR  3             // R/W: Line Control Register
+#define UART_MCR  4             // W: Modem Control Register
+#define UART_LSR  5             // R: Line Status Register
+#define UART_MSR  6             // R: Modem Status Register
+#define UART_SCR  7             // R/W: Scratch Register
+
+// Interrupt Enable register bits of interest
+
+#define UART_IER_ETBEI  0x02    // Enable transmitter holding register int.
+#define UART_IER_ERBFI  0x01    // Enable receiver data interrupt
+
+// Interrupt Identification register bits and interrupt masks of interest
+
+#define UART_IIR_RDI    0x04    // Receiver data interrupt
+#define UART_IIR_THRE   0x02    // Transmitter holding reg empty interrupt
+#define UART_IIR_IPEND  0x00    // Interrupt pending
+
+// Line Control register bits of interest and data word length mask
+
+#define UART_LCR_DLAB   0x80    // Divisor latch access bit
+#define UART_LCR_PEN    0x08    // Parity Enable
+#define UART_LCR_STB    0x04    // Stop bits: 0=1 stop bit, 1= 2 stop bits
+#define UART_LCR_MASK   0x03    // 2-bit mask for word length
+
+// Line Status register bits of interest
+
+#define UART_LSR_TEMT   0x40    // Transmitter serial register empty
+#define UART_LSR_THRE   0x20    // Transmitter holding register empty
+#define UART_LSR_DR     0x01    // Receiver data ready</programlisting>
+
+      </sect3>
 
       <sect3>
 	<title>
-	  Public Methods
+	  Class Declaration and Constructor
 	</title>
+
+        <para>
+	  The main class is a standard &systemc; module class derived from
+	  <classname>sc_core::sc_module</classname>.
+	</para>
+
+	<programlisting>class UartSC
+: public sc_core::sc_module
+{</programlisting>
 
 	<para>
 	  The module has a customized constructor, specifying an input clock
@@ -2577,20 +3132,39 @@ $ </screen>
 
       </sect3>
 
-      <!-- = Public Attributes # -->
-
       <sect3>
 	<title>
-	  Public Attributes: Sockets and Ports
+	  Public Interface
 	</title>
 
 	<para>
-	  The interfaces to the &uart; model are the simple target convenience
-	  port (<literal>bus</literal>), the two &systemc; <literal>unsigned
-	  char</literal> FIFO ports for Rx and Tx (<literal>rx</literal> and
-	  <literal>tx</literal>) and a &systemc; boolean signal for the
-	  interrupt (<literal>intr</literal>).
+	  The interfaces to the &uart; model are:
 	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      The simple target convenience port, <literal>bus</literal>,
+	      representing the bus from the CPU;
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The two &systemc; <literal>unsigned char</literal> FIFO ports
+	      for Rx (input) and Tx (output) pins, <literal>rx</literal> and
+	      <literal>tx</literal>); and
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      A &systemc; boolean output signal port for the interrupt,
+	      <literal>intr</literal>.
+	    </para>
+	  </listitem>
+	</itemizedlist>
 
       </sect3>
 
@@ -2598,7 +3172,7 @@ $ </screen>
 
       <sect3>
 	<title>
-	  Private Methods
+	  Threads
 	</title>
 
 	<para>
@@ -2606,21 +3180,29 @@ $ </screen>
 	  bytes written to the transmit buffer and
 	  <function>rxThread()</function> waiting for bytes on the Rx FIFO.
 	</para>
-	
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Blocking Transport Callback
+	</title>
+
 	<para>
-	  The blocking transport callback routine is
+	  The blocking transport callback function is
 	  <function>busReadWrite()</function>. This in turn calls for two
 	  separate routines which implement read specific
 	  (<function>busRead()</function>) and write specific
 	  (<function>busWrite()</function>) behavior.
 	</para>
+
       </sect3>
 
       <!-- = Private Utilities = -->
 
       <sect3>
 	<title>
-	  Private Utility Methods
+	  Utility Methods
 	</title>
 
 	<para>
@@ -2646,7 +3228,7 @@ $ </screen>
 
       <sect3>
 	<title>
-	  Private Attributes
+	  &uart; State
 	</title>
 
 	<para>
@@ -2669,29 +3251,33 @@ $ </screen>
   } regs;</programlisting>
 
 	<para>
-	  Additional state info is held for the clock rate
-	  (<literal>clockRate</literal>), the 16-bit clock divisor
-	  (<literal>divLatch</literal>), the delay modeling the time taken to
-	  put bits on the Tx pin (<literal>charDelay</literal>) and the flag
-	  indicating model endianism (<literal>isLittleEndian</literal>).
+	  The divisor latch is effectively another 16-bit register,
+	  declared separately, <literal>divLatch</literal>. A flag initialized
+	  at construction records the model endianism,
+	  <literal>isLittleEndian</literal>.
 	</para>
 
-	<note>
-	  <para>
-	    The divisor latch for a 16450 is applied to the input clock to
-	    yield an internal clock <emphasis>16x</emphasis> the baud rate
-	    (i.e. not the actual baud rate itself)<footnote>
-	      <para>
-	        The 16450 input clock is specified to a maximum of 24 MHz, so
-	        that a 16 bit divisor latch can yield an internal clock for
-	        rates down to 50 baud. However for a software model this
-	        limitation is ignored. Faster input clocks can be specified,
-	        but it will not be possible to configure a divisor latch for
-	        very low baud rates
-	      </para>
-	    </footnote>.
-	  </para>
-	</note>
+      </sect3>
+
+      <sect3>
+	<title>
+	  Transmit Data Available Event
+	</title>
+
+	<para>
+	  A method is needed for the &tlm2; callback routine,
+	  <function>busReadWrite()</function> to notify the thread handling
+	  data being sent for transmission
+	  (<function>busThread()</function>). This is achieved with a
+	  &systemc; event:
+	</para>
+
+	<programlisting>  sc_core::sc_event  txReceived;</programlisting>
+
+	<para>
+	  The callback routine use notification on this event, to trigger
+	  behavior in the <function>busThread()</function>.
+	</para>
 
       </sect3>
     </sect2>
@@ -2700,10 +3286,8 @@ $ </screen>
 
     <sect2 id="sec_uart_impl">
       <title>
-	&uart; Module Implementation
+	&uart; Module Class Implementation
       </title>
-
-      <!-- = Constructor = -->
 
       <sect3>
 	<title>
@@ -2712,14 +3296,14 @@ $ </screen>
 	
 	<para>
 	  Declaration of the constructor is preceded, like
-	  <classname>Or1ksim</classname>, by the SystemC macro
+	  <classname>Or1ksimSC</classname>, by the SystemC macro
 	</para>
 
 	<programlisting>SC_HAS_PROCESS( UartSC );</programlisting>
 
 	<para>
-	  The constructor sets the clock rate and endianism member variables
-	  from the parameters supplied and then registers the two threads
+	  The constructor save the endianism flags in its internal state, then
+	  registers the two threads
 	</para>
 
 	<programlisting>  SC_THREAD( busThread );
@@ -2733,12 +3317,10 @@ $ </screen>
 
 	<para>
 	  Finally the registers (<literal>regs</literal>) are cleared. There
-	  is no initialization of the divisor latch or character delay, since
-	  these are undefined until set.
+	  is no initialization of the divisor latch, since this is undefined
+	  until set.
 	</para>
       </sect3>
-
-      <!-- = Threads = -->
 
       <sect3>
 	<title>
@@ -2780,13 +3362,6 @@ $ </screen>
 	</para>
 
 	<para>
-	  The character is not sent immediately. The thread waits for a
-	  period, <literal>charDelay</literal> to model the time taken to push
-	  the bits (start, data, parity and stop) onto the Tx wire. Only then
-	  is the value written onto the Tx FIFO.
-	</para>
-
-	<para>
 	  The second thread, <function>rxThread()</function> sits in a
 	  perpetual loop, waiting for
 	  characters to be received on the Rx FIFO. The character is read into
@@ -2794,21 +3369,12 @@ $ </screen>
 	  to indicate availability.
 	</para>
 
-	<note>
-	  <para>
-	    There is no modeling of line delay here. That is the
-	    responsibility of the entity (a terminal writing to the Rx pin.
-	  </para>
-	</note>
-
 	<para>
 	  If the receive data interrupt is enabled, an interrupt is asserted
 	  to indicate data availability.
 	</para>
 
       </sect3>
-
-      <!-- = Blocking Transport = -->
 
       <sect3>
 	<title>
@@ -2832,7 +3398,6 @@ $ </screen>
 
   default:              // Invalid request
 
-    std::cerr &lt;&lt; "Uart: busRead: multiple byte read - ignored\n" &lt;&lt; std::endl;
     payload.set_response_status( tlm::TLM_GENERIC_ERROR_RESPONSE );
     return;
   }</programlisting>
@@ -2853,21 +3418,12 @@ $ </screen>
 	</para>
 
 	<para>
-	  In each case the delay time is then advanced (neither read nor write
-	  has yielded the thread by calling <function>wait()</function>
-	  explicitly or implicitly). This is a measure of how far in advance
-	  of central &systemc; time the module has progressed.
-	</para>
-
-	<para>
 	  Single byte reads and writes always succeed, so the response is set
 	  to <literal>tlm::TLM_OK_RESPONSE</literal> in all cases.
 	</para>
 
       </sect3>
 
-      <!-- = Read Behavior = -->
-	
       <sect3>
 	<title>
 	  &uart; Read Behavior
@@ -2875,8 +3431,9 @@ $ </screen>
 	
 	<para>
 	  Read behavior is handled by <function>busRead()</function>.  A
-	  switch on the address is used to identify the result to be
-	  returned. The interesting cases are:
+	  switch on the address is used to identify the result to be returned,
+	  usually just the value in the register if it is readable. The
+	  interesting cases are:
 	</para>
 
 	<itemizedlist>
@@ -2911,8 +3468,6 @@ $ </screen>
 	
       </sect3>
 
-      <!-- = Write Behavior = -->
-	
       <sect3>
 	<title>
 	  &uart; Write Behavior
@@ -2920,7 +3475,8 @@ $ </screen>
 	
 	<para>
 	  Write behavior is handled by <function>busWrite()</function>.  A
-	  switch on the address is used to identify the action required. The
+	  switch on the address is used to identify the action
+	  required. Usually the register is just written (if writable). The
 	  interesting cases are:
 	</para>
 
@@ -2931,9 +3487,7 @@ $ </screen>
 	      If the <literal>DLAB</literal> bit is set in the line control
 	      register, then writes to the first two registers (read buffer and
 	      interrupt enable) update the low and high bytes of the
-	      divisor latch respectively. This update may cause a change in
-	      the character delay on transmit, so this is updated via
-	      <function>resetCharDelay()</function>.
+	      divisor latch respectively.
 	    </para>
 	  </listitem>
 
@@ -2947,20 +3501,9 @@ $ </screen>
 	    </para>
 	  </listitem>
 
-	  <listitem>
-	    <para>
-	      Updating the line control register may affect the character
-	      delay on transmit (due to change in number of data, parity or
-	      stop bits), so this is updated via
-	      <function>resetCharDelay()</function>.
-	    </para>
-	  </listitem>
-
 	</itemizedlist>
 
       </sect3>
-
-      <!-- = Utilities = -->
 
       <sect3>
 	<title>
@@ -2985,38 +3528,25 @@ $ </screen>
 	</para>
 
 	<para>
-	  The time to send a character depends on the baud rate and the number
-	  of bits required to send each character. The baud rate in turn
-	  depends on the input clock rate and divisor latch, remembering that
-	  this generates a clock 16x baud rate. The total number of bits
-	  comprises the start bit, data bits (5-8), optional parity bit and
-	  stop bits (1, 1.5 or 2). The function
-	  <function>charDelay()</function> calculates this character delay
-	  whenever one of these parameters is changed.
-	</para>
-
-	<para>
 	  Finally a set of functions are provided to set, clear and test bits
-	  in registers. Using these makes the code much more readable.
+	  in registers. Using these makes the code much more readable<footnote>
+  	    <para>
+	      Many programmers use <literal>#define</literal>d macros for
+	      functions such as these. However such macros have no
+	      encapsulation (they can be used by anyone including the header)
+	      and have a nasty habit of clashing with other peoples macros. By
+	      using functions, the routines can be made private to the
+	      <classname>UartSC</classname> class alone.
+	    </para>
+
+	    <para>
+	      The functions are declared in line, and a modern C++ compiler
+	      will generate code as efficiently as if they had been
+	      <literal>#define</literal>d as macros. Indeed the added type
+	      information gives the potential for greater optimization.
+	    </para>
+	  </footnote>.
 	</para>
-
-	<tip>
-	  <para>
-	    Many programmers use <literal>#define</literal>d macros for
-	    functions such as these. However such macros have no encapsulation
-	    (they can be used by anyone including the header) and have a nasty
-	    habit of clashing with other peoples macros. By using functions,
-	    the routines can be made private to the
-	    <classname>UartSC</classname> class alone.
-	  </para>
-
-	  <para>
-	    The functions are declared in line, and a modern C++ compiler will
-	    generate code as efficiently as if they had been
-	    <literal>#define</literal>d as macros. Indeed the added type
-	    information gives the potential for greater optimization.
-	  </para>
-	</tip>
 
       </sect3>
     </sect2>
@@ -3062,17 +3592,15 @@ $ </screen>
     </para>
 
     <para>
-      The implementation of the terminal will show how to wrap non-blocking
+      This implementation of the terminal will show how to wrap non-blocking
       versions of operating system routines with &systemc; events, to give
       versions that block correctly using &systemc;
       <function>wait()</function>, so allowing the thread to yield.
     </para>
 
-    <!-- ========== Terminal Design ========== -->
-
     <sect2>
       <title>
-	Design of the &systemc; Terminal Model
+	&systemc; Terminal Module Design
       </title>
 
       <para>
@@ -3090,12 +3618,33 @@ $ </screen>
       <para>
 	Two threads are used, one waiting for bytes from the UART on the Rx
 	FIFO, the other waiting for bytes from the &xterm;. When bytes are
-	received on the Rx pin, they are immediately written to the
-	&xterm;. When bytes are received from the &xterm;,
-	<function>wait()</function> is used to model the delay in placing the
-	bits on the serial line. This exactly mirrors the implementation in
-	the &uart; (see <xref linkend="sec_uart_impl" />).
+	received on the Rx pin, they are written to the
+	&xterm;. When bytes are received from the &xterm; they are written to
+	the Tx FIFO. The key interfaces are shown in <xref
+	linkend="fig_terminal" />.
       </para>
+
+      <figure id="fig_terminal">
+	<title>
+	  &systemc; terminal model using a &xterm; child process.
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="terminal.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="terminal.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
 
       <para>
 	The difficulty is in waiting for the xterm. As described above,
@@ -3111,15 +3660,11 @@ $ </screen>
 
     </sect2>
 
-    <!-- ========== Terminal Module Definition ========== -->
-
     <sect2>
       <title>
-	Class Definition of the Terminal Module
+	Terminal Module Class Definition
       </title>
 
-      <!-- = Signal mapping = -->
-      
       <sect3>
 	<title>
 	  Mapping Signals to Class Instances
@@ -3127,23 +3672,22 @@ $ </screen>
 
 	<para>
 	  The operating system signal handlers require C style linkage, so
-	  cannot be used with C++ member functions. Thus the
-	  <literal>SIGIO</literal> handler will be a static function. However
-	  there is one &systemc; event for each instance (there could be
-	  multiple terminals in a simulation). Each will have a different file
-	  descriptor, which can be used to identify the owning class instance.
+	  cannot be used with C++ member functions (the same issue address
+	  with the &or1ksim; wrapper in <xref linkend="sec_upcall" />). Thus
+	  the <literal>SIGIO</literal> handler will be a static
+	  function. However each instance (there could be multiple terminals
+	  in a simulation) will have a different file descriptor, which can be
+	  used to identify the owning class instance.
 	</para>
 
 	<para>
-	  The set of these mappings is held in a static list. The
-	  <literal>struct Fd2Inst</literal> is provided for that list, with
-	  entries for the file descriptor, instance and a pointer to the next
-	  in the list.
+	  The set of mappings from file descriptor to class instance is held
+	  in a linked list with static head pointer. The <literal>struct
+	  Fd2Inst</literal> is provided for that list, with entries for the
+	  file descriptor, instance and a pointer to the next in the list.
 	</para>
 
       </sect3>
-
-      <!-- = SystemC Class = -->
       
       <sect3>
 	<title>
@@ -3153,25 +3697,27 @@ $ </screen>
 	<para>
 	  <classname>TermSC</classname> is declared as a standard &systemc;
 	  class, with two FIFO ports (one in, one out) to talk to the
-	  &uart;. Unusually for &systemc; it has a destructor, which will be
-	  used to kill the child process running the &xterm; on termination.
+	  &uart;. In this case it has a custom destructor, which will be
+	  used to kill the child process running the &xterm; when the class is
+	  deleted.
 	</para>
 
       </sect3>
 
-      <!-- = xterm = -->
-      
       <sect3>
 	<title>
 	  Setting up the &xterm;
 	</title>
 
 	<para>
-	  A set of utility routines are provided to set up the &xterm;, with
-	  two routines to read from, (<function>xtermRead()</function>) and
-	  write to (<function>xtermWrite()</function>) it. Both these routines
-	  are blocking, so the read routine will only be called when the
-	  signal handler has determined input is available.
+	  A set of utility functionss are provided to set up the &xterm;, with
+	  two functions one to read from, and one to write to it,
+	  <function>xtermRead()</function> and
+	  <function>xtermWrite()</function>. Both these functions are blocking
+	  on the operating system. The write routine should always be able to
+	  write with minimal delay. However the read routine must only be
+	  called when the SIGIO signal handler has determined input is
+	  available, in order to avoid blocking the &systemc; simulation.
 	</para>
 
 	<para>
@@ -3182,9 +3728,7 @@ $ </screen>
 	</para>
       </sect3>
 
-      <!-- = Signals & events = -->
-      
-      <sect3>
+<sect3>
 	<title>
 	  Signal and event handling
 	</title>
@@ -3219,29 +3763,26 @@ $ </screen>
 
     </sect2>
 
-    <!-- ========== Terminal Module Implementation ========== -->
-
     <sect2>
       <title>
-	Implementation of the Terminal Module
+	Terminal Module Class Implementation
       </title>
 
       <para>
 	The implementation is a standard &systemc; module communicating via
-	the two FIFOs, and with the two threads, one listening to the Rx from
+	the two FIFOs, and with two threads, one listening to the Rx from
 	the &uart; the other listening to the &xterm;.
       </para>
 
       <para>
 	The setup of the pseudo TTYs and the &xterm; in a separate process
 	uses standard operating system routines, not described further
-	here. The key factor is that the pseudo TTY to the &xterm; is declared
-	asynchronous, with <literal>SIGIO</literal> raised when input is
-	available and handled by <literal>ioHandler</literal>.
+	here. The key factor is that the file descriptor for the pseudo TTY to
+	the &xterm; is set up to be asynchronous, with Linux signal
+	<literal>SIGIO</literal> raised when input is available and handled by
+	the <literal>ioHandler()</literal> function.
       </para>
 
-      <!-- = Threads = -->
-      
       <sect3>
 	<title>
 	  Threads
@@ -3250,9 +3791,9 @@ $ </screen>
 	<para>
 	  The thread listening to the &uart;, <function>rxThread()</function>
 	  sits in a perpetual loop, reading from the input FIFO. This blocks
-	  until a character is received. Any baud-rate delay modeling has been
-	  done by the UART, so this character is immediately copied to the
-	  &xterm;. This is a blocking write, but should return immediately.
+	  until a character is received. The character is immediately copied
+	  to the &xterm;. Although this is a blocking write, it should return
+	  with minimal delay.
 	</para>
 
 	<para>
@@ -3265,15 +3806,11 @@ $ </screen>
 
 	<para>
 	  When input is available, the event is notified (see <xref
-	  linkend="sec_xterm_sig_hand" />>). The thread can safely make a
+	  linkend="sec_xterm_sig_hand" />). The thread can safely make a
 	  blocking operating system read to get the character, knowing that
-	  data is definitely available. The baud rate delay is modelled with a
-	  further <function>wait()</function> call and the character then
-	  written to the Tx FIFO.
+	  data is definitely available.
 	</para>
       </sect3>
-
-      <!-- = Signals & events = -->
       
       <sect3 id="sec_xterm_sig_hand">
 	<title>
@@ -3281,18 +3818,19 @@ $ </screen>
 	</title>
 
 	<para>
-	  During the initialization the &systemc; event,
+	  During initialization of the &xterm; the &systemc; event,
 	  <literal>ioEvent</literal> is allocated:
 	</para>
 
 	<programlisting>  ioEvent = new sc_core::sc_event();</programlisting>
 
 	<para>
-	  When <literal>ioHandler</literal> is called it does not know which
-	  pseudo TTY was responsible. The file descriptor responsible is
-	  identified by using an operating system select call. From this the
-	  corresponding class instance can be identified and its
-	  <literal>ioEvent</literal> notified.
+	  When <literal>ioHandler()</literal> is called in response to a Linux
+	  SIGIO event, it does not know which pseudo TTY was responsible. The
+	  file descriptor responsible is identified by using an operating
+	  system <function>select()</function> call. Using the mappings in
+	  <literal>instList</literal>, the corresponding class instance can be
+	  identified and its <literal>ioEvent</literal> notified.
 	</para>
 
 	<programlisting>  for( Fd2Inst *cur = instList; cur != NULL ; cur = cur->next ) {
@@ -3308,15 +3846,11 @@ $ </screen>
       </sect3>
     </sect2>
 
-    <!-- ========== The SoC ========== -->
-
     <sect2>
       <title>
 	The Complete SoC
       </title>
 
-      <!-- = Main program = -->
-      
       <sect3>
 	<title>
 	  The Model Main Program
@@ -3331,16 +3865,9 @@ $ </screen>
 	</para>
 
 	<programlisting>#include "tlm.h"
-#include "Or1ksimSC.h"
+#include "Or1ksimExtSC.h"
 #include "UartSC.h"
 #include "TermSC.h"</programlisting>
-
-	<para>
-	  The baud rate for the terminal is defined as a constant for
-	  convenience.
-	</para>
-
-	<programlisting>#define BAUD_RATE  9600UL               // Baud rate of the terminal</programlisting>
 
 	<para>
 	  As before the main program (<function>sc_main()</function>) takes as
@@ -3348,13 +3875,13 @@ $ </screen>
 	  image. Instances of the three modules are declared.
 	</para>
 
-	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
-  UartSC     uart( "uart", iss.getClockRate(), iss.isLittleEndian() );
-  TermSC     term( "terminal", BAUD_RATE );</programlisting>
+	<programlisting>  Or1ksimExtSC  iss( "or1ksim", argv[1], argv[2] );
+  UartSC        uart( "uart", iss.isLittleEndian() );
+  TermSC        term( "terminal" );</programlisting>
 
 	<para>
-	  The clock rate and endianism for the &uart; are set using the public
-	  utility methods for the &or1ksim; &iss;. The &tlm; ports of &uart;
+	  The endianism for the &uart; is set using the public utility method
+	  in <classname>Or1ksimExtSC</classname>. The &tlm; ports of &uart;
 	  and &iss; can be connected:
 	</para>
 
@@ -3374,7 +3901,7 @@ $ </screen>
 
 	<para>
 	  Finally the &uart; interrupt is connected to a &systemc;
-	  <literal>bool</literal> signal. The signal goes nowhere, but for now
+	  <literal>bool</literal> signal. The signal goes nowhere, since for now
 	  the interrupts are not required.
 	</para>
 
@@ -3388,8 +3915,6 @@ $ </screen>
 	</para>
       </sect3>
 
-      <!-- = Main program = -->
-      
       <sect3>
 	<title>
 	  Test Program to Run on the &or1ksim; &iss;
@@ -3508,8 +4033,6 @@ struct uart16450
 
       </sect3>
 
-      <!-- = Compiling the model = -->
-      
       <sect3>
 	<title>
 	  Compiling and Running the Model
@@ -3601,7 +4124,405 @@ Read: '!'</screen>
 	  Well it makes a change from "Hello World!".
 	</para>
 
+	<para>
+	  As an exercise, rebuild the model, removing the call to
+	  <function>wait()</function> in the
+	  <function>Or1ksimExtSC::doTrans()</function> function. Observe that
+	  the program hangs without accepting any characters. The reason for
+	  this is given in the description of <function>doTrans()</function>
+	  in <xref linkend="sec_uart_or1ksim_libext" />.
+	</para>
+
+	<para>
+	  A debugger connected to the model will show that execution is stuck
+	  in &or1ksim; &iss;, waiting for the data ready flag to be set in the
+	  &uart;. This can never occur, since neither &uart; nor terminal are
+	  given the chance to execute the threads that would set this flag.
+	</para>
       </sect3>
+    </sect2>
+  </sect1>
+
+  <!-- ========================================================================
+       Adding Synchronous Timing
+       ==================================================================== -->
+
+  <sect1 id="sec_sync">
+    <title>
+      Adding Synchronous Timing to the Model
+    </title>
+
+    <para>
+      The model is extended to add timing to all the components
+    </para>
+
+    <!-- Further extensions to the Or1ksim library -->
+
+    <sect2>
+      <title>
+	Further Extending the &or1k; &or1ksim; Library
+      </title>
+
+      <para>
+	Additional functions are needed in the &or1ksim; library to support
+	peripheral modeling. The &uart; will need to know the endianism of the
+	model (to decode the address of byte access) and the clock rate of the
+	model (to work out the baud rate from the value of the divisor latch).
+      </para>
+
+      <para>
+	Two functions are added to the &or1ksim; library to extract this
+	information.
+      </para>
+
+      <!-- = Library Functions -->
+
+      <sect3 id="sec_or1ksim_libsync">
+	<title>
+	  Additional Functions for the &or1ksim; Library
+	</title>
+
+	<para>
+	  The two additional functions are simple additions. The information
+	  about endianism is a compile time constant in the &or1ksim; &iss;,
+	  while the clock rate is a configuration parameter.
+	</para>
+
+	<para>
+	  The &uart; will need to know the endianism of the model (to decode
+	  the address of byte access) and the clock rate of the model (to work
+	  out the baud rate from the value of the divisor latch).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <programlisting>int  or1ksim_is_le();</programlisting>
+	    </para>
+
+	    <para>
+	      <function>or1ksim_is_le()</function> returns 1 if &or1ksim; is
+	      modeling a <firstterm>little&#32;endian</firstterm>
+	      architecture, 0 otherwise. It is needed to ensure the payload is
+	      packed with the correct byte ordering.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <programlisting>unsigned long int  or1ksim_clock_rate();</programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_clock_rate()</function> returns the &or1ksim;
+	      &iss; clock rate in Hz. This information will be used by the
+	      &uart; to allow it to set its baud rate.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <programlisting>double  or1ksim_time();</programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_time()</function> returns the &or1ksim; view
+	      of how much time has elapsed while simulating. This routine is
+	      needed to keep the SystemC model of time due to instruction set
+	      processing accurate, both in the synchronous SoC and when
+	      temporal decoupling is added (see <xref
+	      linkend="sec_temporal_decoupling" />).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Extending the Or1ksim class definition
+	</title>
+      <para>
+	Two time stamps are declared, one to hold the SystemC view of the
+	time of the last upcall from &or1ksim;, the other to hold the
+	&or1ksim; view of the time of the last upcall.
+      </para>
+
+      <programlisting>  sc_core::sc_time  scLastTime;
+      sc_core::sc_time  or1kLastTime;</programlisting>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Extending the Or1ksim class implementation
+	</title>
+
+	<para>
+	  Once the fields are set up, the <function>doTrans()</function>
+	  method (which is used for both read and write) is called to
+	  synchronize with the SystemC clock, transport the payload to the
+	  target and return the result.
+	</para>
+
+      <para>
+	There are two components to the time taken in this model, the time
+	taken by the &or1ksim; &iss; and the time taken in any peripherals. At
+	the time of an upcall, the SystemC wrapper thread will not have
+	yielded control since the last upcall. It needs to wait for the
+	&systemc; clock to catch up to this time point.
+      </para>
+
+      <para>
+	The &systemc; time at which the last upcall was made was recorded in
+	<literal>scLastUpTime</literal>. The time stamp of the &or1ksim; &iss; at
+	the last upcall (i.e. the number of cycles it has executed,
+	multiplied by the time taken for each cycle) was recorded in the
+	<literal>or1kLastUpTime</literal>.
+      </para>
+
+      <para>
+	A call of <function>or1ksim_time()</function> gives the current time
+	of the &iss;, and hence the time that has elapsed since the last up
+	call. This is used to advance both<literal>scLastUpTime</literal> and
+	<literal>or1kLastUpTime</literal>. The thread then calls
+	<function>wait()</function> to allow any other threads in the
+	&systemc; world to run until the calculated simulation time is
+	reached.
+      </para>
+
+      <para>
+	At this time the blocking transport method of the simple initiator
+	port is called with the payload and specifying a zero time offset
+	(since the call to <function>wait()</function> means the thread is
+	synchronized with the &systemc; clock).
+      </para>
+
+      <para>
+	On return, the <literal>delay</literal> parameter will have been
+	updated with any additional delay due to the transaction&mdash;in
+	this case an estimate of the number of cycles to read or write the
+	relevant &uart; register.
+      </para>
+
+      <para>
+	It would be possible to make another call to
+	<function>wait()</function> immediately to synchronize locally for
+	this delay. However there will be no more processing on this thread
+	until the next upcall from the &or1ksim; &iss;, so the delay is added
+	to the <literal>scLastUpTime</literal> and will be added to the
+	<function>wait()</function> on the next upcall.
+      </para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  Modeling teh FIFO timing
+	</title>
+
+	<para>
+	  The time taken for the serial pules (start, data, parity, stop bits)
+	  on the real &uart; will be modeled as a delay before writing data
+	  into the FIFO.
+	</para>
+
+	<para>
+	  Divisor Latch is needed for timing
+	</para>
+
+	<para>
+	  The divisor latch is effectively another 16-bit register,
+	  declared separately:
+	  (<literal>divLatch</literal>), the delay modeling the time taken to
+	  put bits on the Tx pin (<literal>charDelay</literal>) and the flag
+	  indicating model endianism (<literal>isLittleEndian</literal>).
+	</para>
+
+	<note>
+	  <para>
+	    The divisor latch for a 16450 is applied to the input clock to
+	    yield an internal clock <emphasis>16x</emphasis> the baud rate
+	    (i.e. not the actual baud rate itself)<footnote>
+	      <para>
+	        The 16450 input clock is specified to a maximum of 24 MHz, so
+	        that a 16 bit divisor latch can yield an internal clock for
+	        rates down to 50 baud. However for a software model this
+	        limitation is ignored. Faster input clocks can be specified,
+	        but it will not be possible to configure a divisor latch for
+	        very low baud rates
+	      </para>
+	    </footnote>.
+	  </para>
+	</note>
+
+	<para>
+	  In the Line Control Register, the <literal>Set Break</literal> bit is
+	  ignored (in principle it could be modeled as a change in timing of a
+	  transfer). The parity control bits are ignored, apart from
+	  <literal>Parity Enable</literal>s influence on the timing of a
+	  transfer. Similarly the <literal>Stop Bit</literal> and <literal>Word
+	  Length Enable</literal>bits are only relevant to timing of a transfer.
+	</para>
+
+	<para>
+	  UART busThread: The character is not sent immediately. The thread
+	  waits for a period, <literal>charDelay</literal> to model the time
+	  taken to push the bits (start, data, parity and stop) onto the Tx
+	  wire. Only then is the value written onto the Tx FIFO.
+	</para>
+
+
+	<note>
+	  <para>
+	    UART rxThread: There is no modeling of line delay here. That is the
+	    responsibility of the entity (a terminal writing to the Rx pin.
+	  </para>
+	</note>
+
+	<para>
+	  UART BusReadWriteIn each case the delay time is then advanced
+	  (neither read nor write has yielded the thread by calling
+	  <function>wait()</function> explicitly or implicitly). This is a
+	  measure of how far in advance of central &systemc; time the module
+	  has progressed.
+	</para>
+
+	<para>
+	  UART writing registers
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      If the <literal>DLAB</literal> bit is set in the line control
+	      register, then writes to the first two registers (read buffer and
+	      interrupt enable) update the low and high bytes of the
+	      divisor latch respectively. This update may cause a change in
+	      the character delay on transmit, so this is updated via
+	      <function>resetCharDelay()</function>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Writing the transmit hold register (when
+	      <literal>DLAB=0</literal>) triggers a new transfer. The flags
+	      are set to indicate data is in the register, and the bus thread
+	      (<function>busThread()</function>) notified via the &systemc;
+	      event <literal>txReceived</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Updating the line control register may affect the character
+	      delay on transmit (due to change in number of data, parity or
+	      stop bits), so this is updated via
+	      <function>resetCharDelay()</function>.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  UART: Char delay fn The time to send a character depends on the baud
+	  rate and the number of bits required to send each character. The
+	  baud rate in turn depends on the input clock rate and divisor latch,
+	  remembering that this generates a clock 16x baud rate. The total
+	  number of bits comprises the start bit, data bits (5-8), optional
+	  parity bit and stop bits (1, 1.5 or 2). The function
+	  <function>charDelay()</function> calculates this character delay
+	  whenever one of these parameters is changed.
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Updating the terminal model
+	</title>
+
+      <para>
+	Two threads are used, one waiting for bytes from the UART on the Rx
+	FIFO, the other waiting for bytes from the &xterm;. When bytes are
+	received on the Rx pin, they are immediately written to the
+	&xterm;. When bytes are received from the &xterm;,
+	<function>wait()</function> is used to model the delay in placing the
+	bits on the serial line. This exactly mirrors the implementation in
+	the &uart; (see <xref linkend="sec_uart_impl" />).
+      </para>
+
+	<para>
+	  The thread listening to the &uart;, <function>rxThread()</function>
+	  sits in a perpetual loop, reading from the input FIFO. This blocks
+	  until a character is received. Any baud-rate delay modeling has been
+	  done by the UART, so this character is immediately copied to the
+	  &xterm;. This is a blocking write, but should return immediately.
+	</para>
+
+	<para>
+	  The thread listening to the &xterm;,
+	  <function>xtermThread()</function> sits in a perpetual loop, waiting
+	  on the &systemc; event pointed to by
+	  <literal>ioEvent</literal>. This will safely allow the thread to
+	  yield to the &systemc; scheduler until a character is ready.
+	</para>
+
+	<para>
+	  When input is available, the event is notified (see <xref
+	  linkend="sec_xterm_sig_hand" />>). The thread can safely make a
+	  blocking operating system read to get the character, knowing that
+	  data is definitely available. The baud rate delay is modelled with a
+	  further <function>wait()</function> call and the character then
+	  written to the Tx FIFO.
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Updating the main prog
+	</title>
+
+	<para>
+	  The baud rate for the terminal is defined as a constant for
+	  convenience.
+	</para>
+
+	<programlisting>#define BAUD_RATE  9600UL               // Baud rate of the terminal</programlisting>
+
+	<para>
+	  As before the main program (<function>sc_main()</function>) takes as
+	  arguments the &or1ksim; configuration file and &or1k;
+	  image. Instances of the three modules are declared.
+	</para>
+
+	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
+  UartSC     uart( "uart", iss.getClockRate(), iss.isLittleEndian() );
+  TermSC     term( "terminal", BAUD_RATE );</programlisting>
+
+	<para>
+	  The clock rate and endianism for the &uart; are set using the public
+	  utility methods for the &or1ksim; &iss;. The &tlm; ports of &uart;
+	  and &iss; can be connected:
+	</para>
+
+      </sect3>
+
+
+    </sect2>
+
+    <!-- ========== Running the System ========== -->
+
+    <sect2>
+      <title>
+	Connecting the Complete System
+      </title>
+
+      <para>
+      </para>
+
     </sect2>
   </sect1>
 
