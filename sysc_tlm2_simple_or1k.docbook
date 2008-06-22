@@ -2855,7 +2855,7 @@ $ </screen>
 
     <sect2 id="sec_uart_or1ksim_libext">
       <title>
-	Updating the <classname>Or1ksimSC</classname> Wrapper Module
+	 Extending the <classname>Or1ksimSC</classname> Wrapper Module
       </title>
 
       <para>
@@ -3851,7 +3851,7 @@ Or1ksimExtSC::isLittleEndian()
 	The Complete SoC
       </title>
 
-      <sect3>
+      <sect3 id="sec_simple_soc_main">
 	<title>
 	  The Model Main Program
 	</title>
@@ -3952,7 +3952,8 @@ struct uart16450
 #define UART_LSR_THRE   0x20            // Transmitter holding register empty
 #define UART_LSR_DR     0x01            // Receiver data ready
 
-#define UART_LCR_DLAB   0x80            // Divisor latch access bit</programlisting>
+#define UART_LCR_DLAB   0x80            // Divisor latch access bit
+#define UART_LCR_8BITS  0x03		// 8 bit data bits</programlisting>
 
 	<para>
 	  The utility routines to set and clear flags in the &uart; (see <xref
@@ -3964,7 +3965,7 @@ struct uart16450
 	  The main program declares a pointer to the UART register structure,
 	  <literal>uart</literal>, at the base address. Initialization
 	  requires setting the divisor latch, to divide the main clock down to
-	  16 x the baud rate.
+	  16 x the baud rate and setting 8-bit data.
 	</para>
 
 	<programlisting>  volatile struct uart16450 *uart = (struct uart16450 *)BASEADDR;
@@ -3975,7 +3976,9 @@ struct uart16450
   set( &amp;(uart->lcr), UART_LCR_DLAB );           // Set the divisor latch
   uart->buf  = (unsigned char)( divisor       &amp; 0x00ff);
   uart->ier  = (unsigned char)((divisor >> 8) &amp; 0x00ff);
-  clr( &amp;(uart->lcr), UART_LCR_DLAB );</programlisting>
+  clr( &amp;(uart->lcr), UART_LCR_DLAB );
+
+  set( &amp;(uart->lcr), UART_LCR_8BITS );		// Set 8 bit data packet</programlisting>
 
 	<para>
 	  The remainder of the program is a perpetual loop:
@@ -4033,17 +4036,26 @@ struct uart16450
 
       </sect3>
 
-      <sect3>
+      <sect3 id="sec_simple_soc_run">
 	<title>
 	  Compiling and Running the Model
 	</title>
 
 	<para>
-	  Compilation uses exactly the same command lines as the
+	  Compilation uses the same command lines as the
 	  standalone test of the &or1ksim; wrapper with the logger (see <xref
 	  linkend="sec_iss_run_test" />), but this time links in the &uart;
 	  and terminal; rather than the logger.
 	</para>
+
+	<important>
+	  <para>
+	    Since <classname>Or1ksimExt</classname> is a derived class of
+	    <classname>Or1ksim</classname>, linking should include the
+	    compiled base class, <filename>Or1ksimSC.o</filename> as well as
+	    the derived class, <filename>Or1ksimExtSC.o</filename>.
+	  </para>
+	</important>
 
 	<para>
 	  The &or1ksim; configuration is also unchanged. Like the logger, the
@@ -4140,6 +4152,137 @@ Read: '!'</screen>
 	  given the chance to execute the threads that would set this flag.
 	</para>
       </sect3>
+
+      <sect3>
+	<title>
+	  Model Timing
+	</title>
+
+	<para>
+	  This model is completely untimed. It executes the behavior of the
+	  design, and for that reason such models are useful in system
+	  verification.
+	</para>
+
+	<para>
+	  The next stages will add timing to this model. To allow this to be
+	  demonstrated, add some logging to the &uart; and terminal to report
+	  the timing of reads and writes.
+	</para>
+
+	<para>
+	  Edit the <function>rxThread()</function> in
+	  <classname>UartSC</classname>, to print out the time when a
+	  character is received from the terminal<footnote>
+	    <para>
+	      The use of <function>printf()</function> and C
+	      <literal>stdio</literal> is unfortunate. It would be better to
+	      use C++ stream IO. However there seems to be an interaction with
+	      either &systemc; or the asynchronous IO of the &xterm;, which
+	      makes stream IO to standard output unreliable
+	    </para>
+	  </footnote>.
+	</para>
+
+	<programlisting>void
+UartSC::rxThread()
+{
+  // Loop woken up when a character is written into the fifo from the terminal.
+
+  while( true ) {
+    regs.rbr  = rx.read();                      // Blocking read of the data
+
+    sc_core::sc_time  now = sc_core::sc_time_stamp();
+    printf( "Char read at    %12.9f sec\n", now.to_seconds());
+
+    set( regs.lsr, UART_LSR_DR );               // Mark data ready
+
+    if( isSet( regs.ier, UART_IER_ERBFI ) ) {   // Send interrupt if enabled
+      genInt( UART_IIR_RDI );
+    }
+  }
+}       // rxThread()</programlisting>
+
+	<para>
+	  Similarly edit the <function>rxThread()</function> in
+	  <classname>TermSC</classname>, to print out the time when a
+	  character is received from the UART.
+	</para>
+
+	<programlisting>void
+TermSC::rxThread()
+{
+  while( true ) {
+    unsigned char  ch = rx.read();      // Blocking read from the FIFO
+
+    xtermWrite( ch );                   // Write it to the screen
+
+    sc_core::sc_time  now = sc_core::sc_time_stamp();
+    printf( "Char written at %12.9f sec\n", now.to_seconds());
+  }
+}       // rxThread()</programlisting>
+
+	<para>
+	  In both cases the C standard IO header will be needed at the top of
+	  the file (<filename>UartSC.cpp</filename> and
+	  <filename>TermSC.cpp</filename>):
+	</para>
+
+	<programlisting>#include &lt;stdio.h&gt;</programlisting>
+
+	<para>
+	  The model can now be rerun as before, and will print out precise
+	  timing (use of 9 decimal places ensures that granularity at least as
+	  fine as the 100MHz CPU clock will be seen). The output is shown in
+	  <xref linkend="fig_uart_loopback_log_timed" />.
+	</para>
+
+	<figure id="fig_uart_loopback_log_timed">
+	  <title>
+	    &uart; loop back program log output with timing annotation.
+	  </title>
+
+          <screen>$ ./SimpleSocSC ../simple.cfg ../progs_or32/uart_loop
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Reading script file from '../simple.cfg'...
+
+   ... &lt;Or1ksim initialization messages&gt;
+
+Char read at    0.000000000 sec
+Read: 'F'
+Char written at 0.000000000 sec
+Char read at    0.000000000 sec
+Read: 'a'
+Char written at 0.000000000 sec
+Char read at    0.000000000 sec
+Read: 'r'
+
+   ... &lt;Lots more output&gt;
+
+Read: 'x'
+Char written at 0.000000000 sec
+Char read at    0.000000000 sec
+Read: 'y'
+Char written at 0.000000000 sec
+Char read at    0.000000000 sec
+Read: '!'
+Char written at 0.000000000 sec
+Char read at    0.000000000 sec
+Read: '!'
+Char written at 0.000000000 sec
+Char read at    0.000000000 sec
+Read: '!'
+Char written at 0.000000000 sec</screen>
+	</figure>
+
+	<para>
+	  As can be seen all the reads and writes occur at time zero.
+	</para>
+
+      </sect3>
     </sect2>
   </sect1>
 
@@ -4153,61 +4296,130 @@ Read: '!'</screen>
     </title>
 
     <para>
-      The model is extended to add timing to all the components
+      The current models are all untimed. In the &tlm2; components
+      (<classname>Or1ksimExtSC</classname> and <classname>UartSC</classname>
+      the delay parameter to the blocking transport function has been ignored.
     </para>
 
-    <!-- Further extensions to the Or1ksim library -->
+    <para>
+      In this section, the models are extended to synchronize explicitly with
+      the SystemC clock.
+    </para>
+
+    <para>
+      The synchronization is not perfect&mdash;the underlying &or1ksim; &iss;
+      executes outside the &systemc; world. Synchronization is only possible
+      when it makes an upcall for read or write. In <xref
+      linkend="sec_temporal_decoupling" /> this model will be further
+      extended to add control over the underlying &iss; and its interaction
+      with &systemc; time.
+    </para>
 
     <sect2>
       <title>
-	Further Extending the &or1k; &or1ksim; Library
+	Summary of Changes Required for Synchronous Timing
       </title>
 
       <para>
-	Additional functions are needed in the &or1ksim; library to support
-	peripheral modeling. The &uart; will need to know the endianism of the
-	model (to decode the address of byte access) and the clock rate of the
-	model (to work out the baud rate from the value of the divisor latch).
+	Each module of the existing SoC requires some changes. New classes,
+	<classname>Or1ksimSyncSC</classname>,
+	<classname>UartSyncSC</classname> and
+	<classname>TermSyncSC</classname> are derived from the existing
+	classes to provide added functionality. In addition the underlying
+	&or1ksim; &iss; library will need extending. the main program will
+	need modifying to use these new classes.
       </para>
 
-      <para>
-	Two functions are added to the &or1ksim; library to extract this
-	information.
-      </para>
+      <itemizedlist>
 
-      <!-- = Library Functions -->
+	<listitem>
+	  <para>
+	    <classname>Or1ksimSyncSC</classname>. A public function to report
+	    the clock rate of the underlying &or1ksim; &iss; is added
+	    (requiring an extension to the &or1ksim; library), and the
+	    transport function, <function>doTrans()</function> modified to add
+	    timing information.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <classname>UartSyncSC</classname>. This now models the time taken
+	    to put a character out on the Tx wire, so must know its input
+	    clock rate (in this SoC, the &or1ksim; clock rate), so that baud
+	    rate can be calculated from the divisor latch. Also models the
+	    true time to process a read or write on the bus and returns this
+	    with the transaction response.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <classname>TermSyncSC</classname>. This now models the time taken
+	    to put a character out to the UART, so must know its baud
+	    rate. This requires an updated thread listening to the xterm, so
+	    that the baud rate delay can be added.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    &or1ksim; &iss; library. Information functions are added to return
+	    the model clock rate (used as input clock rate for the UART) and
+	    the time spent executing instructions (so
+	    <classname>Or1ksimSyncSC</classname> can determine the
+	    synchronization time with SystemC.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A new main program <filename>SyncSocSC.cpp</filename> to build the
+	    new classes into a synchronized S. Information functions are added to return
+	    the model clock rate (used as input clock rate for the UART) and
+	    the time spent executing instructions (so
+	    <classname>Or1ksimSyncSC</classname> can determine the
+	    synchronization time with SystemC.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+    </sect2>
+
+    <sect2>
+      <title>
+	Extending the <classname>Or1ksimExtSC</classname> Wrapper Module
+      </title>
 
       <sect3 id="sec_or1ksim_libsync">
 	<title>
-	  Additional Functions for the &or1ksim; Library
+	  Adding Clock Rate and Timing Functions to the &or1ksim; Library
 	</title>
 
 	<para>
-	  The two additional functions are simple additions. The information
-	  about endianism is a compile time constant in the &or1ksim; &iss;,
-	  while the clock rate is a configuration parameter.
+	  Two additional functions are needed in the &or1ksim; library to
+	  support synchronized timing. The &uart; will need to know the clock
+	  rate of the model (to work out the baud rate from the value of the
+	  divisor latch). The <classname>Or1ksimSyncSC</classname> class
+	  itself will need to know how much time the underlying &iss; has used
+	  to synchronize with &systemc;.
 	</para>
 
 	<para>
-	  The &uart; will need to know the endianism of the model (to decode
-	  the address of byte access) and the clock rate of the model (to work
-	  out the baud rate from the value of the divisor latch).
+	  The two additional functions are simple additions. The clock rate is
+	  a configuration parameter, while a run time count of instructions
+	  executed is already maintained. It is a matter of dividing the count
+	  by the clock rate to yield a time<footnote>
+	    <para>
+	      This is a loosely timed model. The timing from the &iss; is
+	      approximate&mdash;it does not model the microarchitecture in
+	      detail. Cycle estimates will not be exact&mdash;that requires a
+	      fully cycle accurate model.
+	    </para>
+	  </footnote>.
 	</para>
 
 	<itemizedlist>
-	  <listitem>
-	    <para>
-	      <programlisting>int  or1ksim_is_le();</programlisting>
-	    </para>
-
-	    <para>
-	      <function>or1ksim_is_le()</function> returns 1 if &or1ksim; is
-	      modeling a <firstterm>little&#32;endian</firstterm>
-	      architecture, 0 otherwise. It is needed to ensure the payload is
-	      packed with the correct byte ordering.
-	    </para>
-	  </listitem>
-
 	  <listitem>
 	    <para>
 	      <programlisting>unsigned long int  or1ksim_clock_rate();</programlisting>
@@ -4230,8 +4442,7 @@ Read: '!'</screen>
 	      of how much time has elapsed while simulating. This routine is
 	      needed to keep the SystemC model of time due to instruction set
 	      processing accurate, both in the synchronous SoC and when
-	      temporal decoupling is added (see <xref
-	      linkend="sec_temporal_decoupling" />).
+	      temporal decoupling is added.
 	    </para>
 	  </listitem>
 	</itemizedlist>
@@ -4240,289 +4451,652 @@ Read: '!'</screen>
 
       <sect3>
 	<title>
-	  Extending the Or1ksim class definition
+	  <classname>Or1ksimSyncSC</classname> Module Class Definition
 	</title>
+
+	<para>
+	  The new module class, <classname>Or1ksimSyncSC</classname> is derived
+	  from the existing <classname>Or1ksimExtSC</classname> module
+	  class. The header of the base class,
+	  <classname>Or1ksimExtSC</classname> is included and the new class
+	  derived from that base class.
+	</para>
+
+        <programlisting>#include "Or1ksimExtSC.h"
+
+class Or1ksimSyncSC
+: public Or1ksimExtSC
+{</programlisting>
+
+        <para>
+	  A custom constructor must be defined, but has the same arguments as
+	  the base class constructor, to which it will pass its arguments.
+	</para>
+
+	<para>
+	  The new &or1ksim; library call to give the clock rate is wrapper in
+	  a public function<footnote>
+	    <para>
+	      The use of unsigned long int reflects the usage in the &or1ksim;
+	      &iss;. The designers do not anticipate usage to model designs in
+	      excess of 4GHz!
+	    </para>
+	  </footnote>.
+	</para>
+
+	<programlisting>  unsigned long int  getClockRate();</programlisting>
+
+	<para>
+	  The <literal>doTrans()</literal> function is redefined&mdash;it will
+	  replace the call to <literal>doTrans()</literal> in the base class
+	  to add timing synchronization.
+	</para>
+
+	<para>
+	  To facility timing synchrnoization, two time stamps are declared,
+	  one to hold the SystemC view of the time of the last upcall from
+	  &or1ksim;, the other to hold the &or1ksim; view of the time of the
+	  last upcall.
+	</para>
+
+        <programlisting>  sc_core::sc_time  scLastUpTime;
+  double            or1kLastUpTime;</programlisting>
+
+      </sect3>
+
+      <sect3 id="sec_Or1ksimSyncSC_impl">
+	<title>
+	  <classname>Or1ksimSyncSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	  The custom constructor just passes its arguments directly to the
+	  parent constructor.
+	</para>
+
+	<para>
+	  The <function>doTrans()</function> function (which is used for both
+	  read and write) is extended from the version used with
+	  <classname>Or1ksimExtSC</classname> to synchronize with the SystemC
+	  clock.
+	</para>
+
+	<para>
+	  There are two components to the time taken in this model, the time
+	  taken by the &or1ksim; &iss; and the time taken in any peripherals. At
+	  the time of an upcall, the SystemC wrapper thread will not have
+	  yielded control since the last upcall. It needs to wait for the
+	  &systemc; clock to catch up to this time point.
+	</para>
+
+	<para>
+	  The &systemc; time at which the last upcall was made was recorded in
+	  <literal>scLastUpTime</literal>. The time stamp of the &or1ksim;
+	  &iss; at the last upcall (i.e. the number of cycles it has executed,
+	  multiplied by the time taken for each cycle) was recorded in the
+	  <literal>or1kLastUpTime</literal>.
+	</para>
+
+	<para>
+	  A call of <function>or1ksim_time()</function> gives the current time
+	  of the &iss;, and hence the time that has elapsed since the last up
+	  call. This is used to advance both<literal>scLastUpTime</literal>
+	  and <literal>or1kLastUpTime</literal>. The thread then calls
+	  <function>wait()</function> to allow any other threads in the
+	  &systemc; world to run until the calculated simulation time is
+	  reached.
+	</para>
+
+	<programlisting>  double  or1kGap = or1ksim_time() - or1kLastUpTime;
+
+  scLastUpTime   += sc_core::sc_time( or1kGap, sc_core::SC_SEC );
+  or1kLastUpTime += or1kGap;
+
+  wait( scLastUpTime - sc_core::sc_time_stamp());</programlisting>
+
+	<para>
+	  At this time the blocking transport method of the simple initiator
+	  port is called with the payload and specifying a zero time offset
+	  (since the call to <function>wait()</function> means the thread is
+	  synchronized with the &systemc; clock).
+	</para>
+
+	<para>
+	  On return, the <literal>delay</literal> parameter will have been
+	  updated with any additional delay due to the transaction&mdash;in
+	  this case an estimate of the number of cycles to read or write the
+	  relevant &uart; register, unless the target has synchronized with
+	  the clock.
+	</para>
+
+	<para>
+	  Since this is a synchronized model, we ancipate the target will have
+	  called <function>wait()</function> to model the time taken to read
+	  or write, so <literal>delay</literal> will still be zero on return.
+	</para>
+
+	<para>
+	  However time has advanced, so <literal>scLastUpdateTime</literal> is
+	  updated with a new timestamp.
+	</para>
+
+	<programlisting>  sc_core::sc_time  delay = sc_core::sc_time( 0.0, sc_core::SC_SEC );
+  dataBus->b_transport( trans, delay );
+  scLastUpTime = sc_core::sc_time_stamp();</programlisting>
+
+        <para>
+	  Finally the utility <function>getClockRate()</function> is a simple
+	  wrapper for the underlying &or1ksim; library routine (see <xref
+	  linkend="sec_or1ksim_libsync"/>).
+	</para>
+
+	<programlisting>unsigned long int
+Or1ksimSyncSC::getClockRate()
+{
+  return or1ksim_clock_rate();
+
+}       // getClockRate()</programlisting>
+
+      </sect3>
+    </sect2>
+
+    <sect2 id="sec_uart_sync">
+      <title>
+	Extending the <classname>UartSC</classname> Module Class
+      </title>
+
       <para>
-	Two time stamps are declared, one to hold the SystemC view of the
-	time of the last upcall from &or1ksim;, the other to hold the
-	&or1ksim; view of the time of the last upcall.
+	A new class, <classname>UartSyncSC</classname> derived from
+	<classname>UartSC</classname> implements the additional functionality
+	for synchronized timing.
       </para>
 
-      <programlisting>  sc_core::sc_time  scLastTime;
-      sc_core::sc_time  or1kLastTime;</programlisting>
+      <para>
+	The time taken for the serial pules (start, data, parity, stop bits)
+	on the real &uart; will be modeled as a delay before writing data into
+	the Tx FIFO port.
+      </para>
+
+      <para>
+	The corresponding delay on the Rx FIFO port will be modeled by the
+	terminal writing onto that port<footnote>
+	  <para>
+	    This is not the ideal solution. The delay is really a property of
+	    the channel, so should be modelled by a derived class of the
+	    standard &systemc; FIFO which provides a defined delay between
+	    data being written and data availability being signalled.
+	  </para>
+
+	  <para>
+	    The approach used here (transmitter models the delay) represents a
+	    practical compromise.
+	  </para>
+	</footnote>.
+      </para>
+
+      <para>
+	The &tlm2; port modeling the bus is extended to model the time taken
+	for reads to and writes from the bus.
+      </para>
+
+      <sect3>
+	<title>
+	  <classname>UartSyncSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	  The class definition (in <filename>UartSyncSC.h</filename>) includes
+	  the header of the base class and defines two new constants to
+	  represent the delay in reading and writing in nanoseconds.
+	</para>
+
+        <programlisting>#define UART_READ_NS       60   // Time to access the UART for read
+#define UART_WRITE_NS      60   // Time to access the UART for write</programlisting>
+
+	<para>
+	  The class is derived directly from the base class,
+	  <classname>UartSC</classname>. A new custom constructor is needed,
+	  with an additional parameter specifying the input clock rate. This
+	  is used in conjunction with the divisor latch to specify the baud
+	  rate.
+	</para>
+
+	<programlisting>  UartSyncSC( sc_core::sc_module_name  name,
+              unsigned long int        _clockRate,
+              bool                     _isLittleEndian );</programlisting>
+
+	<para>
+	  The <function>busThread()</function> thread is updated to add the
+	  timing delay (as a call to <function>wait()</function> in
+	  transmitting a character as described above.
+	</para>
+
+	<para>
+	  The blocking transport function, <function>busReadWrite()</function>
+	  is updated to add in the bus delays in reading and writing. Again
+	  this will be achieved by calls to <function>wait()</function>, so
+	  keeping the model synchronous.
+	</para>
+
+	<para>
+	  The <function>busWrite()</function> must also be updated, since any
+	  change to the divisor latch or the line control register (which
+	  specifies the bit format being sent on the wire) could affect the
+	  baud rate and timing for <function>busThread()</function>
+	</para>
+
+	<para>
+	  A new utility function, <function>resetCharDelay()</function> is
+	  defined to compute the delay in putting a character on the Tx FIFO
+	  from the clock rate, divisor latch and line control register.
+	</para>
+
+	<para>
+	  Two new member variables are declared, to hold the clock rate and
+	  the calculated delay to put a character on the Tx FIFO.
+	</para>
 
       </sect3>
 
       <sect3>
 	<title>
-	  Extending the Or1ksim class implementation
+	  <classname>UartSyncSC</classname> Module Class Implementation
 	</title>
-
+	  
 	<para>
-	  Once the fields are set up, the <function>doTrans()</function>
-	  method (which is used for both read and write) is called to
-	  synchronize with the SystemC clock, transport the payload to the
-	  target and return the result.
+	  The custom constructor passes the name and
+	  <literal>_isLittleEndian</literal> flag to the base class
+	  constructor. The clock rate is saved in the local variable,
+	  <literal>clockRate</literal>.
 	</para>
 
-      <para>
-	There are two components to the time taken in this model, the time
-	taken by the &or1ksim; &iss; and the time taken in any peripherals. At
-	the time of an upcall, the SystemC wrapper thread will not have
-	yielded control since the last upcall. It needs to wait for the
-	&systemc; clock to catch up to this time point.
-      </para>
+	<programlisting>UartSyncSC::UartSyncSC( sc_core::sc_module_name  name,
+                        unsigned long int        _clockRate,
+                        bool                     _isLittleEndian ) :
+  UartSC( name, _isLittleEndian ),
+  clockRate( _clockRate )
+{
 
-      <para>
-	The &systemc; time at which the last upcall was made was recorded in
-	<literal>scLastUpTime</literal>. The time stamp of the &or1ksim; &iss; at
-	the last upcall (i.e. the number of cycles it has executed,
-	multiplied by the time taken for each cycle) was recorded in the
-	<literal>or1kLastUpTime</literal>.
-      </para>
-
-      <para>
-	A call of <function>or1ksim_time()</function> gives the current time
-	of the &iss;, and hence the time that has elapsed since the last up
-	call. This is used to advance both<literal>scLastUpTime</literal> and
-	<literal>or1kLastUpTime</literal>. The thread then calls
-	<function>wait()</function> to allow any other threads in the
-	&systemc; world to run until the calculated simulation time is
-	reached.
-      </para>
-
-      <para>
-	At this time the blocking transport method of the simple initiator
-	port is called with the payload and specifying a zero time offset
-	(since the call to <function>wait()</function> means the thread is
-	synchronized with the &systemc; clock).
-      </para>
-
-      <para>
-	On return, the <literal>delay</literal> parameter will have been
-	updated with any additional delay due to the transaction&mdash;in
-	this case an estimate of the number of cycles to read or write the
-	relevant &uart; register.
-      </para>
-
-      <para>
-	It would be possible to make another call to
-	<function>wait()</function> immediately to synchronize locally for
-	this delay. However there will be no more processing on this thread
-	until the next upcall from the &or1ksim; &iss;, so the delay is added
-	to the <literal>scLastUpTime</literal> and will be added to the
-	<function>wait()</function> on the next upcall.
-      </para>
-      </sect3>
-
-      <sect3>
-	<title>
-	  Modeling teh FIFO timing
-	</title>
+}       /* UartSyncSC() */</programlisting>
 
 	<para>
-	  The time taken for the serial pules (start, data, parity, stop bits)
-	  on the real &uart; will be modeled as a delay before writing data
-	  into the FIFO.
+	  The new version of <function>busThread()</function> adds only one
+	  line to the version in the case class. A call to
+	  <function>wait(&nbsp;charDelay&nbsp;)</function> is added when the
+	  transmit request is received (notified on the &systemc; event,
+	  <literal>txReceived</literal>).
 	</para>
 
+	<programlisting>    wait( txReceived );                         // Wait for a Tx request
+    wait( charDelay );                          // Wait baud delay
+
+    tx.write( regs.thr );                       // Send char to terminal</programlisting>
+
 	<para>
-	  Divisor Latch is needed for timing
+	  The new version of <function>busReadWrite</function> draws most of
+	  its functionality from the base class version. However it then
+	  synchronizes with a time delay for the read or write access. Since
+	  the thread is now synchronous, a time delay of zero is returned with
+	  the transaction.
+	</para>
+
+	<programlisting>void
+UartSyncSC::busReadWrite( tlm::tlm_generic_payload &amp;payload,
+                          sc_core::sc_time         &amp;delay )
+{
+  UartSC::busReadWrite( payload, delay );       // base method
+
+  switch( payload.get_command() ) {
+
+  case tlm::TLM_READ_COMMAND:
+    wait( sc_core::sc_time( UART_READ_NS, sc_core::SC_NS ));
+    delay = sc_core::sc_time( 0.0, sc_core::SC_SEC );
+    break;
+
+    &lt;code for write commands etc&lt;
+</programlisting>
+
+	<para>
+	  The new version of <function>busWrite()</function> similarly relies
+	  on the base class for most of its functionality.
+	</para>
+
+	<programlisting>void
+UartSyncSC::busWrite( unsigned char  uaddr,
+                      unsigned char  wdata )
+{
+  UartSC::busWrite( uaddr, wdata );</programlisting>
+
+	<para>
+	  However any change to the divisor latch or line control register
+	  could change the baud rate or the number of bits in each Tx
+	  transmission, and hence the modelled delay to send a character.
 	</para>
 
 	<para>
-	  The divisor latch is effectively another 16-bit register,
-	  declared separately:
-	  (<literal>divLatch</literal>), the delay modeling the time taken to
-	  put bits on the Tx pin (<literal>charDelay</literal>) and the flag
-	  indicating model endianism (<literal>isLittleEndian</literal>).
+	  The function identifies if this has happened and if so calls
+	  <function>resetCharDelay()</function> to recalculate the delay.
 	</para>
 
+	<programlisting>  switch( uaddr ) {
+
+  case UART_BUF:                // Only change if divisorLatch update (DLAB=1)
+  case UART_IER:
+
+    if( isSet( regs.lcr, UART_LCR_DLAB ) ) {
+      resetCharDelay();
+    }
+
+    break;
+
+  case UART_LCR:
+
+    resetCharDelay();           // Could change baud delay
+    break;</programlisting>
+
+	<para>
+	  The time taken to put a character on the Tx line is the product of
+	  the time taken to put one bit on the line (the inverse of the baud
+	  rate) and the bits required for the character (start bit, data bits,
+	  optional parity bit, stop bit(s)). The baud rate is determined by
+	  the input clock rate and the 16-bit divisor latch.
+	</para>
+	  
 	<note>
 	  <para>
-	    The divisor latch for a 16450 is applied to the input clock to
-	    yield an internal clock <emphasis>16x</emphasis> the baud rate
-	    (i.e. not the actual baud rate itself)<footnote>
+	    The divisor latch for a 16450 divides the input clock to yield an
+	    internal clock <emphasis>16x</emphasis> the baud rate (i.e. not
+	    the actual baud rate itself)<footnote>
 	      <para>
 	        The 16450 input clock is specified to a maximum of 24 MHz, so
 	        that a 16 bit divisor latch can yield an internal clock for
 	        rates down to 50 baud. However for a software model this
 	        limitation is ignored. Faster input clocks can be specified,
-	        but it will not be possible to configure a divisor latch for
-	        very low baud rates
+	        but it will not be possible to configure a 16-bit divisor
+	        latch for very low baud rates
 	      </para>
 	    </footnote>.
 	  </para>
 	</note>
 
 	<para>
-	  In the Line Control Register, the <literal>Set Break</literal> bit is
-	  ignored (in principle it could be modeled as a change in timing of a
-	  transfer). The parity control bits are ignored, apart from
-	  <literal>Parity Enable</literal>s influence on the timing of a
-	  transfer. Similarly the <literal>Stop Bit</literal> and <literal>Word
-	  Length Enable</literal>bits are only relevant to timing of a transfer.
+	  The number of bits to send a character is determined by the line
+	  control registers. There is always a stop bit, there can be 5-8 data
+	  bits, an optional parity bit and 1, 1.5 or 2 stop bits. The
+	  <function>resetCharDelay()</function> function calcuates the total
+	  delay.
 	</para>
 
-	<para>
-	  UART busThread: The character is not sent immediately. The thread
-	  waits for a period, <literal>charDelay</literal> to model the time
-	  taken to push the bits (start, data, parity and stop) onto the Tx
-	  wire. Only then is the value written onto the Tx FIFO.
-	</para>
+	<programlisting>void
+UartSyncSC::resetCharDelay()
+{
+  if( clockRate > 0 ) {         // Avoid divide by zero!
 
+    int  dataBits  = (regs.lcr &amp; UART_LCR_MASK) + 5;
+    int  parityBit = isSet( regs.lcr, UART_LCR_PEN ) ? 1 : 0;
+    int  stopBits  = isSet( regs.lcr, UART_LCR_STB ) ? 2 : 1;
 
-	<note>
-	  <para>
-	    UART rxThread: There is no modeling of line delay here. That is the
-	    responsibility of the entity (a terminal writing to the Rx pin.
-	  </para>
-	</note>
+    // 5 bit data has max 1.5 stop bits
 
-	<para>
-	  UART BusReadWriteIn each case the delay time is then advanced
-	  (neither read nor write has yielded the thread by calling
-	  <function>wait()</function> explicitly or implicitly). This is a
-	  measure of how far in advance of central &systemc; time the module
-	  has progressed.
-	</para>
+    double totBits = (double)(1 + dataBits + parityBit + stopBits) -
+                     (((5 == dataBits) &amp;&amp; (1 == stopBits)) ? 0.5 : 0.0);
+    double baudRate = (double)clockRate / (double)divLatch / 16.0;
 
-	<para>
-	  UART writing registers
-	</para>
-
-	<itemizedlist>
-
-	  <listitem>
-	    <para>
-	      If the <literal>DLAB</literal> bit is set in the line control
-	      register, then writes to the first two registers (read buffer and
-	      interrupt enable) update the low and high bytes of the
-	      divisor latch respectively. This update may cause a change in
-	      the character delay on transmit, so this is updated via
-	      <function>resetCharDelay()</function>.
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      Writing the transmit hold register (when
-	      <literal>DLAB=0</literal>) triggers a new transfer. The flags
-	      are set to indicate data is in the register, and the bus thread
-	      (<function>busThread()</function>) notified via the &systemc;
-	      event <literal>txReceived</literal>.
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      Updating the line control register may affect the character
-	      delay on transmit (due to change in number of data, parity or
-	      stop bits), so this is updated via
-	      <function>resetCharDelay()</function>.
-	    </para>
-	  </listitem>
-
-	</itemizedlist>
-
-	<para>
-	  UART: Char delay fn The time to send a character depends on the baud
-	  rate and the number of bits required to send each character. The
-	  baud rate in turn depends on the input clock rate and divisor latch,
-	  remembering that this generates a clock 16x baud rate. The total
-	  number of bits comprises the start bit, data bits (5-8), optional
-	  parity bit and stop bits (1, 1.5 or 2). The function
-	  <function>charDelay()</function> calculates this character delay
-	  whenever one of these parameters is changed.
-	</para>
+    charDelay = sc_core::sc_time( totBits / baudRate, sc_core::SC_SEC );
+  }
+}       // resetCharDelay()</programlisting>
 
       </sect3>
-
-      <sect3>
-	<title>
-	  Updating the terminal model
-	</title>
-
-      <para>
-	Two threads are used, one waiting for bytes from the UART on the Rx
-	FIFO, the other waiting for bytes from the &xterm;. When bytes are
-	received on the Rx pin, they are immediately written to the
-	&xterm;. When bytes are received from the &xterm;,
-	<function>wait()</function> is used to model the delay in placing the
-	bits on the serial line. This exactly mirrors the implementation in
-	the &uart; (see <xref linkend="sec_uart_impl" />).
-      </para>
-
-	<para>
-	  The thread listening to the &uart;, <function>rxThread()</function>
-	  sits in a perpetual loop, reading from the input FIFO. This blocks
-	  until a character is received. Any baud-rate delay modeling has been
-	  done by the UART, so this character is immediately copied to the
-	  &xterm;. This is a blocking write, but should return immediately.
-	</para>
-
-	<para>
-	  The thread listening to the &xterm;,
-	  <function>xtermThread()</function> sits in a perpetual loop, waiting
-	  on the &systemc; event pointed to by
-	  <literal>ioEvent</literal>. This will safely allow the thread to
-	  yield to the &systemc; scheduler until a character is ready.
-	</para>
-
-	<para>
-	  When input is available, the event is notified (see <xref
-	  linkend="sec_xterm_sig_hand" />>). The thread can safely make a
-	  blocking operating system read to get the character, knowing that
-	  data is definitely available. The baud rate delay is modelled with a
-	  further <function>wait()</function> call and the character then
-	  written to the Tx FIFO.
-	</para>
-
-      </sect3>
-
-      <sect3>
-	<title>
-	  Updating the main prog
-	</title>
-
-	<para>
-	  The baud rate for the terminal is defined as a constant for
-	  convenience.
-	</para>
-
-	<programlisting>#define BAUD_RATE  9600UL               // Baud rate of the terminal</programlisting>
-
-	<para>
-	  As before the main program (<function>sc_main()</function>) takes as
-	  arguments the &or1ksim; configuration file and &or1k;
-	  image. Instances of the three modules are declared.
-	</para>
-
-	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
-  UartSC     uart( "uart", iss.getClockRate(), iss.isLittleEndian() );
-  TermSC     term( "terminal", BAUD_RATE );</programlisting>
-
-	<para>
-	  The clock rate and endianism for the &uart; are set using the public
-	  utility methods for the &or1ksim; &iss;. The &tlm; ports of &uart;
-	  and &iss; can be connected:
-	</para>
-
-      </sect3>
-
-
     </sect2>
-
-    <!-- ========== Running the System ========== -->
 
     <sect2>
       <title>
-	Connecting the Complete System
+	Extending the <classname>TermSC</classname> Module Class
       </title>
 
       <para>
+	A new class, <classname>TermSyncSC</classname> derived from
+	<classname>TermSC</classname> implements the additional functionality
+	for synchronized timing.
       </para>
 
+      <para>
+	As with the &uart; (see <xref linkend="sec_uart_sync" />), the
+	terminal will model the time taken to put the bits of a character on
+	its Tx port. This mirrors the arrangement with the UART, so when the
+	two are connected, delays in both directions are correctly modelled.
+      </para>
+
+      <sect3>
+	<title>
+	  <classname>TermSyncSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	  The new class, <classname>TermSyncSC</classname> is derived from
+	  <classname>TermSC</classname>. The header for that class is included
+	  and the new class derived from that.
+	</para>
+
+	<programlisting>#include "TermSC.h"
+
+class TermSyncSC
+: public TermSC
+{</programlisting>
+
+	<para>
+	  A new custom constructor is needed, which takes a second argument to
+	  specify the baud rate.
+	</para>
+
+	<programlisting>  TermSyncSC( sc_core::sc_module_name  name,
+              unsigned long int        baudRate );</programlisting>
+
+	<para>
+	  The <function>xtermThread()</function> will be updated. No further
+	  derived classes are anticipated, so this function is declared
+	  <literal>private</literal> and not marked as
+	  <literal>virtual</literal>.
+	</para>
+
+	<para>
+	  Finally a variable is needed to hold the baud rate. For convenience
+	  the class does not hold the baud rate, but the corresponding delay
+	  that this represents in sending a character.
+	</para>
+
+	<programlisting>  sc_core::sc_time  charDelay;</programlisting>
+      </sect3>
+
+      <sect3>
+	<title>
+	  <classname>TermSyncSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	  The custom constructor calls the base class constructor to set the
+	  module name. The body of the constructor is in calculating the delay
+	  due to the baud rate. There is no configurability there (this
+	  terminal supports 1 start, 8 data, 0 parity and 1 stop bits only),
+	  so this is a one off calculation.
+	</para>
+
+	<programlisting>TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
+                        unsigned long int        baudRate ) :
+  TermSC( name )  
+{
+  charDelay = sc_core::sc_time( 10.0 / (double)baudRate, sc_core::SC_SEC );
+
+}       /* TermSyncSC() */</programlisting>
+
+	<para>
+	  The <function>xtermThread()</function> thread is almost identical to
+	  the base class version. A single line is added after the character
+	  is read from the &xterm; and before it is written to the FIFO port
+	  to add the modelled baud rate delay.
+	</para>
+
+	<programlisting>    int ch = xtermRead();               // Should not block
+
+    wait( charDelay );                  // Model baud rate delay
+    tx.write( (unsigned char)ch );      // Send it
+</programlisting>
+
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>
+	Main Program for the Synchronous Model
+      </title>
+
+      <para>
+	As with the untimed SoC (see <xref linkend="sec_simple_soc_main" />),
+	the main program includes the headers for &tlm2; and the component
+	modules, but this time using the synchronously timed versions.
+      </para>
+
+      <programlisting>#include "tlm.h"
+#include "Or1ksimSyncSC.h"
+#include "UartSyncSC.h"
+#include "TermSyncSC.h"</programlisting>
+
+      <para>
+	The baud rate for the terminal is defined as a constant for
+	convenience.
+      </para>
+
+      <programlisting>#define BAUD_RATE  9600UL               // Baud rate of the terminal</programlisting>
+
+      <para>
+	As before the main program (<function>sc_main()</function>) takes as
+	arguments the &or1ksim; configuration file and &or1k; image. Instances
+	of the three modules are declared, but now have additional
+	arguments. The &uart; requires an input clock rate&mdash;obtained from
+	the &iss; via the <classname>Or1ksimSyncSC</classname> public utility
+	function, <function>getClockRate()</function> (see <xref
+	linkend="sec_Or1ksimSyncSC_impl" />). The Terminal requires its baud
+	rate to be set.
+      </para>
+
+      <programlisting>  Or1ksimSyncSC  iss( "or1ksim", argv[1], argv[2] );
+  UartSyncSC     uart( "uart", iss.getClockRate(), iss.isLittleEndian() );
+  TermSyncSC     term( "terminal", BAUD_RATE );</programlisting>
+
+      <para>
+	The remainder of the program, connecting components and starting the
+	simulation is identical to the untimed version.
+      </para>
+	
+    </sect2>
+
+
+    <sect2>
+      <title>
+	Compiling and Running the Synchronous Model
+      </title>
+
+      <para>
+	Compilation uses the same command lines as the untimed model (see
+	<xref linkend="sec_simple_soc_run" />), but with the synchronized
+	versions of the modules and main program.
+      </para>
+
+      <important>
+	<para>
+	  Since <classname>Or1ksimSync</classname> is a derived class of
+	  <classname>Or1ksimExt</classname>,
+	  <classname>Or1ksimExt</classname>, linking should include the
+	  compiled base classes, <filename>Or1ksimSC.o</filename> and
+	  <filename>Or1ksimExtSC.o</filename> as well as the derived class,
+	  <filename>Or1ksimSyncSC.o</filename>. Similarly the compiled base
+	  classes of <classname>UartSyncSC</classname> and
+	  <classname>TermSyncSC</classname> should also be included.
+	</para>
+      </important>
+
+      <para>
+	The &or1ksim; configuration is completely unchanged, and the embedded
+	code running on the &or1ksim; &iss; is the same
+	(<filename>uart_loop</filename>).
+      </para>
+
+      <para>
+	The command line to run the model is unchanged, but uses the
+	synchronized version of the model
+      </para>
+
+      <programlisting>./SyncSocSC ../simple.cfg ../progs_or32/uart_loop</programlisting>
+
+      <para>
+	Once again the &xterm; terminal should appear. Select it and type some
+	characters. The window running the model, will show the logged output
+	from the terminal, reporting the same characters being written and
+	timing of the reads and writes. However this time, the time progresses
+	as the characters are written, as shown in <xref
+	linkend="fig_uart_loopback_sync_log" />.
+      </para>
+
+      <figure id="fig_uart_loopback_sync_log">
+	<title>
+	  &uart; loop back program log output.
+	</title>
+
+	<screen>$ ./SyncSocSC ../simple.cfg ../progs_or32/uart_loop
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Reading script file from '../simple.cfg'...
+
+   ... &lt;Or1ksim initialization messages&gt;
+
+Char read at     0.104331907 sec
+Read: 'F'
+Char written at  0.105386810 sec
+Char read at     0.121514857 sec
+Read: 'a'
+Char written at  0.122569760 sec
+Char read at     0.147349087 sec
+Read: 'r'
+Char written at  0.148403990 sec
+
+
+   ... &lt;Lots more output&gt;
+
+Read: 'y'
+Char written at  0.261639710 sec
+Char read at     0.294175357 sec
+Read: '!'
+Char written at  0.295230260 sec
+Char read at     0.298882987 sec
+Read: '!'
+Char written at  0.299937890 sec
+Char read at     0.303386017 sec
+Read: '!'
+Char written at  0.304440920 sec</screen>
+      </figure>
+
+      <para>
+	The read timing is as the character leaves the terminal,
+	<emphasis>after</emphasis> the terminal has added the baud rate
+	delay. The write timing is as the character leaves the uart; after the
+	echo loop in the embedded application on the &or1ksim; &iss; and
+	<emphasis>after</emphasis> the &uart; has added the baud-rate
+	delay. So the timing from the <emphasis>read</emphasis> message to the
+	<emphasis>write</emphasis> message should be the time for the &uart;
+	delay for the current baud rate and packet bits plus the execution
+	time for the code to echo the character on the &or1ksim; &iss;.
+      </para>
+
+      <para>
+	The &uart; was initialized to use 1 start bit, 8 data bits and 1 stop
+	bit, which at 9600 baud should take around 1040&mu;s. The time shown
+	in <xref linkend="fig_uart_loopback_sync_log" /> for the first
+	character to be read and written back is 1055&mu;s. This seems
+	reasonable, allowing approximately 1500 cycles (15&mu;s at 100MHz( for
+	the &or1ksim; &iss; to process the read and write code.
+      </para>
     </sect2>
   </sect1>
 
