@@ -19,41 +19,18 @@ Useful entities
 
 <!-- = software applications = -->
 
-<!ENTITY binutils "<application class='software'>Binutils</application>">
-<!ENTITY gcc "<application class='software'>GCC</application>">
-<!ENTITY gdb "<application class='software'>GDB</application>">
-<!ENTITY ddd "<application class='software'>DDD</application>" >
 <!ENTITY linux "<application class='software'>Linux</application>">
 <!ENTITY systemc "<application class='software'>SystemC</application>" >
-<!ENTITY uclinux "<application class='software'>uClinux</application>" >
-<!ENTITY uclibc "<application class='software'>uClibc</application>">
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
 
 <!-- = Hardware applications = -->
 
 <!ENTITY or1k "<application class='hardware'>OpenRISC 1000</application>">
 <!ENTITY or1200 "<application class='hardware'>OpenRISC 1200</application>">
-<!ENTITY orpsoc "<application class='hardware'>ORPSoC</application>">
 
 <!-- = Commands = -->
 
-<!ENTITY patch "<command>patch</command>" >
-<!ENTITY diff "<command>diff</command>" >
-<!ENTITY configure "<command>configure</command>" >
-<!ENTITY make "<command>make</command>" >
-<!ENTITY makefile "<command>make</command> file" >
-<!ENTITY makeall "<command>make all</command>" >
-<!ENTITY makecheck "<command>make check</command>" >
-<!ENTITY makeinstall "<command>make install</command>" >
-<!ENTITY makeclean "<command>make clean</command>" >
 <!ENTITY xterm "<command>xterm</command>" >
-<!ENTITY sh "<command>sh</command>" >
-<!ENTITY bash "<command>bash</command>" >
-<!ENTITY csh "<command>csh</command>" >
-<!ENTITY tcsh "<command>tcsh</command>" >
-<!ENTITY bunzip2 "<command>bunzip2</command>" >
-<!ENTITY nm "<command>nm</command>" >
-<!ENTITY grep "<command>grep</command>" >
 
 <!-- = Libraries = -->
 
@@ -62,20 +39,12 @@ Useful entities
 
 <!-- ========== Cross references ========== -->
 
-<!-- = Internal cross references = -->
-
-<!ENTITY patchref "See <xref linkend='sec_binutils_download' /> for an example
-  of how to apply a &patch; file." >
-
 <!-- = Web pages = -->
 
 <!ENTITY embecosm "<ulink
   url='http://www.embecosm.com'>Embecosm</ulink>">
 <!ENTITY opencores "<ulink
   url='http://www.opencores.org'>OpenCores</ulink>">
-<!ENTITY gnu "<ulink url='http://www.gnu.org'>GNU</ulink>">
-<!ENTITY gpl "<ulink url='http://www.gnu.org/licenses/gpl.html'>
-  GNU General Public License</ulink>">
 <!ENTITY lgpl "<ulink url='http://www.gnu.org/licenses/lgpl.html'>
   GNU Lesser General Public License</ulink>">
 
@@ -119,7 +88,7 @@ $Id$
     Building a Loosely Timed SoC Model with &osci; TLM 2.0
   </title>
   <subtitle>
-    A Case Study Reusing the &or1k; &or1ksim; &iss;
+    A Case Study Using the &or1k; &or1ksim; &iss;
   </subtitle>
 
   <articleinfo>
@@ -366,7 +335,7 @@ $Id$
 
       <sect3>
 	<title>
-	  Modelling Hardware Parallelism in Software
+	  Modeling Hardware Parallelism in Software
 	</title>
 
 	<para>
@@ -455,8 +424,8 @@ $Id$
 	  <listitem>
 	    <para>
 	      A class, <literal>sc_module</literal>, suitable for defining hardware
-	      modules, with convenience macros <symbol>SC_MODULE</symbol> and
-	      <symbol>SC_CTOR</symbol> to define such classes.
+	      modules, with convenience macros <literal>SC_MODULE</literal> and
+	      <literal>SC_CTOR</literal> to define such classes.
 	    </para>
 	  </listitem>
 
@@ -465,7 +434,7 @@ $Id$
 	      A mechanism to define methods for
 	      <literal>sc_module</literal> classes, which represent its logical
 	      parallel behavior, with convenience macros
-	      <symbol>SC_METHOD</symbol> and <symbol>SC_THREAD</symbol>
+	      <literal>SC_METHOD</literal> and <literal>SC_THREAD</literal>
 	    </para>
 	  </listitem>
 
@@ -810,7 +779,7 @@ $Id$
 
       <listitem>
 	<para>
-	  A model of a terminal is added as a testbench for the SoC. This
+	  A model of a terminal is added as a test bench for the SoC. This
 	  demonstrates how to add &systemc; components which use operating
 	  system I/O without blocking the &systemc; thread. See <xref
 	  linkend="sec_terminal" />
@@ -819,8 +788,8 @@ $Id$
 
       <listitem>
 	<para>
-	  Synchronous is added to each component, making the model loosely
-	  timed. See <xref linkend="sec_sync" />
+	  Synchronous timing is added to each component, making the model
+	  loosely timed. See <xref linkend="sec_sync" />
 	</para>
       </listitem>
 
@@ -833,8 +802,9 @@ $Id$
 
       <listitem>
 	<para>
-	  A second &uart; is added to the system and a &tlm2; arbiter added,
-	  demonstrating the use of &tlm2; convenience passthrough sockets. See
+	  A second &uart; is added to the system and a &tlm2; arbiter/decoder
+	  added, demonstrating the use of &tlm2; convenience passthrough
+	  sockets. See
 	  <xref linkend="sec_arbiter" />
 	</para>
       </listitem>
@@ -877,14 +847,15 @@ $Id$
 
       <para>
 	In general the CPU is configured to remove all the peripherals and
-	the caches and MMU, so it models only the CPU and main memory.
+	the caches and MMU, so it models only the CPU and main memory. The
+	peripherals are then modeled as separate &systemc; modules.
       </para>
 
       <!-- = Plain ISS Wrapper = -->
 
       <sect3>
 	<title>
-	  &or1ksim; &iss; &tlm2; Wrapper
+	  &or1ksim; &iss; &tlm2; Wrapper with Logger
 	</title>
 
 	<para>
@@ -927,12 +898,14 @@ $Id$
 
 	<para>
 	  To build a simple SoC the &or1ksim; CPU/memory subsystem is
-	  connected to a &uart; modeled in &systemc; using &tlm2;. The
-	  test bench for the system will be a terminal, also modeled in
-	  &systemc; using &tlm2;. This model is built up in stages in <xref
+	  connected to a &uart; modeled in &systemc; using &tlm2;. The test
+	  bench for the system will be a terminal, also modeled in &systemc;
+	  using &tlm2;. This model is built up in stages in <xref
 	  linkend="sec_iss_wrapper" />, <xref linkend="sec_uart" /> and <xref
-	  linkend="sec_terminal" />. <xref linkend="fig_simple_soc" /> shows the
-	  design.
+	  linkend="sec_terminal" />. Synchronous timing is added in <xref
+	  linkend="sec_sync" /> and temporal decoupling in <xref
+	  linkend="sec_temporal_decoupling" />. <xref linkend="fig_simple_soc"
+	  /> shows the design.
 	</para>
 
 	<figure id="fig_simple_soc">
@@ -963,15 +936,15 @@ $Id$
 
       <sect3>
 	<title>
-	  SoC with Arbiter
+	  SoC with Arbiter/Decoder
 	</title>
 
 	<para>
 	  For <xref linkend="sec_arbiter" />, the example is extended to add
 	  further peripherals (another &uart;, connected to a second
-	  terminal). An arbiter is introduced, which will route traffic to the
-	  correct &uart;, depending on address. <xref linkend="fig_arbiter_soc"
-	  /> shows the design.
+	  terminal). An arbiter/decoder is introduced, which will route
+	  traffic to the correct &uart;, depending on address. <xref
+	  linkend="fig_arbiter_soc" /> shows the design.
 	</para>
 
 	<figure id="fig_arbiter_soc">
@@ -1007,9 +980,9 @@ $Id$
 
 	<para>
 	  To demonstrate the SoC running Linux <xref linkend="sec_linux" />,
-	  the example is that shown in <xref linkend="fig_arbiter_soc"
-	  />. However the non-UART peripheral modeling capabilities of the
-	  underlying xISS are turned on, to provided the required functionality.
+	  the example in <xref linkend="fig_arbiter_soc" /> is reused. However
+	  the non-UART peripheral modeling capabilities of the underlying xISS
+	  are turned on, to provided the required functionality.
 	</para>
 
       </sect3>
@@ -1166,7 +1139,7 @@ $Id$
 	<para>
 	  The standard &or1ksim; &iss; incorporates the functionality of
 	  several common peripherals. The objective of this application note
-	  is to demonstrate the &iss; driving external peripherals modelled in
+	  is to demonstrate the &iss; driving external peripherals modeled in
 	  &systemc; using &tlm2; interfaces.
 	</para>
 
@@ -1221,7 +1194,7 @@ $Id$
       </para>
 
       <para>
-	The examples use the convention that classes and other typenames start
+	The examples use the convention that classes and other type names start
 	with an Upper Case letter (e.g. <literal>Or1ksimSC</literal>),
 	variables and functions start with a lower case letter
 	(e.g. <literal>dataBus</literal>) and defined or enumerated constants
@@ -1586,10 +1559,11 @@ $Id$
 	  </para>
 
 	  <para>
-	    The SC_CTOR macro can only be used where the constructor's
-	    implementation is given within the class definition. However, it
-	    is not good programming practice to mix the definition of a class
-	    (i.e. what it is) with its implementation (i.e. how it does it).
+	    The <literal>SC_CTOR</literal> macro can only be used where the
+	    constructor's implementation is given within the class
+	    definition. However, it is not good programming practice to mix
+	    the definition of a class (i.e. what it is) with its
+	    implementation (i.e. how it does it).
 	  </para>
 
 	  <para>
@@ -1728,8 +1702,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	    member reference operator (<literal>::*</literal>). However the
 	    linkage to a member is much more complex (to cope with inheritance
 	    and overloading). Lack of standardization in the C++
-	    <firstterm>Application Binary Interface</firstterm> (ABI) means
-	    that such linkage between C and C++ will not necessarily work.
+	    <firstterm>Application Binary Interface</firstterm>
+	    (<acronym>ABI</acronym>) means that such linkage between C and C++
+	    will not necessarily work.
 	  </para>
 
 	  <para>
@@ -1831,11 +1806,11 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
     <para>
       In addition, a simple embedded application is needed to run on the
       &or1ksim; &iss;, which will make reads and writes to peripheral address
-      space, which can be detected by the loggerfrom and to the logger.
+      space, which can be detected by the logger.
     </para>
 
     <para>
-      All the behavior is in the calback function&mdash;there are no &systemc;
+      All the behavior is in the callback function&mdash;there are no &systemc;
       threads. This means the logger will be suitable for testing the
       <classname>Or1ksimSC</classname> wrapper module, even though its thread
       never yields.
@@ -2154,7 +2129,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	<programlisting>#include "utils.h"</programlisting>
 
 	<para>
-	  The utilies' implementation can be found in
+	  The utilities' implementation can be found in
 	  <filename>utils.c</filename>.
 	</para>
 
@@ -2189,9 +2164,10 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 };</programlisting>
 
         <para>
-	  The main program declares a pointer to this struct at the
-	  <literal>BASEADDR</literal>, along with 3 variables to hold the
-	  results of the various sized results when reading.
+	  The main program declares a pointer to this
+	  <literal>struct</literal> at the <literal>BASEADDR</literal>, along
+	  with 3 variables to hold the results of the various sized results
+	  when reading.
 	</para>
 
 	<programlisting>main()
@@ -2648,10 +2624,10 @@ $ </screen>
 	      </entry>
 	      <entry>
 		<para>
-		  Line control register. Various bits controlling the
-		  behavior of the &uart;. Of these, DLAB, bit 7, the divisor
-		  latch access bit is important, because it controls the
-		  behavior of registers 0
+		  Line control register. Various bits controlling the behavior
+		  of the &uart;. Of these, <literal>DLAB</literal>, bit 7, the
+		  divisor latch access bit is important, because it controls
+		  the behavior of registers 0
 		  (<literal>RXBUF</literal>/<literal>TXBUF</literal>/<literal>DLL</literal>)
 		  and 1 (<literal>IER</literal>/<literal>DLH</literal>).
 		</para>
@@ -2775,7 +2751,7 @@ $ </screen>
 	    It might be thought that an 8-bit &systemc; signal port would be
 	    suitable. However &systemc; signal ports model physical wires, and
 	    only notify changes to the value on the wire. This would be suitable
-	    if the &uart; were to model the pulses signalled across the wire.
+	    if the &uart; were to model the pulses signaled across the wire.
 	  </para>
 
 	  <para>
@@ -2787,7 +2763,7 @@ $ </screen>
 	</caution>
 
 	<para>
-	  The interrupt is modelled as a signal, active high for the
+	  The interrupt is modeled as a signal, active high for the
 	  16450. &systemc; static sensitivity to this signal is a natural way
 	  for connected modules to detect the interrupt.
 	</para>
@@ -2811,7 +2787,7 @@ $ </screen>
 	  Only two interrupts are relevant (see <xref
 	  linkend="sec_uart_interrupts" />), and only the corresponding bits
 	  in the interrupt enable and interrupt identification registers are
-	  modelled.
+	  modeled.
 	</para>
 
 	<para>
@@ -2888,7 +2864,7 @@ $ </screen>
       </para>
       <sect3 id="sec_or1ksim_extlib">
 	<title>
-	  Adding an Edianism Test Function to the &or1ksim; Library
+	  Adding an Endianism Test Function to the &or1ksim; Library
 	</title>
 
 	<para>
@@ -2996,7 +2972,7 @@ Or1ksimExtSC::isLittleEndian()
 
 	<para>
 	  The majority of the code for <function>doTrans()</function> is
-	  unchanged from its implmentation in
+	  unchanged from its implementation in
 	  <classname>Or1ksimSC</classname>. The addition is a
 	  <function>wait()</function> for zero time immediately after the
 	  transaction has completed. This allows the &systemc; thread to
@@ -3160,7 +3136,7 @@ Or1ksimExtSC::isLittleEndian()
 
 	  <listitem>
 	    <para>
-	      A &systemc; boolean output signal port for the interrupt,
+	      A &systemc; Boolean output signal port for the interrupt,
 	      <literal>intr</literal>.
 	    </para>
 	  </listitem>
@@ -3232,7 +3208,7 @@ Or1ksimExtSC::isLittleEndian()
 	</title>
 
 	<para>
-	  A struct, <literal>regs</literal> is used to hold the value of each
+	  A <literal>struct</literal>, <literal>regs</literal> is used to hold the value of each
 	  register. There are nine of these, since register 0 is really two
 	  registers, depending on whether it is being read
 	  (<literal>rbr</literal>) or written (<literal>thr</literal>).
@@ -3584,7 +3560,7 @@ Or1ksimExtSC::isLittleEndian()
 
     <para>
       The problem is that many operating system calls block. Consider
-      modelling the terminal as a thread which reads characters from a console
+      modeling the terminal as a thread which reads characters from a console
       window. This will block until characters are typed. However the block
       does not use the &systemc; <function>wait()</function> call, so
       &systemc; is not aware that the thread has yielded. The simulation
@@ -3710,14 +3686,15 @@ Or1ksimExtSC::isLittleEndian()
 	</title>
 
 	<para>
-	  A set of utility functionss are provided to set up the &xterm;, with
+	  A set of utility functions are provided to set up the &xterm;, with
 	  two functions one to read from, and one to write to it,
 	  <function>xtermRead()</function> and
 	  <function>xtermWrite()</function>. Both these functions are blocking
 	  on the operating system. The write routine should always be able to
 	  write with minimal delay. However the read routine must only be
-	  called when the SIGIO signal handler has determined input is
-	  available, in order to avoid blocking the &systemc; simulation.
+	  called when the <literal>SIGIO</literal> signal handler has
+	  determined input is available, in order to avoid blocking the
+	  &systemc; simulation.
 	</para>
 
 	<para>
@@ -3826,11 +3803,12 @@ Or1ksimExtSC::isLittleEndian()
 
 	<para>
 	  When <literal>ioHandler()</literal> is called in response to a Linux
-	  SIGIO event, it does not know which pseudo TTY was responsible. The
-	  file descriptor responsible is identified by using an operating
-	  system <function>select()</function> call. Using the mappings in
-	  <literal>instList</literal>, the corresponding class instance can be
-	  identified and its <literal>ioEvent</literal> notified.
+	  <literal>SIGIO</literal> event, it does not know which pseudo TTY
+	  was responsible. The file descriptor responsible is identified by
+	  using an operating system <function>select()</function> call. Using
+	  the mappings in <literal>instList</literal>, the corresponding class
+	  instance can be identified and its <literal>ioEvent</literal>
+	  notified.
 	</para>
 
 	<programlisting>  for( Fd2Inst *cur = instList; cur != NULL ; cur = cur->next ) {
@@ -3921,7 +3899,7 @@ Or1ksimExtSC::isLittleEndian()
 	</title>
 
 	<para>
-	  The test program, <filename>uartloop.c</filename> is a simple
+	  The test program, <filename>uart_loop.c</filename> is a simple
 	  polling loop back driver of the UART. Characters are read and
 	  immediately echoed back.
 	</para>
@@ -4397,19 +4375,23 @@ Char written at 0.000000000 sec</screen>
 	</title>
 
 	<para>
-	  Two additional functions are needed in the &or1ksim; library to
+	  Three additional functions are needed in the &or1ksim; library to
 	  support synchronized timing. The &uart; will need to know the clock
 	  rate of the model (to work out the baud rate from the value of the
 	  divisor latch). The <classname>Or1ksimSyncSC</classname> class
-	  itself will need to know how much time the underlying &iss; has used
-	  to synchronize with &systemc;.
+	  itself will need a pair of functions, one to set a timing point in
+	  the &iss; the second to return the amount of time since the last
+	  timing point. This the amount of time the underlying &iss; has used
+	  when synchronizing with &systemc;.
 	</para>
 
 	<para>
-	  The two additional functions are simple additions. The clock rate is
+	  The three additional functions are simple additions. The clock rate is
 	  a configuration parameter, while a run time count of instructions
-	  executed is already maintained. It is a matter of dividing the count
-	  by the clock rate to yield a time<footnote>
+	  executed is already maintained. An extra record in the run-time
+	  structure allows a time to be recorded (in seconds through dividing
+	  the count by the clock rate), which can be compared in subsequent
+	  calls to given the &iss; time used since the last time point<footnote>
 	    <para>
 	      This is a loosely timed model. The timing from the &iss; is
 	      approximate&mdash;it does not model the microarchitecture in
@@ -4434,12 +4416,24 @@ Char written at 0.000000000 sec</screen>
 
 	  <listitem>
 	    <para>
-	      <programlisting>double  or1ksim_time();</programlisting>
+	      <programlisting>void  or1ksim_set_time_point();</programlisting>
 	    </para>
 	    
 	    <para>
-	      <function>or1ksim_time()</function> returns the &or1ksim; view
-	      of how much time has elapsed while simulating. This routine is
+	      function <function>or1ksim_set_time_point()</function> records
+	      the current &iss; simulation time (clock cycles divided by clock
+	      rate) in the run-time data structure.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <programlisting>double  or1ksim_get_time_period();</programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_get_time_period()</function> returns the time
+	      in seconds since the last time point was set. This routine is
 	      needed to keep the SystemC model of time due to instruction set
 	      processing accurate, both in the synchronous SoC and when
 	      temporal decoupling is added.
@@ -4492,16 +4486,6 @@ class Or1ksimSyncSC
 	  to add timing synchronization.
 	</para>
 
-	<para>
-	  To facility timing synchrnoization, two time stamps are declared,
-	  one to hold the SystemC view of the time of the last upcall from
-	  &or1ksim;, the other to hold the &or1ksim; view of the time of the
-	  last upcall.
-	</para>
-
-        <programlisting>  sc_core::sc_time  scLastUpTime;
-  double            or1kLastUpTime;</programlisting>
-
       </sect3>
 
       <sect3 id="sec_Or1ksimSyncSC_impl">
@@ -4510,8 +4494,12 @@ class Or1ksimSyncSC
 	</title>
 
 	<para>
-	  The custom constructor just passes its arguments directly to the
-	  parent constructor.
+	  The custom constructor passes its arguments directly to the parent
+	  constructor. It then uses the &or1ksim; library routine,
+	  <function>or1ksim_set_time_point()</function> to set an initial time
+	  point at the start of simulation. The first call to
+	  <function>or1ksim_get_time_period()</function> will return the time
+	  since the &iss; started.
 	</para>
 
 	<para>
@@ -4523,36 +4511,22 @@ class Or1ksimSyncSC
 
 	<para>
 	  There are two components to the time taken in this model, the time
-	  taken by the &or1ksim; &iss; and the time taken in any peripherals. At
-	  the time of an upcall, the SystemC wrapper thread will not have
-	  yielded control since the last upcall. It needs to wait for the
-	  &systemc; clock to catch up to this time point.
+	  taken by the &or1ksim; &iss; and the time taken in any
+	  peripherals. At the time of an upcall, the SystemC wrapper thread
+	  will not have yielded control since either initialization or the
+	  last upcall, when a time point was set in the &iss; using
+	  <function>or1ksim_set_time_point()</function>.
 	</para>
 
 	<para>
-	  The &systemc; time at which the last upcall was made was recorded in
-	  <literal>scLastUpTime</literal>. The time stamp of the &or1ksim;
-	  &iss; at the last upcall (i.e. the number of cycles it has executed,
-	  multiplied by the time taken for each cycle) was recorded in the
-	  <literal>or1kLastUpTime</literal>.
-	</para>
-
-	<para>
-	  A call of <function>or1ksim_time()</function> gives the current time
-	  of the &iss;, and hence the time that has elapsed since the last up
-	  call. This is used to advance both<literal>scLastUpTime</literal>
-	  and <literal>or1kLastUpTime</literal>. The thread then calls
-	  <function>wait()</function> to allow any other threads in the
+	  A call to <function>or1ksim_get_time_period()</function> gives the
+	  time used by the &iss; in this period. This is used as the argument
+	  to <function>wait()</function>, allowing any other threads in the
 	  &systemc; world to run until the calculated simulation time is
 	  reached.
 	</para>
 
-	<programlisting>  double  or1kGap = or1ksim_time() - or1kLastUpTime;
-
-  scLastUpTime   += sc_core::sc_time( or1kGap, sc_core::SC_SEC );
-  or1kLastUpTime += or1kGap;
-
-  wait( scLastUpTime - sc_core::sc_time_stamp());</programlisting>
+	<programlisting>  sc_core::sc_time  delay = sc_core::sc_time( 0.0, sc_core::SC_SEC );</programlisting>
 
 	<para>
 	  At this time the blocking transport method of the simple initiator
@@ -4565,24 +4539,24 @@ class Or1ksimSyncSC
 	  On return, the <literal>delay</literal> parameter will have been
 	  updated with any additional delay due to the transaction&mdash;in
 	  this case an estimate of the number of cycles to read or write the
-	  relevant &uart; register, unless the target has synchronized with
-	  the clock.
+	  relevant &uart; register.
 	</para>
 
 	<para>
-	  Since this is a synchronized model, we ancipate the target will have
+	  However, since this is a synchronized model, the target will have
 	  called <function>wait()</function> to model the time taken to read
 	  or write, so <literal>delay</literal> will still be zero on return.
 	</para>
 
 	<para>
-	  However time has advanced, so <literal>scLastUpdateTime</literal> is
-	  updated with a new timestamp.
+	  The read or write is now complete. A new time point is set with
+	  <function>set_time_point()</function> before control is returned to
+	  the &iss;
 	</para>
 
 	<programlisting>  sc_core::sc_time  delay = sc_core::sc_time( 0.0, sc_core::SC_SEC );
   dataBus->b_transport( trans, delay );
-  scLastUpTime = sc_core::sc_time_stamp();</programlisting>
+  or1ksim_set_time_point();</programlisting>
 
         <para>
 	  Finally the utility <function>getClockRate()</function> is a simple
@@ -4622,9 +4596,9 @@ Or1ksimSyncSC::getClockRate()
 	terminal writing onto that port<footnote>
 	  <para>
 	    This is not the ideal solution. The delay is really a property of
-	    the channel, so should be modelled by a derived class of the
+	    the channel, so should be modeled by a derived class of the
 	    standard &systemc; FIFO which provides a defined delay between
-	    data being written and data availability being signalled.
+	    data being written and data availability being signaled.
 	  </para>
 
 	  <para>
@@ -4770,7 +4744,7 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	<para>
 	  However any change to the divisor latch or line control register
 	  could change the baud rate or the number of bits in each Tx
-	  transmission, and hence the modelled delay to send a character.
+	  transmission, and hence the modeled delay to send a character.
 	</para>
 
 	<para>
@@ -4823,7 +4797,7 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	  The number of bits to send a character is determined by the line
 	  control registers. There is always a stop bit, there can be 5-8 data
 	  bits, an optional parity bit and 1, 1.5 or 2 stop bits. The
-	  <function>resetCharDelay()</function> function calcuates the total
+	  <function>resetCharDelay()</function> function calculates the total
 	  delay.
 	</para>
 
@@ -4864,7 +4838,7 @@ UartSyncSC::resetCharDelay()
 	As with the &uart; (see <xref linkend="sec_uart_sync" />), the
 	terminal will model the time taken to put the bits of a character on
 	its Tx port. This mirrors the arrangement with the UART, so when the
-	two are connected, delays in both directions are correctly modelled.
+	two are connected, delays in both directions are correctly modeled.
       </para>
 
       <sect3>
@@ -4933,7 +4907,7 @@ class TermSyncSC
 	  The <function>xtermThread()</function> thread is almost identical to
 	  the base class version. A single line is added after the character
 	  is read from the &xterm; and before it is written to the FIFO port
-	  to add the modelled baud rate delay.
+	  to add the modeled baud rate delay.
 	</para>
 
 	<programlisting>    int ch = xtermRead();               // Should not block
@@ -4945,7 +4919,7 @@ class TermSyncSC
       </sect3>
     </sect2>
 
-    <sect2>
+    <sect2 id="sec_sync_main_prog">
       <title>
 	Main Program for the Synchronous Model
       </title>
@@ -5051,36 +5025,37 @@ Reading script file from '../simple.cfg'...
 
    ... &lt;Or1ksim initialization messages&gt;
 
-Char read at     0.104331907 sec
+Char read at     0.060059107 sec
 Read: 'F'
-Char written at  0.105386810 sec
-Char read at     0.121514857 sec
+Char written at  0.061114010 sec
+Char read at     0.070717297 sec
 Read: 'a'
-Char written at  0.122569760 sec
-Char read at     0.147349087 sec
+Char written at  0.071772200 sec
+Char read at     0.077270287 sec
 Read: 'r'
-Char written at  0.148403990 sec
+Char written at  0.078325190 sec
 
 
    ... &lt;Lots more output&gt;
 
+Char read at     0.155874487 sec
 Read: 'y'
-Char written at  0.261639710 sec
-Char read at     0.294175357 sec
+Char written at  0.156929390 sec
+Char read at     0.169800997 sec
 Read: '!'
-Char written at  0.295230260 sec
-Char read at     0.298882987 sec
+Char written at  0.170855900 sec
+Char read at     0.174711907 sec
 Read: '!'
-Char written at  0.299937890 sec
-Char read at     0.303386017 sec
+Char written at  0.175766810 sec
+Char read at     0.179016937 sec
 Read: '!'
-Char written at  0.304440920 sec</screen>
+Char written at  0.180071840 sec</screen>
       </figure>
 
       <para>
 	The read timing is as the character leaves the terminal,
 	<emphasis>after</emphasis> the terminal has added the baud rate
-	delay. The write timing is as the character leaves the uart; after the
+	delay. The write timing is as the character leaves the &uart; after the
 	echo loop in the embedded application on the &or1ksim; &iss; and
 	<emphasis>after</emphasis> the &uart; has added the baud-rate
 	delay. So the timing from the <emphasis>read</emphasis> message to the
@@ -5114,42 +5089,969 @@ Char written at  0.304440920 sec</screen>
       an SoC. The SoC model with arbiter from the previous example is reused.
     </para>
 
-    <!-- ========== The Quantum Keeper ========== -->
+    <sect2>
+      <title>
+	What is Temporal Decoupling
+      </title>
+
+      <para>
+	The idea of temporal decoupling is very simple and has been around for
+	a long time (see for example <xref linkend="ref_fitch_88"
+	endterm="ref_fitch_88_xr" />). In a parallel system, let the various
+	threads keep their own local time, and only synchronize when they need
+	to communicate with each other.
+      </para>
+
+      <para>
+	&tlm2; provides some convenience classes to help threads implement
+	temporal decoupling. The nomenclature used by these classes can be
+	more than a little confusing&mdash;the following should make things
+	clear.
+      </para>
+
+      <para>
+	The first thing to be clear about is that temporal decoupling is a
+	property of <emphasis>threads</emphasis>, not module classes. So it is
+	each <emphasis>thread</emphasis> that must keep track of its local
+	view of time.
+      </para>
+
+      <para>
+	The second thing to be clear about is that nothing in the &tlm2;
+	system checks a program is following the rules. It is up to each
+	thread to ensure it follows the rules.
+      </para>
+
+      <para>
+	Not all threads need use temporal decoupling, although the more that
+	do, the greater the potential model efficiency. In general temporal
+	decoupling is omitted from threads which do not use &tlm2; interfaces
+	for their communication. Where threads do use temporal decoupling it
+	is threads driving initiator ports which manage the temporal decoupling.
+      </para>
+
+      <sect3>
+	<title>
+	  Timing Concepts
+	</title>
+
+	<para>
+	  &tlm2; defines four different timing concepts to describe temporal
+	  decoupling:
+	</para>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>
+	      (System) Global Quantum
+	    </term>
+
+	    <listitem>
+	      <para>
+		This represents the time unit on which all threads
+		synchronize. For example a <emphasis>Global Quantum</emphasis>
+		of 100&mu;s means that all threads synchronize on 100&mu;s
+		200&mu;s, 300&mu;s etc. Although the &tlm2; standard refers
+		to this as just the Global Quantum, it is a system wide concept
+		and for clarity this paper refers to it as the <emphasis>System
+		Global Quantum</emphasis>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      (Thread) Global Quantum
+	    </term>
+
+	    <listitem>
+	      <para>
+		This represents the time unit on which a particular thread
+		synchronizes. The &tlm2; standard allows different threads to
+		have their own private time unit of synchronization, which is
+		very confusingly also referred to in the standard as a the
+		Global Quantum.
+	      </para>
+
+	      <para>
+		To avoid confusion, in this application note, the term
+		<emphasis>Thread Global Quantum</emphasis> is used to mean the
+		global quantum used by a particular thread.
+	      </para>
+
+	      <para>
+		Having different values for the global quantum in different
+		threads is a recipe for complete confusion, while offering few
+		advantages. The user is strongly recommended to set the Thread
+		Global Quantum to the same value as the System Global Quantum
+		when the thread is created and not change it.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      Local Quantum
+	    </term>
+
+	    <listitem>
+	      <para>
+		For each thread, this represents the time remaining from the
+		current &systemc; time (as returned by
+		<function>sc_time_stamp()</function>) and the end of the current
+		Thread Global Quantum.
+	      </para>
+
+	      <para>
+		For example if the current &systemc; time stamp is 825&mu;s and
+		the Thread Global Quantum is 100&mu;s, then the Local Quantum
+		will be 75&mu;s&mdash;the time until the 900&mu;s Thread Global
+		Quantum synchronization is due.
+	      </para>
+
+	      <para>
+		If the recommendation that all threads set their Thread Global
+		Quantum to be the same as the System Global Quantum, then the
+		value of the Local Quantum will be the same in all threads.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      Local Time Offset
+	    </term>
+
+	    <listitem>
+	      <para>
+		Each thread is allowed to hold a local view of time, which runs
+		ahead of the current &systemc; time. This is known as
+		the <emphasis>Local Time Offset</emphasis>
+	      </para>
+
+	      <para>
+		The Local Time Offset must not take the thread's local view of
+		time past the next Thread Global Quantum, i.e. it cannot exceed
+		the Local Quantum.
+	      </para>
+
+	      <para>
+		For example if the current &systemc; time stamp is 825&mu;s and
+		the Thread Global Quantum is 100&mu;s, then a local time offset
+		of 50&mu;s would represent a thread local effective time of
+		875&mu;s.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+	<para>
+	  These concepts are shown diagrammatically in <xref
+	  linkend="fig_temporal_decoupling" />.
+	</para>
+
+	<figure id="fig_temporal_decoupling">
+	  <title>
+	    Diagram demonstrating temporal decoupling concepts
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="temporal_decoupling.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="temporal_decoupling.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+      </sect3>
+
+      <sect3>
+	<title>
+	  The Global Quantum Class,
+	  <classname>tlm_global_quantum</classname>
+	</title>
+
+	<para>
+	  &tlm2; defines a <firstterm>singleton</firstterm> class<footnote>
+	    <para>
+	      A singleton is a class of which only one instance can be
+	      created. The constructor is declared private (so no other class
+	      can create it), and a static function is provided to return the
+	      single instance. This static function will create the single
+	      instance the first time it is called, and thereafter just return
+	      a reference to that same instance.
+	    </para>
+
+	    <para>
+	      Singleton classes are useful for holding centrally required
+	      values and providing centrally required functions in a system,
+	      where having duplicate provision would lead to incorrect
+	      behavior.
+	    </para>
+	  </footnote> which can be used to hold the system global quantum. A
+	  set of functions to manipulate the global quantum are provided.
+	</para>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>
+	      <function>instance()</function>
+	    </term>
+	    <listitem>
+	      <para>
+		Returns a reference to the singleton global quantum object
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <function>set()</function>
+	    </term>
+	    <listitem>
+	      <para>
+		Sets the global quantum (as a &systemc;
+		<literal>sc_time</literal> object)
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <function>get()</function>
+	    </term>
+	    <listitem>
+	      <para>
+		Returns the value of the global quantum
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <function>compute_local_quantum()</function>
+	    </term>
+	    <listitem>
+	      <para>
+		Returns the local quantum, i.e. the time from the current
+		&systemc; time stamp to the next multiple of the global
+		quantum.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+	<para>
+	  The intention is that at start up the main program should set the
+	  system global quantum in the singleton
+	  <literal>tlm_global_quantum</literal> object. All threads can then
+	  set their thread global quantum by getting the value from the
+	  <literal>tlm_global_quantum</literal> object.
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  &tlm2; Quantum Keepers
+	</title>
+
+	<para>
+	  &tlm2; provides a utility class for threads to keep track of their
+	  thread global quantum, local quantum and locale time offset. This is
+	  in the <literal>tlm_utils</literal> namespace (like the convenience
+	  sockets) with a header in
+	  <filename>tlm_utils/tlm_quantumkeeper.h</filename>.
+	</para>
+
+	<para>
+	  A module will instantiate one quantum keeper for each thread that is
+	  temporally decoupled, initializing them in the constructor.
+	</para>
+
+	<para>
+	  Two functions are provided to manage the thread global quantum:
+	  <function>set_global_quantum()</function> to set the value and
+	  <function>get_global_quantum</function>. Typically a module
+	  constructor will get the <emphasis>system</emphasis> global quantum
+	  with a call to the singleton
+	  <classname>tlm_global_quantum</classname> and immediately use that
+	  to set the thread global quantum for each thread's quantum
+	  keeper.
+	</para>
+
+	<para>
+	  One function is provided to manage the local quantum. The
+	  <function>reset()</function> calls
+	  <function>compute_local_quantum</function> to calculates the local
+	  quantum from the time stamp and the global quantum (which is done by
+	  calling the <function>compute_local_quantum</function> in the
+	  singleton <classname>tlm_global_quantum</classname> object) and sets
+	  the local time offset to zero.
+	</para>
+
+	<para>
+	  Typically a constructor will call <function>reset()</function> for
+	  each thread immediately after setting the thread global
+	  quantum. The <function>compute_local_quantum</function> in the
+	  quantum keeper is <literal>protected</literal>, so cannot be called
+	  directly (which seems to be an omission). If the value of the local
+	  quantum is needed, this can be obtained using the
+	  <function>compute_local_quantum()</function> function in the
+	  singleton <classname>tlm_global_quantum</classname> object.
+	</para>
+
+	<para>
+	  Four functions are provided to manage the local time
+	  offset. <function>set()</function> sets the local time offset to a
+	  particular value, <function>inc()</function> increments by a given
+	  value and <function>get_local_time</function> returns the current
+	  value of the local time
+	  offset. <function>get_current_time</function> computes the effective
+	  local time, i.e. the &systemc; time stamp plus the local time
+	  offset<footnote>
+	    <para>
+	      The naming is not
+	      consistent. <function>get_local_time()</function> should have
+	      been just <function>get()</function> for consistency with
+	      <function>set()</function> and
+	      <function>inc()</function>.
+	      <function>get_current_time()</function> would be better named
+	      <function>get_effective_time()</function>, to match its
+	      description in the standard.
+	    </para>
+	  </footnote>. The intention is that a thread advances model time, it
+	  will call <function>set()</function> and <function>inc()</function>
+	  to update the local decoupled view of time.
+	</para>
+
+	<para>
+	  Two functions are provided to handle synchronization. The test
+	  <function>need_sync()</function> returns true if the local time
+	  offset exceeds the local quantum. <function>sync()</function> calls
+	  <function>wait()</function> for the local time offset, synchronizing
+	  the thread with the global &systemc; view of time, and allowing other
+	  threads to catch up. It then calls <function>reset()</function> to
+	  update the local quantum and zero the local time
+	  offset.. <function>sync()</function> should always be called when
+	  <function>need_sync()</function> is true, but may be called at any
+	  other time if required.
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Other Styles of Temporal Decoupling
+	</title>
+
+	<para>
+	  &tlm2; presents one model of temporal decoupling, with an explicit
+	  regular synchronization time.
+	</para>
+
+	<para>
+	  Other temporal decoupling models can build on the &tlm2;
+	  infrastructure, for instance to remove the regular synchronization
+	  time, and instead only synchronize when the local time offset
+	  reaches some prescribed maximum. A class derived from the
+	  <classname>tlm_gatekeeper</classname> class can modify the control
+	  and synchronization functions, to allow different approaches to be
+	  tried.
+	</para>
+      </sect3>
+
+
+
+    </sect2>
 
     <sect2>
       <title>
-	The Quantum Keeper
+	Guidelines for Using &tlm2; Temporal Decoupling
       </title>
 
-      <!-- = Basic Interface = -->
+      <para>
+	Temporal decoupling is not for use everywhere. The guidelines may help.
+      </para>
+
+      <orderedlist>
+
+	<listitem>
+	  <para>
+	    Temporal decoupling is most useful with models based on blocking
+	    transactions, as used for loosely timed models.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Only apply temporal decoupling to threads that are communicating
+	    via &tlm2; transactions. Other &systemc; protocols (for example
+	    via FIFO) have no way of communicating delays between threads.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Let the thread controlling the initiator manage the temporal
+	    decoupling and synchronization. Targets should just return the
+	    incremented delay, and avoid synchronizing if possible.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Allocate one quantum keeper for each temporally decoupled thread.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Ensure that the thread global quantum is always the same as system
+	    global quantum.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Select a global quantum that is small enough not to swamp timing
+	    behavior of the system. For example in the SoC used in this
+	    application note, the finest time granularity that matters is the
+	    time to put a character over a 9600 BAUD link, approximately 1ms,
+	    so this would be a reasonable time to use as a global quantum.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+    </sect2>
+
+    <sect2>
+      <title>
+	Temporal Decoupling the &or1ksim; Wrapper Class
+      </title>
 
       <para>
+	The only thread that can be decoupled in the current model is the
+	&or1ksim; wrapper class, <classname>Or1ksimSyncSC</classname>. The
+	other threads all communicate using non-&tlm; interfaces, so cannot
+	easily implement temporal decoupling.
+      </para>
+
+      <para>
+	&iss; are natural candidates for temporal decoupling, since they often
+	can run large blocks of code without any need for hardware
+	interaction. This is particularly important for modern compiling &iss;
+	(e.g ARM <application>SystemGenerator</application>, ARC
+	<application>xISS</application>), which achieve their performance by
+	executing thousands of instructions in one go.
+      </para>
+
+      <para>
+	The changes needed to add temporal decoupling are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Change the main thread, <function>run()</function> so that it only
+	    tries to execute instructions up to the end of the current global
+	    quantum.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Change the upcall transport function,
+	    <function>doTrans()</function>, so that it increments the local
+	    time offset, rather than synchronizing via
+	    <function>wait()</function>/
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    The previous two changes require some changes in the underlying
+	    &or1ksim; &iss; library to support running to a fixed time time
+	    point.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	A new class, <classname>Or1ksimDecoupSC</classname> is derived from
+	<classname>Or1ksimSyncSC</classname> to implement the required
+	functionality.
+      </para>
+
+      <sect3>
+	<title>
+	  Adding a Function to Support Temporal Decoupling to the &or1ksim;
+	  Library
+	</title>
+
+	<para>
+	  One additional function is needed in the &or1ksim; library to
+	  support temporal decoupling. The <function>or1ksim</function>
+	  already allows the user to specify a duration for which the
+	  simulation will run. A function, is added to change the duration of a
+	  run already in progress.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <programlisting>void  or1ksim_reset_duration( double duration );</programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_reset_duration()</function> resets the
+	      duration of a call to <function>or1ksim_run()</function> which
+	      is already in progress. The argument is the duration for which
+	      the run should continue <emphasis>from the current
+	      time</emphasis> (i.e. not from the time of the original call to
+	      <function>or1ksim_run()</function>).
+	    </para>
+
+	    <para>
+	      This function is needed because upcalls may lead to a
+	      synchronization, increasing the time for which the &iss; may run
+	      before needing resynchronization.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+	<para>
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  <classname>Or1ksimDecoupSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	  The new class, <classname>Or1ksimDecoupSC</classname> is derived
+	  from <classname>or1ksimSyncSC</classname>, whose header it
+	  includes. A custom constructor is defined with the same arguments as
+	  the base class constructor.
+	</para>
+
+	<para>
+	  The &iss; thread, <function>run()</function> and the transport
+	  function, <function>doTrans()</function> are both redefined to add
+	  temporal decoupling.
+	</para>
+
+	<para>
+	  A quantum keeper for the &iss; thread, <literal>issQk</literal> is
+	  defined.
+	</para>
+
+	<programlisting>  virtual void  doTrans( tlm::tlm_generic_payload &amp;trans );</programlisting>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  <classname>Or1ksimDecoupSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	  The constructor passes its arguments to the base class,
+	  <classname>Or1ksimSyncSC</classname>. The quantum keeper for the
+	  &iss; thread is then initialized with the system global quantum and
+	  the local quantum calculated and local time offset zeroed with a
+	  call to <function>reset()</function>.
+	</para>
+
+	<programlisting>  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
+  issQk.set_global_quantum( refTgq.get() );
+  issQk.reset();</programlisting>
+
+	<note>
+	  <para>
+	    The global quantum accessor function,
+	    <function>instance()</function> returns a reference to the global
+	    quantum. Ensure that it is assigned to a reference variable
+	    (declared as <literal>&amp;refTgq</literal> here) of type
+	    <classname>tlm::tlm_global_quantum</classname>. Use of a plain
+	    variable would be correct C++, but make a
+	    <emphasis>copy</emphasis> of the quantum keeper, so subsequent
+	    calls to <function>set()</function> would not actually set the
+	    singleton instance. An example of the dangers of reference
+	    variables in C++ and why singleton accessors should return
+	    pointers, not references.
+	  </para>
+	</note>
+
+	<para>
+	  The main thread function, <function>run()</function> is replaced to
+	  ensure that &iss; simulation does not run past the end of the
+	  current quantum. Instead of running for ever
+	  (<function>or1ksim_run(&nbsp;-1.0&nbsp;);</function>, the &iss; is
+	  run for the local time quantum, less the local time offset. This
+	  means the &iss; will return exactly at the point when it should need
+	  to synchronize again.
+	</para>
+
+	<para>
+	  Since the local quantum is only available through the singleton
+	  <classname>tlm::tlm_global_quantum</classname> a reference to that
+	  instance is obtained for use throughout this function:
+	</para>
+
+	<programlisting>  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();</programlisting>
+
+	<para>
+	  The body of the program is a perpetual loop, which calculates the
+	  time left until the next global quantum then calls the &iss; for that
+	  period.
+	</para>
+
+	<programlisting>  while( true ) {
+    sc_core::sc_time  timeLeft =
+      refTgq.compute_local_quantum() - issQk.get_local_time();</programlisting>
+
+	<para>
+	  On return, <function>or1ksim_get_time_period</function> is used to
+	  find out how much computation has actually been carried out and
+	  advance local time accordingly. This may be different to the
+	  duration requested, since an upcall may set a new time point and
+	  adjusted the duration. A new time point is immediately set ready for
+	  the next loop.
+	</para>
+
+	<programlisting>    (void)or1ksim_run( timeLeft.to_seconds() );
+
+    issQk.inc( sc_core::sc_time( or1ksim_get_time_period(), sc_core::SC_SEC ));
+    or1ksim_set_time_point();</programlisting>
+
+	<para>
+	  If the local time offset has reached the end of the global quantum,
+	  the thread synchronizes.
+	</para>
+
+	<programlisting>    if( issQk.need_sync() ) {
+      issQk.sync();</programlisting>
+
+	<para>
+	  The transport function, <function>doTrans()</function> has the same
+	  structure as the synchronous version in the base class. However
+	  instead of calling <function>wait()</function> to delay calculation,
+	  it updates the local time offset. The time offset is advanced for
+	  the &iss; simulation since the last time point and a new time point
+	  is set.
+	</para>
+
+	<programlisting>  issQk.inc( sc_core::sc_time( or1ksim_get_time_period(), sc_core::SC_SEC ));
+  or1ksim_set_time_point();</programlisting>
+
+	<para>
+	  The delay argument to the blocking transport is the local time
+	  offset. This may be increased by the target (to model read/write
+	  delay), and the new value becomes the local time offset on return.
+	</para>
+
+	<programlisting>  sc_core::sc_time  delay = issQk.get_local_time();
+  dataBus->b_transport( trans, delay );
+  issQk.set( delay );</programlisting>
+
+	<para>
+	  At this point synchronization could be required&mdash;the read/write
+	  delay could have pushed the local time offset past the global
+	  quantum.
+	</para>
+
+	<programlisting>  if( issQk.need_sync() ) {
+    issQk.sync();
+  }</programlisting>
+
+	<para>
+	  The duration remaining for the &iss; simulation is reset in the same
+	  way as in the main thread to be the local quantum less the local
+	  time offset. On return the &iss; will continue for that period.
+	</para>
+
+	<programlisting>  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
+  sc_core::sc_time  timeLeft      =
+    refTgq.compute_local_quantum() - issQk.get_local_time();
+
+  or1ksim_reset_duration ( timeLeft.to_seconds() );</programlisting>
+
+      </sect3>
+
+
+    </sect2>
+
+    <sect2>
+      <title>
+	Modifying the &uart; to Support Temporal Decoupling
+      </title>
+
+      <para>
+	Although the threads in the &uart; class are not temporarily
+	decoupled, a small modification is needed. The callback for the target
+	socket is part of this class, and it must handle delay data for the
+	initiator in <classname>Or1ksimDecoupSC</classname> suitably.
+      </para>
+
+      <para>
+	A new class, <classname>UartDecoupSC</classname>, derived from
+	<classname>UartSyncSC</classname> is defined to provide a modified
+	&tlm2; convenience target socket blocking callback function.
+      </para>
+
+      <sect3>
+	<title>
+	  <classname>uartDecoupSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	  The class definition includes the header of the base class and is
+	  derived from it. The constructor has the same parameters as the base
+	  class, <classname>UartSyncSC</classname>.
+	</para>
+
+	<para>
+	  A replacement version of the &tlm2; convenience callback,
+	  <function>busReadWrite()</function> is defined with the same
+	  parameters as the base class function.
+	</para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  <classname>uartDecoupSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	  The constructor just calls the base class constructor, passing on all
+	  its arguments.
+	</para>
+
+	<para>
+	  The <function>BusReadWrite()</function> callback has the same
+	  structure as the version in the parent class. Like the parent class
+	  it calls the original <classname>UartSC</classname> version to carry
+	  out most of the functionality.
+	</para>
+
+	<caution>
+	  <para>
+	    The call is therefore to the <emphasis>base class of the base
+	    class</emphasis> of this class. The call cannot be to the parent,
+	    since that would call <function>wait()</function>, defeating the
+	    temporal decoupling.
+	  </para>
+	</caution>
+
+	<para>
+	  The difference is in updating the delay. The synchronous base class
+	  waited to model the timing delay and set the delay in the response
+	  to zero. In this version the code just increments the delay (which
+	  is the local time offset) by the additional time to carry out the
+	  read or write.
+	</para>
+
+	<programlisting>  switch( payload.get_command() ) {
+
+  case tlm::TLM_READ_COMMAND:
+    delay += sc_core::sc_time( UART_READ_NS, sc_core::SC_NS );
+    break;</programlisting>
+
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>
+	Main Program for the Temporally Decoupled Model
+      </title>
+
+      <para>
+	The main program, <filename>DecoupSocSC.cpp</filename> is similar in
+	structure to the main program used for the synchronous version (see
+	<xref linkend="sec_sync_main_prog" />). This time the temporally
+	decoupled versions of the &or1ksim; wrapper and &uart; headers are
+	used and the time to use as the global quantum is defined as a
+	parameter.
+      </para>
+
+      <programlisting>#include "Or1ksimDecoupSC.h"
+#include "UartDecoupSC.h"
+#include "TermSyncSC.h"
+
+#define QUANTUM_NS  1000000</programlisting>
+
+      <para>
+	Before any modules are instantiated, the system global quantum must be
+	set. For the initial version a value of 10,000 ns is selected, 1% of
+	the time taken to transmit a character at 9600 baud, so there should
+	be no awkward timing interactions.
+      </para>
+
+      <programlisting>  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
+  refTgq.set( sc_core::sc_time( QUANTUM_NS, sc_core::SC_NS ));</programlisting>
+
+      <para>
+	Thereafter the program follows the same structure (but using
+	the temporarily decoupled versions of the &or1ksim; wrapper and
+	&uart;).
       </para>
 
     </sect2>
 
-    <!-- ========== Temporal Decoupling ========== -->
-
     <sect2>
       <title>
-	Temporal Decoupling Each Component
+	Compiling and Running the Synchronous Model
       </title>
 
-      <!-- = Basic Interface = -->
-
       <para>
+	Compilation is very similar to that of the synchronous model. The
+	binaries of <emphasis>all</emphasis> the base classes are included
+	when linking.
       </para>
 
-    </sect2>
+      <para>
+	The same configuration file and &or1k; compiled image is used to run
+	the temporally decoupled model:
+      </para>
 
-    <!-- ========== Connecting the System ========== -->
-
-    <sect2>
-      <title>
-	Connecting the Complete System
-      </title>
+      <programlisting>$ ./DecoupSocSC ../simple.cfg ../progs_or32/uart_loop</programlisting>
 
       <para>
+	The results look very similar to those for the synchronized version,
+	as shown in <xref
+	linkend="fig_uart_loopback_decoup_log" />.
+      </para>
+
+      <figure id="fig_uart_loopback_decoup_log">
+	<title>
+	  &uart; loop back program log output with temporal decoupling.
+	</title>
+
+	<screen>$ ./SyncSocSC ../simple.cfg ../progs_or32/uart_loop
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Reading script file from '../simple.cfg'...
+
+   ... &lt;Or1ksim initialization messages&gt;
+
+Char read at     0.058881667 sec
+Read: 'F'
+Char written at  0.059941600 sec
+Char read at     0.067121677 sec
+Read: 'a'
+Char written at  0.068181600 sec
+Char read at     0.077411667 sec
+Read: 'r'
+Char written at  0.078471620 sec
+
+   ... &lt;Lots more output&gt;
+</screen>
+      </figure>
+
+      <para>
+	The timing reported for the first character, 'F', is now
+	1059&mu;s&mdash;in the synchronized version it was 1055&mu;s. The
+	global quantum was set to 10&mu;s, which means that other threads may
+	have a delay of up to 10&mu;s before they can run, affecting the time
+	they will report for their actions.
+      </para>
+
+      <para>
+	If the quantum is changed from 10&mu;s to 10ms, the change is more
+	dramatic, as shown in  <xref
+	linkend="fig_uart_loopback_decoup_10ms_log" />.
+      </para>
+
+      <figure id="fig_uart_loopback_decoup_10ms_log">
+	<title>
+	  &uart; loop back program log output with temporal decoupling and
+	  10ms global quantum.
+	</title>
+
+	<screen>$ ./SyncSocSC ../simple.cfg ../progs_or32/uart_loop
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Reading script file from '../simple.cfg'...
+
+   ... &lt;Or1ksim initialization messages&gt;
+
+Char read at     0.091041667 sec
+Read: 'F'
+Char written at  0.101041600 sec
+Char read at     0.101041667 sec
+Read: 'a'
+Char written at  0.111041620 sec
+Char read at     0.111041687 sec
+Read: 'r'
+Char written at  0.121041600 sec
+
+   ... &lt;Lots more output&gt;
+</screen>
+      </figure>
+
+      <para>
+	The time taken to write the first character is now 9,999&mu;s,
+	completely dominated by the quantum. The typing of characters at the
+	xterm is notably sluggish.
+      </para>
+
+      <para>
+	This is characteristic of loosely timed models with temporal
+	decoupling. The objective is to model the gross behavior of the system
+	with a reasonable view of the timing, such that events happen in the
+	correct sequence. However detailed timing can be sacrificed in the
+	interest of greater model performance.
+      </para>
+
+      <para>
+	The value for the global quantum is a subjective choice. In this case,
+	with a busy polling &uart; loop back routine, any delays were wasted
+	in additional polling cycles, so a small quantum was appropriate.
+      </para>
+
+      <para>
+	In a more realistic scenario, the &uart; would be interrupt driven (or
+	at least not polled continuously). Very likely the &uart; would only
+	be lightly used, while other parts of the system were working. Under
+	such circumstances, a global quantum of 100-1000&mu;s (10%-100% of the
+	time to put one character on the &uart;) would be reasonable. The
+	timing of characters output would be out by up to 100%, but the model
+	would gain from fewer synchronizations.
+      </para>
+
+      <para>
+	In other scenarios an even higher quantum could be justified&mdash;for
+	example if the &uart; were only for occasional diagnostic output,
+	where sluggishness did not matter. However when modeling a 100MHz
+	&iss; as part of the SoC, the benefits of such large global quantum
+	values would be minimal.
+      </para>
+
+      <para>
+	The other step to take to improve performance would be to move to an
+	exclusively &tlm2; model. The &systemc; FIFO is a good way to model
+	the &uart; to terminal connection. However by using a &tlm2; socket in
+	each direction, both &uart; and terminal could be temporally
+	decoupled, giving further performance improvement.
       </para>
 
     </sect2>
@@ -5380,7 +6282,7 @@ Char written at  0.304440920 sec</screen>
       <glossdef>
 	<para>
 	  Within &tlm2;, a class suitable for use as payload for
-	  transactions. Recommended to maximize the interoperability of TLMs.
+	  transactions. Recommended to maximize the interoperability of &tlm;s.
 	</para>
 
 	<glossseealso>payload</glossseealso>
@@ -5531,7 +6433,7 @@ Char written at  0.304440920 sec</screen>
 	<para>
 	  In &tlm2; approximately timed modeling, a transaction exchange
 	  representing a single phase of the specific bus protocol being
-	  modelled (for example the address phase of an <acronym>AHB</acronym>
+	  modeled (for example the address phase of an <acronym>AHB</acronym>
 	  read or write).
 	</para>
 
@@ -5809,6 +6711,38 @@ Char written at  0.304440920 sec</screen>
       <pubdate>
 	June, 2008
       </pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref_fitch_88">
+      <title id="ref_fitch_88_xr">
+	A loosely coupled parallel LISP execution system
+      </title>
+
+      <publisher>
+	<publishername>
+	  IEEE
+	</publishername>
+      </publisher>
+
+      <author>
+	<surname>ffitch</surname>
+	<firstname>J</firstname>
+      </author>
+
+      <pagenums>
+	128-133
+      </pagenums>
+
+      <confgroup>
+	<conftitle>
+	  International Specialist Seminar on the Design and Application of
+	  Parallel Digital Processors
+	</conftitle>
+	<confdates>
+	  11-15 Apr 1988
+	</confdates>
+      </confgroup>
+
     </biblioentry>
 
   </bibliography>

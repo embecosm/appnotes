@@ -34,3 +34,10 @@ DOCROOT        = sysc_tlm2_simple_or1k
 # Others do all the hard work
 
 include ../../local_scripts/linux_appnote.mk
+
+
+.PHONY: spell
+spell:
+	aspell --lang=en create master ./custom.dict < ./custom.wordlist
+	aspell --master=en_US --mode=sgml --add-extra-dicts=./custom.dict \
+		-c sysc_tlm2_simple_or1k.docbook
