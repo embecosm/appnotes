@@ -185,11 +185,7 @@ $Id$
     </legalnotice>
   </articleinfo>
 
-  <!-- ========================================================================
-       Introduction
-       ==================================================================== -->
-
-  <sect1>
+<sect1>
     <title>
       Introduction
     </title>
@@ -264,11 +260,6 @@ $Id$
 
     </sect2>
   </sect1>
-
-
-  <!-- ========================================================================
-       Background to TLM
-       ==================================================================== -->
 
   <sect1>
     <title>
@@ -722,36 +713,29 @@ $Id$
 	</para>
 
 	<para>
-	  Convenience sockets are used throughout most of the case study in
-	  this application note. In the final section (see <xref
-	  linkend="sec_standard_tlm" />) the conversion from convenience
-	  sockets to standard &tlm2; sockets and interfaces is demonstrated.
+	  Convenience sockets are used throughout the case study in this
+	  application note.
 	</para>
 
       </sect3>
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       The Case Study
-       ==================================================================== -->
-
-  <sect1 id="sec_case_study">
+<sect1 id="sec_case_study">
     <title>
       Case Study: A SoC Using &tlm2;
     </title>
 
     <para>
-      In this case study, the &tlm2; sockets are used to wrap an
+      In this case study, &tlm2; convenience sockets are used to wrap an
       existing &iss;, which is then built into a simple SoC using additional
       hand-written &tlm2; components.
     </para>
 
     <para>
-      The modeling is at a high level of abstraction, using the &tlm2;
-      <glossterm>Generic Payload</glossterm> with no extensions. It is
-      completely independent of the actual bus architecture that will be used
-      in the implementation.
+      Modeling uses the &tlm2; <glossterm>Generic Payload</glossterm> with no
+      extensions. It is independent of the specific bus architecture that will
+      be used in the implementation.
     </para>
 
     <para>
@@ -765,7 +749,8 @@ $Id$
 	  The basic wrapper for the &or1ksim; &iss; is built using &tlm2;
 	  convenience sockets and tested with a simple logger. In this first
 	  stage timing is ignored&mdash;this is effectively an untimed
-	  model. See <xref linkend="sec_iss_wrapper" />
+	  model. See <xref linkend="sec_iss_wrapper" /> and <xref
+	  linkend="sec_iss_wrapper_test" />.
 	</para>
       </listitem>
 
@@ -796,35 +781,26 @@ $Id$
       <listitem>
 	<para>
 	  Temporal decoupling is added to the &or1ksim; &iss;, &uart; and
-	  terminal. See <xref linkend="sec_temporal_decoupling" />
+	  terminal, to improve the performance of the model. See <xref
+	  linkend="sec_temporal_decoupling" />
 	</para>
       </listitem>
 
       <listitem>
 	<para>
-	  A second &uart; is added to the system and a &tlm2; arbiter/decoder
-	  added, demonstrating the use of &tlm2; convenience passthrough
-	  sockets. See
-	  <xref linkend="sec_arbiter" />
+	  Interrupt modeling is added to the &uart; and the &or1ksim; &iss;,
+	  allowing the model to run &linux;.
+	  <xref linkend="sec_linux" />
 	</para>
       </listitem>
 
-      <listitem>
-	<para>
-	  The entire model is reimplemented using the standard &tlm2; sockets
-	  and interfaces. See <xref linkend="sec_standard_tlm" />
-	</para>
-      </listitem>
     </orderedlist>
 
     <para>
       Throughout the model is demonstrated with simple applications to
-      exercise the relevant system components. At the final stage, a full
-      Linux 2.6 kernel is able to run on the SoC.
+      exercise the relevant system components. The final model, is capable of
+      booting a Linux 2.6 kernel.
     </para>
-
-    <!-- ========== Example Designs ========== -->
-
     <sect2>
       <title>
 	The Example Designs
@@ -850,8 +826,6 @@ $Id$
 	the caches and MMU, so it models only the CPU and main memory. The
 	peripherals are then modeled as separate &systemc; modules.
       </para>
-
-      <!-- = Plain ISS Wrapper = -->
 
       <sect3>
 	<title>
@@ -888,8 +862,6 @@ $Id$
 	</figure>
 
       </sect3>
-
-      <!-- = Simple SoC Example = -->
 
       <sect3>
 	<title>
@@ -932,35 +904,34 @@ $Id$
 
       </sect3>
 
-      <!-- = More complex SoC = -->
-
-      <sect3>
+      <sect3 id="soc_example_soc_intr">
 	<title>
-	  SoC with Arbiter/Decoder
+	  SoC with Interrupt Support
 	</title>
 
 	<para>
-	  For <xref linkend="sec_arbiter" />, the example is extended to add
-	  further peripherals (another &uart;, connected to a second
-	  terminal). An arbiter/decoder is introduced, which will route
-	  traffic to the correct &uart;, depending on address. <xref
-	  linkend="fig_arbiter_soc" /> shows the design.
+	  To run Linux (see <xref linkend="sec_linux" />), the example must be
+	  extended to support interrupt driver I/O. It also needs memory
+	  management and other peripheral functions. This is provided
+	  internally to the &or1ksim; &iss;. This design is shown in <xref
+	  linkend="fig_simple_soc_intr" />.
 	</para>
 
-	<figure id="fig_arbiter_soc">
+	<figure id="fig_simple_soc_intr">
 	  <title>
-	    Simple SoC based on the &or1k; &or1ksim;.
+	    Simple SoC based on the &or1k; &or1ksim; with interrupts and MMU
+	    enabled.
 	  </title>
 	  <mediaobject>
 	    <imageobject>
-	      <imagedata fileref="arbiter_soc.svg"
+	      <imagedata fileref="simple_soc_intr.svg"
 			 format="SVG"
 			 width="14cm"
 			 scalefit="1"
 			 align="center" />
 	    </imageobject>
 	    <imageobject>
-	      <imagedata fileref="arbiter_soc.png"
+	      <imagedata fileref="simple_soc_intr.png"
 			 format="PNG"
 			 width="80%"
 			 scalefit="1"
@@ -970,30 +941,10 @@ $Id$
 	</figure>
 
       </sect3>
-
-      <!-- = SoC for Linux = -->
-
-      <sect3>
-	<title>
-	  SoC to run Linux
-	</title>
-
-	<para>
-	  To demonstrate the SoC running Linux <xref linkend="sec_linux" />,
-	  the example in <xref linkend="fig_arbiter_soc" /> is reused. However
-	  the non-UART peripheral modeling capabilities of the underlying xISS
-	  are turned on, to provided the required functionality.
-	</para>
-
-      </sect3>
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       Wrapping the ISS
-       ==================================================================== -->
-
-  <sect1 id="sec_iss_wrapper">
+<sect1 id="sec_iss_wrapper">
     <title>
       Wrapping the &iss;
     </title>
@@ -1788,11 +1739,7 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       Testing the Wrapper
-       ==================================================================== -->
-
-  <sect1 id="sec_iss_wrapper_test">
+<sect1 id="sec_iss_wrapper_test">
     <title>
       Testing the &or1ksim; &iss; &tlm2; Wrapper
     </title>
@@ -2417,11 +2364,6 @@ $ </screen>
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       Connecting to Peripherals
-       ==================================================================== -->
-
-
   <sect1 id="sec_uart">
     <title>
       Modeling Peripherals
@@ -2746,12 +2688,20 @@ $ </screen>
 	  standard &systemc; one byte FIFO will be suitable.
 	</para>
 
-	<caution>
+	<note>
 	  <para>
-	    It might be thought that an 8-bit &systemc; signal port would be
-	    suitable. However &systemc; signal ports model physical wires, and
-	    only notify changes to the value on the wire. This would be suitable
-	    if the &uart; were to model the pulses signaled across the wire.
+	    It might be thought that an 8-bit &systemc; signal or buffer port
+	    would be suitable. However &systemc; signal ports model physical
+	    wires, and only notify changes to the value on the wire. This
+	    would be suitable if the &uart; were to model the pulses signaled
+	    across the wire.
+	  </para>
+
+	  <para>
+	    &systemc; does offer a buffer class, <literal>sc_buffer</literal>,
+	    which provides notification on <emphasis>any</emphasis>
+	    write. However support for buffers is limited (there are no
+	    special ports provided for example).
 	  </para>
 
 	  <para>
@@ -2760,7 +2710,14 @@ $ </screen>
 	    other. A signal port would not notify any change to the recipient,
 	    while a FIFO will signal that data has been written.
 	  </para>
-	</caution>
+
+	  <para>
+	    FIFOs also offer the possibility that a future implementation
+	    could implement a custom derived class, which explicitly modeled
+	    the delay in putting bits on the wire, delaying notification of a
+	    write for the appropriate time.
+	  </para>
+	</note>
 
 	<para>
 	  The interrupt is modeled as a signal, active high for the
@@ -3529,11 +3486,7 @@ Or1ksimExtSC::isLittleEndian()
 
   </sect1>
 
-  <!-- ========================================================================
-       a Testbench
-       ==================================================================== -->
-
-  <sect1 id="sec_terminal">
+<sect1 id="sec_terminal">
     <title>
       Adding a Terminal as Test Bench
     </title>
@@ -4264,11 +4217,7 @@ Char written at 0.000000000 sec</screen>
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       Adding Synchronous Timing
-       ==================================================================== -->
-
-  <sect1 id="sec_sync">
+<sect1 id="sec_sync">
     <title>
       Adding Synchronous Timing to the Model
     </title>
@@ -5075,11 +5024,7 @@ Char written at  0.180071840 sec</screen>
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       Adding Temporal Decoupling
-       ==================================================================== -->
-
-  <sect1 id="sec_temporal_decoupling">
+<sect1 id="sec_temporal_decoupling">
     <title>
       Adding Temporal Decoupling of the Model
     </title>
@@ -5875,7 +5820,7 @@ Char written at  0.180071840 sec</screen>
       </sect3>
     </sect2>
 
-    <sect2>
+    <sect2 id="sec_temp_decoup_main">
       <title>
 	Main Program for the Temporally Decoupled Model
       </title>
@@ -6057,101 +6002,583 @@ Char written at  0.121041600 sec
     </sect2>
   </sect1>
 
-  <!-- ========================================================================
-       Adding an Arbiter
-       ==================================================================== -->
-
-  <sect1 id="sec_arbiter">
-    <title>
-      Adding an Arbiter
-    </title>
-
-    <para>
-      In this case study, the &tlm2; model from the first case study an
-      arbiter is added to illustrate the use of the
-      <firstterm>passthrough</firstterm> convenience socket and
-      <firstterm>tagged&#32;socket</firstterm>s.
-    </para>
-
-    <!-- ========== Design of the Arbiter ========== -->
-
-    <sect2>
-      <title>
-	The Arbiter &tlm2; Model
-      </title>
-
-      <!-- = Interface = -->
-
-      <sect3>
-	<title>
-	  Adding a &tlm2; Passthrough Socket
-	</title>
-
-	<para>
-	</para>
-
-      </sect3>
-
-      <!-- = Interface = -->
-
-      <sect3>
-	<title>
-	  Using Tagging with Initiator Sockets
-	</title>
-
-	<para>
-	</para>
-
-      </sect3>
-
-    </sect2>
-
-    <!-- ========== Connecting to Peripherals ========== -->
-
-    <sect2>
-      <title>
-	Connecting the SoC
-      </title>
-
-	<para>
-	</para>
-
-    </sect2>
-  </sect1>
-
-  <!-- ========================================================================
-       Using standard TLM2
-       ==================================================================== -->
-
-  <sect1 id="sec_standard_tlm">
-    <title>
-      Using Standard &tlm2; Sockets and Interfaces
-    </title>
-
-    <para>
-    </para>
-  </sect1>
-
-  <!-- ========================================================================
-       Running Linux
-       ==================================================================== -->
-
   <sect1 id="sec_linux">
     <title>
-      Running Linux on the Example SoC
+      Modeling Interrupts and Running Linux on the Example SoC
     </title>
 
     <para>
-      
+      The Simple SoC used in the previous sections is not sufficient to run
+      Linux. Two significant extensions are needed.
     </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Memory management must be added to support Linux virtual
+	  memory. This is provided by enabling the internal MMUs (instruction
+	  and data) of the &or1ksim; &iss;.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  The &systemc; &uart; peripheral must be extended to handle
+	  interrupts.
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      The example design was shown in <xref linkend="soc_example_soc_intr"/>,
+      but for convenience the diagram is repeated here in <xref
+      linkend="fig_simple_soc_intr2" />.
+    </para>
+
+    <figure id="fig_simple_soc_intr2">
+      <title>
+	Simple SoC based on the &or1k; &or1ksim; with interrupts and MMU
+	enabled.
+      </title>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="simple_soc_intr.svg"
+		     format="SVG"
+		     width="14cm"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+	<imageobject>
+	  <imagedata fileref="simple_soc_intr.png"
+		     format="PNG"
+		     width="80%"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      Enabling memory management is a matter of modifying the configuration
+      file for &or1ksim;. The Linux port used here expects to boot from flash
+      memory, so the internal memory of &or1ksim; is also extended to provide
+      this.
+    </para>
+
+    <para>
+      The &uart; model, <classname>UartDecoupSC</classname> is further
+      extended by a new derived class, <classname>UartIntrSC</classname>
+      providing a &systemc; <classname>sc_out&lt;bool&gt;</classname> port
+      through which the interrupt signal is driven.
+    </para>
+
+    <sect2>
+      <title>
+	Extending the <classname>Or1ksimDecoupSC</classname> Module Class
+      </title>
+
+      <para>
+	The &or1ksim; &iss; library is extended to provide an
+	<acronym>API</acronym> call to generate an interrupt. The &or1ksim;
+	includes a programmable interrupt controller
+	(<firstterm>PIC</firstterm>), which is enabled. The new
+	<acronym>API</acronym> call, takes as parameter the interrupt number
+	to be triggered.
+      </para>
+
+      <para>
+	The &or1ksim; wrapper, <classname>Or1ksimDecoupSC</classname> is further
+	extended by a new derived class, <classname>Or1ksimIntrSC</classname>,
+	which provides an array of signal ports to connect to external devices
+	which wish to generate interrupts.
+      </para>
+
+      <sect3>
+	<title>
+	  Adding an Interrupt Generation Function to the &or1ksim; Library
+	</title>
+
+	<para>
+	  The additional function allows the external &systemc; model to call
+	  into the &or1ksim; &iss; to request an interrupt. The &iss; requires
+	  that interrupts are not taken mid-instruction (for example while a
+	  peripheral memory access upcall is in progress), so a flag is set
+	  internally, allowing the &iss; to trigger the interrupt at the start
+	  of the next instruction.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <programlisting>void or1ksim_interrupt( int  i );</programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>void or1ksim_interrupt()</function> requests the the
+	      interrupt given by its argument be taken at the start of the
+	      next instruction cycle.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </sect3>
+
+      <sect3>
+	<title>
+	  <classname>Or1ksimIntrSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	  The new module class, <classname>Or1ksimIntrSC</classname> is
+	  derived from the existing <classname>Or1ksimDecoupSC</classname>
+	  module class, whose header, <filename>Or1ksimDecoupSC.h</filename>,
+	  is included. The number of interrupts to be supported is given by
+	  the constant, <literal>NUM_INTR</literal>.
+	</para>
+	
+	<programlisting>#define  NUM_INTR  32</programlisting>
+
+	<para>
+	  The new class derived from the base class and a custom constructor
+	  defined. The possible interrupts are represented by an array of
+	  <classname>sc_signal</classname>.
+	</para>
+
+	<programlisting>  sc_core::sc_signal&lt;bool&gt;  intr[NUM_INTR];</programlisting>
+
+	<tip>
+	  <para>
+	    It would have been possible to define an array of signal input
+	    ports, <classname>sc_in&lt;bool&gt;</classname>. However these
+	    ports must then be explicitly connected (bound), requiring tie-off
+	    signals to be created in the main program.
+	  </para>
+
+	  <para>
+	    By creating actual signals, interrupts that are unused can be left
+	    unbound and ignored.
+	  </para>
+	</tip>
+
+	<para>
+	  A &systemc; method is required to handle the interrupts (since it
+	  never waits, a thread is not needed). This can respond to interrupts
+	  in parallel with the main &iss; execution thread.
+	</para>
+
+	<programlisting>  void  intrMethod();</programlisting>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  <classname>Or1ksimIntrSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	  The constructor passes its arguments to the base class constructor
+	  for processing. It then sets up <function>intrMethod</function> as a
+	  &systemc; method process, sensitive to the positive edge of each
+	  interrupt signal. There is no need to initialize this function.
+	</para>
+
+	<programlisting>  SC_METHOD( intrMethod );
+  for( i = 0 ; i &lt; NUM_INTR ; i++ ) {
+    sensitive &lt;&lt; intr[i].posedge_event();
+  }
+  dont_initialize();</programlisting>
+	
+	<para>
+	  The interrupt method is triggered by a positive edge on one of the
+	  signals. It loops through to find which interrupt was triggered and
+	  generates a call to <function>or1ksim_interrupt</function> for that
+	  interrupt number. In principle more than one could be triggered in the
+	  same cycle, so all are checked.
+	</para>
+
+	<programlisting>  for( i = 0 ; i &lt; NUM_INTR ; i++ ) {
+    if( intr[i].event()) {
+      or1ksim_interrupt( i );
+    }
+  }</programlisting>
+
+      </sect3>
+    </sect2>
+
+
+    <sect2>
+      <title>
+	Extending the <classname>UartDecoupSC</classname> Module Class
+      </title>
+
+      <para>
+	The existing &uart; module processes interrupts, but does not generate
+	an external interrupt signal. To generated an interrupt signal,
+	<classname>UartDecoupSC</classname> is further extended by a new
+	derived class, <classname>UartIntrSC</classname>, which provides a
+	signal port and a new thread to drive that signal port
+      </para>
+
+      <para>
+	An extra thread is required, because both the
+	<function>rxMethod</function> and <function>busThread</function>
+	processes may wish to drive signals, but &systemc; requires that a
+	signal is driven by a single process. Just as in hardware
+	design a wire would not normally have more than one driver.
+      </para>
+
+      <para>
+	The new process communicates with the existing processes via a FIFO
+	internal to the UART, allowing <function>rxMethod()</function> and
+	<function>busThread()</function> to both request interrupt activity
+	and for those requests to be processed in the order they were
+	generated.
+      </para>
+
+      <sect3>
+	<title>
+	  <classname>UartIntrSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	  The new module class, <classname>UartIntrSC</classname> is
+	  derived from the existing <classname>UartDecoupSC</classname>
+	  module class, whose header, <filename>UartDecoupSC.h</filename>,
+	  is included.
+	</para>
+
+	<para>
+	  A custom constructor is declared, and signal output port
+	  <classname>sc_out&lt;bool&gt;</classname> through which the
+	  interrupt will be driven.
+	</para>
+
+	<para>
+	  The new thread, <function>intrThread()</function> is declared. It
+	  will use re-implemented versions of the <function>genIntr()</function>
+	  and <function>clrIntr()</function> functions from the base class,
+	  <classname>UartSC</classname>.
+	</para>
+
+	<para>
+	  A Boolean FIFO is used to hold the queue of requests from the
+	  existing processes, <function>rxMethod()</function> and
+	  <function>busThread()</function>.
+	</para>
+
+	<programlisting>  sc_core::sc_fifo&lt;bool&gt;  intrQueue;</programlisting>
+
+      </sect3>
+
+      <sect3>
+
+	<title>
+	  <classname>UartIntrSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	  Since this class declares a new &systemc; process,
+	  <literal>SC_HAS_PROCESS</literal> is used. The constructor passes
+	  its arguments to the base class,
+	  <classname>UartDecoupSC</classname> and sets the FIFO queue size to 1.
+	</para>
+
+	<programlisting></programlisting>
+
+	<note>
+	  <para>
+	    The choice of FIFO size means that there should be only one
+	    request for interrupt pending. In principle this could block an
+	    attempt by the <function>rxMethod</function> to write to the FIFO,
+	    and since &systemc; methods may now wait (unlike threads) a
+	    run time error will occur.
+	  </para>
+
+	  <para>
+	    This is an explicit model design decision. If there is interrupt
+	    congestion, then it would be useful to know&mdash;indicating
+	    design issues over the UART capacity. If this were not an issue,
+	    then it would be quite valid to use a larger FIFO capacity.
+	  </para>
+	</note>
+
+	 <para>
+	   The constructor then creates the new &systemc; method for
+	   <function>intrThread()</function>.
+	 </para>
+
+	 <para>
+	   <function>intrThread()</function> has a very simple
+	   <acronym>API</acronym>. If <literal>true</literal> is read it
+	   asserts an interrupt (drives the interrupt port
+	   <literal>true</literal>), otherwise it deasserts the interrupt port
+	   (drives the interrupt port <literal>false</literal>).
+	 </para>
+
+	 <para>
+	   On initialization, the interrupt port is deasserted
+	   (<literal>false</literal>). The thread then sits in a perpetual
+	 loop, copying requests from the FIFO to the interrupt signal output
+	 port.</para>
+
+	 <programlisting>  while( true ) {
+    intr.write( intrQueue.read() );
+  }</programlisting>
+
+	 <para>
+	   The interrupt generator, <function>genIntr</function> is almost
+	   identical to the version in the base class,
+	   <classname>UartSC</classname>. The only difference is that if an
+	   interrupt is generated, a request to drive the signal is written
+	   onto the internal interrupt FIFO for processing by the
+	   <function>intrThread()</function> thread.
+	 </para>
+
+	 <programlisting>    clr( regs.iir, UART_IIR_IPEND );   // Mark (0 = pending) and queue
+    intrQueue.write( true );
+  }</programlisting>
+
+	 <para>
+	   The interrupt clear routing is a similar modification, this time
+	   requesting the interrupt signal to be cleared by writing
+	   <literal>false</literal> on the FIFO queue.
+	 </para>
+
+	 <programlisting>  if( !setIntrFlags()) {               // Deassert if none left
+    set( regs.iir, UART_IIR_IPEND );    // 1 = not pending
+    intrQueue.write( false );
+ }</programlisting>
+
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>
+	Main Program for the Interrupt Driven Model
+      </title>
+
+      <para>
+	The main program for the model supporting interrupts in is
+	<filename>intrSocSC>cpp</filename>. It has a very similar structure to
+	the main program used with the temporal decoupling example in <xref
+	linkend="sec_temp_decoup_main" />, but uses the new versions of the
+	&or1ksim; wrapper class and &uart; module,
+	<classname>Or1ksimIntrSC</classname> and
+	<classname>UartIntrSC</classname>. 
+      </para>
+
+      <para>
+	A baud rate of 115,200 is expected for the Linux kernel serial port
+	and a global quantum of 10&mu;s is appropriate for this. A constant is
+	defined to hold the interrupt port number used by the &uart; (2).
+      </para>
+
+      <programlisting>#define BAUD_RATE   115200
+#define QUANTUM_US      10
+
+#define INTR_UART        2</programlisting>
+
+      <para>
+	The main program structure is unchanged, except that the &uart;
+	interrupt output port needs to be connected to the correct signal in
+	the &or1ksim; wrapper:
+      </para>
+
+      <programlisting>  uart.intr( iss.intr[INTR_UART] );</programlisting>
+    </sect2>
+
+    <sect2>
+      <title>
+	Running the Interrupt Driven Model
+      </title>
+
+      <para>
+	Compilation and linking of the program follows the same procedure as
+	with the previous examples.
+      </para>
+
+      <para>
+	As a simple test, the interrupt loop program used in earlier examples
+	is extended to demonstrate basic interrupt handling. The main test is
+	booting a &linux; kernel.
+      </para>
+
+      <sect3>
+	<title>
+	  Simple Test for the Interrupt Driven SoC Model
+	</title>
+
+	<para>
+	  A simple test is provided in <filename>uart_loop_intr.c</filename>
+	  as an extension of <filename>uart_loop.c</filename>. After a
+	  character is read, the program loops to wait until the interrupt
+	  pending flag is clear (indicating the transmit buffer is empty).
+	</para>
+
+	<programlisting>    do {                        /* Wait for interrupts to clear */
+      ;
+    } while( is_set( uart->iir, UART_IIR_IPEND ) );</programlisting>
+
+	<para>
+	  This is a very basic test&mdash;if all is well it behaves
+	  identically to the existing loop program. If there is a problem
+	  clearing the transmit buffer empty interrupt, or the received data
+	  available interrupt is not cleared when data is read, then the
+	  program will lock up waiting for the interrupt pending flag to
+	  clear.
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Running Linux
+	</title>
+
+	<para>
+	  This test uses a &linux;&nbsp;2.6.19 kernel built for the standalone
+	  &or1ksim; as described in the Embecosm Application note <xref
+	  linkend="ref_app_note_1" />. A configuration file, which enables the
+	  internal <firstterm>memory management unit</firstterm>s
+	  (<acronym>MMU</acronym>s) and Programmable Interrupt Controller
+	  (<acronym>PIC</acronym>) of the &or1ksim; is provided,
+	  <filename>linux.cfg</filename>. This also declares additional
+	  internal memory space for &or1ksim; for flash and
+	  <acronym>SRAM</acronym>.
+	</para>
+
+	<para>
+	  The &systemc; model is then run with this configuration file and the
+	  &linux; kernel binary.
+	</para>
+
+	<programlisting>./IntrSocSC linux.cfg ../linux-2.6.19/vmlinux</programlisting>
+
+	<para>
+	  Initially &linux; copies itself from flash memory to
+	  <acronym>RAM</acronym>.
+	</para>
+
+	<screen>Copying Linux... Ok, booting the kernel.</screen>
+
+	<para>
+	  After a pause while initial booting is taking place the serial
+	  interface is ready, allowing the normal kernel boot messages to
+	  appear:
+	</para>
+
+	<screen>Linux version 2.6.19-or32 (jeremy@thomas) (gcc version 3.4.4) #59 Wed Jun 25 18:48:06 BST 2008
+Detecting Processor units:
+  Signed 0x391
+Setting up paging and PTEs.
+write protecting ro sections (0xc0002000 - 0xc024c000)
+Setting up identical mapping (0x80000000 - 0x90000000)
+Setting up identical mapping (0x92000000 - 0x92002000)
+Setting up identical mapping (0xb8070000 - 0xb8072000)
+Setting up identical mapping (0x97000000 - 0x97002000)
+Setting up identical mapping (0x99000000 - 0x9a000000)
+Setting up identical mapping (0x93000000 - 0x93002000)
+Setting up identical mapping (0xa6000000 - 0xa6100000)
+Setting up identical mapping (0x1e50000 - 0x1fa0000)
+dtlb_miss_handler c00040c8
+itlb_miss_handler c00041a8
+Built 1 zonelists.  Total pages: 3953
+Kernel command line: root=/dev/ram console=ttyS0
+
+   &lt;Lots more &linux; kernel messages...&gt;
+
+Serial: 8250/16550 driver $Revision: 1.90 $ 4 ports, IRQ sharing disabled
+serial8250.0: ttyS0 at MMIO 0x90000000 (irq = 2) is a 16450
+
+   &lt;Lots more &linux; kernel messages...&gt;
+
+VFS: Mounted root (ext2 filesystem) readonly.
+Freeing unused kernel memory: 104k freed
+init started:  BusyBox v1.4.1 (2007-03-22 18:53:56 EST) multi-call binary
+init started:  BusyBox v1.4.1 (2007-03-22 18:53:56 EST) multi-call binary
+Starting pid 22, console /dev/ttyS0: '/etc/init.d/rcS'
+
+Please press Enter to activate this console. </screen>
+
+	<para>
+	  This takes a simulated time of about 37 seconds, and on a modern PC
+	  around 20-25 seconds elapsed time (the &or1ksim; &iss; in this minimal
+	  configuration runs at 150-200MHz <footnote>
+	    <para>
+	      This may seem exceptionally fast for an interpreting &iss;, but
+	      this model is configured with slow RAM with a 20-25 cycle access
+	      time and no caches. So 150-200MHz represents only 5-10
+	      MIPS. That's why booting a basic &linux; kernel takes 37s of
+	      simulated time, rather than the 2-3s that might reasonably be
+	      expected!
+	    </para>
+	  </footnote>).
+	</para>
+  
+	<para>
+	  At this point hitting return will start up a &linux; shell,
+	  running some basic commands and in this example the
+	  <application>BusyBox</application> utilities (see the <ulink
+	  url="http://www.busybox.com">website</ulink> for more details).
+	</para>
+
+	<screen>Please press Enter to activate this console. 
+Startingpid 25, console /dev/ttyS0: '/bin/sh'
+
+
+BusyBox v1.4.1 (2007-03-22 18:53:56 EST) Built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+# ls /proc
+1              2              bus            iomem          self
+10             25             cmdline        ioports        slabinfo
+11             26             cpuinfo        kcore          stat
+12             3              crypto         kmsg           sys
+13             4              devices        loadavg        sysrq-trigger
+14             5              diskstats      locks          sysvipc
+15             6              driver         meminfo        tty
+16             7              execdomains    misc           uptime
+17             8              filesystems    mounts         version
+18             9              fs             net            vmstat
+19             buddyinfo      interrupts     partitions     zoneinfo
+# busybox mount
+rootfs on / type rootfs (rw)
+/dev/root on / type ext2 (ro)
+proc on /proc type proc (rw)
+# </screen>
+
+	<para>
+	  The importance of choosing a suitable value for the global quantum
+	  is well illustrated here. Rebuild the model with a global quantum of
+	  100&mu;s&mdash;rather longer than the time it takes to transmit one
+	  character at 115,200 baud.
+	</para>
+
+	<programlisting>#define QUANTUM_US     100</programlisting>
+
+	<para>
+	  The time taken to boot is marginally faster (19s), but this time the
+	  terminal cannot cope with the erratic interrupt behavior.
+	</para>
+
+	<screen>VFS: Mounted root (ext2 filesystem) readonly.
+Freeing unused kernel memory: 104k freed
+init started:  BusyBox v1.4.
+Please press Ent</screen>
+
+	<para>
+	  The &linux; system has locked up, presumably due to interrupt
+	  behavior and a few seconds later will crash with an unhandled
+	  exception.
+	</para>
+
+      </sect3>
+    </sect2>
+
+
 
   </sect1>
 
-  <!-- ========================================================================
-       Glossary
-       ==================================================================== -->
-
-  <glossary>
+<glossary>
     <title>
       Glossary
     </title>
@@ -6389,6 +6816,29 @@ Char written at  0.121041600 sec
     </glossentry>
 
     <glossentry>
+      <glossterm><acronym>MMU</acronym></glossterm>
+      <glosssee>memory management unit</glosssee>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>memory management unit</glossterm>
+      <acronym>MMU</acronym>
+      <glossdef>
+	<para>
+	  A hardware component which maps virtual address references to
+	  physical memory addresses via a page lookup table. An exception
+	  handler may be required to bring non-existent memory pages into
+	  physical memory from backing storage when accessed.
+	</para>
+
+	<para>
+	  On a Harvard architecture (i.e. with separate logical instruction
+	  and data address spaces), two MMUs are typically needed.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
       <glossterm>non-blocking</glossterm>
       <glossdef>
 	<para>
@@ -6442,11 +6892,31 @@ Char written at  0.121041600 sec
     </glossentry>
 
     <glossentry>
-      <glossterm>POSIX</glossterm>
+      <glossterm><acronym>PIC</acronym></glossterm>
+      <glosssee>programmable interrupt controller</glosssee>
+    </glossentry>
+
+    <glossentry>
+      <glossterm><acronym>POSIX</acronym></glossterm>
       <glossdef>
 	<para>
 	  An IEEE standard for application programming interfaces and
 	  utilities for Unix/Linux operating systems.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>programmable interrupt controller</glossterm>
+      <acronym>PIC</acronym>
+      <glossdef>
+	<para>
+	  A hardware component which provides a large number of interrupt
+	  ports, which are mapped onto one or two interrupt ports on an actual
+	  processor. The <acronym>PIC</acronym> will provide a lookup table of
+	  interrupt service routines for its interrupts, which the interrupt
+	  service routine on the processor can use to identify the correct
+	  handler to use.
 	</para>
       </glossdef>
     </glossentry>
@@ -6476,6 +6946,18 @@ Char written at  0.121041600 sec
 
 	<glossseealso>temporal&#32;decoupling</glossseealso>
 	<glossseealso>quantum</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>singleton</glossterm>
+      <glossdef>
+	<para>
+	  In object oriented programming, a class which can have at most one
+	  instance. Typically implemented by making the constructor private
+	  and providing an access routine which instantiates the class on its
+	  first call and on all other calls returns a pointer to that instance.
+	</para>
       </glossdef>
     </glossentry>
 
@@ -6678,10 +7160,6 @@ Char written at  0.121041600 sec
     </glossentry>
 
   </glossary>      
-
-  <!-- ========================================================================
-       References
-       ==================================================================== -->
 
   <bibliography>
     <title>

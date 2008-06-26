@@ -3,10 +3,14 @@ accessors
 configurability
 deallocation
 deasserts
+deasserted
 destructor
 Destructor
 FIFOs
+lookup
 microarchitecture
+MMU
+MMUs
 namespace
 ns
 passthrough
@@ -15,6 +19,7 @@ subclassing
 templated
 TTYs
 Tx
+unhandled
 untimed
 Untimed
 upcall
