@@ -8,12 +8,15 @@ destructor
 Destructor
 FIFOs
 lookup
+loopback
 microarchitecture
 MMU
 MMUs
 namespace
 ns
+Or1ksim
 passthrough
+re-implements
 Rx
 subclassing
 templated

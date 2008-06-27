@@ -38,23 +38,24 @@
         </dc:creator>
         <dc:rights>
           <cc:Agent>
-            <dc:title>Jeremy Bennett</dc:title>
+            <dc:title>Embecosm Limited</dc:title>
           </cc:Agent>
         </dc:rights>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
         <dc:publisher>
           <cc:Agent>
-            <dc:title>Jeremy Bennett</dc:title>
+            <dc:title>Embecosm Limited</dc:title>
           </cc:Agent>
         </dc:publisher>
         <dc:language>en-GB</dc:language>
         <dc:subject>
           <rdf:Bag>
-            <rdf:li>UART</rdf:li>
+            <rdf:li>Terminal</rdf:li>
+            <rdf:li>SystemC</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <dc:description>Diagram showing the SystemC model as two communicating processes
+        <dc:description>Diagram showing a SystemC model of a terminal as two processes.
 </dc:description>
       </cc:Work>
       <cc:License
@@ -89,9 +90,9 @@
      inkscape:snap-guide="true"
      showguides="true"
      inkscape:showpageshadow="false"
-     inkscape:zoom="2.3162381"
+     inkscape:zoom="2.3263175"
      inkscape:cx="248.03149"
-     inkscape:cy="64.40003"
+     inkscape:cy="79.999992"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg3702"
@@ -121,100 +122,100 @@
     </marker>
   </defs>
   <g
-     id="g6896"
-     transform="translate(602.35514,0)">
+     id="g2827"
+     transform="translate(602.35613,0)">
     <path
-       d="M 7453.8883,56.250803 L 19341.389,56.250803 L 19341.389,11943.751 L 7453.8883,11943.751 L 7453.8883,56.250803 z"
+       d="M 7453.8878,56.250803 L 19341.388,56.250803 L 19341.388,11943.751 L 7453.8878,11943.751 L 7453.8878,56.250803 z"
        id="path3779"
        style="fill:#d2d1e7;fill-rule:evenodd;stroke:#000000;stroke-width:112.50003052;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;visibility:visible" />
     <text
        sodipodi:linespacing="125%"
        id="text5809"
        y="5598.5605"
-       x="13420.453"
+       x="13420.452"
        style="font-size:1050.00012207px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
        xml:space="preserve"><tspan
          y="5598.5605"
-         x="13420.453"
+         x="13420.452"
          id="tspan6892"
          sodipodi:role="line">Terminal Module</tspan><tspan
          y="6911.0605"
-         x="13420.453"
+         x="13420.452"
          id="tspan6894"
          sodipodi:role="line">(parent process)</tspan></text>
     <path
        id="path2660"
-       d="M 1453.8873,2999.9991 L 7109.8763,2999.9991"
+       d="M 1453.8868,2999.9991 L 7109.8758,2999.9991"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        sodipodi:linespacing="150%"
        id="text3466"
        y="2666.4541"
-       x="4380.5239"
+       x="4380.5234"
        style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
        xml:space="preserve"><tspan
          id="tspan6864"
          sodipodi:role="line"
-         x="4380.5239"
+         x="4380.5234"
          y="2666.4541">Read</tspan><tspan
          id="tspan6866"
          sodipodi:role="line"
-         x="4380.5239"
+         x="4380.5234"
          y="3903.9541">Pseudo-TTY</tspan></text>
     <text
        sodipodi:linespacing="150%"
        id="text3508"
        y="8657.3906"
-       x="22397.848"
+       x="22381.531"
        style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
        xml:space="preserve"><tspan
          y="8657.3906"
-         x="22397.848"
-         id="tspan6876"
+         x="22381.531"
+         id="tspan2823"
          sodipodi:role="line">Rx</tspan><tspan
          y="9894.8906"
-         x="22397.848"
-         id="tspan6878"
-         sodipodi:role="line">FIFO</tspan></text>
+         x="22381.531"
+         id="tspan2825"
+         sodipodi:role="line">Buffer</tspan></text>
     <text
        sodipodi:linespacing="150%"
        id="text3514"
        y="2666.8569"
-       x="22397.848"
+       x="22384.352"
        style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
        xml:space="preserve"><tspan
          y="2666.8569"
-         x="22397.848"
-         id="tspan6872"
+         x="22384.352"
+         id="tspan2819"
          sodipodi:role="line">Tx</tspan><tspan
          y="3904.3569"
-         x="22397.848"
-         id="tspan6874"
-         sodipodi:role="line">FIFO</tspan></text>
+         x="22384.352"
+         id="tspan2821"
+         sodipodi:role="line">Port</tspan></text>
     <rect
        y="1556.2489"
-       x="-10546.113"
+       x="-10546.114"
        height="8887.501"
        width="11887.501"
        id="rect3901"
        style="fill:#748ba4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:112.50000763;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="2128.1238"
-       x="-10424.239"
+       x="-10424.24"
        height="8193.751"
        width="11643.751"
        id="rect4412"
        style="fill:#b3b3b3;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:56.25000381;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="2128.124"
-       x="-9824.2383"
+       x="-9824.2393"
        height="8193.751"
        width="11043.751"
        id="rect4414"
        style="fill:#eae8e3;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:56.25;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="1668.749"
-       x="835.13727"
+       x="835.13672"
        height="375.00003"
        width="375.00003"
        id="rect4416"
@@ -222,88 +223,88 @@
     <path
        sodipodi:nodetypes="cc"
        id="path4418"
-       d="M 900.76226,1734.3741 L 1144.5123,1978.1241"
+       d="M 900.76171,1734.3741 L 1144.5118,1978.1241"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:56.25000381;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="cc"
        id="path4420"
-       d="M 1144.5124,1734.374 L 900.76226,1978.1241"
+       d="M 1144.5119,1734.374 L 900.76171,1978.1241"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:56.25000381;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="1668.749"
-       x="385.13721"
+       x="385.13666"
        height="375.00003"
        width="375.00003"
        id="rect4422"
        style="fill:#f3f2f0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="1715.624"
-       x="432.01221"
+       x="432.01166"
        height="281.25003"
        width="281.25003"
        id="rect4424"
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:18.74999809;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="1706.2844"
-       x="422.63721"
+       x="422.63666"
        height="74.964661"
        width="299.99979"
        id="rect4426"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.25000003;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="1668.749"
-       x="-64.862831"
+       x="-64.86338"
        height="375.00003"
        width="375.00003"
        id="rect4428"
        style="fill:#f3f2f0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="1931.2844"
-       x="-27.362825"
+       x="-27.363375"
        height="74.964661"
        width="299.99979"
        id="rect4430"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.25000003;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        id="path6856"
-       d="M 7341.4013,8999.9997 L 1685.4123,8999.9997"
+       d="M 7341.4008,8999.9997 L 1685.4118,8999.9997"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        sodipodi:linespacing="150%"
        id="text6858"
        y="8666.4551"
-       x="4380.5239"
+       x="4380.5234"
        style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
        xml:space="preserve"><tspan
          y="8666.4551"
-         x="4380.5239"
+         x="4380.5234"
          id="tspan6860"
          sodipodi:role="line">Write</tspan><tspan
          y="9903.9551"
-         x="4380.5239"
+         x="4380.5234"
          id="tspan6862"
          sodipodi:role="line">Pseudo-TTY</tspan></text>
     <path
        id="path6868"
-       d="M 19453.889,2999.9991 L 25109.878,2999.9991"
+       d="M 19453.888,2999.9991 L 25109.877,2999.9991"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        id="path6870"
-       d="M 25341.403,8999.9997 L 19685.414,8999.9997"
+       d="M 25341.402,8999.9997 L 19685.413,8999.9997"
        style="font-size:825.00006104px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:150%;writing-mode:lr-tb;text-anchor:middle;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:112.5;stroke-linecap:square;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light" />
     <text
        sodipodi:linespacing="125%"
        id="text6880"
        y="5557.0303"
-       x="-4602.1064"
+       x="-4602.1069"
        style="font-size:1050.00012207px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
        xml:space="preserve"><tspan
          y="5557.0303"
-         x="-4602.1064"
+         x="-4602.1069"
          id="tspan6888"
          sodipodi:role="line">xterm</tspan><tspan
          y="6869.5303"
-         x="-4602.1064"
+         x="-4602.1069"
          id="tspan6890"
          sodipodi:role="line">(child process)</tspan></text>
   </g>
