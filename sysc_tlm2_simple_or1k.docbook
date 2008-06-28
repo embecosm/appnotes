@@ -31,29 +31,30 @@ Useful entities
 
 <!-- = Commands = -->
 
-<!ENTITY xterm "<command>xterm</command>" >
+<!ENTITY xterm "<application>xterm</application>" >
 
 <!-- = Libraries = -->
 
-<!ENTITY readline "<systemitem class='library'>readline</systemitem>" >
 <!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
 
 <!-- ========== Cross references ========== -->
 
-<!-- = Web pages = -->
+<!-- = Organizations = -->
 
-<!ENTITY embecosm "<ulink
-  url='http://www.embecosm.com'>Embecosm</ulink>">
-<!ENTITY opencores "<ulink
-  url='http://www.opencores.org'>OpenCores</ulink>">
-<!ENTITY lgpl "<ulink url='http://www.gnu.org/licenses/lgpl.html'>
-  GNU Lesser General Public License</ulink>">
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY lgpl "GNU Lesser General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY lgpl_www "GNU Lesser General Public License (<ulink url='http://www.gnu.org/licenses/lgpl.html'>GNU Lesser General Public License</ulink>)">
 
 ]>
 
 <!-- ==========================================================================
 
-Copyright (c) 2008 Embecosm Limited.
+Copyright (c) 2008 Embecosm Limited <info@embecosm.com>.
 
 This work is licensed under the Creative Commons Attribution 2.0 UK:
 England & Wales License. To view a copy of this license, visit
@@ -86,21 +87,26 @@ $Id$
     Building a Loosely Timed &soc; Model with &osci; TLM 2.0
   </title>
   <subtitle>
-    A Case Study Using the &or1k; &or1ksim; &iss;
+    A Case Study Using an Open Source &iss; and &linux; 2.6 Kernel
   </subtitle>
 
   <articleinfo>
 
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
     <corpauthor>
-      &embecosm;
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
     </corpauthor>
 
     <pubdate>
-      14 June 2008
+      June 2008
     </pubdate>
 
     <releaseinfo>
-      Application Note 2. Issue 1, draft A
+      Application Note 2. Issue 1, draft D
     </releaseinfo>
 
     <copyright>
@@ -108,7 +114,7 @@ $Id$
 	2008
       </year>
       <holder>
-	Embecosm Limited
+	&embecosm; Limited
       </holder>
     </copyright>
 
@@ -145,7 +151,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      <emphasis>Attribution.</emphasis> You must give the original
-	      author, &embecosm;, credit;
+	      author, &embecosm_www;, credit;
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -171,21 +177,22 @@ $Id$
 
       <para>
 	The software examples written by &embecosm; and used in this document
-	are licensed under the &lgpl;. For detailed licensing information see
-	the files <filename>COPYING</filename> and
+	are licensed under the &lgpl_www;. For detailed licensing information
+	see the files <filename>COPYING</filename> and
 	<filename>COPYING.LESSER</filename> in the source code of the
 	examples.
       </para>
 
       <para>
-	Embecosm is the business name of Embecosm Limited, a private limited
-	company registered in England and Wales. Registration number 6577021.
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
       </para>
 
     </legalnotice>
   </articleinfo>
 
-<sect1>
+  <sect1>
     <title>
       Introduction
     </title>
@@ -194,8 +201,8 @@ $Id$
       The Open <firstterm>&systemc;</firstterm> Initiative
       (<firstterm>&osci;</firstterm>) has recently issued the second version
       of its standard for
-      <firstterm>Transaction&#32;Level&#32;Modeling</firstterm> (&tlm;) [<xref
-      linkend="ref_osci_tlm" />]. This defines an interface for writing high
+      <firstterm>Transaction&#32;Level&#32;Modeling</firstterm> (&tlm;) <xref
+      linkend="ref_osci_tlm" />. This defines an interface for writing high
       level software models of hardware.
     </para>
 
@@ -210,8 +217,8 @@ $Id$
       This application note provides an introductory tutorial on using &tlm2;
       for loosely timed models&mdash;ideally suited for early development of
       embedded software. It demonstrates through a practical case study the
-      development of a complete &soc; using the &tlm2;
-      <emphasis>convenience</emphasis> components.
+      development of a complete &soc;, capable of running a modern &linux; 2.6
+      kernel, using the &tlm2; <emphasis>convenience</emphasis> components.
     </para>
 
     <para>
@@ -222,7 +229,7 @@ $Id$
     </para>
 
     <para>
-      This application note is the first in a series from &embecosm;,
+      This application note is the first in a series from &embecosm_www;,
       providing case studies in &osci; &tlm2; use. The objective is to provide
       an introduction to &tlm2; within a practical context. Examples are
       provided throughout, based on open source components, which are freely
@@ -264,8 +271,8 @@ $Id$
 
       <para>
 	Familiarity with &systemc; is assumed. The user guide supplied with
-	&systemc; provides a good introduction [<xref
-	linkend="ref_osci_systemc_ug" />].
+	&systemc; provides a good introduction <xref
+	linkend="ref_osci_systemc_ug" />.
       </para>
 
     </sect2>
@@ -307,7 +314,7 @@ $Id$
       The development of &systemc; as a standard for modeling hardware started
       in 1996. Version 2.0 of the proposed standard was released by the Open
       SystemC Initiative (&osci;) in 2002. In 2006, &systemc; became IEEE
-      standard 1666-2005 [<xref linkend="ref_ieee_1666" />].
+      standard 1666-2005 <xref linkend="ref_ieee_1666" />.
     </para>
 
     <para>
@@ -315,7 +322,7 @@ $Id$
       these is the &tlm; Working Group. It proposed its first standard for
       transaction level modeling in 2005. Two drafts for version 2.0 were
       released in 2006 and 2007, with the version 2.0 standard issued in June
-      2008 [<xref linkend="ref_osci_tlm" />].
+      2008 <xref linkend="ref_osci_tlm" />.
     </para>
 
     <sect2>
@@ -360,7 +367,7 @@ $Id$
 	    <para>
 	      <emphasis>Process</emphasis> is a general term in &systemc;
 	      to describe the various ways of representing parallel flows
-	      of control. It has nothing to do with processes in the Linux
+	      of control. It has nothing to do with processes in the &linux;
 	      or Microsoft Windows operating systems.
 	    </para>
 	    </footnote>;
@@ -420,10 +427,10 @@ $Id$
       </itemizedlist>
 
       <para>
-	The full specification is 441 pages long [<xref
-	linkend="ref_ieee_1666" />]. The &osci; reference distribution
-	includes a very useful introductory user guide and tutorial [<xref
-	linkend="ref_osci_systemc_ug" />].
+	The full specification is 441 pages long <xref
+	linkend="ref_ieee_1666" />. The &osci; reference distribution
+	includes a very useful introductory user guide and tutorial <xref
+	linkend="ref_osci_systemc_ug" />.
       </para>
 	
     </sect2>
@@ -882,6 +889,14 @@ $Id$
     </para>
 
     <para>
+      The &iss; used is from the &opencores_www; project. This open source
+      project has developed a complete 32/64-bit architecture, the &or1k;,
+      complete with GNU compiler chain, architectural simulator and &linux;
+      port. This application note uses the &or1k; architectural simulator,
+      &or1ksim; as the &iss; for all the examples.
+    </para>
+
+    <para>
       The model is constructed in a number of stages:
     </para>
 
@@ -942,7 +957,7 @@ $Id$
     <para>
       Simple applications, compiled with the &or1k; tool chain are used
       throughout to exercise the model components. The final model
-      is demonstrated booting a Linux 2.6 kernel.
+      is demonstrated booting a &linux; 2.6 kernel.
     </para>
 
     <sect2>
@@ -962,7 +977,7 @@ $Id$
       <para>
 	Information on obtaining and setting up the open source &or1ksim;
 	simulator and its tool chain are given in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> [<xref
+	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
 	linkend="ref_app_note_1" />.
       </para>
 
@@ -1107,7 +1122,7 @@ $Id$
 
       <sect3>
 	<title>
-	  Source Code for Example Models and Programs>
+	  Source Code for Example Models and Programs
 	</title>
 
 	<para>
@@ -1120,11 +1135,11 @@ $Id$
 	<para>
 	  Code for example programs which run on the models can be found in in
 	  the <filename>sysc_models/progs_or32</filename> sub-directory of the
-	  code distribution. Reference binaries are provided, but to
-	  recompiling those models requires the (free) &or1k; tool chain. <xref
-	  linkend="ref_app_note_1" endterm="ref_app_note_1_xr" />
-	  [<xref linkend="ref_app_note_1" />] provides information on
-	  building that tool chain.
+	  code distribution. Binaries are provided as well as source, but to
+	  recompile the example programs requires the &or1k; tool chain. See
+	  <xref linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
+	  linkend="ref_app_note_1" /> for more information on building the
+	  &or1k; tool chain.
 	</para>
 
       </sect3>
@@ -1137,10 +1152,11 @@ $Id$
 	<para>
 	  The code throughout is documented with
 	  <application>Doxygen</application> (see <ulink
-	  url="http://www.doxygen.org">www.doxygen.org</ulink>). The generated
-	  HTML can be found in the <filename>doc/html</filename> sub-directory
-	  of both the &systemc; model directory and the &or1k; program
-	  directory.
+	  url="http://www.doxygen.org">www.doxygen.org</ulink>). This provides
+	  a description of the code, generated automatically from the
+	  source. The generated HTML can be found in the
+	  <filename>doc/html</filename> sub-directory of both the &systemc;
+	  model directory and the &or1k; program directory.
 	</para>
       </sect3>
 
@@ -1154,10 +1170,9 @@ $Id$
 	  a class (i.e. <emphasis>what</emphasis> it does) in a
 	  <filename>.h</filename> file, from the implementation
 	  (i.e. <emphasis>how</emphasis> it does it) in a
-	  <filename>.cpp</filename> file. This is considered good programming
-	  practice. Class <parameter>X</parameter> is defined in file
-	  <filename><parameter>X</parameter>.h</filename> and implemented in
-	  <filename><parameter>X</parameter>.cpp</filename>.
+	  <filename>.cpp</filename> file. Class <parameter>X</parameter> is
+	  defined in file <filename><parameter>X</parameter>.h</filename> and
+	  implemented in <filename><parameter>X</parameter>.cpp</filename>.
 	</para>
 
 	<para>
@@ -1167,6 +1182,21 @@ $Id$
 	  (e.g. <literal>dataBus</literal>) and defined or enumerated
 	  constants are all in UPPER CASE (e.g. <literal>#define BAUD_RATE
 	  9600</literal>).
+	</para>
+
+      </sect3>
+
+      <sect3>
+	<title>
+	  Modifying the Standard &or1ksim; &iss;
+	</title>
+
+	<para>
+	  It is not intended that the reader should have to understand the
+	  internal workings of &or1ksim;. The changes described in this
+	  application note are provided as a patch file, which can be applied
+	  to generate a fully working, modified version of the &iss;. More
+	  information is provided in <xref linkend="app_download" />.
 	</para>
 
       </sect3>
@@ -1188,8 +1218,7 @@ $Id$
 
 	<para>
 	  The &systemc; models in each section of this application note are
-	  build using derived classes of the models from previous
-	  sections.
+	  built using derived classes of the models from previous sections.
 	</para>
 
 	<para>
@@ -1315,7 +1344,7 @@ $Id$
 	All the modifications required to the standard &or1ksim; &iss;
 	described in this application note are provided as a
 	<command>patch</command> file in the distribution. See <xref
-	linkend="app_download" />> for details.
+	linkend="app_download" /> for details.
       </para>
 
       <sect3 id="sec_or1ksim_libcals">
@@ -2282,7 +2311,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	memory mapped volatile data structure and then writes to and reads
 	from each element of that structure. Compilation of this program
 	requires the &or1k; GNU tool chain (see <xref linkend="ref_app_note_1"
-	endterm="ref_app_note_1_xr" /> [<xref linkend="ref_app_note_1" />] for
+	endterm="ref_app_note_1_xr" /> <xref linkend="ref_app_note_1" /> for
 	details of installing this).
       </para>
 
@@ -2482,8 +2511,8 @@ g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
 	<para>
 	  The &or1ksim; &iss; is configured using a textual configuration
 	  file, described in more detail in <xref linkend="ref_app_note_1"
-	  endterm="ref_app_note_1_xr" /> [<xref linkend="ref_app_note_1"
-	  />]. For the modified &or1ksim; &iss;, <literal>generic</literal>
+	  endterm="ref_app_note_1_xr" /> <xref linkend="ref_app_note_1"
+	  />. For the modified &or1ksim; &iss;, <literal>generic</literal>
 	  peripherals can be added (see <xref
 	  linkend="sec_or1ksim_generic_sec" />), which will cause code to call
 	  out via the upcall mechanism to the &or1ksim; &systemc; wrapper
@@ -2575,7 +2604,7 @@ $ </screen>
 
 	<note>
 	  <para>
-	    The &or1ksim; can be configured to model big-endian
+	    The &or1ksim; &iss; can be configured to model big-endian
 	    architectures. The &tlm2; payloads are always packed with data
 	    using the endianism of the model.
 	  </para>
@@ -2656,10 +2685,10 @@ $ </screen>
 	  NS 16450 &uart; Registers
 	</title>
 	<tgroup cols='4' align="left" colsep="1" rowsep="1">
-	  <colspec colwidth="2*" colname="address" />
-	  <colspec colwidth="2*" colname="register" />
-	  <colspec colwidth="1*" colname="rw" />
-	  <colspec colwidth="8*" colname="description" />
+	  <colspec colwidth="4*" colname="address" />
+	  <colspec colwidth="4*" colname="register" />
+	  <colspec colwidth="2*" colname="rw" />
+	  <colspec colwidth="16*" colname="description" />
 
 	  <thead>
 	    <row>
@@ -2962,7 +2991,7 @@ $ </screen>
 	  The modem control and status registers are only modeled to the
 	  extent of supporting modem loopback. This is used by some software
 	  to determine the nature of the modem (for example in the standard
-	  Linux serial line driver).
+	  &linux; serial line driver).
 	</para>
 
 	<para>
@@ -3003,7 +3032,7 @@ $ </screen>
 
       <para>
 	For a larger system, the &or1ksim; wrapper module described in <xref
-	linkend="sec_iss_wrapper" />> must be extended. A public function is
+	linkend="sec_iss_wrapper" /> must be extended. A public function is
 	required for peripheral models to establish the CPU endianism.
       </para>
 
@@ -3990,7 +4019,7 @@ Or1ksimExtSC::isLittleEndian()
 	The setup of the pseudo-TTYs and the &xterm; in a separate process
 	uses standard operating system functions, not described further
 	here. The key factor is that the file descriptor for the pseudo-TTY to
-	the &xterm; is set up to be asynchronous, with Linux signal
+	the &xterm; is set up to be asynchronous, with &linux; signal
 	<literal>SIGIO</literal> raised when input is available and handled by
 	the <function>ioHandler()</function> function.
       </para>
@@ -4040,7 +4069,7 @@ Or1ksimExtSC::isLittleEndian()
 	<programlisting>  ioEvent = new sc_core::sc_event();</programlisting>
 
 	<para>
-	  When <function>ioHandler</function> is called in response to a Linux
+	  When <function>ioHandler</function> is called in response to a &linux;
 	  <literal>SIGIO</literal> event, it does not know which pseudo-TTY
 	  was responsible. The file descriptor responsible is identified by
 	  using an operating system <function>select</function> call. Using
@@ -4181,7 +4210,7 @@ struct uart16450
 
   set( &amp;(uart->lcr), UART_LCR_DLAB );           // Set the divisor latch
   uart->buf  = (unsigned char)( divisor       &amp; 0x00ff);
-  uart->ier  = (unsigned char)((divisor >> 8) &amp; 0x00ff);
+  uart->ier  = (unsigned char)((divisor &gt;&gt; 8) &amp; 0x00ff);
   clr( &amp;(uart->lcr), UART_LCR_DLAB );
 
   set( &amp;(uart->lcr), UART_LCR_8BITS );		// Set 8 bit data packet</programlisting>
@@ -4373,7 +4402,7 @@ Read: '!'</screen>
 	  character is received from the terminal<footnote>
 	    <para>
 	      The use of <function>printf</function> and C
-	      <literal>stdio</literal> is unfortunate. It would be better to
+	      &stdio; is unfortunate. It would be better to
 	      use C++ stream IO. However there seems to be an interaction with
 	      either &systemc; or the asynchronous IO of the &xterm;, which
 	      makes stream IO to standard output unreliable
@@ -4972,16 +5001,16 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	  <para>
 	    The divisor latch for a 16450 divides the input clock to yield an
 	    internal clock 16x the baud rate (i.e. not the actual baud rate
-	    itself)<footnote>
-	      <para>
-	        The 16450 input clock is specified to a maximum of 24 MHz, so
-	        that a 16 bit divisor latch can yield an internal clock for
-	        rates down to 50 baud. However for a software model this
-	        limitation is ignored. Faster input clocks can be specified,
-	        but it will not be possible to configure a 16-bit divisor
-	        latch for very low baud rates
-	      </para>
-	    </footnote>.
+	    itself).
+	  </para>
+
+	  <para>
+	    The 16450 specification supports an input clock up to 24 MHz, so
+	    the 16 bit divisor latch can yield an internal clock for rates
+	    down to 50 baud. However for a software model this limitation can
+	    be ignored. Faster input clocks can be specified, but it will not
+	    be possible to configure a 16-bit divisor latch for very low baud
+	    rates.
 	  </para>
 	</note>
 
@@ -5903,7 +5932,7 @@ Char written at  0.078325190 sec
 	  the next loop.
 	</para>
 
-	<programlisting>    (void)or1ksim_run( timeLeft.to_seconds() );
+	<programlisting>    (void)or1ksim_run( timeLeft.to_seconds());
 
     issQk.inc( sc_core::sc_time( or1ksim_get_time_period(), sc_core::SC_SEC ));
     or1ksim_set_time_point();</programlisting>
@@ -6235,18 +6264,18 @@ Char written at  0.121041600 sec
 
   <sect1 id="sec_linux">
     <title>
-      Modeling Interrupts and Running Linux on the Example &soc;
+      Modeling Interrupts and Running &linux; on the Example &soc;
     </title>
 
     <para>
       The Simple &soc; used in the previous sections is not sufficient to run
-      Linux. Two significant extensions are needed.
+      &linux;. Two significant extensions are needed.
     </para>
 
     <itemizedlist>
       <listitem>
 	<para>
-	  Memory management must be added to support Linux virtual
+	  Memory management must be added to support &linux; virtual
 	  memory. This is provided by enabling the internal MMUs (instruction
 	  and data) of the &or1ksim; &iss;.
 	</para>
@@ -6291,7 +6320,7 @@ Char written at  0.121041600 sec
 
     <para>
       Enabling memory management is a matter of modifying the configuration
-      file for &or1ksim;. The Linux port used here expects to boot from flash
+      file for &or1ksim;. The &linux; port used here expects to boot from flash
       memory, so the internal memory of &or1ksim; is also extended to provide
       this.
     </para>
@@ -6311,8 +6340,8 @@ Char written at  0.121041600 sec
       <para>
 	The &or1ksim; &iss; library is extended to provide an
 	<acronym>API</acronym> call to generate an interrupt. The &or1ksim;
-	includes a programmable interrupt controller
-	(<firstterm>PIC</firstterm>), which is enabled. The new
+	includes a <firstterm>programmable interrupt controller</firstterm>
+	(<acronym>PIC</acronym>), which is enabled. The new
 	<acronym>API</acronym> call, <function>or1ksim_interrupt</function>,
 	takes as parameter the interrupt number to be triggered.
       </para>
@@ -6513,7 +6542,12 @@ Char written at  0.121041600 sec
 	  <classname>UartDecoupSC</classname> and sets the FIFO queue size to 1.
 	</para>
 
-	<programlisting></programlisting>
+	<programlisting>UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
+                        unsigned long int        _clockRate,
+                        bool                     _isLittleEndian ) :
+  UartDecoupSC( name, _clockRate, _isLittleEndian ),
+  intrQueue( 1 )
+{</programlisting>
 
 	<note>
 	  <para>
@@ -6595,7 +6629,7 @@ Char written at  0.121041600 sec
       </para>
 
       <para>
-	A baud rate of 115,200 is expected for the Linux kernel serial port
+	A baud rate of 115,200 is expected for the &linux; kernel serial port
 	and a global quantum of 10&mu;s is appropriate for this. A constant is
 	defined to hold the interrupt port number used by the &uart; (2).
       </para>
@@ -6659,14 +6693,14 @@ Char written at  0.121041600 sec
 
       <sect3>
 	<title>
-	  Running Linux
+	  Running &linux;
 	</title>
 
 	<para>
 	  This test uses a &linux;&nbsp;2.6.19 kernel built for the standalone
 	  &or1ksim; as described in <xref
-	  linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> [<xref
-	  linkend="ref_app_note_1" />]. A configuration file, which enables the
+	  linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
+	  linkend="ref_app_note_1" />. A configuration file, which enables the
 	  internal <firstterm>memory management unit</firstterm>s
 	  (<acronym>MMU</acronym>s) and Programmable Interrupt Controller
 	  (<acronym>PIC</acronym>) of the &or1ksim; is provided,
@@ -6695,7 +6729,8 @@ Char written at  0.121041600 sec
 	  appear:
 	</para>
 
-	<screen>Linux version 2.6.19-or32 (jeremy@thomas) (gcc version 3.4.4) #59 Wed Jun 25 18:48:06 BST 2008
+	<screen>Linux version 2.6.19-or32 (jeremy@thomas) (gcc version 3.4.4) #59 Wed Jun 25 18:
+48:06 BST 2008
 Detecting Processor units:
   Signed 0x391
 Setting up paging and PTEs.
@@ -6868,8 +6903,8 @@ Please press Ent</screen>
 
       <para>
 	The instructions for building standard &or1ksim; may be found in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> [<xref
-	linkend="ref_app_note_1" />] on the &embecosm; website. This includes
+	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
+	linkend="ref_app_note_1" /> on the &embecosm; website. This includes
 	some patches to the standard distribution to fix a number of known
 	bugs. The &iss; uses standard GNU configuration and build.
       </para>
@@ -6879,8 +6914,8 @@ Please press Ent</screen>
 	this download and unpack standard &or1ksim; has in directory
 	<filename>or1ksim-0.2.0</filename>. Apply the &embecosm; bug fix patches
 	described above and documented in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> [<xref
-	linkend="ref_app_note_1" />]. This is the source for a working
+	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
+	linkend="ref_app_note_1" />. This is the source for a working
 	<emphasis>standard</emphasis> &or1ksim; &iss;.
       </para>
 
@@ -6901,13 +6936,13 @@ Please press Ent</screen>
 
     <sect1>
       <title>
-	Building the Linux Kernel
+	Building the &linux; Kernel
       </title>
 
       <para>
-	The Linux kernel is built as described in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> [<xref
-	linkend="ref_app_note_1" />]. This does require building the &or1ksim;
+	The &linux; kernel is built as described in <xref
+	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
+	linkend="ref_app_note_1" />. This does require building the &or1ksim;
 	tool chain. This includes patches to the &linux; kernel required to get
 	it to work correctly on the &or1ksim; &iss;
       </para>
@@ -7103,16 +7138,13 @@ Please press Ent</screen>
 
     <glossentry>
       <glossterm>Hardware&#32;Description&#32;Language</glossterm>
+      <acronym>HDL</acronym>
       <glossdef>
 	<para>
-	  A language (<glossterm>Verilog</glossterm> and
-	  <glossterm>VHDL</glossterm> are the best known), which describes
-	  hardware. Can be used to describe both an actual chip and its
-	  test bench.
+	  A language (Verilog and <acronym>VHDL</acronym> are the best known),
+	  which describes hardware. Can be used to describe both an actual
+	  chip and its test bench.
 	</para>
-
-	<glossseealso>Verilog</glossseealso>
-	<glossseealso>VHDL</glossseealso>
       </glossdef>
     </glossentry>
 
@@ -7131,6 +7163,7 @@ Please press Ent</screen>
 
     <glossentry>
       <glossterm>Instruction&#32;Set&#32;Simulator</glossterm>
+      <acronym>ISS</acronym>
       <glossdef>
 	<para>
 	  A software model of a CPU core instruction set. Typically completely
@@ -7142,11 +7175,6 @@ Please press Ent</screen>
 	</para>
       </glossdef>
 
-    </glossentry>
-
-    <glossentry>
-      <glossterm>&iss;</glossterm>
-      <glosssee>Instruction&#32;Set&#32;Simulator</glosssee>
     </glossentry>
 
     <glossentry>
@@ -7186,11 +7214,6 @@ Please press Ent</screen>
     </glossentry>
 
     <glossentry>
-      <glossterm><acronym>MMU</acronym></glossterm>
-      <glosssee>memory management unit</glosssee>
-    </glossentry>
-
-    <glossentry>
       <glossterm>memory management unit</glossterm>
       <acronym>MMU</acronym>
       <glossdef>
@@ -7223,29 +7246,13 @@ Please press Ent</screen>
     </glossentry>
 
     <glossentry>
-      <glossterm>Open&#32;&systemc;&#32;Initiative</glossterm>
-      <glossdef>
-	<para>
-	  The industry body standardizing the &systemc; language and
-	  applications of those language for particular purposes, such as
-	  <glossterm>Transaction&#32;Level&#32;Modeling</glossterm>,
-	  verification and synthesis. More information is available on their
-	  website at <ulink
-	  url="http://www.systemc.org">www.systemc.org</ulink>.
-	</para>
-
-	<glossseealso>&systemc;</glossseealso>
-      </glossdef>
-    </glossentry>
-
-    <glossentry>
       <glossterm>passthrough</glossterm>
       <glossdef>
 	<para>
-	  A term describing a &tlm2; convenience socket which reuses the
-	  payload, thereby eliminating the computational cost of allocation
-	  and deallocation. Typically used in modules which perform a routing
-	  or arbitration function.
+	  A term describing a &tlm2; convenience socket which does not perform
+	  an automatic conversion between blocking and non-blocking
+	  transport. Potentially more efficient than the other types of
+	  convenience socket.
 	</para>
 
 	<glossseealso>payload</glossseealso>
@@ -7278,16 +7285,11 @@ Please press Ent</screen>
     </glossentry>
 
     <glossentry>
-      <glossterm><acronym>PIC</acronym></glossterm>
-      <glosssee>programmable interrupt controller</glosssee>
-    </glossentry>
-
-    <glossentry>
-      <glossterm><acronym>&posix;</acronym></glossterm>
+      <glossterm><acronym>POSIX</acronym></glossterm>
       <glossdef>
 	<para>
 	  An IEEE standard for application programming interfaces and
-	  utilities for Unix/Linux operating systems.
+	  utilities for Unix/&linux; operating systems.
 	</para>
       </glossdef>
     </glossentry>
@@ -7379,6 +7381,7 @@ Please press Ent</screen>
 
     <glossentry>
       <glossterm>System on Chip</glossterm>
+      <acronym>SoC</acronym>
       <glossdef>
 	<para>
 	  A silicon chip which includes one or more processor cores.
@@ -7539,30 +7542,6 @@ Please press Ent</screen>
       </glossdef>
     </glossentry>
 
-    <glossentry>
-      <glossterm>Verilog</glossterm>
-      <glossdef>
-	<para>
-	  A Hardware&#32;Description&#32;Language (HDL).
-	</para>
-
-	<glossseealso>Hardware&#32;Description&#32;Languages</glossseealso>
-	<glossseealso><acronym>VHDL</acronym></glossseealso>
-      </glossdef>
-    </glossentry>
-
-    <glossentry>
-      <glossterm><acronym>VHDL</acronym></glossterm>
-      <glossdef>
-	<para>
-	  A Hardware&#32;Description&#32;Language (HDL).
-	</para>
-
-	<glossseealso>Hardware&#32;Description&#32;Languages</glossseealso>
-	<glossseealso>Verilog</glossseealso>
-      </glossdef>
-    </glossentry>
-
   </glossary>      
 
   <bibliography>
@@ -7572,91 +7551,83 @@ Please press Ent</screen>
 
     <bibliomixed id="ref_fitch_88">
       <title id="ref_fitch_88_xr">
-	A loosely coupled parallel LISP execution system
+	A loosely coupled parallel LISP execution system.
       </title>
       <author>
-	<surname>ffitch</surname>
-	<firstname>J</firstname>
+	<firstname>John </firstname>
+	<surname>ffitch.</surname>
       </author>
       <publisher>
 	<publishername>
 	  International Specialist Seminar on the Design and Application of
-	  Parallel Digital Processors
+	  Parallel Digital Processors,
 	</publishername>
       </publisher>
       <pubdate>
-	  11-15 Apr 1988
+	  11-15 Apr 1988.
       </pubdate>
       <pagenums>
-	128-133
+	pp 128-133.
       </pagenums>
     </bibliomixed>
 
     <bibliomixed id="ref_app_note_1">
       <title id="ref_app_note_1_xr">
 	&embecosm; Application Note 1. The &opencores; &or1k; Simulator and
-	Tool Chain: Installation Guide
+	Tool Chain: Installation Guide.
       </title>
       <publisher>
 	<publishername>
-	  Embecosm
+	  Embecosm Limited,
 	</publishername>
-	<address>
-	  <city>
-	    Bournemouth
-	  </city>
-	  <country>
-	    UK
-	  </country>
-	</address>
       </publisher>
       <pubdate>
-	June, 2008
+	June 2008.
       </pubdate>
     </bibliomixed>
 
     <bibliomixed id="ref_ieee_1666">
       <title id="ref_ieee_1666_xr">
-	IEEE Standard &systemc; Language Reference Manual
+	IEEE Standard &systemc; Language Reference Manual.
       </title>
       <publisher>
 	<publishername>
-	  IEEE Computer Society
+	  IEEE Computer Society,
 	</publishername>
       </publisher>
       <pubsnumber>
-	1666-2005
+	1666-2005,
       </pubsnumber>
       <pubdate>
-	31 March, 2006
+	31 March, 2006.
       </pubdate>
     </bibliomixed>
 
     <bibliomixed id="ref_osci_tlm">
       <title id="ref_osci_tlm_xr">
-	OSCI TLM 2.0 User Manual
+	OSCI TLM 2.0 User Manual.
       </title>
       <publisher>
 	<publishername>
-	  Open &systemc; Initiative
+	  Open &systemc; Initiative,
 	</publishername>
       </publisher>
       <pubdate>
-	June, 2008
+	June, 2008.
       </pubdate>
     </bibliomixed>
 
     <bibliomixed id="ref_osci_systemc_ug">
       <title id="ref_osci_systemc_ug_xr">
-	&systemc; Version 2.0 User Guide
+	&systemc; Version 2.0 User Guide.
       </title>
       <publisher>
 	<publishername>
-	  Open &systemc; Initiative
+	  Open &systemc; Initiative,
 	</publishername>
       </publisher>
       <pubdate>
-	2002
+	2002.
       </pubdate>
     </bibliomixed>
 
