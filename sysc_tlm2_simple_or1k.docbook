@@ -106,7 +106,7 @@ $Id$
     </pubdate>
 
     <releaseinfo>
-      Application Note 2. Issue 1, draft D
+      Application Note 2. Issue 1
     </releaseinfo>
 
     <copyright>
@@ -1266,6 +1266,38 @@ $Id$
 	  functions may be <emphasis>reimplemented</emphasis> in derived
 	  classes.
 	</para>
+      </sect3>
+
+      <sect3>
+	<title>
+	  <application>Make</application> Files
+	</title>
+
+	<para>
+	  Both the <filename>sysc_models</filename> and
+	  <filename>progs_or32</filename> directory contain make files which
+	  will build the programs and <application>Doxygen</application>
+	  documentation, if the appropriate tools are available.
+	</para>
+
+	<para>
+	  These files will need editing. In general the main
+	  <command>make</command> file, <filename>Makefile</filename> includes
+	  an operating system specific make file
+	  (<filename>linux.mk</filename> for Linux,
+	  <filename>win32.mk</filename> for Microsoft Windows), because of the
+	  very substantial differences in behavior between GNU
+	  <command>make</command> and Microsoft
+	  <command>nmake</command>.
+	</para>
+
+	<para>
+	  In particular the SystemC model builds need to know the location of
+	  the &or1ksim; binaries, libraries and include files, which should be
+	  set in the environment variable <literal>OR1KSIM</literal>. If left
+	  unset it will default to <filename>/opt/or1ksim</filename>.
+	</para>
+
       </sect3>
     </sect2>
 
@@ -3798,7 +3830,7 @@ Or1ksimExtSC::isLittleEndian()
 
   <sect1 id="sec_terminal">
     <title>
-      Adding a Terminal as Test Bench
+      Adding a Terminal as a Test Bench
     </title>
 
     <para>
@@ -6926,7 +6958,7 @@ Please press Ent</screen>
 	applied by the command:
       </para>
 
-      <programlisting>bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p 1</programlisting>
+      <programlisting>bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1</programlisting>
 
       <para>
 	The &or1ksim; &iss; can then be built from this patched source in
