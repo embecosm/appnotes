@@ -106,7 +106,7 @@ $Id$
     </pubdate>
 
     <releaseinfo>
-      Application Note 2. Issue 1
+      Application Note 1. Issue 1
     </releaseinfo>
 
     <copyright>
@@ -977,8 +977,8 @@ $Id$
       <para>
 	Information on obtaining and setting up the open source &or1ksim;
 	simulator and its tool chain are given in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
-	linkend="ref_app_note_1" />.
+	linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
+	linkend="ref_app_note_2" />.
       </para>
 
       <para>
@@ -1137,8 +1137,8 @@ $Id$
 	  the <filename>sysc_models/progs_or32</filename> sub-directory of the
 	  code distribution. Binaries are provided as well as source, but to
 	  recompile the example programs requires the &or1k; tool chain. See
-	  <xref linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
-	  linkend="ref_app_note_1" /> for more information on building the
+	  <xref linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
+	  linkend="ref_app_note_2" /> for more information on building the
 	  &or1k; tool chain.
 	</para>
 
@@ -2342,8 +2342,8 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	The test program in <filename>logger_test.c</filename> defines a
 	memory mapped volatile data structure and then writes to and reads
 	from each element of that structure. Compilation of this program
-	requires the &or1k; GNU tool chain (see <xref linkend="ref_app_note_1"
-	endterm="ref_app_note_1_xr" /> <xref linkend="ref_app_note_1" /> for
+	requires the &or1k; GNU tool chain (see <xref linkend="ref_app_note_2"
+	endterm="ref_app_note_2_xr" /> <xref linkend="ref_app_note_2" /> for
 	details of installing this).
       </para>
 
@@ -2542,8 +2542,8 @@ g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
 
 	<para>
 	  The &or1ksim; &iss; is configured using a textual configuration
-	  file, described in more detail in <xref linkend="ref_app_note_1"
-	  endterm="ref_app_note_1_xr" /> <xref linkend="ref_app_note_1"
+	  file, described in more detail in <xref linkend="ref_app_note_2"
+	  endterm="ref_app_note_2_xr" /> <xref linkend="ref_app_note_2"
 	  />. For the modified &or1ksim; &iss;, <literal>generic</literal>
 	  peripherals can be added (see <xref
 	  linkend="sec_or1ksim_generic_sec" />), which will cause code to call
@@ -6731,8 +6731,8 @@ Char written at  0.121041600 sec
 	<para>
 	  This test uses a &linux;&nbsp;2.6.19 kernel built for the standalone
 	  &or1ksim; as described in <xref
-	  linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
-	  linkend="ref_app_note_1" />. A configuration file, which enables the
+	  linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
+	  linkend="ref_app_note_2" />. A configuration file, which enables the
 	  internal <firstterm>memory management unit</firstterm>s
 	  (<acronym>MMU</acronym>s) and Programmable Interrupt Controller
 	  (<acronym>PIC</acronym>) of the &or1ksim; is provided,
@@ -6935,8 +6935,8 @@ Please press Ent</screen>
 
       <para>
 	The instructions for building standard &or1ksim; may be found in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
-	linkend="ref_app_note_1" /> on the &embecosm; website. This includes
+	linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
+	linkend="ref_app_note_2" /> on the &embecosm; website. This includes
 	some patches to the standard distribution to fix a number of known
 	bugs. The &iss; uses standard GNU configuration and build.
       </para>
@@ -6946,8 +6946,8 @@ Please press Ent</screen>
 	this download and unpack standard &or1ksim; has in directory
 	<filename>or1ksim-0.2.0</filename>. Apply the &embecosm; bug fix patches
 	described above and documented in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
-	linkend="ref_app_note_1" />. This is the source for a working
+	linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
+	linkend="ref_app_note_2" />. This is the source for a working
 	<emphasis>standard</emphasis> &or1ksim; &iss;.
       </para>
 
@@ -6973,8 +6973,8 @@ Please press Ent</screen>
 
       <para>
 	The &linux; kernel is built as described in <xref
-	linkend="ref_app_note_1" endterm="ref_app_note_1_xr" /> <xref
-	linkend="ref_app_note_1" />. This does require building the &or1ksim;
+	linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
+	linkend="ref_app_note_2" />. This does require building the &or1ksim;
 	tool chain. This includes patches to the &linux; kernel required to get
 	it to work correctly on the &or1ksim; &iss;
       </para>
@@ -7603,9 +7603,9 @@ Please press Ent</screen>
       </pagenums>
     </bibliomixed>
 
-    <bibliomixed id="ref_app_note_1">
-      <title id="ref_app_note_1_xr">
-	&embecosm; Application Note 1. The &opencores; &or1k; Simulator and
+    <bibliomixed id="ref_app_note_2">
+      <title id="ref_app_note_2_xr">
+	&embecosm; Application Note 2. The &opencores; &or1k; Simulator and
 	Tool Chain: Installation Guide.
       </title>
       <publisher>

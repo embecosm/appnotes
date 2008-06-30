@@ -33,7 +33,7 @@ DOCROOT        = sysc_tlm2_simple_or1k
 # ----------------------------------------------------------------------------
 # Others do all the hard work
 
-include ../../local_scripts/linux_appnote.mk
+include $(HOME)/svntrunk/Documentation/local_scripts/linux_appnote.mk
 
 
 .PHONY: spell
