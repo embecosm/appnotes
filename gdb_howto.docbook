@@ -1,0 +1,3162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- =========================================================================
+Useful entities
+========================================================================== -->
+
+<!-- ========== Acronyms and abbreviations ========== -->
+
+<!ENTITY abi  "<acronym>ABI</acronym>">
+<!ENTITY bfd  "<acronym>BFD</acronym>">
+<!ENTITY gdb  "<acronym>GDB</acronym>">
+<!ENTITY gpr  "<acronym>GPR</acronym>">
+<!ENTITY iss  "<acronym>ISS</acronym>">
+<!ENTITY jtag "<acronym>JTAG</acronym>">
+<!ENTITY rsp  "<acronym>RSP</acronym>">
+<!ENTITY soc  "<acronym>SoC</acronym>">
+<!ENTITY spr  "<acronym>SPR</acronym>">
+
+<!-- ========== commonly used things ========== -->
+
+<!ENTITY null         "<literal>NULL</literal>">
+<!ENTITY this         "<emphasis>THIS</emphasis>">
+<!ENTITY prev         "<emphasis>PREVIOUS</emphasis>">
+<!ENTITY next         "<emphasis>NEXT</emphasis>">
+
+<!ENTITY frame_info   "<structname>struct&nbsp;frame_info</structname>">
+<!ENTITY gdbarch      "<structname>struct&nbsp;gdbarch</structname>">
+<!ENTITY gdbarch_info "<structname>struct&nbsp;gdbarch_info</structname>">
+<!ENTITY gdbarch_tdep "<structname>struct&nbsp;gdbarch_tdep</structname>">
+<!ENTITY regcache     "<structname>struct&nbsp;regcache</structname>">
+<!ENTITY target_ops   "<structname>struct&nbsp;target_ops</structname>">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
+
+<!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY systemc "<application class='software'>SystemC</application>" >
+<!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
+
+<!-- = Hardware applications = -->
+
+<!ENTITY or1k "<application class='hardware'>OpenRISC 1000</application>">
+
+<!-- = Commands = -->
+
+<!ENTITY xterm "<application>xterm</application>" >
+
+<!-- = Libraries = -->
+
+<!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
+
+<!-- ========== Cross references ========== -->
+
+<!-- = Organizations = -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY lgpl "GNU Lesser General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY gpl_www "GNU General Public License (<ulink url='http://www.gnu.org/licenses/gpl.html'>GNU General Public License</ulink>)">
+
+]>
+
+<!-- ==========================================================================
+
+Copyright (c) 2008 Embecosm Limited <info@embecosm.com>.
+
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
+
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
+
+===============================================================================
+
+Application note describing how to port GDB
+
+$Id$
+
+=========================================================================== -->
+
+<book lang="en_GB">
+  <title>
+    Howto: Porting the GNU Debugger
+  </title>
+  <subtitle>
+    Practical Experience with the OpenRISC 1000 Architecture
+  </subtitle>
+
+  <bookinfo>
+
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>
+      August 2008
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 3. Issue 1
+    </releaseinfo>
+
+    <copyright>
+      <year>
+	2008
+      </year>
+      <holder>
+	&embecosm; Limited
+      </holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>
+	Legal Notice
+      </title>
+
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, &embecosm_www;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The software for the port of the GNU Debugger written by &embecosm;
+	and used in this document are licensed under the &gpl_www;. For
+	detailed licensing information see the files
+	<filename>COPYING</filename>, <filename>COPYING3</filename>,
+	<filename>COPYING.LIB</filename> and <filename>COPYING3.LIB</filename>
+	in the source code.
+      </para>
+
+      <para>
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
+      </para>
+
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      This document complements the existing documentation for &gdb; (<xref
+      linkend="ref_gdb_ug" />, <xref linkend="ref_gdb_int" />, <xref
+      linkend="ref_bfd" />). It is intended to help software engineers porting
+      &gdb; to a new architecture for the first time.
+    </para>
+
+    <para>
+      This is a work in progress, capturing the author's experience to
+      date. Suggestions for improvements are always welcome.
+    </para>
+
+    <sect1>
+      <title>
+	Rationale
+      </title>
+
+      <para>
+	Although the &gdb; project includes a 100 page guide to its internals,
+	that document suffers from three limitations.
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    It tends to document at a low-level. Individual functions are
+	    described well, but it is hard to get the <emphasis>big
+	    picture</emphasis>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    It is incomplete. Many of the most useful sections (for example on
+	    frame interpretation) are yet to be written.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Is tends to be out of date. For example the documentation of the
+	    UI-Independent output describes a number of functions which no
+	    longer exist.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+      <para>
+	Consequently the engineer faced with their first port of &gdb; to a new
+	architecture is faced with discovering how &gdb; works by reading the
+	source code and looking at how other architectures have been ported.
+      </para>
+
+      <para>
+	The author of this paper went through that process when porting the
+	OpenRISC 1000 architecture to &gdb;. This document captures the learning
+	experience, in the hope that it will help others.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+	If you are about to start a port of &gdb; to a new architecture, this
+	document is for you. Hopefully this document will help you. If at the
+	end of your endeavours you are better informed, please help by adding
+	to this document.
+      </para>
+
+      <para>
+	If you have already been through the porting process, please help
+	others by adding to this document.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Other Sources of Information
+      </title>
+
+      <para>
+	The main user guide for &gdb; (<xref linkend="ref_gdb_ug" />) provides a
+	great deal of context about how &gdb; is intended to work.
+      </para>
+
+      <para>
+	The &gdb; Internals guide (<xref linkend="ref_gdb_int" />) is
+	essential reading before and during any porting exercise. It is not
+	complete, nor is it always up to date, but it provides the first place
+	to look for explanation of what a particular function does.
+      </para>
+
+      <para>
+	&gdb; relies on a separate specification of the Application Binary
+	Interface (&abi;) for each architecture. That has its
+	own comprehensive user guide (<xref linkend="ref_bfd" />).
+      </para>
+
+      <para>
+	The main &gdb; code base is generally well commented, particularly in
+	the headers for the major interfaces. Inevitably this must be the
+	definitive place to find out exactly how a particular function
+	behaves.
+      </para>
+
+      <para>
+	The files making up the port for the OpenRISC 1000 are comprehensively
+	commented, and can be processed with Doxygen (<xref
+	linkend="ref_doxygen" />). Each function, its parameters and return
+	value is described.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      About the OpenRISC 1000 Architecture
+    </title>
+
+    <para>
+      OpenRISC 1000 is architecture for a family of free, open source RISC
+      processor cores. It is a 32 or 64-bit load and store RISC architecture
+      designed with emphasis on performance, simplicity, low power
+      requirements, scalability and versatility.
+    </para>
+
+    <para>
+      The OpenRISC 1000 is fully documented in its Architecture Manual <xref
+      linkend="ref_or1k" />.
+    </para>
+
+    <para>
+      From a debugging perspective, there are three data areas that are
+      manipulated by the instruction set.
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Main memory. A uniform address space with 32 or 64-bit
+	  addressing. Provision for separate or unified instruction and data
+	  and instruction caches. Provision for separate or unified, 1 or
+	  2-level data and instruction MMUs.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  General Purpose Registers (&gpr;s). Up to 32 registers, 32 or 64-bit
+	  in length.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Special Purpose Registers (&spr;s). Up to 32 groups each with up to
+	  2048 registers, up to 32 or 64-bit in length. These registers
+	  provide all the administrative functionality of the processor:
+	  program counter, processor status, saved exception registers, debug
+	  interface, MMU and cache interfaces, etc.
+	</para>
+      </listitem>
+    </orderedlist>
+
+    <para>
+      The Special Purpose Registers (&spr;s) represent a
+      challenge for &gdb;, since they represent neither addressable memory, nor
+      have the characteristics of a register set (generally modest in number).
+    </para>
+
+    <sect1>
+      <title>
+	&jtag; Interface
+      </title>
+
+      <para>
+	The OpenRISC 1000 provides a &jtag; interface, which can be used for
+	external control and debug of the processor. It provides a number of
+	scan chains, of which the most important for debugging are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    RISC_DEBUG (scan chain 1), providing read/write access to the
+	    &spr;s.
+	  </para>
+	</listitem>
+	
+	<listitem>
+	  <para>
+	    REGISTER (scan chain 4), providing read/write access to the
+	    &jtag; control registers, allowing control of hardware trace and
+	    stalling, unstalling and reset of the processor.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    WISHBONE (scan chain 5), providing read/write access to main
+	    memory.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	Since the General Purpose Registers (&gpr;s) are mapped to one of the
+	&spr; groups, this mechanism also allows &gpr;s to be read and
+	written.
+      </para>
+
+      <sect2>
+	<title>
+	  The OpenRISC 1000 Remote &jtag; Protocol
+	</title>
+
+	<para>
+	  To facilitate remote debugging by &gdb;, the OpenRISC defines a
+	  software protocol describing &jtag; accesses, suitable for conveying
+	  over a TCP/IP via a socket interface.
+	</para>
+
+	<note>
+	  <para>
+	    This protocol pre-dates the &gdb; Remote Serial Protocol (&rsp;). At
+	    some future date the OpenRISC 1000 Remote &jtag; Protocol will be
+	    replaced by the &rsp;.
+	  </para>
+	</note>
+
+	<para>
+	  The OpenRISC 1000 Remote &jtag; Protocol is a simple message
+	  send/acknowlege protocol. The &jtag; request is packaged as a 32 bit
+	  command, 32-bit length and series of 32-bit data words. The &jtag;
+	  response is packaged as a 32-bit status and optionally a number of
+	  32-bit data words. The commands available are:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <literal>OR1K_JTAG_COMMAND_READ</literal> (1). Read a single
+	      &jtag; register. A 32-bit address is provided in the request. The
+	      response includes 64-bits of read data.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>OR1K_JTAG_COMMAND_WRITE</literal> (2). Write a single
+	      &jtag; register. A 32-bit address is provided in the 
+	      request and 64-bit data to be written.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>OR1K_JTAG_COMMAND_READ_BLOCK</literal> (3). Read
+	      multiple 32-bit &jtag; registers. A 32-bit address of the first
+	      register and number of registers to be read is provided in the
+	      request. The response includes the number of registers read and
+	      32-bits of data for each one read.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>OR1K_JTAG_COMMAND_WRITE_BLOCK</literal> (4). Write
+	      multiple 32-bit &jtag; registers. A 32-bit address of the first
+	      register and number of registers to be written is provided in the
+	      request followed by 32-bits of data to be written for each
+	      register.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>OR1K_JTAG_COMMAND_CHAIN</literal> (5). Select the scan
+	      chain. A 32-bit scan chain number is provided in the request.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<note>
+	  <para>
+	    There is apparently a contradiction in this protocol. Provision is
+	    made for individual registers to be read/written as 64 bits,
+	    whereas block read/writes (provided for communication efficiency)
+	    are only 32-bits.
+	  </para>
+	</note>
+
+	<para>
+	  <xref linkend="fig_remote_jtag_protocol" />
+	  shows the structures of all five requests and their corresponding
+	  (successful) responses. Note that if a request fails, the response
+	  will only contain the status word.
+      </para>
+
+      <figure id="fig_remote_jtag_protocol">
+	<title>
+	  The OpenRISC 1000 Remote &jtag; Protocol data structures
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="remote_jtag.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="remote_jtag.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	The client side of this protol (issuing the requests) is implemented
+	by the &gdb; port for OpenRISC 1000.
+      </para>
+
+      <para>
+	Server side applications may implement this protocol to drive either
+	physical hardware (via its &jtag; port) or simulations, which include
+	the &jtag; functionality. Examples of the former include USB &jtag;
+	connectors. An example of the latter is the OpenRISC 1000
+	Architectural Simulator, Or1ksim (see <xref linkend="sec_or1ksim" />.
+      </para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Application Binary Interface (&abi;)
+      </title>
+
+      <para>
+	The ABI for the OpenRISC 1000 is described in Chapter 16 of the
+	Architecture Manual (<xref linkend="ref_or1k" />). However the actual
+	GCC compiler implementation differs very slightly from the documented
+	ABI. Since precise understanding of the ABI is critical to &gdb;, those
+	differences are documented here.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Register Usage: R12 is used as another callee-saved register. It
+	    is never used to return the upper 32 bits of a 64-bit result on a
+	    32-bit architecture. All values greater than 32-bits are returned
+	    by a pointer.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Although the specification requires stack frames to be
+	    <emphasis>double</emphasis> word aligned, the GCC implementation
+	    implements <emphasis>single</emphasis> word alignment.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Integral values more than 32 bits (64 bits on 64-bit
+	    architectures), structures and unions are returned as pointers to
+	    the location of the result. That location is provided the
+	    <emphasis>calling</emphasis> function, which passes it as a first
+	    argument in &gpr; 3. In other words, where a function returns a
+	    result of this type, the first true argument to the function will
+	    appear in R4 (or R5/R6 if it is a 64-bit argument on a 32-bit
+	    architecture).
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1 id="sec_or1ksim">
+      <title>
+	Or1ksim: the OpenRISC 1000 Architectural Simulator
+      </title>
+
+      <para>
+	Or1ksim is an instruction set simulator (&iss;) for the OpenRISC 1000
+	architecture. At present only the 32-bit architecture is modelled. In
+	addition to modeling the core processor, Or1ksim can model a number of
+	peripherals, to provide the functionality of a complete System-on-Chip
+	(&soc;).
+      </para>
+
+      <para>
+	Or1ksim models the OpenRISC 1000 &jtag; interface and implements the
+	OpenRISC 1000 Remote &jtag; protocol server side. It was used as the
+	testbed for the port of &gdb;
+      </para>
+
+      <note>
+	<para>
+	  Porting &gdb; uncovered a number of bugs in &or1ksim;. The
+	  implementation is now quite old, and predates the current OpenRISC
+	  1000 specification. A patch (available from <ulink
+	  url="http://www.embecosm.com/download.html" /> is available to fix
+	  these bugs.
+	</para>
+      </note>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Overview of &gdb; Internals
+    </title>
+
+    <para>
+      There are three major areas to GDB:
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  The user interface. How GDB communicates with the user
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  The <emphasis>symbol side</emphasis>. The analysis of object files,
+	  and the mapping of the information contained to the corresponding
+	  source files.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  the <emphasis>target side</emphasis>. Executing programs and
+	  analysing their data.
+	</para>
+      </listitem>
+    </orderedlist>
+
+    <para>
+      &gdb; has a very simple view of a processor. It has a block of memory
+      and a block of registers. Executing code contains its state in the
+      registers and in memory, statically allocated, dynamically allocated
+      from the heap or in stack frames. GDB maps that information to the
+      source level program being debugged.
+    </para>
+
+    <para>
+      Porting a new architecture to GDB means providing a way to read
+      executable files, a description of the &abi; a description of the
+      physical architecture and operations to access the target being
+      debugged.
+    </para>
+
+    <para>
+      Arguably the most common use of &gdb; is to debug the architecture on
+      which it is actually running. This is <emphasis>native</emphasis>
+      debugging where the architecture of the host and target are the same.
+    </para>
+
+    <para>
+      For the OpenRISC 1000 we will normally expect to run &gdb; on a host
+      separate to the target (typically a PC) connecting to the OpenRISC 1000
+      target via &jtag;, possibly using the OpenRISC 1000 Remote &jtag; Protocol.
+    </para>
+
+    <sect1>
+      <title>
+	Main Functional Areas
+      </title>
+
+      <sect2>
+	<title>
+	  Binary File Description (&bfd;)
+	</title>
+
+	<para>
+	  &bfd; is a package which allows applications to use the same routines
+	  to operate on object files whatever the object file format. A new
+	  object file format can be supported simply by creating a new &bfd;
+	  back end and adding it to the library.
+	</para>
+
+	<para>
+	  &bfd; backends already exist suitable for use with 32-bit OpenRISC
+	  1000 images in <acronym>ELF</acronym> or <acronym>COFF</acronym>
+	  format as used with either the RTEMS or Linux operating systems.
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_arch_description">
+	<title>
+	  Architecture Description
+	</title>
+
+	<para>
+	  Any architecture to be debugged by &gdb; is described in a
+	  &gdbarch;. When an object file is to be debugged, &gdb; will select
+	  the correct &gdbarch; using information about the object file
+	  captured in its &bfd;.
+	</para>
+
+	<para>
+	  The data in &gdbarch; facilitates both the <emphasis>symbol
+	  side</emphasis> processing in (for which it also uses the
+	  &bfd; information) and the <emphasis>target side</emphasis>
+	  processing (in combination with the frame and target operation
+	  information).
+	</para>
+
+	<para>
+	  &gdbarch; is a mixture of data values (number of bytes in a word for
+	  example) and functions to perform standard operations (e.g. to print
+	  the registers). The major functional groups are:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Details of the hardware architecture. For example the endianism
+	      and the number of bits in an address and in a word. Much of this
+	      data is captured in the &bfd;, to which there is a reference in
+	      the &gdbarch;. There is also a structure to capture additional
+	      target specific data, beyond that which is found in the &bfd;
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Details of how all the standard high level scalar data
+	      structures are represented (<literal>char</literal>,
+	      <literal>int</literal>, <literal>double</literal> etc).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Functions to access and display registers. &gdb; includes the
+	      concept of "pseudo-registers", those registers which do not
+	      physically exist, but which have a meaning within the
+	      architecture. For example in the OpenRISC 1000, floating point
+	      registers are actually the same as the General Purpose
+	      Registers. However a set of floating point pseudo-registers
+	      could be defined, to allow the GPRs to be displayed in floating
+	      point format.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Functions to access information on stack frames. This includes
+	      setting up "dummy" frames to allow &gdb; to evaluate functions
+	      (for example using the <command>call</command> command). One key
+	      function is to skip the prologue of a compiled function in the
+	      target&mdash;the initial code in a function which sets up the
+	      stack frame before the main code executes.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  An architecture will need to specify most of the contents of
+	  &gdbarch;, for which a set of functions (all starting
+	  <literal>set_gdbarch_</literal>) are provided. Defaults are provided
+	  for all entries, and in a small number of cases these will be
+	  suitable.
+	</para>
+
+	<para>
+	  The &gdbarch; is note quite sufficient to describe how to analyse an
+	  executing program (the <emphasis>target side</emphasis>
+	  functionality). In addition a set of functions are required which
+	  understand stack frames for the target architecture, allowing GDB to
+	  <emphasis>unwind</emphasis> them to discover the data for functions
+	  which called the one currently executing.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Target Operations
+	</title>
+
+	<para>
+	  A set of operations is required to access a program using the target
+	  architecture described by &gdbarch; in order to implement the
+	  <emphasis>target side</emphasis> functionality. For any given
+	  architecture there may be multiple ways of connecting to the target,
+	  specified using the &gdb; <command>target</command> command. For
+	  example with the OpenRISC 1000 architecture, the connection may be
+	  directly to a &jtag; interface connected through the host computer's
+	  parallel port, or through a the OpenRISC 1000 Remote &jtag; protocol
+	  over TCP/IP.
+	</para>
+
+	<para>
+	  These target operations are described in a &target_ops;. As with
+	  &gdbarch; this comprises a mixture of data and functions to be
+	  called. The major functional groups are:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Functions to establish and close down a connection to the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Functions to access registers and memory on the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Functions to insert and remote breakpoints and watchpoings on
+	      the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Functions to start and stop programs running on the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      A set of data describing the features of the target, and hence
+	      what operations can be applied. For example when examining a
+	      core dump, the data can be inspected, but the program cannot be
+	      executed.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  As with &gdbarch;, defaults are provided for the &target_ops;
+	  values. In many cases these are sufficient, so need not be
+	  provided.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="sec_data_structures">
+      <title>
+	Key Data Structures
+      </title>
+
+      <para>
+	A new architecture for GDB is created by defining a global function
+	<literal>_initialize_</literal><emphasis>architecture</emphasis><literal>_tdep</literal>. In
+	the case of the OpenRISC 1000, this function is called
+	<function>_initialize_or1k_tdep</function> and is found in the file
+	<filename>or1k-tdep.c</filename>.
+      </para>
+
+      <para>
+	The source file(s) with the definition of the
+	<literal>_initialize_</literal> function are specified in the
+	&gdb; <filename>configure.tgt</filename> file, which includes a large
+	case statement pattern matching against the
+	<option>--target</option> option of the <command>configure</command>
+	command.
+      </para>
+
+      <para>
+	The new &gdbarch; is created within the
+	<function>_initialize_</function> function by calling
+	<function>gdbarch_register</function>:
+      </para>
+
+      <programlisting>void gdbarch_register (enum bfd_architecture    architecture,
+                       gdbarch_init_ftype      *init_func,
+                       gdbarch_dump_tdep_ftype *tdep_dump_func);</programlisting>
+
+      <para>
+	The <literal>architecture</literal> enumeration will identify the
+	unique &bfd; for this architecture (see <xref linkend="sec_bfd"
+	/>). The <function>init_func</function> is called to create and return
+	the new &gdbarch; (see <xref linkend="sec_gdbarch" />). The
+	<function>tdep_dump_func</function> is a function which will dump the
+	target specific details associated with this architecture (also
+	described in <xref linkend="sec_gdbarch" />).
+      </para>
+
+      <sect2 id="sec_bfd">
+	<title>
+	  Binary File Descriptor
+	</title>
+
+	<para>
+	  The &bfd; library backend creates a number of data structures
+	  describing the data held in a particular type of object
+	  file. Ultimately a unique enumerated constant (of type
+	  <type>enum&nbsp;bfd_architecture</type>) is defined for each
+	  individual architecture. This constant is then used to access the
+	  various data structures associated with the &bfd; of the particular
+	  architecture.
+	</para>
+	<para>
+	  In the case of the OpenRISC 1000, 32-bit implementation (which may
+	  be a <acronym>COFF</acronym> or <acronym>ELF</acronym> binary), the
+	  enumerated constant is <literal>bfd_arch_or32</literal>.
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_gdbarch">
+	<title>
+	  &gdb; Architecture Specification
+	</title>
+
+	<para>
+	  The call to <function>gdbarch_register</function> (see <xref
+	  linkend="sec_data_structures" />) specifies a function which will
+	  define a &gdbarch; for a particular &bfd; architecture.
+	</para>
+
+	<programlisting>struct gdbarch  gdbarch_init_func (struct gdbarch_info  info,
+                                   struct gdbarch_list *arches);</programlisting>
+	<para>
+	  In the case of the OpenRISC 1000 architecture, the initialization
+	  function is <function>or1k_gdbarch_init</function>.
+	</para>
+
+	<tip>
+	  <para>
+	    By convention all target specific functions and global variables
+	    in &gdb; begin with a string unique to that architecture. This
+	    helps to avoid namespace polution when using C. Thus all the MIPS
+	    specific functions begin <literal>mips_</literal>, the ARM specific
+	    functions begin <literal>arm_</literal> etc.
+	  </para>
+
+	  <para>
+	    For the OpenRISC 1000 all target specific functions and global
+	    variables begin with <literal>or1k_</literal>.
+	  </para>
+	</tip>
+
+	<para>
+	  The first argument to the architecture initialization function is a
+	  &gdbarch_info; containing all the known information about this
+	  architecture (deduced from the &bfd; enumeration provided to
+	  <function>gdbarch_register</function>). The second argument is a list
+	  of the currently defined architectures within &gdb;.
+	</para>
+
+	<para>
+	  The &gdbarch_info; has the following components:
+	</para>
+
+	<programlisting>struct gdbarch_info
+{
+  const struct bfd_arch_info *bfd_arch_info;
+  int                         byte_order;
+  bfd                        *abfd;
+  struct gdbarch_tdep_info   *tdep_info;
+  enum gdb_osabi              osabi;
+  const struct target_desc   *target_desc;
+};</programlisting>
+
+	<para>
+	  <literal>bfd_arch_info</literal> holds the key details about the
+	  architecture. <literal>byte_order</literal> is an enumeration
+	  indicating the endianism. <literal>abfd</literal> is a pointer to
+	  the full &bfd;, <literal>tdep_info</literal> is additional target
+	  specific information, <literal>gdb_osabi</literal> is an enumeration
+	  identifying which (if any) of a number of operating specific ABIs
+	  are used by this architecture and <literal>target_desc</literal> is
+	  a set of name-value pairs with information about register usage in
+	  this target.
+	</para>
+
+	<para>
+	  When the &gdbarch; initialization function is called, not all the
+	  fields are provided&mdash;only those which can be deduced from the
+	  &bfd;. The &gdbarch_info; is used as a look-up key with the list of
+	  existing architectures (the second argument to the initialization
+	  function) to see if a suitable architecture already exists. The
+	  <literal>tdep_info</literal> <literal>osabi</literal> and
+	  <literal>target_desc</literal> fields may be added before this
+	  lookup to refine the search.
+	</para>
+
+	<para>
+	  The lookup is done using
+	  <function>gdbarch_lookup_by_arches</function>. It is passed the list
+	  of existing architectures and the &gdbarch_info; (possily updated)
+	  and returns the first matching architecture it finds, or
+	  &null; if none are found. If an architecture is found, the
+	  initialization function can finish, returning the found architecture
+	  as result.
+	</para>
+
+	<para>
+	  If no architecture is found, then a new architecture is created, by
+	  calling <function>gdbarch_alloc</function> using the supplied
+	  &gdbarch_info; and and any additional target specific information in
+	  a &gdbarch_tdep;.
+	</para>
+
+	<programlisting>struct gdbarch *gdbarch_alloc (const struct gdbarch_info *info,
+                               struct gdbarch_tdep       *tdep);</programlisting>
+
+	<para>
+	  &gdbarch_tdep; is not part of standard &gdb;&mdash;it is up to the
+	  user to define this struct if it is needed. If there is no
+	  additional target specific information, it can be set to NULL.
+	</para>
+
+	<para>
+	  The newly created &gdbarch; must then be populated. Although there
+	  are default values, in most cases they are not what is required. For
+	  each element, <emphasis>X</emphasis>, there is a corresponding
+	  accessor function to set the value of that element,
+	  <function>set_gdbarch_</function><emphasis>X</emphasis>. The most
+	  important elements that can/should be set in this way are:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <literal>bits_big_endian</literal>. 1 (true) if the bits within
+	      a byte are big-endian.
+	    </para>
+
+	    <note>
+	      <para>
+		This not the same as the endianism of the target (the order of
+		bytes within a word). This element is about the ordering of
+		bits within bytes.
+	      </para>
+	    </note>
+
+	    <para>
+	      The default value is 1 (true) if the target endianism (the order
+	      of bytes within a word) is big-endian. That information is
+	      specified in the &bfd;. In general the default value is what is
+	      wanted.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>short_bit</literal>. Number of bits in a C/C++
+	      <type>short</type> variable. Default is
+	      <literal>2*TARGET_CHAR_BIT</literal>.
+	      <literal>TARGET_CHAR_BIT</literal> is a defined constant, which
+	      if not set explicitly defaults to 8.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>int_bit</literal>, <literal>long_bit</literal>,
+	      <literal>long_long_bit</literal>, <literal>float_bit</literal>,
+	      <literal>double_bit</literal>,
+	      <literal>long_double_bit</literal>. These are analagous to
+	      <literal>short</literal> and are the number of bits in a C/C++
+	      variable of the corresponding time. Defaults are
+	      <literal>4*TARGET_CHAR_BIT</literal> for <type>int</type>,
+	      <type>long</type> and <type>float</type> and
+	      <literal>4*TARGET_CHAR_BIT</literal> for <type>long long</type>,
+	      <type>double</type> and <type>long double</type>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>ptr_bit</literal>. Number of bits in a C/C++
+	      pointer. Default is <literal>4*TARGET_CHAR_BIT</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>char_signed</literal>. 1 if <type>char</type> to be
+	      treated as signed, 0 if <type>char</type> is to be treated as
+	      unsigned. The default is -1 (undefined), so this should always
+	      be set.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>read_pc</function>. A function to read the program
+	      counter. The default value is &null; (no function
+	      available). However, if the program counter is just an ordinary
+	      register, it can be specified in &gdbarch; instead (see
+	      <literal>pc_regnum</literal> below) and it will be read using
+	      the standard routines to read regsters. Thus this function need
+	      only be specified <emphasis>if</emphasis> the program counter is
+	      not an ordinary register. See <xref linkend="sec_regcache" />
+	      for more discussion of how registers are handled in &gdb;
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>write_pc</function>. A function to write the program
+	      counter. The default value is &null; (no function available). As
+	      with <function>read_pc</function>, this function need only be
+	      specified <emphasis>if</emphasis> the program counter is not an
+	      ordinary register.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>virtual_frame_pointer</function>. A function to return
+	      the "virtual" frame pointer. This is a register and offset which
+	      together define the  location of the start of the frame. The
+	      default is the function
+	      <function>legacy_virtual_frame_pointer</function> which returns
+	      either the value <function>from deprecated_fp_regnum</function>
+	      (which hopefully has <emphasis>not</emphasis> been used) or the
+	      stack pointer. If the frame pointer is not the same as the stack
+	      pointer, this function should be defined.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>pseudo_register_read</function> and
+	      <function>pseudo_register_write</function>. These functions
+	      should be defined if there are any pseudo-registers (see <xref
+	      linkend="sec_arch_description" /> and <xref
+	      linkend="sec_regcache" /> for more information on
+	      pseudo-registers). The default value is &null;.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>num_regs</literal> and
+	      <literal>num_pseudo_regs</literal>. These define the number of
+	      real and pseudo-registers. They default to -1 (undefined) and
+	      should always be explicitly defined.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>sp_regnum</literal>, <literal>pc_regnum</literal>,
+	      <literal>ps_regnum</literal> and
+	      <literal>fp0_regnum</literal>. These specify the register
+	      holding the stack pointer, program counter, processor status and
+	      first floating point register. All except the first
+	      floating-point register (which defaults to 0) default to -1 (not
+	      defined). They may be real or
+	      pseudo-registers. <literal>sp_regnum</literal> must always be
+	      defined. If <literal>pc_regnum</literal> is not defined, then
+	      the functions <function>read_pc</function> and
+	      <function>write_pc</function> (see above) must be defined. If
+	      <literal>ps_regnum</literal> is not defined, then the
+	      <literal>$ps</literal> variable will not be available to the GDB
+	      user. <literal>fp0_regnum</literal> is not needed unless the
+	      target offers support for floating point.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>register_name</function>. This function should convert
+	      a register number to a register name (as a char *). This is used
+	      both to determine the name of a register for output and to work
+	      out what the meaning of any register names used as input. For
+	      example with the OpenRISC 1000, &gdb; registers 0-31 are the
+	      GPRs, register 32 is the program counter and register 33 is the
+	      supervision register, which map to the strings "gpr0" through
+	      "gpr31", "pc" and "sr" respectively. This means that if I use
+	      the &gdb; command <command>print $gpr5</command> I should get
+	      the value of the OR1K general purpose register 5. The default
+	      value for this function is &null;. It should always be defined.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>register_type</function>. Given a register number,
+	      this function identifies the type of data it may be holding,
+	      specified as a <structname>struct&nbsp;type</structname>. &gdb;
+	      allows creation of arbitrary types, but a number of builtin
+	      types are provided (<literal>builtin_type_void</literal>,
+	      <literal>builtin_type_int32</literal> etc), together with
+	      functions to derive types from these. Typically the program
+	      counter will have a type of "pointer to function" (it points to
+	      code), the frame pointer and stack pointer will have types of
+	      "pointer to void" (they point to data on the stack) and all
+	      other integer registers will have a type of 32-bit integer or
+	      64-bit integer. This information is used to help when displaying
+	      out register information. The default value is &null; meaning no
+	      information is availble to help when displaying registers.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>push_dummy_call</function>. &gdb; allows you to
+	      execute parts of the program being debugger, either directly via
+	      the <command>call</command> command or indirectly when function
+	      calls form arguments to commands such as
+	      <command>print</command>. &gdb; needs to make it look as though
+	      these functions have been called from the existing point in the
+	      code, with their own stack frame. This means if the function
+	      hits a breakpoint, a stack backtrace will work correctly.
+	    </para>
+
+	    <para>
+	      To make this work, &gdb; needs to set up a "dummy" stack frame
+	      for the function about to be
+	      called. <function>push_dummy_call</function> is given the
+	      arguments to be passed and must copy them into registers or push
+	      them on to the stack as appropriate for the &abi;. &gdb; will
+	      then pass control to the target at the address of the function,
+	      and it will find the stack and registers set up just as
+	      expected.
+	    </para>
+
+	    <para>
+	      The default value of this function is &null; (undefined). If the
+	      function is not defined, then &gdb; will not allow the user to
+	      call functions within the target being debugged.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>unwind_dummy_id</function>. This is the inverse of
+	      <function>push_dummy_call</function> which restores the stack
+	      and frame pointers afer a call to evaluate a function using a
+	      dummy stack frame. The default value is &null; (undefined). If
+	      <function>push_dummy_call</function> is defined, then this
+	      function should also be defined.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>push_dummy_code</function>. If this function is not
+	      defined (its default value is &null;), a dummy call will use the
+	      entry point of the target as its return address. A temporary
+	      breakpoint will be set there, so the location must be writeable
+	      and have room for a breakpoint.
+	    </para>
+
+	    <para>
+	      It is possible that this default is not suitable. It might be
+	      unwriteable (in ROM possibly), or the &abi; might require
+	      code to be executed on return from a call to unwind the stack
+	      before the breakpoint is encountered.
+	    </para>
+
+	    <para>
+	      If either of these is the case, then
+	      <function>push_dummy_code</function> should be defined to push
+	      an instruction sequence onto the end of the stack to which the
+	      dummy call should return.
+	    </para>
+
+	    <note>
+	      <para>
+		This does require that code in the stack can be executed. Some
+		Harvard architectures may not allow this.
+	      </para>
+	    </note>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>print_registers_info</function>. Define this function
+	      to print out one or all of the registers for the &gdb;
+	      <command>info&nbsp;registers</command> command. The default
+	      value is the function
+	      <function>default_print_registers_info</function> which uses the
+	      type information (see <function>register_type</function> above)
+	      to determine how each register should be printed. Define this
+	      function for fuller controller over how the registers are
+	      displayed.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>print_float_info</function> and
+	      <function>print_vector_info</function>. Define this function to
+	      provide output for the &gdb; <command>info&nbsp;float</command>
+	      and <command>info&nbsp;vector</command> commands
+	      respectively. The default value is &null; (not defined), meaning
+	      no information will be provided. Define each function if the
+	      target supports floating point or vector operations
+	      respectively.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>return_value</function>. Determines the return
+	      convention for a particular type. For example on the OpenRISC
+	      1000, structs/unions and large (>32 bit) scalars are returned as
+	      references, while small scalars are returned in GPR11.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>skip_prologue</function>. The prologue of a function is
+	      the code at the beginning of the function which sets up the
+	      stack frame, saves the return address etc. The code representing
+	      the behavior of the function starts after the prologue.
+	    </para>
+
+	    <para>
+	      This function skips past the prologue of a function if the program
+	      counter is within the prologue of a function. With modern
+	      optimizing compilers, this may be a far from trivial
+	      exercise. However the required information may be within the
+	      binary as DWARF2 debugging information, making the job much
+	      easier.
+	    </para>
+
+	    <para>
+	      The default value is &null; (not defined). This function should
+	      always may be provided, but can take advantage of DWARF2
+	      debugging information if that is available.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>inner_than</function>. Given two frame or stack
+	      pointers, return 1 (true) if the first represents the "inner"
+	      stack frame and 0 (false) otherwise. This is used to determine
+	      whether the target has a rising or a falling stack frame. See
+	      <xref linkend="sec_frames" /> for an explanation of "inner"
+	      frames.
+	    </para>
+
+	    <para>
+	      The default value of this function is &null; and it should
+	      always be defined. However for almost all architectures one of
+	      the built-in functions <function>core_addr_lessthan</function>
+	      (for falling stacks) or
+	      <function>core_addr_greaterthan</function> (for rising stacks)
+	      can be used.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>breakpoint_from_pc</function>. Returns the breakpoint
+	      instruction to be used when the PC is at a particular location
+	      in memory. For architectures with variable length instructions,
+	      the choice of breakpoint instruction may depend on the length of
+	      the instruction at the program counter. Returns the instruction
+	      sequence and its length.
+	    </para>
+
+	    <para>
+	      The default value is &null; (undefined). This function should
+	      always be defined if &gdb; is to support breakpointing for this
+	      architecture.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>adjust_breakpoint_address</function>. Some
+	      architectures do not allow breakpoints to be placed at all
+	      points. Given a program counter, this function returns an
+	      address where a breakpoint <emphasis>can</emphasis> be
+	      placed. Default value is &null; (undefined). The function need
+	      only be defined for architectures which cannot accept a
+	      breakpoint at all program counter locations.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>memory_insert_breakpoint</function> and
+	      <function>memory_remove_breakpoint</function>. Insert or remove
+	      memory based (a.k.a. soft) breakpoints. The default values
+	      <function>default_memory_insert_breakpoint</function> and
+	      <function>default_memory_remove_breakpoint</function> are
+	      suitable for most architectures, so in most cases these
+	      functions need note be defined.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>decr_pc_after_break</function>. Some architectures
+	      require the program counter to be decremented after a break, to
+	      allow the broken instruction to be executed on resumption. This
+	      function returns the number of bytes by which to decrement the
+	      address. The default value is &null; (undefined) which means the
+	      program counter is left unchanged. This function need only be
+	      defined if the functionality is required.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>unwind_pc</function> and
+	      <function>unwind_sp</function>. These functions are given a
+	      stack frame (see <xref linkend="sec_frames" /> for how frames
+	      are represented) and return the value of the program counter and
+	      stack pointer respectively in the previous frame (i.e. the frame
+	      of the function that called this one).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>frame_num_args</function>. Given a stack frame (see
+	      <xref linkend="sec_frames" /> for how frames are represented),
+	      return the number of arguments that are being passed, or -1 if
+	      not known. The default value is -1 (undefined), in which case
+	      the number of arguments passed on any stack frame is always
+	      unknown. For many architectures this will be a suitable default.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>frame_align</function>. The architecture may have
+	      constraints on how its frames are aligned. Given a proposed
+	      address for the stack pointer, 
+	      this function returns a suitably aligned address (by expanding
+	      the stack frame). The default value is &null; (undefined). This
+	      function should be defined for any architecture where it is
+	      possible the stack could become misaligned. The utility functions
+	      <function>align_down</function> (for falling stacks) and
+	      <function>align_up</function> (for rising stacks) will
+	      facilitate the implementation of this function.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>frame_red_zone_size</literal>. Some &abi;s reserve
+	      space beyond the end of the stack for use by leaf funtions
+	      without prologue or epilogue or by exception handlers (OpenRISC
+	      1000 is in this category). This is known as a <emphasis>red
+	      zone</emphasis> (<acronym>AMD</acronym> terminology). Default
+	      value is 0. Set this field if the architecture has such a red
+	      zone.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>single_step_through_delay</function>. Returns 1 if the
+	      target is executing a delay slot and a further single step is
+	      needed before the instruction finishes. The default value is
+	      &null; (not defined). This function should be implemented if the
+	      target has delay slots.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>construct_inferior_arguments</function>. Used to
+	      construct the argument string to be passed to the target when
+	      execution is started. Should call <function>error</function> if
+	      arguments are not permitted. The default value is the function
+	      <function>construct_inferior_arguments</function> which provides
+	      an argument string suitable for a Unix shell. This function need
+	      only be implemented if the target requires a non-Unix style
+	      argument string, or does not support command line arguments at
+	      all.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>print_insn</literal>. Disassemble an instruction and
+	      print it. Default value is &null; (undefined). This function
+	      should be defined if disassembly of code is to be supported.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>name_of_malloc</literal>. A string representing the
+	      name of the <function>malloc</function> function on the
+	      target. This may be needed if a function is evaluated with
+	      constructed data on the target. For example using the &gdb;
+	      <command>call</command> command on a function with a string
+	      argument, viz <command>call printf( "Hello World!\n"
+	      )</command>. The default value is <literal>"malloc"</literal>
+	      and need only be changed if the target does not support
+	      <function>malloc</function> (when it should be set to "").
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>register_reggroup</function>. &gdb; groups registers
+	      into different categories (general, vector, floating point
+	      etc). This function given a register and group returns 1 (true)
+	      if the register is in the group and 0 otherwise. The default
+	      value is the function
+	      <function>default_register_reggroup_p</function> which will do a
+	      reasonable job based on the type of the register (see the
+	      function <function>register_type</function> above) and groups
+	      for general purpose registers, floating point registers, vector
+	      registers and real (i.e not pseudo) registers.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  This is not the complete list, but represents the functions and
+	  elements that must commonly be specified for a new
+	  architecture. Many of the functions are described in the header
+	  file, <filename>gdbarch.h</filename> and many may be found in the
+	  &gdb; internals manual <xref linkend="ref_gdb_int" />.
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_frames">
+	<title>
+	  Frames and Prologue Caches
+	</title>
+
+	<para>
+	  &gdb; needs to understand the stack on which local (automatic)
+	  variables are stored. The area of the stack containing all the local
+	  variables for a function invocation is known as the <emphasis>stack
+	  frame</emphasis> for that function. In turn the function that called
+	  the function will have its stack frame, and so on back through the
+	  chain of functions that have been called.
+	</para>
+
+	<para>
+	  Almost all architectures have one register dedicated to point to the
+	  end of the stack (the <emphasis>stack pointer</emphasis>). Many have
+	  a second register which points to the start of the currently active
+	  stack frame (the <emphasis>frame pointer</emphasis>). The specific
+	  arrangements for an architecture are a key part of the &abi;.
+	</para>
+
+	<para>
+	  A diagram helps to explain this. Here is a simple program to compute
+	  factorials:
+	</para>
+
+	<programlisting> 1:   #include &lt;stdio.h&gt;
+ 2:   
+ 3:   int fact( int  n )
+ 4:   {
+ 5:     if( 0 == n ) {
+ 6:       return 1;
+ 7:     }
+ 8:     else {
+ 9:       return n * fact( n - 1 );
+10:     }
+11:   }
+12:   
+13:   main()
+14:   {
+15:     int  i;
+16:   
+17:     for( i = 0 ; i &lt; 10 ; i++ ) {
+18:       int   f = fact( i );
+19:       printf( "%d! = %d\n", i, f );
+20:     }
+21:   }</programlisting>
+
+        <para>
+	  Consider the state of the stack when the code reaches line 6 after
+	  the main program has called <literal>fact&nbsp;(3)</literal>. The
+	  chain of function calls will be <literal>main</literal>,
+	  <literal>fact&nbsp;(3)</literal>, <literal>fact&nbsp;(2)</literal>,
+	  <literal>fact&nbsp;(1)</literal> and
+	  <literal>fact&nbsp;(0)</literal>. In this example the stack is
+	  falling (as used by the OpenRISC 1000 &abi;). The stack pointer
+	  (<acronym>SP</acronym>) is at the end of the stack (lowest address)
+	  and the frame pointer (<acronym>FP</acronym>) is at the highest
+	  address in the current stack frame. <xref linkend="fig_stack_frame"
+	  /> shows how the stack looks.
+	</para>
+
+	<figure id="fig_stack_frame">
+	  <title>
+	    An example stack frame
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="stack_frame.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="stack_frame.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  In each stack frame offset 0 from the stack pointer is the frame
+	  pointer of the <emphasis>previous frame</emphasis> and offset 4
+	  (this is illustrating a 32-bit architecture) from the stack pointer
+	  is the return address. Local variables are indexed from the frame
+	  pointer, with negative indices. In the function
+	  <function>fact</function>, offset -4 from the frame pointer is the
+	  argument <literal>n</literal>. In the <literal>main</literal>
+	  function, offset -4 from the frame pointer is the local variable
+	  <literal>i</literal> and offset -8 from the frame pointer is the
+	  local variable <literal>f</literal>.
+	</para>
+
+	<note>
+	  <para>
+	    This is a simplified example for illustrative purposes only. Good
+	    optimizing compilers would not put anything on the stack for such
+	    simple functions. Indeed they might eliminate the recursion and
+	    use of the stack entirely!
+	  </para>
+	</note>
+
+	<para>
+	  It is very easy to get confused when examing stacks. &gdb; has
+	  terminology it uses rigorously throughout. The stack frame of the
+	  function currently executing, or where execution stopped is numbered
+	  zero. In this example frame #0 is the stack frame of the call to
+	  <literal>fact&nbsp;(0)</literal>. The stack frame of its calling
+	  function (<literal>fact(1)</literal> in this case) is numbered #1 and
+	  so on back through the chain of calls.
+	</para>
+
+	<para>
+	  The main &gdb; data structure describing frames is &frame_info;. It
+	  is not used directly, but only via its accessor
+	  functions. &frame_info; includes information about the registers in
+	  the frame and a pointer to the code of the function with which the
+	  frame is associated. The entire stack is represented as a linked
+	  list of &frame_info;.
+	</para>
+
+	<para>
+	  It is easy to get confused when referencing stack frames. &gdb; uses
+	  some precise terminology.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      &this; frame is the frame currently under consideration.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The &next; frame, also sometimes called the
+	      <emphasis>inner</emphasis> or <emphasis>newer</emphasis> frame
+	      is the frame of the function called by the function of &this;
+	      frame.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The &prev; frame, also sometimes called the
+	      <emphasis>outer</emphasis> or <emphasis>older</emphasis> frame
+	      is the frame of the function which called the function of &this;
+	      frame.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  So in the example of <xref linkend="fig_stack_frame" />, if
+	  &this;frame is frame #3 (the call to
+	  <literal>fact&nbsp;(3)</literal>), the &next; frame is frame #2 (the
+	  call to <literal>fact&nbsp;(2)</literal>) and the &prev; frame is
+	  frame #4 (the call to <literal>main&nbsp;()</literal>).
+	</para>
+
+	<para>
+	  The <emphasis>innermost</emphasis> frame is the frame of the current
+	  executing function, or where the program stopped, in this example,
+	  in the middle of the call to <literal>fact&nbsp;(0)</literal>). It
+	  is always numbered frame #0.
+	</para>
+
+	<para>
+	  The <emphasis>base</emphasis> of a frame is the address immediately
+	  before the start of the &next; frame. For a falling stack this will
+	  be the lowest address and for a rising stack this will be the
+	  highest address in the frame.
+	</para>
+
+	<para>
+	  &gdb; functions to analyse the stack are typically given a pointer
+	  to the &next; frame to determine information about &this;
+	  frame. Information about &this; frame includes data on where the
+	  registers of the &prev; frame are stored in this stack frame. In
+	  this example the frame pointer of the &prev; frame is stored at
+	  offset 0 from the stack pointer of &this; frame.
+	</para>
+
+	<para>
+	  The process whereby a function is given a pointer to the &next;
+	  frame to work out information about &this; frame is referred to as
+	  <emphasis>unwinding</emphasis>. The &gdb; functions involved in this
+	  typically include <literal>unwind</literal> in their name.
+	</para>
+
+	<para>
+	  The process of analysing a target to determine the information that
+	  should go in &frame_info; is called
+	  <emphasis>sniffing</emphasis>. The functions that carry this out are
+	  called <emphasis>sniffers</emphasis> and typically include
+	  <literal>sniffer</literal> in their name. More than one sniffer may
+	  be required to extract all the information for a particular frame.
+	</para>
+
+	<para>
+	  Because so many functions work using the &next; frame, there is an
+	  issue about addressing the <emphasis>innermost</emphasis>
+	  frame&mdash;it has no &next; frame. To solve this &gdb; creates a
+	  dummy frame #-1, known as the <emphasis>sentinel</emphasis> frame.
+	</para>
+
+	<sect3>
+	  <title>
+	    Analysing Stacks
+	  </title>
+
+	  <para>
+	    When a program stops, &gdb; needs to construct the chain of
+	    &frame_info; representing the state of the stack using appropriate
+	    <emphasis>sniffers</emphasis>.
+	  </para>
+
+	  <para>
+	    Each architecture requires appropriate sniffers, but they do not
+	    form part of &gdbarch;, since more than one sniffer may be
+	    required. Instead they are associated with the architecture using
+	    the following functions.
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>frame_unwind_append_sniffer</function> is used to
+		add a new sniffer to analyse &this; frame when given a pointer
+		to the &next; frame.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>frame_base_append_sniffer</function> is used to add
+		a new sniffer which can determine information about the base
+		of a stack frame.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>frame_base_set_default</function> is used to specify
+		the default base sniffer.
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+
+	  <para>
+	    These functions all take a reference to &gdbarch;, so they are
+	    associated with a specific architecture. They are usually called
+	    in the &gdbarch; initialization function, after the &gdbarch; has
+	    been set up. Unless a default has been set, the sniffers will be
+	    tried most recently appended first.
+	  </para>
+
+	  <para>
+	    The main frame unwinding sniffer (as set by
+	    <function>frame_unwind_append_sniffer</function>) returns a
+	    structure specifying a set of sniffing functions:
+	  </para>
+
+	  <programlisting>struct frame_unwind
+{
+  enum frame_type            type;
+  frame_this_id_ftype       *this_id;
+  frame_prev_register_ftype *prev_register;
+  const struct frame_data   *unwind_data;
+  frame_sniffer_ftype       *sniffer;
+  frame_prev_pc_ftype       *prev_pc;
+  frame_dealloc_cache_ftype *dealloc_cache;
+};</programlisting>
+
+	  <para>
+	    The <literal>type</literal> field indicates the type of frame this
+	    sniffer can handle: normal, dummy (see
+	    <function>push_dummy_call</function> in <xref
+	    linkend="sec_gdbarch" />), signal handler or sentinel. Signal
+	    handlers sometimes have their own simplified stack structure for
+	    efficiency, so may need their own handlers.
+	  </para>
+
+	  <para>
+	    <literal>unwind_data</literal> holds additional information which
+	    may be relevant to particular types of frame. For example it may
+	    hold additional information for signal handler frames.
+	  </para>
+
+	  <para>
+	    The remaining fields define functions that yield different types
+	    of information when given a pointer to the &next; stack frame. Not
+	    all functions need be provided. If an entry is &null;, the next
+	    sniffer will be tried instead.
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>this_id</function> determines the stack pointer and
+		function (code entry point) for &this; stack frame.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>prev_register</function> determines where the values
+		of registers for the &prev; stack frame are stored in &this;
+		stack frame.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>sniffer</function> takes a look at &this; frame's
+		registers to determine if this is the appropriate unwinder.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>prev_pc</function> determines the program counter
+		for &this; frame. Only needed if the program counter is not an
+		ordinary register (see <function>prev_pc</function> in <xref
+		linkend="sec_gdbarch" />).
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>dealloc_cache</function> frees any additional memory
+		associated with the prologue cache for this frame (see <xref
+		linkend="sec_prologue_cache" />).
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+
+	  <para>
+	    In general it is only the <function>this_id</function> and
+	    <function>prev_register</function> functions that need be defined
+	    for most custom sniffers.
+	  </para>
+
+	  <para>
+	    The frame base sniffer is much simpler. It is a
+	    <literal>struct&nbsp;frame_base</literal>, which refers to the
+	    corresponding <literal>struct&nbsp;frame_unwind</literal> and
+	    provides functions yielding various addresses within the frame.
+	  </para>
+
+	  <programlisting>struct frame_base
+{
+  const struct frame_unwind *unwind;
+  frame_this_base_ftype     *this_base;
+  frame_this_locals_ftype   *this_locals;
+  frame_this_args_ftype     *this_args;
+};</programlisting>
+
+	  <para>
+	    All these functions take a pointer to the &next; frame as
+	    argument. <function>this_base</function> returns the base address
+	    of &this; frame, <function>this_locals</function> returns the base
+	    address of local variables in &this; frame and
+	    <function>this_args</function> returns the base address of the
+	    function arguments in this frame.
+	  </para>
+
+	  <para>
+	    As described above the <emphasis>base</emphasis> address of a
+	    frame is the address immediately before the start of the &next;
+	    frame. For a falling stack, this is the lowest address in the
+	    frame and for a falling stack it is the highest address in the
+	    frame. For most architectures the same address is also the base
+	    address for local variables and arguments, in which case the same
+	    function can be used for all three entries.
+	  </para>
+
+	  <para>
+	    It is worth noting that if it cannot be determined in any other
+	    way (for example by the <function>virtual_frame_pointer</function>
+	    in the &gdbarch;), then the result of the
+	    <function>this_base</function> function will be used as the value
+	    of the frame pointer variable <literal>$fp</literal> in &gdb;
+	  </para>
+	</sect3>
+
+	<sect3 id="sec_prologue_cache">
+	  <title>
+	    Prologue Caches
+	  </title>
+
+	  <para>
+	    All the frame sniffing functions typically examine the code at the
+	    start of the corresponding function, to determine the state of
+	    registers. The &abi; will save old values and set new values of
+	    key registers at the start of each function in what is known as
+	    the function <emphasis>prologue</emphasis>.
+	  </para>
+
+	  <para>
+	    For any particular stack frame this data does not change, so all
+	    the standard unwinding functions, in addition to receiving a
+	    pointer to the &next; frame as their first argument, receive a
+	    pointer to a <emphasis>prologue cache</emphasis> as their second
+	    argument. This can be used to store values associated with a
+	    particular frame, for reuse on subsequent calls involving the same
+	    frame.
+	  </para>
+
+	  <para>
+	    It is up to the user to define the structure used (it is a
+	    <type>void&nbsp;*</type> pointer) and arrange allocation and
+	    deallocation of storate. However for general use, &gdb;
+	    provides <literal>struct&nbsp;trad_frame_cache</literal>, with a
+	    set of accessor routines. This structure holds the stack and code
+	    address of &this; frame, the base address of the frame, a pointer
+	    to the &frame_info; for the &next; frame and details of where the
+	    registers of the &prev; frame may be found in &this; frame.
+	  </para>
+
+	  <para>
+	    Typically the first time any sniffer function is called with
+	    &next; frame, the prologue sniffer for &this; frame will be
+	    &null;. The sniffer will analyse the frame, allocate a prologue
+	    cache structure and populate it. Subsequent calls using the same
+	    &next; frame will pass in this prologue cache, so the data can be
+	    returned with no additional analysis.
+	  </para>
+
+	</sect3>
+	
+      </sect2>
+
+      <sect2 id="sec_regcache">
+	<title>
+	  Register Caches
+	</title>
+
+	<para>
+	  For frames, a cacheing strategy was used, so that the target did not
+	  need to be accessed and reanalysed multiple times for the same
+	  frame. Similarly a cacheing strategy is used to hold the values of
+	  registers.
+	</para>
+
+	<para>
+	  &gdb; considers registers to be a set with members numbered linearly
+	  from 0 upwards. The first part of that set corresponds to real
+	  physical registers, the second part to any
+	  "pseudo-registers". Pseudo-registers have no independent physical
+	  existence, but are useful representations of information within the
+	  architecture. For example the OpenRISC 1000 architecture has up to
+	  32 general purpose registers, which are typically represented as
+	  32-bit (or 64-bit) integers. However it could be convenient to
+	  define a set of pseudo-registers, to show the &gpr;s represented as
+	  floating point registers.
+	</para>
+
+	<para>
+	  For any architecture, the implementer will decide on a mapping from
+	  hardware to &gdb; register numbers. The registers corresponding to
+	  real hardware are referred to as <emphasis>raw</emphasis> registers,
+	  the remaining registers are
+	  <emphasis>pseudo-</emphasis>registers. The total register set (raw
+	  and pseudo) is called the <emphasis>cooked</emphasis> register set.
+	</para>
+
+	<para>
+	  &gdb; provides &regcache;, associated with a particular &gdbarch; to
+	  hold the cached values of the raw registers. A set of functions are
+	  provided to access both the raw registers (with
+	  <literal>raw</literal> in their name) and the full set of cooked
+	  registers (with <literal>cooked</literal> in their name). Functions
+	  are provided to ensure the register cache is kept synchronized with
+	  the values of the actual registers in the target.
+	</para>
+
+	<para>
+	  Accessing registers through the &regcache; routines will ensure that
+	  the appropriate &gdbarch; functions are called when necessary to
+	  access the underlying target architecture. In general users should
+	  use the "cooked" functions, since these will map to the "raw"
+	  functions automatically as appropriate.
+	</para>
+
+	<para>
+	  The two key functions are <function>regcache_cooked_read</function>
+	  and <function>regcache_cooked_write</function> which read or write a
+	  register to or from a byte buffer (type
+	  <type>gdb_byte&nbsp;*</type>). For convenience the wrapper functions
+	  <literal>regcache_cooked_read_signed</literal>,
+	  <literal>regcache_cooked_read_unsigned</literal>,
+	  <literal>regcache_cooked_write_signed</literal> and
+	  <literal>regcache_cooked_write_unsigned</literal> are provided,
+	  which read or write the value and convert to or from a value as
+	  appropriate.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Target Operations
+	</title>
+
+	<para>
+	  The communication with the target is down to a set of
+	  <emphasis>target operations</emphasis>. These operations are
+	  held in a &target_ops;, together with flags describing the behavior
+	  of the target.
+	</para>
+
+	<para>
+	  &gdb; has several different types of target: executable files, core
+	  dumps, executing processes etc. At any time, &gdb; may have several
+	  sets of target operations in use. For example target operations for
+	  use with an executing process (which can run code) might be
+	  different from the operations used when inspecting a core dump.
+	</para>
+
+	<para>
+	  All the targets &gdb; knows about are held in a stack. &gdb; walks
+	  down the stack to find the set of target operations suitable for
+	  use. The stack is organized as a series of
+	  <emphasis>strata</emphasis> or decreasing importance: target
+	  operations for threads, then target operations suitable for
+	  processes, target operations to download remote targets, target
+	  operations for core dumps, target operations for executable files
+	  and at the bottom target operations for dummy targets. So &gdb; when
+	  debugging a running process will always select target operations
+	  from the process_stratum if available, over target operations from
+	  the file stratum, even if the target operations from the file
+	  stratum were pushed onto the stack more recently.
+	</para>
+
+	<para>
+	  At any particular time, there is a <emphasis>current</emphasis>
+	  target, held in the global variable
+	  <literal>current_target</literal>. This can never be &null;&mdash;if
+	  there is no other target available, it will point to the dummy
+	  target.
+	</para>
+
+	<para>
+	  Some targets (sets of target operations in a &target_ops;) are set
+	  up automatically by &gdb;&mdash;these include the operations to
+	  drive simulators (see <xref linkend="ref_simulators" /> and the
+	  operations to drive the &gdb; <emphasis>Remote Serial
+	  Protocol</emphasis> (&rsp;) (see <xref linkend="ref_rsp" />).
+	</para>
+
+	<para>
+	  Other targets must be set up explicitly by the implementer, using
+	  the <function>add_target</function> function. By far the most common
+	  is the <literal>native</literal> target for native debugging of the
+	  host. Less common is to set up a non-native target, such as the
+	  &jtag; target used with the OpenRISC 1000<footnote>
+	    <para>
+	      For a new remote target of any kind, the recommended approach is
+	      to use the standard &gdb; Remote Serial Protocol and have the
+	      target implement the server side of this interface. The only
+	      remote targets remaining are historic legacy interfaces, such as
+	      the OpenRISC 1000 Remote &jtag; Protocol.
+	    </para>
+	  </footnote>.
+	</para>
+
+	<para>
+	  A new native target is created by defining a function
+	  <literal>_initialize_</literal><emphasis>arch</emphasis><literal>_</literal><emphasis>os</emphasis><literal>_nat</literal>
+	  for the architecture, <emphasis>arch</emphasis> and operating system
+	  <emphasis>os</emphasis>, in the source file
+	  <emphasis>arch-os</emphasis><filename>-nat.c</filename>. A fragment
+	  of a makefile to create the binary from the source is created in the
+	  file
+	  <filename>config>/</filename><emphasis>arch</emphasis><filename>/</filename><emphasis>os</emphasis><filename>.mh</filename>
+	  with a header giving any macro definitions etc in
+	  <filename>config>/</filename><emphasis>arch</emphasis><filename>/nm-</filename><emphasis>os</emphasis><filename>.h</filename>
+	  (which will be linked to <filename>nm.h</filename> at build time).
+	</para>
+
+	<para>
+	  The <literal>_initialize_</literal> function should create a new
+	  &target_ops; and call <function>add_target</function> to add this
+	  target to the list of available targets.
+	</para>
+
+	<para>
+	  For a new remote target, the procedure is a little simpler. The
+	  source files should be added to <filename>configure.tgt</filename>,
+	  just as for the architectural description (see <xref
+	  linkend="sec_gdbarch" />). Within the source file, define a new
+	  function
+	  <function>_initialize_remote_</function><emphasis>arch</emphasis> to
+	  implement a new remote target, <emphasis>arch</emphasis>.
+	</para>
+
+	<para>
+	  For new native targets, most have standard implementations which can
+	  be reused, with just one or two changes. For example the function
+	  <function>linux_trad_target</function> will provide a set of target
+	  operations suitable for most Linux native targets. It may prove
+	  necessary only to alter the description field and the functions to
+	  fetch and store registers.
+	</para>
+
+	<para>
+	  For new remote targets, the definitions in
+	  <filename>remote.c</filename> used to implement the &rsp; provide a
+	  good starting point.
+	</para>
+  
+	<para>
+	  The main &target_ops; elements (which are defined in
+	  <filename>target.h</filename>) are:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <literal>to_shortname</literal>. This string is the name of
+	      target, for use with &gdb;s <command>target</command>. Setting
+	      <literal>to_shortname</literal> to <emphasis>foo</emphasis>
+	      means that <command>target </command><emphasis>foo</emphasis>
+	      will connect to the target, invoking to
+	      <function>to_open</function> for this target (see below).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_longname</literal>. A string giving a brief
+	      description of the type of target. This is printed with the
+	      <command>info target</command> information (see also
+	      <function>to_files_info</function> below).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_doc</literal>. The help text for this target. If the
+	      short name of the target is <emphasis>foo</emphasis>, then the
+	      command <command>help&nbsp;target</command> will print
+	      <literal>target</literal><emphasis>foot</emphasis> followed by
+	      the first sentence of this help text. The command
+	      <command>help&nbsp;target&nbsp;</command><emphasis>foo</emphasis>
+	      will print out the complete text.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_open</function>. This function should establish the
+	      communications with the target. It should establish the state of
+	      the target (is it already running for example), and initialize
+	      data structures appropriately. It should
+	      <emphasis>not</emphasis> start the target running if it is not
+	      currently running&mdash;that is the job of the &gdb;
+	      <command>run</command> command.
+	    </para>
+
+	    <para>
+	      <function>to_open</function> is invoked by the &gdb;
+	      <command>target</command>. Any additional arguments (beyond the
+	      name of the target being invoked) are passed to this function.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_xclose</function> and
+	      <function>to_close</function>. Both these functions should close
+	      the remote connection. <function>to_close</function> is the
+	      legacy function. New implementations should use
+	      <function>to_xclose</function> which should also free any memory
+	      allocated for this target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_attach</function>. For targets which can run
+	      without a debugger connected, this function attaches the
+	      debugger to a running target (which should first have been
+	      opened).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_detach</function>. Function to detach from a
+	      target, leaving it running.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_disconnect</function>. This is similar to
+	      <function>to_detach</function>, but makes no effort to inform
+	      the target that the debugger is detaching. It should just drop
+	      the connection to the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_resume</function>. Function to tell the target to
+	      start running again.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_wait</function>. Function to wait for the target to
+	      return control to the debugger. Typically this will be when the
+	      target finishes execution or hits a breakpoint. It could also
+	      occur if the connection is interrupted (for example by ctrl-C).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_fetch_registers</function> and
+	      <function>to_store_registers</function>. Functions to populate
+	      the register cache with values from the target and to set target
+	      registers with values in the register cache.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_prepare_to_store</function>. This function is
+	      called prior to storing registers to set up any addtional
+	      information required. In most cases it will be an empty function.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_files_info</function>. This function provides
+	      additional information for the <command>info target</command>
+	      command.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_insert_breakpoint</function> and
+	      <function>to_remove_breakpoint</function>. These functions
+	      insert and remove breakpoints on the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_can_use_hw_breakpoint</function>. This function
+	      should return 1 (true) if the target can set a hardware
+	      breakpoint or watchpoint and 0 otherwise. The function is passed
+	      an enumeration to indicate whether watchpoints or breakpoints
+	      are being queried, and should use information about the number
+	      of hardware breakpoints/watchpoints currently in use to
+	      determine if a breakpoint/watchpoint can be set.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_insert_hw_breakpoint</function> and
+	      <function>to_remove_hw_breakpoint</function>. Functions to
+	      insert and remove hardware breakpoints.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_remove_watchpoint</function> and
+	      <function>to_insert_watchpoint</function>. Functions to remove
+	      and insert watchpoints.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_stopped_by_watchpoint</function>. Function returns
+	      1 (true) if the last stop was due to a watchpoint.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_stopped_data_address</function>. If the last stop
+	      was due to a watchpoint, this function returns the address of
+	      the data which triggered the watchpoint.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_terminal_inferior</function>. This function
+	      connects the target's terminal I/O to our terminal.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_kill</function>. Kill the target. This should not
+	      hang up if the connection to the terminal is not working.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_load</function>. Load a file into the target. Since
+	      this is built on top of the other target operations the generic
+	      function <function>generic_load</function> is suitable for most
+	      implementations.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_create_inferior</function>. For targets can
+	      execute, this starts a program running on the target. It is
+	      invoked by the &gdb; <command>run</command> command.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_mourn_inferior</function>. Tidy up after execution
+	      of the target has finished (for example after it has been
+	      killed). Most implementations call the generic function,
+	      <function>generic_mourn_inferior</function>, but may do some
+	      additional tidying up.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_thread_alive</function>. Function which returns 1
+	      (true) if a thread is alive on the target.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_find_new_threads</function>. Function which reports
+	      all the threads on the target for the <command>info
+	      threads</command> command.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_pid_to_str</function>. Converts a process ID on the
+	      target to a string.
+	    </para>
+
+	    <note>
+	      <para>
+		The documentation of this in &gdb; is ambiguous. While it
+		appears to get the process ID, it converts it to a string
+		"Thread %d".
+	      </para>
+	    </note>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_extra_thread_info</function>Function which returns
+	      a string giving additional information about a particular
+	      thread. This function is optional.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_stop</function>. Function to stop the target - used
+	      whenever the target is to be interrupted (for example by ctrl-C).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_rcmd</function>. If the target is capable of
+	      running commands, then this function requests that command to be
+	      run on the target. This is of most relevance to remote targets.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_stratum</literal>. An enumerated constant indicating
+	      to which stratum this &target_ops; belongs
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_has_all_memory</literal>. Boolean indicating if the
+	      target includes all of memory, or only part of it. If only part,
+	      then a failed memory request may be able to be satisfied by a
+	      different target in the stack.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_has_memory</literal>. Boolean indicating if the
+	      target has memory (dummy targets to not)
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_has_stack</literal>. Boolean indicating if the
+	      target has a stack. Object files do not, core dumps and
+	      executable threads/processes do.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_has_registers</literal>. Boolean indicating if the
+	      target has registers.  Object files do not, core dumps and
+	      executable threads/processes do.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_has_execution</literal>. Boolean indicating if the
+	      target is currently executing. For some targets that is the same
+	      as if they are capable of execution. However some remote targets
+	      can be in the position where they are not executing until
+	      <function>create_inferior</function> or
+	      <function>attach</function> is called.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_has_thread_control</literal>. Boolean indicating if
+	      the target can switch threads.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_can_async_p</function>. Function indicating if the
+	      target can execute asynchrnously. This is often true for remote
+	      targets.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_is_async_p</function>. For targets which can
+	      execute asynchronously, this function indicates if the target is
+	      currently executing asynchronously.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_async</function>. Used to start asynchronous
+	      execution, with a callback for use when the target wishes to
+	      engage the debugger.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>to_async_mask_value</literal>. Asynchronous targets can
+	      be a problem, when a function needs to be evaluated (for example
+	      with the &gdb; <command>call</command> command). This is a patch
+	      to put the target temporarily into synchronous mode while the
+	      function is evaluated.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_xfer_partial</function>. This function is a generic
+	      function to transfer data to and from the target. Its most
+	      important function (often the only one actually implemented) is
+	      to load and store data from and to target memory.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>to_memory_map</function>. Function to return the
+	      memory map for the target.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="ref_simulators">
+      <title>
+	Simulators
+      </title>
+
+      <para>
+	&gdb; enables implementers to link gdb to a built-in simulator, so
+	that a simulated target may be executed through use of the
+	<command>target&nbsp;sim</command> command.
+      </para>
+
+      <para>
+	The simulator should be built as a library,
+	<filename>libsim.a</filename>, implementing the standard &gdb;
+	simulator interface. The location of the library is specified by
+	setting the <literal>gdb_sim</literal> parameter in
+	<filename>configure.tgt</filename>.
+      </para>
+
+      <para>
+	The interface consists of a set of functions which should be
+	implemented. The detailed specification is found in the header
+	<filename>remote-sim.h</filename> in the include directory.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <function>sim_open</function>. Initialize the simulator.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_close</function>. Destroy the simulator instance,
+	    including freeing any memory.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_load</function>. Load a program into the simulator's
+	    memory.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_create_inferior</function>. Prepare to run the
+	    simulated program. Don't actually run it until
+	    <function>sim_resume</function> (see below) is called.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_read</function> and
+	    <function>sim_write</function>. Read and write bytes from and to
+	    the simulator's memory.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_fetch_register</function> and
+	    <function>sim_store_register</function>. Read and write the
+	    simulator's registers.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_info</function>. Print information for the
+	    <command>info sim</command> command.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_resume</function>. Resume (or start) execution of
+	    the simulated program.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_stop</function>. Stop execution of the simulated
+	    program.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_stop_reason</function>. Return the reason why the
+	    program stopped.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>sim_do_command</function>. Execute some arbitrary
+	    command that the simulator supports.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1 id="ref_rsp">
+      <title>
+	Remote Serial Protocol
+      </title>
+
+      <para>
+	The &gdb; <emphasis>Remote Serial Protocol</emphasis> is a general
+	purpose protocol for connecting to remote targets. It is invoked
+	through the <command>target remote</command> command.
+      </para>
+
+      <para>
+	The protocol is a simple text command-response protocol. Any remote
+	target can communicate with &gdb; by implementing the server side of
+	the &rsp;. A number of stub implementations are provided for various
+	architectures, which can be used as the basis of new implementations.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	&gdb; File Organization
+      </title>
+
+      <para>
+	The bulk of the &gdb; source code is in a small number of
+	directories. Some components of &gdb; are libraries used elsewhere
+	(for example &bfd; is used in GNU binutils), and these have their own
+	directory. The main directories are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <filename>include</filename>. Header files for information which
+	    straddles major components. For example the main simulator
+	    interface header is here (<filename>remote-sim.h</filename>),
+	    because it links &gdb; (in directory <filename>gdb</filename>) to
+	    the simulators (in directory <filename>sim</filename>). Headers
+	    specific to a particular component reside in the directory of that
+	    component.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>bfd</filename>. The Binary File Descriptor library. If a
+	    new object file type must be recognized, it should be added here.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>gdb</filename>. The main &gdb; directory. All source
+	    files should include <filename>defs.h</filename> first and then
+	    any other headers they reference. Headers should also include any
+	    headers they reference, but may assume that
+	    <filename>defs.h</filename> has been included.
+	  </para>
+
+	  <para>
+	    The file <filename>configure.tgt</filename> contains a huge switch
+	    statement to match targets specified to the main
+	    <command>configure</command> command. Add a new target by
+	    incorporating its pattern match in this file.
+	  </para>
+
+	  <para>
+	    The subdirectory <filename>config</filename> contains target
+	    specific configuration information for native targets.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>libiberty</filename>. Before POSIX and glibc, this was a
+	    GNU project to provide a set of standard functions. It lives on in
+	    GNU. Most valuable are its freestore management and argument
+	    parsing functions.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>opcodes</filename>. This contains disassemblers for use
+	    by &gdb; (the <command>disassemble</command> command);. In a
+	    directory of its own, because this code is also used in binutils.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>sim</filename>. The simulators for various targets. Each
+	    target architecture simulator is built in its own sub-directory.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Testing &gdb;
+      </title>
+
+      <para>
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Summary: Steps to Port a New Architecture to &gdb;
+      </title>
+
+      <para>
+	Porting a new architecture to &gdb; can be broken into a number of
+	steps.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Ensure a &bfd; exisits for executables of the target architecture
+	    in the <filename>bfd</filename> directory. If one does not exist,
+	    create one by modifying an existing similar one.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Implement a disassembler for the target architecture in the
+	    <filename>opcodes</filename> directory.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Define the target architecture in the <filename>gdb</filename>
+	    directory. Add the pattern for the new target to
+	    <filename>configure.tgt</filename> with the names of the files
+	    that contain the code. By convention the target architecture
+	    definition for an architecture <emphasis>arch</emphasis> is placed
+	    in <emphasis>arch</emphasis><literal>-tdep.c</literal>.
+	  </para>
+
+	  <para>
+	    Within <emphasis>arch</emphasis><literal>-tdep.c</literal> define
+	    the function
+	    <literal>_initialize_</literal><emphasis>arch</emphasis><literal>_tdep</literal>
+	    which calls <function>gdbarch_register</function> to create the
+	    new &gdbarch; for the architecture.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    If a new remote target is needed, consider adding a new remote
+	    target by defining a function
+	    <literal>_initialize_remote_</literal><emphasis>arch</emphasis>.
+	    However if at all possible use the <emphasis>Remote Serial
+	    Protocol</emphasis> for this and implement the server side
+	    protocol independently with the target.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    If desired implement a simulator in the <filename>sim</filename>
+	    directory. This should create the library
+	    <filename>libsim.a</filename> implementing the interface in
+	    <filename>remote-sim.h</filename> (found in the
+	    <filename>include</filename> directory).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Build and test. If desired lobby the &gdb; steering group to have
+	    your new port included in the main distribution!
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Porting the OpenRISC 1000 Architecture
+    </title>
+
+    <sect1>
+      <title>
+	BFD Specification
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Target Architecture Specification
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	OpenRISC 1000 &jtag; Remote Target Specification
+      </title>
+
+      <sect2>
+	<title>
+	  The &jtag; Interface
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <glossary>
+    <title>
+      Glossary
+    </title>
+
+    <glossentry>
+      <glossterm>Application&#32;Binary&#32;Interface</glossterm>
+      <glossdef>
+	<para>
+	  The low-level interface between an application program and the
+	  operating system, thus ensuring binary compatibility between programs.
+	</para>
+
+	<para>
+	  C++ notoriously suffers from lack of agreed standards in this area.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>big&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a big endian architecture, the
+	  least significant byte in a data word resides at the highest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+
+	<para>
+	  The alternative is little endian addressing.
+	</para>
+
+	<glossseealso>little&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Instruction&#32;Set&#32;Simulator</glossterm>
+      <acronym>ISS</acronym>
+      <glossdef>
+	<para>
+	  A software model of a CPU core instruction set. Typically completely
+	  models the instruction semantics, but not the full microarchitecture
+	  of a particular CPU implementation. Timing information may be just
+	  an instruction count, or may (as with the &or1ksim;) offer some
+	  estimate of timing delays due to memory accesses, caching and
+	  virtual memory access.
+	</para>
+      </glossdef>
+
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a little endian architecture, the
+	  least significant byte in a data word resides at the lowest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+
+	<para>
+	  The alternative is big endian addressing.
+	</para>
+
+	<glossseealso>big&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>memory management unit</glossterm>
+      <acronym>MMU</acronym>
+      <glossdef>
+	<para>
+	  A hardware component which maps virtual address references to
+	  physical memory addresses via a page lookup table. An exception
+	  handler may be required to bring non-existent memory pages into
+	  physical memory from backing storage when accessed.
+	</para>
+
+	<para>
+	  On a Harvard architecture (i.e. with separate logical instruction
+	  and data address spaces), two MMUs are typically needed.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>programmable interrupt controller</glossterm>
+      <acronym>PIC</acronym>
+      <glossdef>
+	<para>
+	  A hardware component which provides a large number of interrupt
+	  ports, which are mapped onto one or two interrupt ports on an actual
+	  processor. The <acronym>PIC</acronym> will provide a lookup table of
+	  interrupt service functions for its interrupts, which the interrupt
+	  service function on the processor can use to identify the correct
+	  handler to use.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>System on Chip</glossterm>
+      <acronym>SoC</acronym>
+      <glossdef>
+	<para>
+	  A silicon chip which includes one or more processor cores.
+	</para>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_app_note_2">
+      <title id="ref_app_note_2_xr">
+	&embecosm; Application Note 2. The &opencores; &or1k; Simulator and
+	Tool Chain: Installation Guide.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	June 2008.
+      </pubdate>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gdb_ug">
+      <title id="ref_gdb_ug_xr">
+	Debugging with &gdb;: The GNU Source-Level Debugger,
+      </title>
+      <firstname>Richard</firstname> <surname>Stallman</surname>,
+      <firstname>Roland</firstname> <surname>Pesch</surname>,
+      <firstname>Stan</firstname> <surname>Shebbs</surname>, et al,
+      issue <issuenum>9</issuenum>.
+      <publisher>
+	<publishername>
+	  Free Software Foundation
+	</publishername>
+      </publisher>
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://sourceware.org/gdb/current/onlinedocs/gdb_toc.html"/>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gdb_int">
+      <title id="ref_gdb_int_xr">
+	&gdb; Internals: A guide to the internals of the GNU debugger,
+      </title>
+      <firstname>John</firstname> <surname>Gillmore</surname> and
+      <firstname>Stan</firstname> <surname>Shebbs</surname>,
+      issue <issuenum>2</issuenum>.
+      <publisher>
+	<publishername>
+	  Cygnus Solutions
+	</publishername>
+      </publisher>
+      <pubdate>
+	2006
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://sourceware.org/gdb/current/onlinedocs/gdbint_toc.html"/>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_bfd">
+      <title id="ref_bfd_xr">
+	libbfd: The Binary File Descriptor Library,
+      </title>
+      <firstname>Steve</firstname> <surname>Chamberlain</surname>,
+      issue <issuenum>1</issuenum>.
+      <publisher>
+	<publishername>
+	  Cygnus Solutions
+	</publishername>
+      </publisher>
+      <pubdate>
+	2006
+      </pubdate>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_or1k_gdb">
+      <title id="ref_gdb_or1k_gdb_xr">
+	Debugging the OpenRISC 1000 with &gdb;: Target Processor Manual,
+      </title>
+      <firstname>Jeremy</firstname> <surname>Bennett</surname>,
+      issue <issuenum>1</issuenum>.
+      <publisher>
+	<publishername>
+	  Embecosm Limited
+	</publishername>
+      </publisher>
+      <pubdate>
+	June 2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://www.embecosm.com/downloads/or1k/or1k.html"/>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_doxygen">
+      <title id="ref_gdb_doxygen_xr">
+	Doxygen: Source code documentation generator tool,
+      </title>
+      <firstname>Dimitri</firstname> <surname>van Heesch</surname>,
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://www.doxygen.org"/>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_or1k">
+      <title id="ref_gdb_or1k_xr">
+	OpenRISC 1000 Architectural Manual,
+      </title>
+      <firstname>Damjan</firstname> <surname>Lampret</surname>,
+      <firstname>Chen-Min</firstname> <surname>Chen</surname>,
+      <firstname>Marko</firstname> <surname>Mlinar</surname>,
+      <firstname>Johan</firstname> <surname>Rydberg</surname>,
+      <firstname>Matan</firstname> <surname>Ziv-Av</surname>,
+      <firstname>Chris</firstname> <surname>Ziomkowski</surname>,
+      <firstname>Greg</firstname> <surname>McGary</surname>,
+      <firstname>Bob</firstname> <surname>Gardner</surname>,
+      <firstname>Rohit</firstname> <surname>Mathur</surname> and
+      <firstname>Maria</firstname> <surname>Bolado</surname>,
+      <pubdate>
+	November 2005
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf"/>
+      </bibliosource>
+    </bibliomixed>
+
+  </bibliography>
+</book>
