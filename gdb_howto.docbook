@@ -10,17 +10,25 @@ Useful entities
 
 <!ENTITY abi  "<acronym>ABI</acronym>">
 <!ENTITY bfd  "<acronym>BFD</acronym>">
+<!ENTITY fp   "<acronym>FP</acronym>">
+<!ENTITY gcc  "<acronym>GCC</acronym>">
 <!ENTITY gdb  "<acronym>GDB</acronym>">
+<!ENTITY gnu  "<acronym>GNU</acronym>">
 <!ENTITY gpr  "<acronym>GPR</acronym>">
 <!ENTITY iss  "<acronym>ISS</acronym>">
+<!ENTITY html "<acronym>HTML</acronym>">
 <!ENTITY jtag "<acronym>JTAG</acronym>">
+<!ENTITY pc   "<acronym>PC</acronym>">
+<!ENTITY pdf  "<acronym>PDF</acronym>">
 <!ENTITY rsp  "<acronym>RSP</acronym>">
+<!ENTITY sal  "<acronym>SAL</acronym>">
 <!ENTITY soc  "<acronym>SoC</acronym>">
+<!ENTITY sp   "<acronym>SP</acronym>">
 <!ENTITY spr  "<acronym>SPR</acronym>">
 
 <!-- ========== commonly used things ========== -->
 
-<!ENTITY null         "<literal>NULL</literal>">
+<!ENTITY null         "<constant>NULL</constant>">
 <!ENTITY this         "<emphasis>THIS</emphasis>">
 <!ENTITY prev         "<emphasis>PREVIOUS</emphasis>">
 <!ENTITY next         "<emphasis>NEXT</emphasis>">
@@ -460,7 +468,7 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <literal>OR1K_JTAG_COMMAND_READ</literal> (1). Read a single
+	      <constant>OR1K_JTAG_COMMAND_READ</constant> (1). Read a single
 	      &jtag; register. A 32-bit address is provided in the request. The
 	      response includes 64-bits of read data.
 	    </para>
@@ -468,7 +476,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>OR1K_JTAG_COMMAND_WRITE</literal> (2). Write a single
+	      <constant>OR1K_JTAG_COMMAND_WRITE</constant> (2). Write a single
 	      &jtag; register. A 32-bit address is provided in the 
 	      request and 64-bit data to be written.
 	    </para>
@@ -476,7 +484,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>OR1K_JTAG_COMMAND_READ_BLOCK</literal> (3). Read
+	      <constant>OR1K_JTAG_COMMAND_READ_BLOCK</constant> (3). Read
 	      multiple 32-bit &jtag; registers. A 32-bit address of the first
 	      register and number of registers to be read is provided in the
 	      request. The response includes the number of registers read and
@@ -486,7 +494,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>OR1K_JTAG_COMMAND_WRITE_BLOCK</literal> (4). Write
+	      <constant>OR1K_JTAG_COMMAND_WRITE_BLOCK</constant> (4). Write
 	      multiple 32-bit &jtag; registers. A 32-bit address of the first
 	      register and number of registers to be written is provided in the
 	      request followed by 32-bits of data to be written for each
@@ -496,7 +504,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>OR1K_JTAG_COMMAND_CHAIN</literal> (5). Select the scan
+	      <constant>OR1K_JTAG_COMMAND_CHAIN</constant> (5). Select the scan
 	      chain. A 32-bit scan chain number is provided in the request.
 	    </para>
 	  </listitem>
@@ -557,7 +565,7 @@ $Id$
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_or1k_abi">
       <title>
 	Application Binary Interface (&abi;)
       </title>
@@ -637,7 +645,7 @@ $Id$
 
   </chapter>
 
-  <chapter>
+  <chapter id="chap_gdb_internals">
     <title>
       Overview of &gdb; Internals
     </title>
@@ -761,8 +769,8 @@ $Id$
 	  <listitem>
 	    <para>
 	      Details of how all the standard high level scalar data
-	      structures are represented (<literal>char</literal>,
-	      <literal>int</literal>, <literal>double</literal> etc).
+	      structures are represented (<type>char</type>,
+	      <type>int</type>, <type>double</type> etc).
 	    </para>
 	  </listitem>
 
@@ -912,7 +920,7 @@ $Id$
                        gdbarch_dump_tdep_ftype *tdep_dump_func);</programlisting>
 
       <para>
-	The <literal>architecture</literal> enumeration will identify the
+	The <varname>architecture</varname> enumeration will identify the
 	unique &bfd; for this architecture (see <xref linkend="sec_bfd"
 	/>). The <function>init_func</function> is called to create and return
 	the new &gdbarch; (see <xref linkend="sec_gdbarch" />). The
@@ -938,7 +946,7 @@ $Id$
 	<para>
 	  In the case of the OpenRISC 1000, 32-bit implementation (which may
 	  be a <acronym>COFF</acronym> or <acronym>ELF</acronym> binary), the
-	  enumerated constant is <literal>bfd_arch_or32</literal>.
+	  enumerated constant is <constant>bfd_arch_or32</constant>.
 	</para>
 
       </sect2>
@@ -999,13 +1007,13 @@ $Id$
 };</programlisting>
 
 	<para>
-	  <literal>bfd_arch_info</literal> holds the key details about the
-	  architecture. <literal>byte_order</literal> is an enumeration
-	  indicating the endianism. <literal>abfd</literal> is a pointer to
-	  the full &bfd;, <literal>tdep_info</literal> is additional target
-	  specific information, <literal>gdb_osabi</literal> is an enumeration
+	  <varname>bfd_arch_info</varname> holds the key details about the
+	  architecture. <varname>byte_order</varname> is an enumeration
+	  indicating the endianism. <varname>abfd</varname> is a pointer to
+	  the full &bfd;, <varname>tdep_info</varname> is additional target
+	  specific information, <varname>gdb_osabi</varname> is an enumeration
 	  identifying which (if any) of a number of operating specific ABIs
-	  are used by this architecture and <literal>target_desc</literal> is
+	  are used by this architecture and <varname>target_desc</varname> is
 	  a set of name-value pairs with information about register usage in
 	  this target.
 	</para>
@@ -1016,8 +1024,8 @@ $Id$
 	  &bfd;. The &gdbarch_info; is used as a look-up key with the list of
 	  existing architectures (the second argument to the initialization
 	  function) to see if a suitable architecture already exists. The
-	  <literal>tdep_info</literal> <literal>osabi</literal> and
-	  <literal>target_desc</literal> fields may be added before this
+	  <varname>tdep_info</varname> <varname>osabi</varname> and
+	  <varname>target_desc</varname> fields may be added before this
 	  lookup to refine the search.
 	</para>
 
@@ -1059,7 +1067,7 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <literal>bits_big_endian</literal>. 1 (true) if the bits within
+	      <varname>bits_big_endian</varname>. 1 (true) if the bits within
 	      a byte are big-endian.
 	    </para>
 
@@ -1081,21 +1089,21 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>short_bit</literal>. Number of bits in a C/C++
+	      <varname>short_bit</varname>. Number of bits in a C/C++
 	      <type>short</type> variable. Default is
 	      <literal>2*TARGET_CHAR_BIT</literal>.
-	      <literal>TARGET_CHAR_BIT</literal> is a defined constant, which
+	      <constant>TARGET_CHAR_BIT</constant> is a defined constant, which
 	      if not set explicitly defaults to 8.
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-	      <literal>int_bit</literal>, <literal>long_bit</literal>,
-	      <literal>long_long_bit</literal>, <literal>float_bit</literal>,
-	      <literal>double_bit</literal>,
-	      <literal>long_double_bit</literal>. These are analagous to
-	      <literal>short</literal> and are the number of bits in a C/C++
+	      <varname>int_bit</varname>, <varname>long_bit</varname>,
+	      <varname>long_long_bit</varname>, <varname>float_bit</varname>,
+	      <varname>double_bit</varname>,
+	      <varname>long_double_bit</varname>. These are analagous to
+	      <varname>short</varname> and are the number of bits in a C/C++
 	      variable of the corresponding time. Defaults are
 	      <literal>4*TARGET_CHAR_BIT</literal> for <type>int</type>,
 	      <type>long</type> and <type>float</type> and
@@ -1106,14 +1114,26 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>ptr_bit</literal>. Number of bits in a C/C++
+	      <varname>ptr_bit</varname>. Number of bits in a C/C++
 	      pointer. Default is <literal>4*TARGET_CHAR_BIT</literal>.
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-	      <literal>char_signed</literal>. 1 if <type>char</type> to be
+	      <varname>float_format</varname>,
+	      <varname>double_format</varname> and
+	      <varname>long_double_format</varname>. These point to an array
+	      of structs (one for each endianism), defining the format for
+	      each of the floating point types. A number of these arrays are
+	      predefined. They in turn are built on top of a set of standard
+	      types defined by the library <literal>libiberty</literal>.
+	    </para>
+	  </listitem>
+	    
+	  <listitem>
+	    <para>
+	      <varname>char_signed</varname>. 1 if <type>char</type> to be
 	      treated as signed, 0 if <type>char</type> is to be treated as
 	      unsigned. The default is -1 (undefined), so this should always
 	      be set.
@@ -1126,7 +1146,7 @@ $Id$
 	      counter. The default value is &null; (no function
 	      available). However, if the program counter is just an ordinary
 	      register, it can be specified in &gdbarch; instead (see
-	      <literal>pc_regnum</literal> below) and it will be read using
+	      <varname>pc_regnum</varname> below) and it will be read using
 	      the standard routines to read regsters. Thus this function need
 	      only be specified <emphasis>if</emphasis> the program counter is
 	      not an ordinary register. See <xref linkend="sec_regcache" />
@@ -1148,12 +1168,15 @@ $Id$
 	    <para>
 	      <function>virtual_frame_pointer</function>. A function to return
 	      the "virtual" frame pointer. This is a register and offset which
-	      together define the  location of the start of the frame. The
+	      together define the location of the start of the frame. The
 	      default is the function
 	      <function>legacy_virtual_frame_pointer</function> which returns
 	      either the value <function>from deprecated_fp_regnum</function>
 	      (which hopefully has <emphasis>not</emphasis> been used) or the
-	      stack pointer. If the frame pointer is not the same as the stack
+	      stack pointer. The role of this function is far from
+	      clear&mdash;it is used in some code to evaluate agent
+	      expressions and in some code to handle tracepoints in DWARF2. As
+	      a precaution, if the frame pointer is not the same as the stack
 	      pointer, this function should be defined.
 	    </para>
 	  </listitem>
@@ -1171,8 +1194,8 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>num_regs</literal> and
-	      <literal>num_pseudo_regs</literal>. These define the number of
+	      <varname>num_regs</varname> and
+	      <varname>num_pseudo_regs</varname>. These define the number of
 	      real and pseudo-registers. They default to -1 (undefined) and
 	      should always be explicitly defined.
 	    </para>
@@ -1180,20 +1203,20 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>sp_regnum</literal>, <literal>pc_regnum</literal>,
-	      <literal>ps_regnum</literal> and
-	      <literal>fp0_regnum</literal>. These specify the register
+	      <varname>sp_regnum</varname>, <varname>pc_regnum</varname>,
+	      <varname>ps_regnum</varname> and
+	      <varname>fp0_regnum</varname>. These specify the register
 	      holding the stack pointer, program counter, processor status and
 	      first floating point register. All except the first
 	      floating-point register (which defaults to 0) default to -1 (not
 	      defined). They may be real or
-	      pseudo-registers. <literal>sp_regnum</literal> must always be
-	      defined. If <literal>pc_regnum</literal> is not defined, then
+	      pseudo-registers. <varname>sp_regnum</varname> must always be
+	      defined. If <varname>pc_regnum</varname> is not defined, then
 	      the functions <function>read_pc</function> and
 	      <function>write_pc</function> (see above) must be defined. If
-	      <literal>ps_regnum</literal> is not defined, then the
-	      <literal>$ps</literal> variable will not be available to the GDB
-	      user. <literal>fp0_regnum</literal> is not needed unless the
+	      <varname>ps_regnum</varname> is not defined, then the
+	      <varname>$ps</varname> variable will not be available to the GDB
+	      user. <varname>fp0_regnum</varname> is not needed unless the
 	      target offers support for floating point.
 	    </para>
 	  </listitem>
@@ -1220,8 +1243,8 @@ $Id$
 	      this function identifies the type of data it may be holding,
 	      specified as a <structname>struct&nbsp;type</structname>. &gdb;
 	      allows creation of arbitrary types, but a number of builtin
-	      types are provided (<literal>builtin_type_void</literal>,
-	      <literal>builtin_type_int32</literal> etc), together with
+	      types are provided (<varname>builtin_type_void</varname>,
+	      <varname>builtin_type_int32</varname> etc), together with
 	      functions to derive types from these. Typically the program
 	      counter will have a type of "pointer to function" (it points to
 	      code), the frame pointer and stack pointer will have types of
@@ -1477,7 +1500,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>frame_red_zone_size</literal>. Some &abi;s reserve
+	      <varname>frame_red_zone_size</varname>. Some &abi;s reserve
 	      space beyond the end of the stack for use by leaf funtions
 	      without prologue or epilogue or by exception handlers (OpenRISC
 	      1000 is in this category). This is known as a <emphasis>red
@@ -1513,7 +1536,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>print_insn</literal>. Disassemble an instruction and
+	      <function>print_insn</function>. Disassemble an instruction and
 	      print it. Default value is &null; (undefined). This function
 	      should be defined if disassembly of code is to be supported.
 	    </para>
@@ -1521,7 +1544,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>name_of_malloc</literal>. A string representing the
+	      <varname>name_of_malloc</varname>. A string representing the
 	      name of the <function>malloc</function> function on the
 	      target. This may be needed if a function is evaluated with
 	      constructed data on the target. For example using the &gdb;
@@ -1611,11 +1634,12 @@ $Id$
 
         <para>
 	  Consider the state of the stack when the code reaches line 6 after
-	  the main program has called <literal>fact&nbsp;(3)</literal>. The
-	  chain of function calls will be <literal>main</literal>,
-	  <literal>fact&nbsp;(3)</literal>, <literal>fact&nbsp;(2)</literal>,
-	  <literal>fact&nbsp;(1)</literal> and
-	  <literal>fact&nbsp;(0)</literal>. In this example the stack is
+	  the main program has called <function>fact&nbsp;(3)</function>. The
+	  chain of function calls will be <function>main</function>,
+	  <function>fact&nbsp;(3)</function>,
+	  <function>fact&nbsp;(2)</function>,
+	  <function>fact&nbsp;(1)</function> and
+	  <function>fact&nbsp;(0)</function>. In this example the stack is
 	  falling (as used by the OpenRISC 1000 &abi;). The stack pointer
 	  (<acronym>SP</acronym>) is at the end of the stack (lowest address)
 	  and the frame pointer (<acronym>FP</acronym>) is at the highest
@@ -1652,10 +1676,10 @@ $Id$
 	  is the return address. Local variables are indexed from the frame
 	  pointer, with negative indices. In the function
 	  <function>fact</function>, offset -4 from the frame pointer is the
-	  argument <literal>n</literal>. In the <literal>main</literal>
+	  argument <varname>n</varname>. In the <function>main</function>
 	  function, offset -4 from the frame pointer is the local variable
-	  <literal>i</literal> and offset -8 from the frame pointer is the
-	  local variable <literal>f</literal>.
+	  <varname>i</varname> and offset -8 from the frame pointer is the
+	  local variable <varname>f</varname>.
 	</para>
 
 	<note>
@@ -1672,8 +1696,8 @@ $Id$
 	  terminology it uses rigorously throughout. The stack frame of the
 	  function currently executing, or where execution stopped is numbered
 	  zero. In this example frame #0 is the stack frame of the call to
-	  <literal>fact&nbsp;(0)</literal>. The stack frame of its calling
-	  function (<literal>fact(1)</literal> in this case) is numbered #1 and
+	  <function>fact&nbsp;(0)</function>. The stack frame of its calling
+	  function (<function>fact(1)</function> in this case) is numbered #1 and
 	  so on back through the chain of calls.
 	</para>
 
@@ -1720,15 +1744,15 @@ $Id$
 	<para>
 	  So in the example of <xref linkend="fig_stack_frame" />, if
 	  &this;frame is frame #3 (the call to
-	  <literal>fact&nbsp;(3)</literal>), the &next; frame is frame #2 (the
-	  call to <literal>fact&nbsp;(2)</literal>) and the &prev; frame is
-	  frame #4 (the call to <literal>main&nbsp;()</literal>).
+	  <function>fact&nbsp;(3)</function>), the &next; frame is frame #2 (the
+	  call to <function>fact&nbsp;(2)</function>) and the &prev; frame is
+	  frame #4 (the call to <function>main&nbsp;()</function>).
 	</para>
 
 	<para>
 	  The <emphasis>innermost</emphasis> frame is the frame of the current
 	  executing function, or where the program stopped, in this example,
-	  in the middle of the call to <literal>fact&nbsp;(0)</literal>). It
+	  in the middle of the call to <function>fact&nbsp;(0)</function>). It
 	  is always numbered frame #0.
 	</para>
 
@@ -1840,7 +1864,7 @@ $Id$
 };</programlisting>
 
 	  <para>
-	    The <literal>type</literal> field indicates the type of frame this
+	    The <varname>type</varname> field indicates the type of frame this
 	    sniffer can handle: normal, dummy (see
 	    <function>push_dummy_call</function> in <xref
 	    linkend="sec_gdbarch" />), signal handler or sentinel. Signal
@@ -1849,7 +1873,7 @@ $Id$
 	  </para>
 
 	  <para>
-	    <literal>unwind_data</literal> holds additional information which
+	    <varname>unwind_data</varname> holds additional information which
 	    may be relevant to particular types of frame. For example it may
 	    hold additional information for signal handler frames.
 	  </para>
@@ -1910,8 +1934,8 @@ $Id$
 
 	  <para>
 	    The frame base sniffer is much simpler. It is a
-	    <literal>struct&nbsp;frame_base</literal>, which refers to the
-	    corresponding <literal>struct&nbsp;frame_unwind</literal> and
+	    <structname>struct&nbsp;frame_base</structname>, which refers to the
+	    corresponding <structname>struct&nbsp;frame_unwind</structname> and
 	    provides functions yielding various addresses within the frame.
 	  </para>
 
@@ -1944,10 +1968,10 @@ $Id$
 
 	  <para>
 	    It is worth noting that if it cannot be determined in any other
-	    way (for example by the <function>virtual_frame_pointer</function>
-	    in the &gdbarch;), then the result of the
-	    <function>this_base</function> function will be used as the value
-	    of the frame pointer variable <literal>$fp</literal> in &gdb;
+	    way (for example by their being a register with the name "fp"),
+	    then the result of the <function>this_base</function> function
+	    will be used as the value of the frame pointer variable
+	    <varname>$fp</varname> in &gdb;
 	  </para>
 	</sect3>
 
@@ -1978,7 +2002,7 @@ $Id$
 	    It is up to the user to define the structure used (it is a
 	    <type>void&nbsp;*</type> pointer) and arrange allocation and
 	    deallocation of storate. However for general use, &gdb;
-	    provides <literal>struct&nbsp;trad_frame_cache</literal>, with a
+	    provides <structname>struct&nbsp;trad_frame_cache</structname>, with a
 	    set of accessor routines. This structure holds the stack and code
 	    address of &this; frame, the base address of the frame, a pointer
 	    to the &frame_info; for the &next; frame and details of where the
@@ -2055,10 +2079,10 @@ $Id$
 	  and <function>regcache_cooked_write</function> which read or write a
 	  register to or from a byte buffer (type
 	  <type>gdb_byte&nbsp;*</type>). For convenience the wrapper functions
-	  <literal>regcache_cooked_read_signed</literal>,
-	  <literal>regcache_cooked_read_unsigned</literal>,
-	  <literal>regcache_cooked_write_signed</literal> and
-	  <literal>regcache_cooked_write_unsigned</literal> are provided,
+	  <function>regcache_cooked_read_signed</function>,
+	  <function>regcache_cooked_read_unsigned</function>,
+	  <function>regcache_cooked_write_signed</function> and
+	  <function>regcache_cooked_write_unsigned</function> are provided,
 	  which read or write the value and convert to or from a value as
 	  appropriate.
 	</para>
@@ -2103,7 +2127,7 @@ $Id$
 	<para>
 	  At any particular time, there is a <emphasis>current</emphasis>
 	  target, held in the global variable
-	  <literal>current_target</literal>. This can never be &null;&mdash;if
+	  <varname>current_target</varname>. This can never be &null;&mdash;if
 	  there is no other target available, it will point to the dummy
 	  target.
 	</para>
@@ -2119,7 +2143,7 @@ $Id$
 	<para>
 	  Other targets must be set up explicitly by the implementer, using
 	  the <function>add_target</function> function. By far the most common
-	  is the <literal>native</literal> target for native debugging of the
+	  is the <emphasis>native</emphasis> target for native debugging of the
 	  host. Less common is to set up a non-native target, such as the
 	  &jtag; target used with the OpenRISC 1000<footnote>
 	    <para>
@@ -2185,9 +2209,9 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <literal>to_shortname</literal>. This string is the name of
+	      <varname>to_shortname</varname>. This string is the name of
 	      target, for use with &gdb;s <command>target</command>. Setting
-	      <literal>to_shortname</literal> to <emphasis>foo</emphasis>
+	      <varname>to_shortname</varname> to <emphasis>foo</emphasis>
 	      means that <command>target </command><emphasis>foo</emphasis>
 	      will connect to the target, invoking to
 	      <function>to_open</function> for this target (see below).
@@ -2196,7 +2220,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_longname</literal>. A string giving a brief
+	      <varname>to_longname</varname>. A string giving a brief
 	      description of the type of target. This is printed with the
 	      <command>info target</command> information (see also
 	      <function>to_files_info</function> below).
@@ -2205,10 +2229,10 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_doc</literal>. The help text for this target. If the
+	      <varname>to_doc</varname>. The help text for this target. If the
 	      short name of the target is <emphasis>foo</emphasis>, then the
 	      command <command>help&nbsp;target</command> will print
-	      <literal>target</literal><emphasis>foot</emphasis> followed by
+	      <literal>target </literal><emphasis>foo</emphasis> followed by
 	      the first sentence of this help text. The command
 	      <command>help&nbsp;target&nbsp;</command><emphasis>foo</emphasis>
 	      will print out the complete text.
@@ -2457,14 +2481,14 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_stratum</literal>. An enumerated constant indicating
+	      <varname>to_stratum</varname>. An enumerated constant indicating
 	      to which stratum this &target_ops; belongs
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-	      <literal>to_has_all_memory</literal>. Boolean indicating if the
+	      <varname>to_has_all_memory</varname>. Boolean indicating if the
 	      target includes all of memory, or only part of it. If only part,
 	      then a failed memory request may be able to be satisfied by a
 	      different target in the stack.
@@ -2473,14 +2497,14 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_has_memory</literal>. Boolean indicating if the
+	      <varname>to_has_memory</varname>. Boolean indicating if the
 	      target has memory (dummy targets to not)
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-	      <literal>to_has_stack</literal>. Boolean indicating if the
+	      <varname>to_has_stack</varname>. Boolean indicating if the
 	      target has a stack. Object files do not, core dumps and
 	      executable threads/processes do.
 	    </para>
@@ -2488,7 +2512,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_has_registers</literal>. Boolean indicating if the
+	      <varname>to_has_registers</varname>. Boolean indicating if the
 	      target has registers.  Object files do not, core dumps and
 	      executable threads/processes do.
 	    </para>
@@ -2496,7 +2520,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_has_execution</literal>. Boolean indicating if the
+	      <varname>to_has_execution</varname>. Boolean indicating if the
 	      target is currently executing. For some targets that is the same
 	      as if they are capable of execution. However some remote targets
 	      can be in the position where they are not executing until
@@ -2507,7 +2531,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_has_thread_control</literal>. Boolean indicating if
+	      <varname>to_has_thread_control</varname>. Boolean indicating if
 	      the target can switch threads.
 	    </para>
 	  </listitem>
@@ -2538,7 +2562,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      <literal>to_async_mask_value</literal>. Asynchronous targets can
+	      <varname>to_async_mask_value</varname>. Asynchronous targets can
 	      be a problem, when a function needs to be evaluated (for example
 	      with the &gdb; <command>call</command> command). This is a patch
 	      to put the target temporarily into synchronous mode while the
@@ -2567,6 +2591,105 @@ $Id$
 
     </sect1>
 
+    <sect1>
+      <title>
+	Adding Commands to &gdb;
+      </title>
+
+      <para>
+	&gdb;'s command handling is intended to be extensible. A set of
+	functions (defined in <filename>cli-decode.h</filename>) provide that
+	extensibility.
+      </para>
+
+      <para>
+	&gdb; groups its commands into a number of command lists (of
+	<structname>struct&nbsp;cmd_list_element</structname>), pointed to by
+	a number of global variables (defined in
+	<filename>cli-cmds.h</filename>). Of these, <varname>cmdlist</varname>
+	is the list of all defined commands. Separate lists defined
+	sub-commands of various top level commands. For example
+	<varname>infolist</varname> is the list of all <command>info</command>
+	sub-commands.
+      </para>
+
+      <para>
+	Commands are also classified according the the area they address, for
+	example commands that provide support, commands that examine data,
+	commands for file handling etc. These classes are specified by
+	<type>enum&nbsp;command_class</type>, defined in
+	<filename>command.h</filename>. These classes provide the top level
+	categories in which help will be given.
+      </para>
+
+      <para>
+	Each command (or sub-command) is associated with a callback function
+	which implements the behavior of the functions. There are additional
+	requirements for functions which set or show values within &gdb;. Each
+	function also takes a documentation string (used by the help
+	command). Functions for adding commands all return a pointer
+	to the <structname>struct&nbsp;cmd_list_element</structname> for the
+	command added (which is not necessarily the head of its command
+	list). The most useful functions are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <function>add_cmd</function>. Add a function to a command list.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>add_com</function>. Add a function to the main command
+	    list, <varname>cmdlist</varname>. This is a convenience wrapper
+	    for <function>add_cmd</function>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>add_prefix_cmd</function>. Add a new prefix
+	    command. This command should have its own function for use if it
+	    is called on its own, and a global command list pointer specific
+	    to the prefix command to which all its sub-commands will be
+	    added. If a prefix command is called with an unknown sub-command,
+	    it can either give an error or call the function of the prefix
+	    command itself. Which of these is used is specified by a flag in
+	    the call to <function>add_prefix_cmd</function>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>add_alias_cmd</function>. Add an alias for a command
+	    already defined.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>add_info</function>. Add a sub-command to the
+	    <command>info</command>. A convenience wrapper for
+	    <function>add_cmd</function>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>add_cmd</function>. Add a function to a command list.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	New commands are usually added in the
+	<literal>initialize_</literal><emphasis>arch</emphasis> function after
+	the &gdbarch; has been defined.
+      </para>
+    </sect1>
+
     <sect1 id="ref_simulators">
       <title>
 	Simulators
@@ -2582,7 +2705,7 @@ $Id$
 	The simulator should be built as a library,
 	<filename>libsim.a</filename>, implementing the standard &gdb;
 	simulator interface. The location of the library is specified by
-	setting the <literal>gdb_sim</literal> parameter in
+	setting the <parameter>gdb_sim</parameter> parameter in
 	<filename>configure.tgt</filename>.
       </para>
 
@@ -2781,8 +2904,94 @@ $Id$
       </title>
 
       <para>
+	Running the &gdb; testsuite requires that the
+	<application>DejaGNU</application> package is installed. The tests can
+	then be run with:
+      </para>
+
+      <informalexample>
+	<para>
+	  <command>make check</command>
+	</para>
+      </informalexample>
+
+      <para>
+	On completion of the run, the summary results will be in the
+	<filename>gdb/testsuite</filename> directory in
+	<filename>gdb.sum</filename> with the detailed log in
+	<filename>gdb.log</filename>
+      </para>
+
+      <para>
+	For the most comprehensive tests in an envioronment where host and
+	target differ, DejaGNU needs some additonal configuration. This can be
+	achieved by setting the <constant>DEJAGNU</constant> environment
+	variable to refer to a suitable configuration file, and defining a
+	custom board configuration file in the directory
+	<filename>~/boards</filename>. These configuration files can be used
+	to specify a suitable simulator and how to connect it when running
+	tests.
       </para>
     </sect1>
+
+    <sect1>
+      <title>
+	Documentation
+      </title>
+
+      <para>
+	Some of &gdb; subdirectories in turn have <filename>doc</filename>
+	subdirectories. The documentation is written in
+	<application>texinfo</application> (<xref linkend="ref_texinfo" />),
+	from which documents can be generated as &pdf;, PostScript, &html; or
+	<command>info</command> files. The documentation is not built
+	automatically with <command>make&nbsp;all</command>, nor with
+	<command>make&nbsp;doc</command>.
+      </para>
+
+      <para>
+	To create documentation, change to the individual documentation
+	directory and use <command>make&nbsp;html</command>,
+	<command>make&nbsp;pdf</command>, <command>make&nbsp;ps</command> or
+	<command>make&nbsp;info</command> as required.
+      </para>
+
+      <para>
+	The main documents of interest are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <filename>bfd/doc/bfd.texinfo</filename>. This is the &bfd; manual.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>gdb/doc/gdb.texinfo</filename>. This is the main &gdb;
+	    user guide <xref linkend="ref_gdb_ug" />.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>gdb/doc/gdbint.texinfo</filename>. This is the internals
+	    user guide <xref linkend="ref_gdb_int" />. It is essential reading
+	    for any developer porting the code.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	The exception to automatic building is with
+	<command>make&nbsp;install</command>. This will build
+	<command>info</command> files for any documents in the
+	<filename>gdb/doc</filename> directory and install them in the
+	<filename>info</filename> sub-directory of the install directory.
+      </para>
+
+    </sect1>      
 
     <sect1>
       <title>
@@ -2797,7 +3006,7 @@ $Id$
       <itemizedlist>
 	<listitem>
 	  <para>
-	    Ensure a &bfd; exisits for executables of the target architecture
+	    Ensure a &bfd; exists for executables of the target architecture
 	    in the <filename>bfd</filename> directory. If one does not exist,
 	    create one by modifying an existing similar one.
 	  </para>
@@ -2856,6 +3065,15 @@ $Id$
 	    your new port included in the main distribution!
 	  </para>
 	</listitem>
+
+	<listitem>
+	  <para>
+	    Add a description of the new architecture to the "Configuration
+	    Specific Information" section in the main &gdb; user guide
+	    (<filename>gdb/doc/gdb.texinfo</filename> <xref
+	    linkend="ref_gdb_ug" />).
+	  </para>
+	</listitem>
       </itemizedlist>
 
     </sect1>
@@ -2867,12 +3085,53 @@ $Id$
       Porting the OpenRISC 1000 Architecture
     </title>
 
+    <para>
+      This chapter describes the steps in porting the OpenRISC 1000
+      architecture to &gdb;. It uses the information and data structures
+      described in <xref linkend="chap_gdb_internals" />.
+    </para>
+
+    <para>
+      Strictly speaking this was not a new port. An old port existed for &gdb;
+      5.3. However &gdb; has changed substantially since that time, and an
+      almost complete reimplementation was required.
+    </para>
+
+    <tip>
+      <para>
+	When working with any large code base a TAGS file is invaluable. This
+	allows immediate lookup of any procedure or variable across the entire
+	code base. Normally for any GNU project, this is achieved with the
+	command <command>make tags</command>. However this does not work for
+	&gdb;&mdash;there is a problem with the <literal>tags</literal> target
+	in the <filename>opcodes</filename> directory.
+      </para>
+
+      <para>
+	However tags building <emphasis>does</emphasis> work in the
+	<filename>gdb</filename> directory, so a <filename>TAGS</filename>
+	file can be built in that directory by:
+      </para>
+
+      <informalexample>
+	<literallayout>
+<command>cd gdb</command>
+<command>make tags</command>
+<command>cd ..</command>
+	</literallayout>
+      </informalexample>
+	
+    </tip>
+
     <sect1>
       <title>
 	BFD Specification
       </title>
 
       <para>
+	The &bfd; specification for OpenRISC 1000 already existed (it is part
+	of binutils), so there was no need to implement this. The existing
+	code is just reused.
       </para>
 
     </sect1>
@@ -2883,7 +3142,918 @@ $Id$
       </title>
 
       <para>
+	The code resides in the <filename>gdb</filename> sub-directory. The
+	main architectural specfication is in
+	<filename>or1k-tdep.c</filename>, with and OpenRISC 1000 wide header
+	in <filename>or1k-tdep.h</filename>. Support for the OpenRISC 1000
+	Remote JTAG interface is in <filename>remote-or1k.c</filename> with
+	the detailed protocol in <filename>or1k-jtag.c</filename> and a
+	protocol header in <filename>or1k-jtag.h</filename>.
       </para>
+
+      <para>
+	There are several targets which can use the OpenRISC 1000
+	architecture. These all begin <literal>or16</literal>,
+	<literal>or32</literal> or <literal>or32</literal>. The
+	<filename>configure.tgt</filename> is edited to add patterns for these
+	that will pick up the binaries generated from these source files.
+      </para>
+
+      <programlisting>or16* | or32* | or64*)
+        # Target: OpenCores OpenRISC 1000 architecture
+        gdb_target_obs="or1k-tdep.o remote-or1k.o or1k-jtag.o"
+        ;;</programlisting>
+
+      <caution>
+	<para>
+	  <filename>configure.tgt</filename> only specifies binaries, so
+	  cannot show dependencies on headers. To correct this,
+	  <filename>Makefile.in</filename> can be edited, so that automake and
+	  configure will generate a <filename>Makefile</filename> with the
+	  correct dependencies.
+	</para>
+      </caution>
+
+      <para>
+	The architecture definition is created from the
+	<function>_initialize_or1k_tdep</function> by a call to
+	<function>gdbarch_register</function>. That function also initializes
+	the disassembler (<function>build_automata</function>) and adds two
+	new commands: a sub-command to the <command>info</command> command to
+	read &spr;s and a new top level support command,
+	<command>spr</command> to set the value of &spr;s.
+      </para>
+
+      <sect2>
+	<title>
+	  Creating &gdbarch;
+	</title>
+
+	<para>
+	  <function>gdbarch_register</function> is called for &bfd; type
+	  <constant>bfd_arch_or32</constant> with the initialization function
+	  <function>or1k_gdbarch_init</function> and the target specific dump
+	  function, <function>or1k_dump_tdep</function>.
+	</para>
+
+	<para>
+	  Future implementations may make additional calls to use the same
+	  function to create a 64-bit version of the architecture.
+	</para>
+
+	<para>
+	  <function>gdbarch_init</function> receives the &gdbarch_info;
+	  created from the &bfd; entries and the list of existing
+	  architectures. That list is first checked, using
+	  <function>gdbarch_list_lookup_by_info</function> to see if there is
+	  already an architecture defined suitable for the given
+	  &gdbarch_info; and if so it is returned.
+	</para>
+
+	<para>
+	  Otherwise a new &gdbarch; is created. For that a the target
+	  dependencies are saved in an OpenRISC 1000 specific
+	  <structname>struct&nbsp;gdbarch_tdep</structname>, defined in
+	  <filename>or1k-tdep.h</filename>.
+	</para>
+
+	<programlisting>struct gdbarch_tdep
+{
+  int           is_initialized;
+  unsigned int  version;
+  unsigned int  upr;
+  unsigned int  num_matchpoints;
+  unsigned int  num_gpr_regs;
+  int           bytes_per_word;
+  int           bytes_per_address;
+};</programlisting>
+	  
+	<para>
+	  This is information beyond that which is held in the &gdbarch;. By
+	  using this structure, the &gdb; implementation for OpenRISC 1000 can
+	  be made flexible enough to deal with both 32 and 64-bit
+	  implementations and with variable numbers of registers and
+	  matchpoints. The <varname>is_initialized</varname> flag is required,
+	  because some of this data is obtained fom the specific target on
+	  connection, so is not available until that time.
+	</para>
+
+	<note>
+	  <para>
+	    Although this flexibility is built in to the code, the current
+	    implementation has only been tested with 32-bit OpenRISC without
+	    floating point or vector support and with 32 registers.
+	  </para>
+	</note>
+
+	<para>
+	  The new architecture is then created by
+	  <function>gdbarch_alloc</function>, passing in the
+	  &gdbarch_info; and the
+	  <structname>struct&nbsp;gdbarch_tdep</structname>.
+	</para>
+
+	<para>
+	  The &gdbarch; is populated using the various
+	  <literal>set_gdbarch_</literal> functions. The first group of these
+	  initialize the size and format of all the standard data types, for
+	  example:
+	</para>
+
+        <programlisting>set_gdbarch_short_bit             (gdbarch, 16);</programlisting>
+
+	<para>
+	  The next group of functions set up register handling. The
+	  representation of the <emphasis>raw</emphasis> registers (see <xref
+	  linkend="sec_regcache" />) is: registers 0-31 are the corresponding
+	  &gpr;s, register 32 is the program counter and register 33 is the
+	  supervision register. For convenience, constants are defined in the
+	  header, <filename>or1k_tdep.h</filename>, for all the special
+	  registers.
+	</para>
+
+	<programlisting>#define OR1K_SP_REGNUM         1
+#define OR1K_FP_REGNUM         2
+#define OR1K_FIRST_ARG_REGNUM  3
+#define OR1K_LAST_ARG_REGNUM   8
+#define OR1K_LR_REGNUM         9
+#define OR1K_RV_REGNUM        11
+#define OR1K_PC_REGNUM       (OR1K_MAX_GPR_REGS + 0)
+#define OR1K_SR_REGNUM       (OR1K_MAX_GPR_REGS + 1)</programlisting>
+
+	<para>
+	  In this implementation there are no pseudo-registers. A set could
+	  have been provided to represent the &gpr;s in floating point format
+	  (for use with the floating point instructions), but this has not
+	  been implemented. Constants are defined for the various totals
+	</para>
+
+        <programlisting>#define OR1K_MAX_GPR_REGS    32
+#define OR1K_NUM_PSEUDO_REGS  0
+#define OR1K_NUM_REGS        (OR1K_MAX_GPR_REGS + 2)
+#define OR1K_TOTAL_NUM_REGS  (OR1K_NUM_REGS + OR1K_NUM_PSEUDO_REGS)</programlisting>
+
+        <caution>
+	  <para>
+	    These totals are currently hard-coded constants. They should
+	    really draw on the data in the &gdbarch_tdep;, providing support
+	    for architectures which have less than the full complement of 32
+	    registers.
+	  </para>
+
+	  <para>
+	    This functionality will be provided in a future implementation.
+	  </para>
+	</caution>
+	    
+	<para>
+	  Although this architecture currently has no pseudo-registers, the
+	  functions to read and write these registers are added as
+	  place-holders, <function>or1k_pseudo_register_read</function> and
+	  <function>or1k_pseudo_register_write</function>. The number of
+	  registers and the specific values are set for stack pointer, program
+	  counter and processor status. The virtual frame pointer is set by
+	  <function>or1k_virtual_frame_pointer_function</function>.  Functions
+	  provided to give the name, type and group of a register
+	  (<function>or1k_register_name</function>,
+	  <function>or1k_register_type</function> and
+	  <function>or1k_register_reggroup_p</function>) and to provide the
+	  output for the <command>info&nbsp;registers</command> command
+	  (<function>or1k_registers_info</function>). The implementation of
+	  these functions is discussed in more detail in <xref
+	  linkend="sec_or1k_reg_funcs" />.
+	</para>
+
+	<para>
+	  The next group of functions handle frames. These are functions to
+	  set up and tear down a dummy stack frame
+	  (<function>or1k_push_dummy_call</function> and
+	  <function>or1k_unwind_dummy_id</function>), a function to determine
+	  the type of a return value (<function>or1k_return_value</function>),
+	  a function to skip the prologue of a function
+	  (<function>or1k_skip_prologue</function>), a function to determine
+	  whether the stack frame is rising or falling (the generic
+	  <function>core_addr_lessthan</function>), a function to enforce the
+	  frame alignment rules (<function>or1k_frame_align</function>), the
+	  red zone size (<constant>OR1K_RED_ZONE_SIZE</constant>, see <xref
+	  linkend="sec_gdbarch" />, a function to check for delay slots
+	  (<function>or1k_single_step_through_delay</function> and functions
+	  to unwind standard registers from the stack
+	  (<function>or1k_unwind_pc</function> and
+	  <function>or1k_unwind_sp</function>). The handling of OpenRISC 1000
+	  frames is discussed in more detail in <xref
+	  linkend="sec_or1k_frames" /> and the implementation of the frame
+	  handling function in <xref linkend="sec_or1k_frame_funcs" />.
+	</para>
+
+	<para>
+	  Finally two functions, which do not fit in the other
+	  groups. <function>or1k_breakpoint_from_pc</function> returns the
+	  breakpoint function to be used at a given program counter
+	  address. Since all OpenRISC 1000 instructions are the same size,
+	  this function always returns the same value, the instruction
+	  sequence for a <literal>l.trap</literal> instruction.
+	</para>
+
+	<para>
+	  The other function is the disassembler. There are two variants of
+	  this, depending on the endianism. The disassembler is discussed in
+	  more detail in <xref linkend="sec_or1k_disasm" />.
+	</para>
+
+	<para>
+	  This completes the definition of the &gdbarch; for the OpenRISC
+	  1000. However before the function returns, suitable frame sniffers
+	  are set up for the architecture. These are described in <xref
+	  linkend="sec_or1k_frames" />.
+	</para>
+
+	<para>
+	  When creating a new &gdbarch; a function must be provided to dump
+	  the target specific definitions in &gdbarch_tdep; to a file. This is
+	  provided in <function>or1k_dump_tdep</function>. It is passed a
+	  pointer to the &gdbarch; and a file handle and simply writes out the
+	  fields in the &gdbarch_tdep; with suitable explanatory text.
+	</para>
+
+	<sect3 id="sec_or1k_reg_funcs">
+	  <title>
+	    OpenRISC 1000 Register Handling Functions
+	  </title>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>or1k_virtual_frame_pointer</function>. &gdb;
+		increasingly discards the concept of a the frame pointer being
+		a "special" register&mdash;not all architectures have
+		them. It is up to individual architectures to define a frame
+		pointer as a raw or pseudo-register if desired. Thus the
+		setting of a register number for the frame pointer in the
+		&gdbarch; is now deprecated. However there appear to be a
+		small number of places where a pointer to the start of the
+		frame is required, which this function provides.
+	      </para>
+
+	      <para>
+		The OpenRISC 1000 does have a frame pointer (&gpr; 2). With
+		the falling stack frame, the stack pointer (&gpr; 1) points to
+		the lowest address on the frame, and the frame pointer (&fp;)
+		to the lowest address on the previous frame. Local variables
+		have negative indices on the &fp;. Function arguments that are
+		on the stack (rather than in registers) have positive offsets
+		from the &fp;, ie. they are on the end of the previous stack
+		frame.
+	      </para>
+
+	      <para>
+		The implementation trivially returns the number of the frame
+		pointer register and and offset from that register to the
+		start of the frame.
+	      </para>
+
+	      <note>
+		<para>
+		  This function <emphasis>does not</emphasis> give the value
+		  of the <varname>$fp</varname> variable in &gdb;. That is
+		  provided from any register named "fp", from the deprecated
+		  &fp; register number if it has been set, or from the base
+		  address returned by the frame sniffer.
+		</para>
+	      </note>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_pseudo_register_read</function> and
+		<function>or1k_pseudo_register_write</function>. The functions
+		are defined as hooks, but in the absence of any
+		pseudo-registers they do nothing.
+	      </para>
+	    </listitem>
+	
+	    <listitem>
+	      <para>
+		<function>or1k_register_name</function>. This is a simple
+		table lookup to yield the register name from its number.
+	      </para>
+	    </listitem>
+	
+	    <listitem>
+	      <para>
+		<function>or1k_register_type</function>. This function must
+		return the type as a
+		<structname>struct&nbsp;type</structname>. This &gdb; data
+		structure contains detailed information about each type and
+		its relationship to other types.
+	      </para>
+
+	      <para>
+		For the purposes of this function, a number of standard types
+		are predefined, with utility functions to construct other
+		types from them. For most registers the predefined
+		<constant>builtin_type_int32</constant> is suitable. The stack
+		pointer and frame pointer are pointers to arbitrary data, so
+		the equivalent of <type>void *</type> is required. This is
+		constructed by applying the function
+		<function>lookup_pointer_type</function> to the predefined
+		<constant>builtin_type_void</constant>. The program counter is
+		a pointer to code, so the equivalent of a pointer to a void
+		function is appropriate. This is constructed by applying
+		<function>lookup_pointer_type</function> and
+		<function>lookup_function_type</function> to
+		<constant>builtin_type</constant>.
+	      </para>
+	    </listitem>
+	
+	    <listitem>
+	      <para>
+		<function>or1k_register_info</function>. This function is used
+		by the <command>info&nbsp;registers</command> command to
+		display information about one or more registers.
+	      </para>
+
+	      <para>
+		This function is not really needed. It is just a wrapper for
+		<function>default_print_registers_info</function>, which is
+		the default setting for this function anyway.
+	      </para>
+	    </listitem>
+	
+	    <listitem>
+	      <para>
+		<function>or1k_register_reggroup_p</function>. This predicate
+		function returns 1 (true) if a given register is in a
+		particular group. This is used by the command
+		<command>info&nbsp;registers</command> when registers in a
+		particular category are requested.
+	      </para>
+
+	      <para>
+		The function as implemented is little different from the
+		default function
+		(<function>default_register_reggroup_p</function>), which is
+		called for any unknown cases anyway. However it does make use
+		of the target dependent data (&gdbarch_tdep;), thus providing
+		flexibility for different OpenRISC 1000 architectures.
+	      </para>
+	    </listitem>
+	  </itemizedlist>	
+	    
+	</sect3>
+
+      </sect2>
+
+      <sect2 id="sec_or1k_frames">
+	<title>
+	  Frame Handling
+	</title>
+
+	<para>
+	  The OpenRISC 1000 frame structure is described in its &abi; <xref
+	  linkend="ref_or1k" />. Some of the detail is slightly different in
+	  current OpenRISC implementations&mdash;this is described in <xref
+	  linkend="sec_or1k_abi" />.
+	</para>
+
+	<para>
+	  The key to frame handling is understanding the prologue (and
+	  possibly epilogue) in each function which is responsible for
+	  initializing the stack frame. For the OpenRISC 1000, &gpr;&nbsp;1 is
+	  used as the stack pointer, &gpr;&nbsp;2 as the frame pointer and
+	  &gpr;&nbsp;9 as the return address. The prologue sequence is:
+	</para>
+
+	<informalexample>
+	  <literallayout><literal>l.addi  r1,r1,-</literal><emphasis>frame_size</emphasis>
+<literal>l.sw    </literal><emphasis>save_loc</emphasis><literal>(r1),r2</literal>
+<literal>l.addi  r2,r1,</literal><emphasis>frame_size</emphasis>
+<literal>l.sw    </literal><emphasis>save_loc</emphasis><literal>-4(r1),r9</literal>
+<literal>l.sw    </literal><emphasis>x</emphasis><literal>(r1),r</literal><emphasis>y</emphasis></literallayout>
+	</informalexample>
+
+	<para>
+	  The OpenRISC 1000 stack frame accommodates any local (automatic)
+	  variables and temporary values, then the return address, then the
+	  old frame pointer and finally any stack based arguments to functions
+	  called by this function. This last rule means that the return
+	  address and old frame pointer are not necessarily at the end of the
+	  stack frame - enough space will be left to build up any arguments
+	  for called functions that must go on the stack. <xref
+	  linkend="fig_prologue_frame" 
+	  /> shows how the stack looks at the end of the prologue.
+	</para>
+
+	<figure id="fig_prologue_frame">
+	  <title>
+	    The OpenRISC 1000 stack frame at the end of the prologue
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="prologue_frame.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="prologue_frame.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  Not all fields are always present. The function need not save its
+	  return address to stack, and there may be no callee-saved registers
+	  (i.e. &gpr;s 12, 14, 16, 18, 20, 22, 24, 26, 28 and 30) which
+	  require saving. Leaf functions are not required to set up a new
+	  stack frame at all.
+	</para>
+
+	<para>
+	  The epilogue is the inverse. Callee-saved registers are restored,
+	  the return address placed in &gpr;&nbsp;9 and the stack and frame
+	  pointers restored before jumping to the address in &gpr;&nbsp;9.
+	</para>
+
+	<informalexample>
+	  <literallayout>
+<literal>l.lwz   r</literal><emphasis>y</emphasis><literal>,</literal><emphasis>x</emphasis><literal>(r1)</literal>
+<literal>l.lwz   r9,</literal><emphasis>save_loc</emphasis><literal>-4(r1)</literal>
+<literal>l.lwz   r2,</literal><emphasis>save_loc</emphasis><literal>(r1)</literal>
+<literal>l.jr    r9</literal>
+<literal>l.addi  r1,r1,</literal><emphasis>frame_size</emphasis>
+</literallayout>
+	</informalexample>
+
+	<para>
+	  Only those parts of the epilogue which correspond to the prologue
+	  need actually appear. The OpenRISC 1000 has a delay slot after
+	  branch instructions, so for efficiency the stack restoration can be
+	  placed after the <literal>l.jr</literal> instruction.
+	</para>
+
+	<para>
+	  The OpenRISC 1000 &gdbarch; requires custom functions to create and
+	  remote dummy stack frames (<function>or1k_unwind_dummy_id</function>
+	  and <function>or1k_push_dummy_call</function>). These allow &gdb; to
+	  evaluate functions in the target, with a correct stack, so that
+	  backtraces will work correctly.
+	</para>
+
+	<para>
+	  There are a group of functions to return information about the
+	  stack. <function>or1k_return_value</function> given a type returns
+	  an enum for the style of return (via register, on the stack, by
+	  refernce). <function>or1k_skip_prolog</function> returns the address
+	  at the end of a function
+	  prologue. <function>core_addr_lessthan</function> tests two stack
+	  addresses, so &gdb; can work out whether the stack rises or
+	  falls. <function>or1k_frame_align</function> enforces the correct
+	  alignment for stack
+	  frames. <function>or1k_single_step_through_delay</function> tests if
+	  the processor is executing a delay
+	  slot. <function>or1k_unwind_pc</function> and
+	  <function>or1k_unwind_sp</function> get the value of the program
+	  counter and stack pointer respectively from &this; frame, given a
+	  poiner to the &next; frame.
+	</para>
+
+	<para>
+	  These functions all have a 1:1 relationship with &gdbarch;. However
+	  for stack analysis (or "sniffing") more than one approach may be
+	  appopriate, so a list of functions is maintained.
+	</para>
+
+	<para>
+	  The low level stack analysis functions are set by
+	  <function>frame_unwind_append_sniffer</function>. The OpenRISC 1000
+	  has its own sniffers for finding the ID of a frame and getting the
+	  value of a register on the frame specified by
+	  <function>or1k_frame_sniffer</function>. For all other sniffing
+	  functions, the default DWARF2 frame sniffer is used,
+	  <function>dwarf2_frame_sniffer</function>.
+	</para>
+
+	<para>
+	  The high level sniffer finds the base of the stack frame. OpenRISC
+	  defines its own base sniffer,
+	  <structname>or1k_frame_base</structname> as default, using
+	  <function>frame_base_set_default</function> and adds the
+	  DWARF2 frame sniffer,
+	  <structname>dwarf2_frame_base_sniffer</structname> as an alternative
+	  using <function>frame_base_append_sniffer</function>. The frame base
+	  is a structure, with entries pointing to the corresponding frame
+	  sniffer and functions to give the base address of the frame, the
+	  arguments on the frame and the local variables on the frame. Since
+	  these are all the same for the OpenRISC 1000, the same function,
+	  <function>or1k_frame_base_address</function> is used for all three.
+	</para>
+  
+	<sect3 id="sec_or1k_frame_funcs">
+	  <title>
+	    OpenRISC 1000 Frame Handling Functions
+	  </title>
+
+	  <para>
+	    The first group of functions are the frame sniffers and their
+	    support routines.
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>or1k_frame_base_address</function>. The
+		specification of this function
+		appears to require the end of the stack, i.e. the stack
+		pointer. However it is used by &gdb; to determine the value of
+		the <varname>$fp</varname> variable (which makes sense from
+		the name), so here it yields the value of the frame pointer
+		(&gpr;&nbsp;2). Like all the frame sniffers, it is passed the
+		address of the &next; frame, and requires the value for &this;
+		frame, so the value of the frame pointer is unwound from the
+		stack by using the generic register unwinder:
+	      </para>
+
+	      <programlisting>frame_unwind_register_unsigned (next_frame, OR1K_FP_REGNUM);</programlisting>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_frame_sniffer</function>. This function just
+		returns a pointer to
+		<structname>struct&nbsp;frame_unwind</structname> with entries
+		for the functions defined by this sniffer. For the OpenRISC
+		1000, this structure is the global,
+		<varname>or1k_frame_unwind</varname>. This defines a custom
+		function to construct the frame ID of &this; frame given a
+		pointer to the &next; frame
+		(<function>or1k_frame_this_id</function>) and a custom
+		function to give the value of a register in &this; frame given
+		a pointer to the next frame.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_frame_this_id</function>. This function's inputs
+		are a pointer to the &next; frame and the prologue cache
+		(if any exists) for &this; frame. It
+		uses the main OpenRISC 1000 frame analyser,
+		<function>or1k_frame_unwind_cache</function> to generate the
+		prologue cache if it does not exist (see below).
+	      </para>
+
+	      <para>
+		From the cached data, the function returns the
+		<emphasis>frame&nbsp;ID</emphasis>. This comprises two values,
+		the stack pointer for this frame and the address of the code
+		(typically the entry point) for the function using this stack
+		frame<footnote>
+		  <para>
+		    Strictly speaking frame IDs can have a third value, the
+		    <emphasis>special address</emphasis> for use with
+		    architectures which have more complex frame
+		    structures. However this is rarely used.
+		  </para>
+		</footnote>.
+	      </para>
+
+	      <para>
+		The result is returned in a
+		<structname>struct&nbsp;frame_id</structname> passed by
+		reference as a third argument. Since the implementation uses
+		the built in
+		<structname>struct&nbsp;trad_frame_cache</structname> for its
+		register cache, the code can use the
+		<function>trad_frame_get_id</function> function to decode the
+		frame ID from the cache.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_frame_prev_register</function>. This function's
+		inputs are a pointer to the &next; frame, the prologue cache
+		(if any exists) for &this; frame and a register number. It
+		uses the main OpenRISC 1000 frame analyser,
+		<function>or1k_frame_unwind_cache</function> to generate the
+		prologue cache if it does not exist (see below).
+	      </para>
+
+	      <para>
+		From the cached data, a flag is returned indicating if the
+		register has been optimized out (this is never the case), what
+		sort of l-value the register represents (a register, memory or
+		not an l-value), the address where it is saved in memory (if
+		it is saved in memory), the number of a different register
+		which holds the value of this register (if that is the case)
+		and if a buffer is provided the actual value as obttained from
+		memory or the register cache.
+	      </para>
+
+	      <para>
+		Since the implementation uses the built in
+		<structname>struct&nbsp;trad_frame_cache</structname> for its
+		register cache, the code can use the
+		<function>trad_frame_get_register</function> function to
+		decode all this information from the cache.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_frame_unwind_cache</function>. This is the
+		heart of the sniffer. It must determine the frame ID for
+		&this; frame given a pointer to the &next; frame and then the
+		information in &this; frame about the values of registers in
+		the &prev; frame.
+	      </para>
+
+	      <para>
+		All this data is returned in a prologue cache (see <xref
+		linkend="sec_frames" />), a reference to which is passed as an
+		argument. If the cache already exists for &this; frame it can
+		be returned immediately as the result.
+	      </para>
+
+	      <para>
+		If the cache does not yet exist, it is allocated (using
+		<function>trad_frame_cache_zalloc</function>). The first step
+		is to unwind the start address of this function from the
+		&next; frame. The DWARF2 information in the object file can be
+		used to find the end of the prologue (using
+		<function>skip_prologue_using_sale</function>).
+	      </para>
+
+	      <para>
+		The code then works through each instruction of the prologue
+		to find the data required. The <literal>l.addi</literal>
+		instruction should be first and its immediate constant field
+		is the size of the stack. If it is missing, then this is a
+		frameless call to a function.
+	      </para>
+
+	      <para>
+		The stack pointer is found by simply unwinding the &next;
+		frame. This value is the base of &this; frame, and is added to
+		the cache data using
+		<function>trad_frame_set_this_base</function>.
+	      </para>
+
+	      <para>
+		The stack pointer of the &prev; frame is the frame pointer of
+		&this; frame. This information is recorded in the cache using
+		<function>trad_frame_set_reg_realreg</function>. Similarly,
+		unless we subsequently find it was saved on the stack, the
+		program counter of the &prev; frame is the link register of
+		&this; frame and can also be recorded in the cache.
+	      </para>
+
+	      <para>
+		For a frameless call, there is no more information to found,
+		so the rest of the code analysis only applies if the frame
+		size was non-zero.
+	      </para>
+
+	      <para>
+		The second instruction in the prolog is where the frame
+		pointer of the &prev; frame is saved. It is an error if this
+		is missing. The address where it is saved (the stack pointer
+		of &this; frame plus the offset in the <literal>l.sw</literal>
+		instruction) is saved in the cache using
+		<function>trad_frame_set_reg_addr</function>.
+	      </para>
+
+	      <tip>
+		<para>
+		  It is essential to save the register data using the correct
+		  function. Use
+		  <function>trad_frame_set_reg_realreg</function> when a
+		  register in the &prev; frame is obtained from a register in
+		  &this; frame. Use
+		  <function>trad_frame_set_reg_addr</function> when a register
+		  in the &prev; frame is obtained from an address in &this;
+		  frame. Use <function>trad_frame_set_reg_value</function>
+		  when a register in the &prev; frame is a particular value in
+		  &this; frame. The default entry for each register is that
+		  its value in the &prev; frame is obtained from the same
+		  register in &this; frame.
+		</para>
+	      </tip>
+
+	      <para>
+		The third instruction should be an <literal>l.addi</literal>
+		instruction which sets the frame pointer. The frame size set
+		should match the frame size set in the first instruction.
+	      </para>
+
+	      <para>
+		The fourth instruction is optional and saves the return
+		address to the stack. If this instruction is found, the entry
+		in the register cache for the program counter in the &prev;
+		frame must be changed using
+		<function>trad_frame_set_reg_addr</function> to indicate it is
+		found at an address in this frame.
+	      </para>
+
+	      <para>
+		All the subsequent instructions in the prolog should be saves
+		of callee-savable registers. These are checked for until the
+		code address has reached the end of the prologue. For each
+		instruction that is found, the save location of the register
+		is recorded in the cache using
+		<function>trad_frame_set_reg_addr</function>.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_frame_size</function>,
+		<function>or1k_frame_fp_loc</function>,
+		<function>or1k_frame_size_check</function>,
+		<function>or1k_link_address</function>,
+		<function>or1k_get_saved_reg</function>. The analysis in
+		<function>or1k_frame_unwind_cache</function> makes use of
+		these helper routines to check each of the instructions in the
+		prologue. By breaking out this code into separate functions,
+		they can be reused by <function>or1k_skip_prologue</function>.
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+
+	  <para>
+	    The second group of functions are the &gdbarch; frame handling
+	    functions.
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>or1k_push_dummy_call</function>. This function
+		creates a dummy stack frame, so that &gdb; can evaluate a
+		function within the target code (for example in a
+		<command>call</command> command). The input arguments include
+		all the parameters for the call, including the return address
+		and an address where a structure should be returned.
+	      </para>
+
+	      <para>
+		The return address for the function is always breakpointed (so
+		&gdb; can trap the return). This return address is written
+		into the link register (in the register cache) using
+		<function>regcache_cooked_write_unsigned</function>).
+	      </para>
+
+	      <para>
+		If the function is to return a structure, the address where
+		the structure is to go is passed as a first argument, in
+		&gpr;&nbsp;3.
+	      </para>
+
+	      <para>
+		The next arguments are passed in the remaining argument
+		registers (up to &gpr;&nbsp;8). Structures are passed by
+		reference to their locating in memory. For 32-bit
+		architectures passing 64-bit arguments, a pair of registers (3
+		and 3, 5 and 6 or 7 and 8) are used.
+	      </para>
+
+	      <para>
+		Any remaing arguments must be pushed on the end of the
+		stack. There is a difficulty here, since pushing each argument
+		may leave the stack misaligned (OpenRISC 1000 specifies
+		double-word alignment). So the code first works out the space
+		required, then adjusts the resulting stack pointer to the
+		correct alignment. The arguments can then be written to the
+		stack in the correct location.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_unwind_dummy_id</function>. This is the inverse
+		of <function>or1k_push_dummy_call</function>. Given a pointer
+		to the &next; stack frame (which will be the frame of the
+		dummy call), it returns the frame ID (that is the stack
+		pointer and function entry point address) of &this; frame.
+	      </para>
+
+	      <para>
+		This is not completely trivial. For a dummy frame, the &next;
+		frame information about &this; frame is not necessarily
+		complete, so a simple call to
+		<function>frame_unwind_id</function> recurses back to this
+		function <emphasis>ad infinitum</emphasis>. Instead the frame
+		information is built by unwind the stack pointer and program
+		counter and attempting to use DWARF2 symbol-and-line (&sal;)
+		information to find the start of the function from the &pc;
+		with <function>find_pc_partial_function</function>. If that
+		information is not available, the program counter is used as a
+		proxy for the function start address.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_return_value</function>. This function tells
+		&gdb; how a value of a particular type would be returned by
+		the &abi;. Structures/unions and large scalars (> 4 bytes) are
+		placed in memory and returned by reference
+		(<constant>RETURN_VALUE_ABI_RETURNS_ADDRESS</constant>. Smallers
+		scalars are returned in &gpr;&nbsp;11
+		(<constant>RETURN_VALUE_REGISTER_CONVENTION</constant>).
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_skip_prologue</function>. This function returns
+		the end of the function prologue, if the program counter is
+		currently in a function prologue.
+	      </para>
+
+	      <para>
+		The initial approach is to use the DWARF2 symbol-and-line
+		(&sal;) information to identify the start of the function
+		(<function>find_pc_partial_function</function> and hence the
+		end of the prologue
+		(<function>skip_prologue_using_sal</function>).
+	      </para>
+
+	      <para>
+		If this information is not reused,
+		<function>or1k_skip_prologue</function> reuses the helper
+		functions from the frame sniffer function,
+		<function>or1k_frame_unwind_cache</function> (see <xref
+		linkend="sec_frame_funcs" />) to step through code that
+		appears to be function prologue.
+	      </para>
+
+	      <caution>
+		<para>
+		  There is some evidence that the &sal; information in
+		  compiled OpenRISC 1000 programs is not always
+		  correct. Occasionally code can be deemed to be in the
+		  prologue, when it actually forms part of the body of the
+		  function.
+		</para>
+	      </caution>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_frame_align</function>. This function takes a
+		stack pointer and returns a value (expanding the frame) which
+		meets the stack alignment requirements of the &abi;. Since the
+		OpenRISC 1000 &abi; uses a falling stack, this uses the
+		built-in function, <function>align_down</function>. The
+		alignment is specified in the constant
+		<constant>OR1K_STACK_ALIGN</constant> defined in
+		<filename>or1k-tdep.h</filename>.
+	      </para>
+
+	      <note>
+		<para>
+		  The OpenRISC 1000 &abi; specifies that frames should be
+		  double-word aligned. However the version of &gcc; in the
+		  current OpenRISC toolchain implements single-word
+		  alignment. So the current &gdb; implementation specifies
+		  <constant>OR1K_STACK_ALIGN</constant> to be 4, not 8.
+		</para>
+	      </note>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_single_step_through_delay</function>. This
+		function is used to determine if a single stepped instruction
+		is actually executing a delay slot. This is the case if the
+		current instruction is a break instruction
+		<emphasis>and</emphasis> it is the same instruction we have
+		just seen.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_unwind_pc</function>,
+		<function>or1k_unwind_sp</function>. Given the &next; frame,
+		these functions return respectively the program counter and
+		stack pointer. Since these are both ordinary registers, these
+		functions map directly onto calls to
+		<function>frame_unwind_register_unsigned</function>.
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+
+	</sect3>
+
+      </sect2>
 
     </sect1>
 
@@ -2901,6 +4071,26 @@ $Id$
 	</para>
 
       </sect2>
+
+    </sect1>
+
+    <sect1 id="sec_or1k_disasm">
+      <title>
+	The OpenRISC 1000 Disassembler
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	OpenRISC 1000 Specific Commands for &gdb;
+      </title>
+
+      <para>
+      </para>
 
     </sect1>
 
@@ -3156,6 +4346,23 @@ $Id$
 	<ulink
 	    url="http://www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf"/>
       </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_texinfo">
+      <title id="ref_texinfo_xr">
+	Texinfo: The &gnu; Documentation Format
+      </title>
+      <firstname>Robert</firstname> J <surname>Chassell</surname> and
+      <firstname>Richard</firstname> <surname>Stallman</surname>,
+      issue <issuenum>4.12</issuenum>.
+      <publisher>
+	<publishername>
+	  Free Software Foundation
+	</publishername>
+      </publisher>
+      <pubdate>
+	9 April, 2008
+      </pubdate>.
     </bibliomixed>
 
   </bibliography>
