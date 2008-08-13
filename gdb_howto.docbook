@@ -3136,7 +3136,7 @@ $Id$
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_target_arch">
       <title>
 	Target Architecture Specification
       </title>
@@ -3792,41 +3792,45 @@ $Id$
 
 	      <para>
 		The code then works through each instruction of the prologue
-		to find the data required. The <literal>l.addi</literal>
-		instruction should be first and its immediate constant field
-		is the size of the stack. If it is missing, then this is a
-		frameless call to a function.
+		to find the data required.
 	      </para>
 
+	      <caution>
+		<para>
+		  The analysis must only consider prologue instructions that
+		  have actually been executed. It is quite possible the
+		  program counter is in the prologue code, and only
+		  instructions that have actually been executed should be
+		  analysed.
+		</para>
+	      </caution>
+
 	      <para>
-		The stack pointer is found by simply unwinding the &next;
-		frame. This value is the base of &this; frame, and is added to
-		the cache data using
+		The stack pointer and program counter are found by simply
+		unwinding the &next; frame. The stack pointer is the base of
+		&this; frame, and is added to the cache data using
 		<function>trad_frame_set_this_base</function>.
 	      </para>
 
 	      <para>
-		The stack pointer of the &prev; frame is the frame pointer of
-		&this; frame. This information is recorded in the cache using
-		<function>trad_frame_set_reg_realreg</function>. Similarly,
-		unless we subsequently find it was saved on the stack, the
+		<varname>end_iaddr</varname> marks the end of the code we
+		should analyse. Only instructions with addresses less than
+		this will be considered.
+	      </para>
+
+	      <para>
+		The <literal>l.addi</literal> instruction should be first and
+		its immediate constant field is the size of the stack. If it
+		is missing, then this is a frameless call to a function. If
+		the program counter is right at the start of the function,
+		before the stack and frame pointers are set up, then it will
+		also look like a frameless function.
+	      </para>
+
+	      <para>
+		Unless we subsequently find it was saved on the stack, the
 		program counter of the &prev; frame is the link register of
-		&this; frame and can also be recorded in the cache.
-	      </para>
-
-	      <para>
-		For a frameless call, there is no more information to found,
-		so the rest of the code analysis only applies if the frame
-		size was non-zero.
-	      </para>
-
-	      <para>
-		The second instruction in the prolog is where the frame
-		pointer of the &prev; frame is saved. It is an error if this
-		is missing. The address where it is saved (the stack pointer
-		of &this; frame plus the offset in the <literal>l.sw</literal>
-		instruction) is saved in the cache using
-		<function>trad_frame_set_reg_addr</function>.
+		&this; frame and can be recorded in the register cache.
 	      </para>
 
 	      <tip>
@@ -3847,9 +3851,27 @@ $Id$
 	      </tip>
 
 	      <para>
+		For a frameless call, there is no more information to found,
+		so the rest of the code analysis only applies if the frame
+		size was non-zero.
+	      </para>
+
+	      <para>
+		The second instruction in the prolog is where the frame
+		pointer of the &prev; frame is saved. It is an error if this
+		is missing. The address where it is saved (the stack pointer
+		of &this; frame plus the offset in the <literal>l.sw</literal>
+		instruction) is saved in the cache using
+		<function>trad_frame_set_reg_addr</function>.
+	      </para>
+
+	      <para>
 		The third instruction should be an <literal>l.addi</literal>
 		instruction which sets the frame pointer. The frame size set
-		should match the frame size set in the first instruction.
+		should match the frame size set in the first instruction. Once
+		this has been set up, the frame pointer can be used to yield
+		the stack pointer of the previous frame. This information is
+		recorded in the register cache.
 	      </para>
 
 	      <para>
@@ -3990,7 +4012,7 @@ $Id$
 		<function>or1k_skip_prologue</function> reuses the helper
 		functions from the frame sniffer function,
 		<function>or1k_frame_unwind_cache</function> (see <xref
-		linkend="sec_frame_funcs" />) to step through code that
+		linkend="sec_or1k_frame_funcs" />) to step through code that
 		appears to be function prologue.
 	      </para>
 
@@ -4062,6 +4084,791 @@ $Id$
 	OpenRISC 1000 &jtag; Remote Target Specification
       </title>
 
+      <para>
+	The code for the remote target specification for the OpenRISC Remote
+	JTAG protocol is found in the <filename>gdb</filename>
+	sub-directory. <filename>remote-or1k.c</filename> contains the target
+	definition. The low-level interface is found in
+	<filename>or1k-jtag.c</filename> with a shared header in
+	<filename>or1k-jtagh</filename>.
+      </para>
+
+      <para>
+	The low-level interface is abstracted to a set of OpenRISC 1000
+	specific functions relating to the behavior of the target, rather than
+	the chosen interface. This allows alternatives to the JTAG interface
+	to be implemented in the future. The interface is captured as a set of
+	functions in <structname>struct&nbsp;or1k_extra_ops</structname>.
+      </para>
+
+      <programlisting>struct or1k_extra_ops {
+  void      (*to_init) (char *args);
+  void      (*to_reset)();
+  void      (*to_wait)();
+  void      (*to_done)();
+  ULONGEST  (*to_read_spr) (unsigned int  sprnum);
+  void      (*to_write_spr) (unsigned int  sprnum,
+                             ULONGEST      data);
+  int       (*to_read_mem) (CORE_ADDR     addr,
+                            gdb_byte     *buf,
+                            int           len);
+  int       (*to_write_mem) (CORE_ADDR       addr,
+                             const gdb_byte *buf,
+                             int             len);
+  void      (*to_stall)();
+  void      (*to_unstall)();
+  void      (*to_trace)();
+  void      (*to_untrace)();
+};</programlisting>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <function>to_init</function>. Initialize a connection to the
+	    target.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_reset</function>. Reset the target.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_wait</function>. Wait for the target to stall.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_done</function>. Close the connection to the target.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_read_spr</function> and
+	    <function>to_write_spr</function>. Read or write a special
+	    purpose register.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_read_mem</function> and
+	    <function>to_write_mem</function>. Read or write a block of
+	    memory.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_stall</function> and
+	    <function>to_unstall</function>. Stall or unstall the target.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <function>to_trace</function> and
+	    <function>to_untrace</function>. Turn hardware trace on or off for
+	    the target.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	The current set of OpenRISC 1000 specific operations is pointed to by
+	<varname>or1k_extra_ops</varname>. This is defined in the main
+	architecture file (<filename>or1k-tdep.c</filename>), since some of
+	the functions implementing additional &gdb; commands, which are
+	defined there use these functions.
+      </para>
+
+      <para>
+	There is a wrapper for each of these OpenRISC 1000 specific extra
+	operations. This tests if the operation is defined in the structure
+	pointed to by <varname>extra_ops</varname>. If it is defined, the
+	function is called, otherwise an error is raised.
+      </para>
+
+      <para>
+	The binaries for the remote target interface
+	(<filename>remote-or1k.o</filename> and
+	<filename>or1k-jtag.o</filename>) are added to the
+	<filename>configure.tgt</filename> file for the OpenRISC targets. As
+	noted in <xref linkend="sec_target_arch" />, this only specifies
+	binaries, so dependencies on headers cannot be captured. To do this
+	requires editing the <filename>Makefile.in</filename>.
+      </para>
+
+      <tip>
+	<para>
+	  As a shortcut for a simple port, editing
+	  <filename>Makefile.in</filename> can be omitted. Instead,
+	  <command>touch</command> the target specific C source files before
+	  calling <command>make</command> to ensure they are rebuilt.
+	</para>
+      </tip>
+
+      <para>
+	The remote target is created by defining the function
+	<function>_initialize_remote_or1k</function>. A new &target_ops;,
+	<varname>or1k_jtag_target</varname> is populated and added as a target
+	by calling <function>add_target</function>.
+      </para>
+
+      <sect2>
+	<title>
+	  Creating &target_ops;
+	</title>
+
+	<para>
+	  The majority of the target operations are generic to OpenRISC 1000,
+	  and independent of the actual low level interface. This is achieved
+	  by abstracting the low level interface through
+	  <varname>or1k_extra_ops</varname>.
+	</para>
+
+	<para>
+	  There are a group of operations which establish the link to the
+	  target and get a program ready to
+	  run. <function>or1k_close</function> closes the
+	  connection. <function>or1k_create_inferior</function> and
+	  <function>or1k_mourn_inferior</function> respectively set up a
+	  program ready to run on the target, and tidy up after execution has
+	  completed.
+	</para>
+
+	<para>
+	  There are a group of functions which control the execution of the
+	  program on the target. <function>or1k_resume</function> requests
+	  execution to resume (or start for the first
+	  time). <function>or1k_detach</function> disconnects the debugger
+	  from the target, while leaving the program
+	  running. <function>or1k_wait</function> waits for execution on the
+	  target to halt, for example due to a breakpoint, by watching for the
+	  processor stalling. <function>or1k_stop</function> stops execution
+	  of the target, while <function>or1k_kill</function> stops execution
+	  of the target more forcefully.
+	</para>
+
+	<para>
+	  There are a group of functions to access the state of the
+	  target. <function>or1k_fetch_registers</function> and
+	  <function>or1k_store_registers</function> read and write the raw
+	  &gdb; registers (the &gpr;s, program counter and supervision
+	  register), with <function>or1k_prepare_to_store</function> as a
+	  function that can help
+	  this. <function>or1k_jtag_xfer_partial</function> is used to read
+	  and write main memory. Object file loading is achieved with the
+	  generic loader, <function>generic_load</function>.
+	</para>
+
+	<para>
+	  The function <function>or1k_files_info</function> provides data on
+	  the remote target for use by the
+	  <command>info&nbsp;target</command> command.
+	</para>
+
+	<para>
+	  There are a group of functions to handle breakpoints and
+	  watchpoints, <function>or1k_insert_breakpoint</function>,
+	  <function>or1k_remove_breakpoint</function>,
+	  <function>or1k_insert_watchpoint</function>,
+	  <function>or1k_remove_watchpoint</function> and
+	  <function>or1k_stopped_by_watchpoint</function>. &gdb; allows remote
+	  targets to distinguish between software and hardware breakpoints,
+	  but the OpenRISC 1000 treats them identically, using the same
+	  functions for both.
+	</para>
+
+	<para>
+	  Various data fields are then set up. This target controls executing
+	  programs, so is in the <constant>process_stratum</constant>. Since
+	  it is a running process, target has access to all its memory, a
+	  stack, registers and can execute.
+	</para>
+
+	<para>
+	  The last group of functions are <emphasis>not</emphasis> generic to
+	  the OpenRISC 1000&mdash;they differ for each target interface. The
+	  function to open a connection for a JTAG interface is
+	  <function>or1k_jtag_open</function>. The name of the interface is
+	  "jtag" (this means the command to establish the connection will be
+	  <command>target jtag ...</command>). Long name and documentation is
+	  also specific to the interace.
+	</para>
+
+	<para>
+	  Having established all the target functions, the target is added by
+	  calling <function>add_target</function>
+	</para>
+
+	<para>
+	  When a target is selected (with the &gdb;
+	  <command>target&nbsp;jtag</command> command), the set of target
+	  operations chosen for use with the OpenRISC 1000 architecture will
+	  be referred to by the global variable,
+	  <varname>or1k_target</varname>, defined in
+	  <filename>or1k-tdep.c</filename>.
+	</para>
+
+	<note>
+	  <para>
+	    &gdb; has its own global variable,
+	    <varname>current_target</varname>, which refers to the current set
+	    of target operations. However this is not sufficient, since even
+	    though a target may be connected via the OpenRISC remote
+	    interface, it may not be the <emphasis>current</emphasis>
+	    target. The use of strata by &gdb; means there could possibly be
+	    another target which is active at the same time.
+	  </para>
+	</note>
+
+	<sect3>
+	  <title>
+	    OpenRISC 1000 Remote &jtag; Target Operation Functions
+	  </title>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<function>or1k_jtag_open</function>. This is the interface
+		specific open function for the OpenRISC JTAG protocol. It
+		initializes <varname>or1k_target</varname> with the
+		&target_ops; for the OpenRISC JTAG inteface and 
+		initializes <varname>or1k_extra_ops</varname> with the extra
+		inteface operations for the OpenRISC 1000 protocol. It then
+		calls <function>or1k_open</function> which is interface
+		independent.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_open</function>. This is passed the arguments
+		to the <command>target jtag</command> command and establishes
+		the connection to the target. This is achieved through the low
+		level interface routine, <function>or1k_init</function>.
+	      </para>
+
+	      <para>
+		Having established an interface to the target, its
+		process/thread id is set to the NULL process/thread, since the
+		target does not have any concept of distinct processes or
+		threads in this implementation. The target is then pushed on
+		to the stack of targets, so
+		that it is the current target for this stratum
+		(<function>push_target</function>). Since the board is assumed
+		to be running free, the target is marked as running
+		(<function>target_mark_running</function>). This will set the
+		<varname>has_execution</varname> flag in the &target_ops;.
+	      </para>
+
+	      <para>
+		The frame cache is reinitialized
+		(<function>reinit_frame_cache</function>) and the register
+		cache invalidated
+		(<function>registers_changed</function>). The &gdb; global
+		variable for the current location in the target
+		(<varname>stop_pc</varname>) is set by reading the program
+		counter. Finally the current stack frame is printed. By giving
+		a null stack frame, the frame cache will be populated.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_close</function>. This closes the connection by
+		calling the low level interface function,
+		<function>to_done</function> if it exists and then clearing
+		the <varname>or1k_extra_ops</varname> pointer. This is the
+		final stage in closing down a remote connection. The target
+		will already have been unpushed and the inferior mourned, so
+		these actions are not required.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_create_inferior</function>. This sets up a
+		program to run on the target, but does not actually start it
+		running. It is called in response to the &gdb;
+		<command>run</command> command and is passed any arguments to
+		that command. However the OpenRISC 1000 JTAG protocol has no
+		way to send arguments to the target, so these are ignored.
+	      </para>
+
+	      <para>
+		Any existing program is killed
+		(<function>or1k_kill</function>), which has the side effect of
+		stalling the target. Breakpoints are cleared
+		(<function>remove_breakpoings</function>). The wait status is
+		cleared (<function>init_wait_for_inferior</function>) and our
+		local status is market as
+		<constant>OR1K_TARGET_STOPPED</constant>.
+	      </para>
+
+	      <para>
+		Any breakpoints that have been requested are then inserted
+		(<function>insert_breakpoints</function>) and the &gdb; global
+		entry point, <varname>entry_pt</varname> set from the entry
+		point in the executable (which for OpenRISC 1000 should always
+		be the reset vector at 0x100). Finally all the flags are
+		cleared to allow the program to run in response to a call to
+		resume (<function>clear_proceed_status</function>).
+	      </para>
+
+	      <tip>
+		<para>
+		  If &gdb; for the OpenRISC 1000 is used with
+		  <command>ddd</command> the warning about passing arguments will
+		  often be triggered. This occurs when <command>ddd</command>
+		  is asked to run a program in a separate execution window,
+		  which it attempts to achieve by creating an
+		  <command>xterm</command> and redirecting I/O via pseudo-TTYs
+		  to that <command>xterm</command>. The redirections are
+		  arguments to the &gdb; <command>run</command> command.
+		</para>
+
+		<para>
+		  &gdb; for OpenRISC 1000 does not support this. The run in
+		  separate window option should be disabled with
+		  <command>ddd</command>.
+		</para>
+	      </tip>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_mourn_inferior</function>. This is the
+		counterpart to <function>or1k_create_inferior</function>,
+		called after execution has completed. It tidies up by removing
+		breakpoints (<function>remove_breakpoints></function>), marking the
+		target as exited (<function>target_mark_exited</function>) and
+		"unpushing" the target from the stack of targets
+		(<function>unpush_target</function>). The remaining tidying up
+		is entirely generic and achieved by calling
+		<function>generic_mourn_inferior</function>.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_detach</function>. This just detaches from the
+		target being debugged, which is achieved by calling
+		<function>or1k_close</function>. In the absence of an attach
+		function, there is no way of re-establishing the connection
+		after this.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_resume</function>. This is the function which
+		causes the target program to run. It is called in response to
+		the <command>run</command>, <command>step</command>,
+		<command>stepi</command>, <command>next</command> and
+		<command>nexti</command> instructions.
+	      </para>
+
+	      <para>
+		The behavior of this function is complex, because it must
+		consider a large number of scenarios. Central to the
+		implementation is the behavior of the OpenRISC 1000 &jtag;
+		interface. The debug initialization sets this up, so trap
+		exceptions are not routed via the exception vector, but stall
+		the processor, allowing the debugger to regain control. This
+		is achieved by setting the Debug Reason Register (a &spr;).
+	      </para>
+
+	      <para>
+		Normal execution is resumed by writing the Next Program
+		Counter &spr; with the address of the next instruction to
+		execute and unstalling the processor.
+	      </para>
+
+	      <para>
+		When resuming execution, the debugger needs to consider if the
+		last break was just after a branch or jump instruction. The
+		next instruction is in the delay slot, but by the time
+		execution resumes, the processor may have lost knowledge of
+		the delayed branch it was due to execute (for example if &gdb;
+		had executed a <command>call</command> command). Thus
+		branch/jump instructions must be re-executed to refill the
+		pipeline. In the case of jump-and-link instructions
+		(<literal>l.jal</literal> and <literal>l.jalr</literal>), the
+		link register also needs restoring.
+	      </para>
+
+	      <para>
+		The issue is further complicated, because the branch/jump
+		instruction may have since had a breakpoint placed on it,
+		which must be lifted to allow re-execution.
+	      </para>
+
+	      <para>
+		The code must also distinguish between single stepping calls
+		and continuous execution. The former requires setting the
+		single step flag in the Debug Mode 1 register.
+	      </para>
+
+	      <para>
+		For single stepped code, after the Debug Mode 1 register is
+		set, the following cases have to be considered.
+	      </para>
+
+	      <orderedlist>
+		<listitem>
+		  <para>
+		    The program counter has been manually reset by &gdb;. This
+		    is indicated by the <varname>or1k_new_pc_set</varname>
+		    global, set when the Next Program Counter &spr; is written
+		    explicitly in <function>or1k_write_spr</function>. Any
+		    previous branch instruction can be ignored. However if the
+		    instruction to be executed is a jump-and-link, the value
+		    of the link register should be save, with a flag to
+		    indicate this is the case. It can then be restored if the
+		    jump-and-link has to be re-executed after a trap.
+		  </para>
+		</listitem>
+
+		<listitem>
+		  <para>
+		    The previous instruction was a branch or jump. If there is
+		    now a breakpoint at that instruction, replace it by the
+		    original instruction for re-execution. If it was a
+		    jump-and-link, restore the link register and clear the
+		    flag indicating the link register was saved. Set the
+		    program counter to the value of the previous program
+		    counter and re-execute the instruction by unstalling the
+		    processor and waiting. There is no need to restore the
+		    breakpoint&mdash;when single stepping it will be reset
+		    automatically.
+		  </para>
+		</listitem>
+
+		<listitem>
+		  <para>
+		    The previous instruction was a breakpoint (may now have
+		    been cleared) in a delay slot. For this we need to
+		    re-execute the branch preceding the breakpoint, saving the
+		    link register if it was a jump-and-link). Set the program
+		    counter to the instruction before the Previous Program
+		    Counter and re-execute the instruction by unstalling the
+		    processor and waiting.
+		  </para>
+		</listitem>
+
+		<listitem>
+		  <para>
+		    Everything else&mdash; a non-delay slot instruction. If
+		    the instruction is a jump-and-link save its link register
+		    ready for re-execution in the future.
+		  </para>
+		</listitem>
+	      </orderedlist>
+
+	      <para>
+		For continuous execution, once the Debug Mode register 1
+		single-step bit has been cleared, the following cases have to
+		be considered.
+	      </para>
+
+	      <orderedlist>
+		<listitem>
+		  <para>
+		    The program counter has been manually reset by &gdb;. The
+		    program counter is explicitly written into the Next
+		    Program Counter &spr; to ensure any JTAG trap information
+		    is cleared.
+		  </para>
+		</listitem>
+
+		<listitem>
+		  <para>
+		    The previous instruction was a branch or jump, and there
+		    is currently no breakpoint there. The instruction must be
+		    re-executed. If it was a jump-and-link, the link register
+		    is restored. The program counter is set to the Previous
+		    Program Counter. There is no need to explicitly execute
+		    the instruction&mdash;it will just be the first to be
+		    executed in the continuous execution.
+		  </para>
+		</listitem>
+
+		<listitem>
+		  <para>
+		    The previous instruction was a branch or jump, and there
+		    is now a breakpoint there. We must remove the breakpoint,
+		    re-execute the instruction, then restore the breakpoint
+		    (since we are not single-stepping it may not be restored
+		    before we get to execute it again). The Debug Mode
+		    Register 1 is set for single stepping, the instruction is
+		    restored, re-executed (unstall the processor and wait),
+		    then the breakpoint instruction is put back and the Debug
+		    Mode Register 1 single stepping flag cleared.
+		  </para>
+		</listitem>
+
+		<listitem>
+		  <para>
+		    Everything else&mdash; a non-delay slot instruction. If
+		    the instruction is a jump-and-link save its link register
+		    ready for re-execution in the future.
+		  </para>
+		</listitem>
+	      </orderedlist>
+
+	      <para>
+		At this point any re-execution required is complete. The
+		<varname>or1k_new_pc_set</varname> flag can be cleared and
+		execution recommenced by unstalling the processor.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_wait_with_interrupt</function>. This is a
+		utility function for <function>or1k_resume</function> and
+		<function>or1k_wait</function>. It establishes a signal
+		handler for <constant>SIGINT</constant>, the signal sent by
+		ctrl-C. This means an executing target can be interrupted by
+		using ctrl-C. A single ctrl-C will cause the interrupt handler
+		<function>or1k_interrupt</function> to be called, which
+		requests passive interrupt by setting the &gdb; global,
+		<varname>quit_flag</varname>. A second ctrl-C triggers the
+		<function>or1k_interrupt_twice</function> which forces will
+		query the user to see if they want to kill the debugging by
+		raising an exception.
+	      </para>
+
+	      <para>
+		The function then calls the OpenRISC target operation to wait
+		for the processor to stall. When this returns, the old signal
+		hnandler is restored.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_wait </function>. This function waits for the
+		target to stall, and analyses the cause. Information about why
+		the target stalled is returned via the
+		<varname>status</varname> argument. The function returns the
+		process/thread ID of the process which stalled, although for
+		the OpenRISC 1000 this will always be the same value.
+	      </para>
+
+	      <para>
+		After the wait returns, when the processor stalls, the Debug
+		Reason Register (a &spr;) shows the reason for the stall. This
+		will be due to any exception set in the Debug Stop Register
+		(currently only trap), due to a single step, or (when the
+		target is the architectural simulator, Or1ksim) due to an exit
+		<literal>l.nop</literal> being executed.
+	      </para>
+
+	      <para>
+		Single step is treated as though it were a trap exception
+		(like a breakpoint). For true breakpoints, the program counter
+		is reset to the value of the Previous Program Counter, so the
+		instruction will be re-executed after the breakpoint.
+	      </para>
+
+	      <para>
+		The OpenRISC 1000 signal is mapped to its equivalent &gdb;
+		signal name in the <varname>status</varname>. If no signal is
+		found, that ought to be an error, but it also occurs when the
+		Architectural Simulator, Or1ksim, stalls at the end of
+		execution. Until Or1ksim is fixed, this is treated as a trap
+		and the status updated to
+		<constant>TARGET_WAITKIND_EXITED</constant>, with a return
+		code of zero.
+	      </para>
+
+	      <para>
+		If the code hit a breakpoint, then record that in
+		<varname>or1k_hit_breakpoint</varname>. That information is
+		needed when resume works out how to restart an instruction.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_stop</function>. This stops the processor
+		executing. To achieve this cleanly, the processor is stalled,
+		single step mode is set and the processor unstalled, so
+		execution will have stopped at the end of an instruction.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_kill</function>. This stops the
+		processor. Hardware trace is cleared, the processor is stalled
+		then reset. The target is unpushed and market as exited.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_fetch_registers</function>. This function
+		populates the register cache from the actual target
+		registers. The interface to the OpenRISC 1000 only provides
+		for reading of memory or &spr;s. However the &gpr;s are
+		mapped into the &spr; space, so can be read in this way.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_store_registers</function>. This is the inverse
+		of <function>or1k_fetch_registers</function>. It writes the
+		contents of the register cache back to the physical registers
+		on the target.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_prepare_to_store</function>. &gdb; allows for
+		targets which need some preparatory work before storing, so
+		provides this function. It is not needed for the OpenRISC
+		1000, so just returns.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_jtag_xfer_partial</function>. This is the
+		generic function for reading and writing objects from and to
+		the target. However the only class of object which needs be
+		supported is read and write from memory. This is achieved
+		through the low-level interface routines
+		<function>or1k_read_mem</function> and
+		<function>or1k_write_mem</function>.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_files_info</function>. This function provides
+		the initial information for
+		<command>info&nbsp;target</command>. The program being run is
+		identified and the state of the simulation. Additional
+		information about the executable will be provided
+		automatically by &gdb;
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_insert_breakpoint</function>. This function
+		inserts a breakpoint.
+		<function>or1k_can_use_hardware_breakpoint</function> checks
+		if a hardware breakpoint is available by comparing the number
+		currently active against the number available for the
+		target. If one is available, it is set via
+		<function>or1k_set_breakpoint</function>. Otherwise the
+		generic <function>memory_insert_breakpoint</function> is used
+		to set a software breakpoint.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_set_breakpoint</function>. This is the function
+		which sets a hardware breakpoint if one is available. This is
+		controlled through the Debug Value Register and Debug Control
+		Register 
+	      </para>
+
+	      <para>
+		The first free hardware matchpoint is found by searching
+		through the Debug Control Registers for a register without its
+		DVR/DCR Preset (DP) flag set. If a register is not found, the
+		functions returns failure, although that ought not to be
+		possible (the function is only called after checking for
+		availability).
+	      </para>
+
+	      <para>
+		The Debug Value Register is set to the address of the
+		breakpoint and the Debug Control Register to trigger the
+		breakpoint when the unsigned effective address of the fetched
+		instruction is equal to the Debug Value Register. The number
+		of matchpoints used is incremented. The matchpoint is marked
+		as unchained in Debug Mode Register&nbsp;1 and the breakpoint
+		enabled in Debug Mode Register&nbsp;2. The debug cache
+		registers are marked as changed so they are written out when
+		the target is next resumed.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_remove_breakpoint</function>. This is the
+		counterpart to <function>or1k_insert_breakpoint</function>. It
+		tries to clear a hardware breakpoint, and if that fails tries
+		to clear a software breakpoint instead.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_clear_breakpoint</function>. This is the
+		counterpart to <function>or1k_set_breakpoint</function>. The
+		Debug Control Registers are searched for an entry set to carry
+		out an unsigned match to the effective address for the matched
+		instruction.
+	      </para>
+
+	      <para>
+		If a register is found, its DVR/DVR Present flag is cleared,
+		and the matchpoint marked unused in Debug Mode
+		Register&nbsp;2. The debug cached registers are marked as
+		changed and the number of used matchpoints decremented.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_insert_hw_breakpoint</function> and
+		<function>or1k_remove_hw_breakpoint</function>. These
+		functions are similar to
+		<function>or1k_insert_breakpoint</function> and
+		<function>or1k_remove_breakpoint</function>. However if a
+		hardware breakpoint is not available, they do not attempt to
+		use a software (memory) breakpoint instead.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_insert_watchpoint</function>
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_remove_watchpoint</function>
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>or1k_stopped_by_watchpoint</function>
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</sect3>
+
+      </sect2>
+      
       <sect2>
 	<title>
 	  The &jtag; Interface
