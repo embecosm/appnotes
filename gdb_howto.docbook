@@ -8,23 +8,28 @@ Useful entities
 
 <!-- ========== Acronyms and abbreviations ========== -->
 
-<!ENTITY abi  "<acronym>ABI</acronym>">
-<!ENTITY bfd  "<acronym>BFD</acronym>">
-<!ENTITY fp   "<acronym>FP</acronym>">
-<!ENTITY gcc  "<acronym>GCC</acronym>">
-<!ENTITY gdb  "<acronym>GDB</acronym>">
-<!ENTITY gnu  "<acronym>GNU</acronym>">
-<!ENTITY gpr  "<acronym>GPR</acronym>">
-<!ENTITY iss  "<acronym>ISS</acronym>">
-<!ENTITY html "<acronym>HTML</acronym>">
-<!ENTITY jtag "<acronym>JTAG</acronym>">
-<!ENTITY pc   "<acronym>PC</acronym>">
-<!ENTITY pdf  "<acronym>PDF</acronym>">
-<!ENTITY rsp  "<acronym>RSP</acronym>">
-<!ENTITY sal  "<acronym>SAL</acronym>">
-<!ENTITY soc  "<acronym>SoC</acronym>">
-<!ENTITY sp   "<acronym>SP</acronym>">
-<!ENTITY spr  "<acronym>SPR</acronym>">
+<!ENTITY abi   "<acronym>ABI</acronym>">
+<!ENTITY bfd   "<acronym>BFD</acronym>">
+<!ENTITY dcr   "<acronym>DCR</acronym>">
+<!ENTITY dvr   "<acronym>DVR</acronym>">
+<!ENTITY fp    "<acronym>FP</acronym>">
+<!ENTITY fsa   "<acronym>FSA</acronym>">
+<!ENTITY gcc   "<acronym>GCC</acronym>">
+<!ENTITY gdb   "<acronym>GDB</acronym>">
+<!ENTITY gnu   "<acronym>GNU</acronym>">
+<!ENTITY gpr   "<acronym>GPR</acronym>">
+<!ENTITY html  "<acronym>HTML</acronym>">
+<!ENTITY iss   "<acronym>ISS</acronym>">
+<!ENTITY jtag  "<acronym>JTAG</acronym>">
+<!ENTITY pc    "<acronym>PC</acronym>">
+<!ENTITY pdf   "<acronym>PDF</acronym>">
+<!ENTITY rtems "<acronym>RTEMS</acronym>">
+<!ENTITY rsp   "<acronym>RSP</acronym>">
+<!ENTITY sal   "<acronym>SAL</acronym>">
+<!ENTITY soc   "<acronym>SoC</acronym>">
+<!ENTITY sp    "<acronym>SP</acronym>">
+<!ENTITY spr   "<acronym>SPR</acronym>">
+<!ENTITY usb   "<acronym>USB</acronym>">
 
 <!-- ========== commonly used things ========== -->
 
@@ -106,7 +111,7 @@ $Id$
 
 <book lang="en_GB">
   <title>
-    Howto: Porting the GNU Debugger
+    Howto: Porting the &gnu; Debugger
   </title>
   <subtitle>
     Practical Experience with the OpenRISC 1000 Architecture
@@ -198,7 +203,7 @@ $Id$
       </para>
 
       <para>
-	The software for the port of the GNU Debugger written by &embecosm;
+	The software for the port of the &gnu; Debugger written by &embecosm;
 	and used in this document are licensed under the &gpl_www;. For
 	detailed licensing information see the files
 	<filename>COPYING</filename>, <filename>COPYING3</filename>,
@@ -289,7 +294,7 @@ $Id$
       <para>
 	If you are about to start a port of &gdb; to a new architecture, this
 	document is for you. Hopefully this document will help you. If at the
-	end of your endeavours you are better informed, please help by adding
+	end of your endeavors you are better informed, please help by adding
 	to this document.
       </para>
 
@@ -397,6 +402,155 @@ $Id$
       have the characteristics of a register set (generally modest in number).
     </para>
 
+    <para>
+      A number of &spr;s are of particular significance to the &gdb;
+      implementation.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  <emphasis>Configuration registers</emphasis>. The Unit Present
+	  register (&spr;&nbsp;1, <literal>UPR</literal>), CPU Configuration
+	  register (&spr;&nbsp;2, <literal>CPUCFGR</literal>) and Debug
+	  Configuration register (&spr;&nbsp;7, <literal>DCFGR</literal>)
+	  identify the features available in the particular OpenRISC 1000
+	  implementation. This includes the instruction set in use, number of
+	  general purpose registers and configuration of the hardware debug
+	  interface.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis>Program counters</emphasis>. The Previous Program Counter
+	  (&spr;&nbsp;0x12, <literal>PPC</literal>) is the address of the
+	  instruction just executed. The Next Program Counter (&spr;&nbsp;0x10,
+	  <literal>NPC</literal>) is the address of the next instruction to be
+	  executed. The <literal>NPC</literal> is the value reported by &gdb;s
+	  <command>$pc</command> variable.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis>Supervision register</emphasis>. The supervision register
+	  (&spr;&nbsp;0x11, <literal>SR</literal>) represents the current status
+	  of the processor. It is the value reported by &gdb;s status register
+	  variable, <command>$ps</command>.
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      Of particular importance are the &spr;s in group 6 controlling the debug
+      unit (if present). The debug unit can trigger a trap exception in
+      response to any one of up to 10
+      <emphasis>watchpoints</emphasis>. Watchpoints are logical expressions
+      built by combining <emphasis>matchpoints</emphasis>, which are simple
+      point tests of particular behavior (has a specified address been
+      accessed for example).
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  <emphasis>Debug Value and Control registers</emphasis>. There are up
+	  to 8 pairs of Debug Value (&spr;&nbsp;0x3000&ndash;0x3007,
+	  <literal>DVR0</literal> through <literal>DVR7</literal>) and
+	  Debug Control (&spr;&nbsp;0x3008&ndash;0x300f,
+	  <literal>DCR0</literal> through <literal>DCR7</literal>)
+	  registers. Each pair is associated with one hardware
+	  <emphasis>matchpoint</emphasis>. The Debug Value register in each
+	  pair gives a value to compare against. The Debug Control register
+	  indicates whether the matchpoint is enabled, the type of value to
+	  compare against (instruction fetch address, data load and/or store
+	  address data load and/or store value) and the comparison to make
+	  (equal, not equal, less than, less than or equal, greater than,
+	  greater than or equal), both signed and unsigned. If the matchpoint
+	  is enabled and the test met, the corresponding matchpoint is
+	  triggered.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis>Debug Watchpoint counters</emphasis>. There are two 16-bit
+	  Debug Watchpoint Counter registers (&spr;&nbsp;0x3012&ndash;0x3013,
+	  <literal>DWCR0</literal> and <literal>DWCR1</literal>), associated
+	  with two further matchpoints. The upper 16 bits are a value to
+	  match, the lower 16 bits a counter. The counter is incremented when
+	  specified matchpoints are triggered (see Debug Mode register
+	  1). When the count reaches the match value, the corresponding
+	  matchpoint is triggered.
+	</para>
+
+	<caution>
+	  <para>
+	    There is potential ambiguity in that counters are incremented in
+	    response to matchpoints and also generate their own
+	    matchpoints. It is not good practice to set a counter to increment
+	    on its own matchpoint!
+	  </para>
+	</caution>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis>Debug Mode registers</emphasis>. There are two Debug Mode
+	  registers to control the behavior of the the debug unit
+	  (&spr;&nbsp;0x3010&ndash;0x3011, <literal>DMR1</literal> and
+	  <literal>DMR2</literal>). <literal>DMR1</literal> provides a pair of
+	  bits for each of the 10 matchpoints (8 associated with &dvr;/&dcr;
+	  pairs, 2 associated with counters). These specify whether the
+	  watchpoint is triggered by the associated matchpoint, by the
+	  matchpoint AND-ed with the previous watchpoint or by the matchpoint
+	  OR-ed with the previous watchpoint. By building chains of
+	  watchpoints, complex logical tests of hardware behavior can be built
+	  up.
+	</para>
+
+	<para>
+	  Two further bits in <literal>DMR1</literal> enable single step
+	  behavior (a trap exception occurs on completion of each instruction)
+	  and branch step behavior (a trap exception occurs on completion of
+	  each branch instruction).
+	</para>
+
+	<para>
+	  <literal>DMR2</literal> contains an enable bit for each counter, 10
+	  bits indicating which watchpoints are assigned to which counter and 10
+	  bits indicating which watchpoints generate a trap exception. It also
+	  contains 10 bits of output, indicating which watchpoints have
+	  generated a trap exception.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis>Debug Stop and Reason registers</emphasis>. In normal
+	  operation, all OpenRISC 1000 exceptions are handled through the
+	  exception vectors at locations 0x100 through 0xf00. The Debug Stop
+	  register (&spr;&nbsp;0x3014, <literal>DSR</literal>) is used to
+	  assign particular exceptions instead to the &jtag; interface. These
+	  exceptions stall the processor, allowing the machine state to be
+	  analyzed through the &jtag; interface. Typically a debugger will
+	  enable this for trap exceptions used for breakpointing.
+	</para>
+
+	<para>
+	  Where an exception has been diverted to the development interface,
+	  the Debug Reason register (&spr;&nbsp;0x3021,
+	  <literal>DRR</literal>) indicates which exception caused the
+	  diversion. Note that although single stepping and branch stepping
+	  cause a trap, if they are assigned to the &jtag; interface, they
+	  <emphasis>do not</emphasis> set the <literal>TE</literal> bit in the
+	  <literal>DRR</literal>. This allows an external debugger to
+	  distinguish between breakpoint traps and single/branch step traps.
+	</para>
+      </listitem>
+    </itemizedlist>
+
     <sect1>
       <title>
 	&jtag; Interface
@@ -459,7 +613,7 @@ $Id$
 
 	<para>
 	  The OpenRISC 1000 Remote &jtag; Protocol is a simple message
-	  send/acknowlege protocol. The &jtag; request is packaged as a 32 bit
+	  send/acknowledge protocol. The &jtag; request is packaged as a 32 bit
 	  command, 32-bit length and series of 32-bit data words. The &jtag;
 	  response is packaged as a 32-bit status and optionally a number of
 	  32-bit data words. The commands available are:
@@ -549,14 +703,14 @@ $Id$
       </figure>
 
       <para>
-	The client side of this protol (issuing the requests) is implemented
+	The client side of this protocol (issuing the requests) is implemented
 	by the &gdb; port for OpenRISC 1000.
       </para>
 
       <para>
 	Server side applications may implement this protocol to drive either
 	physical hardware (via its &jtag; port) or simulations, which include
-	the &jtag; functionality. Examples of the former include USB &jtag;
+	the &jtag; functionality. Examples of the former include &usb; &jtag;
 	connectors. An example of the latter is the OpenRISC 1000
 	Architectural Simulator, Or1ksim (see <xref linkend="sec_or1ksim" />.
       </para>
@@ -571,11 +725,11 @@ $Id$
       </title>
 
       <para>
-	The ABI for the OpenRISC 1000 is described in Chapter 16 of the
+	The &abi; for the OpenRISC 1000 is described in Chapter 16 of the
 	Architecture Manual (<xref linkend="ref_or1k" />). However the actual
-	GCC compiler implementation differs very slightly from the documented
-	ABI. Since precise understanding of the ABI is critical to &gdb;, those
-	differences are documented here.
+	&gcc; compiler implementation differs very slightly from the documented
+	&abi;. Since precise understanding of the &abi; is critical to &gdb;,
+	those differences are documented here.
       </para>
 
       <itemizedlist>
@@ -591,7 +745,7 @@ $Id$
 	<listitem>
 	  <para>
 	    Although the specification requires stack frames to be
-	    <emphasis>double</emphasis> word aligned, the GCC implementation
+	    <emphasis>double</emphasis> word aligned, the &gcc; implementation
 	    implements <emphasis>single</emphasis> word alignment.
 	  </para>
 	</listitem>
@@ -619,7 +773,7 @@ $Id$
 
       <para>
 	Or1ksim is an instruction set simulator (&iss;) for the OpenRISC 1000
-	architecture. At present only the 32-bit architecture is modelled. In
+	architecture. At present only the 32-bit architecture is modeled. In
 	addition to modeling the core processor, Or1ksim can model a number of
 	peripherals, to provide the functionality of a complete System-on-Chip
 	(&soc;).
@@ -651,13 +805,13 @@ $Id$
     </title>
 
     <para>
-      There are three major areas to GDB:
+      There are three major areas to &gdb;:
     </para>
 
     <orderedlist>
       <listitem>
 	<para>
-	  The user interface. How GDB communicates with the user
+	  The user interface. How &gdb; communicates with the user
 	</para>
       </listitem>
 
@@ -672,7 +826,7 @@ $Id$
       <listitem>
 	<para>
 	  the <emphasis>target side</emphasis>. Executing programs and
-	  analysing their data.
+	  analyzing their data.
 	</para>
       </listitem>
     </orderedlist>
@@ -681,12 +835,12 @@ $Id$
       &gdb; has a very simple view of a processor. It has a block of memory
       and a block of registers. Executing code contains its state in the
       registers and in memory, statically allocated, dynamically allocated
-      from the heap or in stack frames. GDB maps that information to the
+      from the heap or in stack frames. &gdb; maps that information to the
       source level program being debugged.
     </para>
 
     <para>
-      Porting a new architecture to GDB means providing a way to read
+      Porting a new architecture to &gdb; means providing a way to read
       executable files, a description of the &abi; a description of the
       physical architecture and operations to access the target being
       debugged.
@@ -700,8 +854,9 @@ $Id$
 
     <para>
       For the OpenRISC 1000 we will normally expect to run &gdb; on a host
-      separate to the target (typically a PC) connecting to the OpenRISC 1000
-      target via &jtag;, possibly using the OpenRISC 1000 Remote &jtag; Protocol.
+      separate to the target (typically a workstation) connecting to the
+      OpenRISC 1000 target via &jtag;, possibly using the OpenRISC 1000 Remote
+      &jtag; Protocol.
     </para>
 
     <sect1>
@@ -722,9 +877,9 @@ $Id$
 	</para>
 
 	<para>
-	  &bfd; backends already exist suitable for use with 32-bit OpenRISC
+	  &bfd; back ends already exist suitable for use with 32-bit OpenRISC
 	  1000 images in <acronym>ELF</acronym> or <acronym>COFF</acronym>
-	  format as used with either the RTEMS or Linux operating systems.
+	  format as used with either the &rtems; or Linux operating systems.
 	</para>
 
       </sect2>
@@ -782,7 +937,7 @@ $Id$
 	      architecture. For example in the OpenRISC 1000, floating point
 	      registers are actually the same as the General Purpose
 	      Registers. However a set of floating point pseudo-registers
-	      could be defined, to allow the GPRs to be displayed in floating
+	      could be defined, to allow the &gpr;s to be displayed in floating
 	      point format.
 	    </para>
 	  </listitem>
@@ -808,10 +963,10 @@ $Id$
 	</para>
 
 	<para>
-	  The &gdbarch; is note quite sufficient to describe how to analyse an
+	  The &gdbarch; is note quite sufficient to describe how to analyze an
 	  executing program (the <emphasis>target side</emphasis>
 	  functionality). In addition a set of functions are required which
-	  understand stack frames for the target architecture, allowing GDB to
+	  understand stack frames for the target architecture, allowing &gdb; to
 	  <emphasis>unwind</emphasis> them to discover the data for functions
 	  which called the one currently executing.
 	</para>
@@ -856,7 +1011,7 @@ $Id$
 
 	  <listitem>
 	    <para>
-	      Functions to insert and remote breakpoints and watchpoings on
+	      Functions to insert and remote breakpoints and watchpoints on
 	      the target.
 	    </para>
 	  </listitem>
@@ -893,7 +1048,7 @@ $Id$
       </title>
 
       <para>
-	A new architecture for GDB is created by defining a global function
+	A new architecture for &gdb; is created by defining a global function
 	<literal>_initialize_</literal><emphasis>architecture</emphasis><literal>_tdep</literal>. In
 	the case of the OpenRISC 1000, this function is called
 	<function>_initialize_or1k_tdep</function> and is found in the file
@@ -935,7 +1090,7 @@ $Id$
 	</title>
 
 	<para>
-	  The &bfd; library backend creates a number of data structures
+	  The &bfd; library back end creates a number of data structures
 	  describing the data held in a particular type of object
 	  file. Ultimately a unique enumerated constant (of type
 	  <type>enum&nbsp;bfd_architecture</type>) is defined for each
@@ -973,7 +1128,7 @@ $Id$
 	  <para>
 	    By convention all target specific functions and global variables
 	    in &gdb; begin with a string unique to that architecture. This
-	    helps to avoid namespace polution when using C. Thus all the MIPS
+	    helps to avoid namespace pollution when using C. Thus all the MIPS
 	    specific functions begin <literal>mips_</literal>, the ARM specific
 	    functions begin <literal>arm_</literal> etc.
 	  </para>
@@ -1012,7 +1167,7 @@ $Id$
 	  indicating the endianism. <varname>abfd</varname> is a pointer to
 	  the full &bfd;, <varname>tdep_info</varname> is additional target
 	  specific information, <varname>gdb_osabi</varname> is an enumeration
-	  identifying which (if any) of a number of operating specific ABIs
+	  identifying which (if any) of a number of operating specific &abi;s
 	  are used by this architecture and <varname>target_desc</varname> is
 	  a set of name-value pairs with information about register usage in
 	  this target.
@@ -1032,7 +1187,7 @@ $Id$
 	<para>
 	  The lookup is done using
 	  <function>gdbarch_lookup_by_arches</function>. It is passed the list
-	  of existing architectures and the &gdbarch_info; (possily updated)
+	  of existing architectures and the &gdbarch_info; (possibly updated)
 	  and returns the first matching architecture it finds, or
 	  &null; if none are found. If an architecture is found, the
 	  initialization function can finish, returning the found architecture
@@ -1102,7 +1257,7 @@ $Id$
 	      <varname>int_bit</varname>, <varname>long_bit</varname>,
 	      <varname>long_long_bit</varname>, <varname>float_bit</varname>,
 	      <varname>double_bit</varname>,
-	      <varname>long_double_bit</varname>. These are analagous to
+	      <varname>long_double_bit</varname>. These are analogous to
 	      <varname>short</varname> and are the number of bits in a C/C++
 	      variable of the corresponding time. Defaults are
 	      <literal>4*TARGET_CHAR_BIT</literal> for <type>int</type>,
@@ -1147,7 +1302,7 @@ $Id$
 	      available). However, if the program counter is just an ordinary
 	      register, it can be specified in &gdbarch; instead (see
 	      <varname>pc_regnum</varname> below) and it will be read using
-	      the standard routines to read regsters. Thus this function need
+	      the standard routines to read registers. Thus this function need
 	      only be specified <emphasis>if</emphasis> the program counter is
 	      not an ordinary register. See <xref linkend="sec_regcache" />
 	      for more discussion of how registers are handled in &gdb;
@@ -1215,7 +1370,7 @@ $Id$
 	      the functions <function>read_pc</function> and
 	      <function>write_pc</function> (see above) must be defined. If
 	      <varname>ps_regnum</varname> is not defined, then the
-	      <varname>$ps</varname> variable will not be available to the GDB
+	      <varname>$ps</varname> variable will not be available to the &gdb;
 	      user. <varname>fp0_regnum</varname> is not needed unless the
 	      target offers support for floating point.
 	    </para>
@@ -1228,12 +1383,14 @@ $Id$
 	      both to determine the name of a register for output and to work
 	      out what the meaning of any register names used as input. For
 	      example with the OpenRISC 1000, &gdb; registers 0-31 are the
-	      GPRs, register 32 is the program counter and register 33 is the
-	      supervision register, which map to the strings "gpr0" through
-	      "gpr31", "pc" and "sr" respectively. This means that if I use
-	      the &gdb; command <command>print $gpr5</command> I should get
-	      the value of the OR1K general purpose register 5. The default
-	      value for this function is &null;. It should always be defined.
+	      &gpr;s, register 32 is the program counter and register 33 is
+	      the supervision register, which map to the strings
+	      <literal>"gpr00"</literal> through <literal>"gpr31"</literal>,
+	      <literal>"pc"</literal> and <literal>"sr"</literal>
+	      respectively. This means that the &gdb; command <command>print
+	      $gpr5</command> should print the value of the OR1K general
+	      purpose register 5. The default value for this function is
+	      &null;. It should always be defined.
 	    </para>
 	  </listitem>
 
@@ -1242,7 +1399,7 @@ $Id$
 	      <function>register_type</function>. Given a register number,
 	      this function identifies the type of data it may be holding,
 	      specified as a <structname>struct&nbsp;type</structname>. &gdb;
-	      allows creation of arbitrary types, but a number of builtin
+	      allows creation of arbitrary types, but a number of built in
 	      types are provided (<varname>builtin_type_void</varname>,
 	      <varname>builtin_type_int32</varname> etc), together with
 	      functions to derive types from these. Typically the program
@@ -1252,7 +1409,7 @@ $Id$
 	      other integer registers will have a type of 32-bit integer or
 	      64-bit integer. This information is used to help when displaying
 	      out register information. The default value is &null; meaning no
-	      information is availble to help when displaying registers.
+	      information is available to help when displaying registers.
 	    </para>
 	  </listitem>
 
@@ -1290,7 +1447,7 @@ $Id$
 	    <para>
 	      <function>unwind_dummy_id</function>. This is the inverse of
 	      <function>push_dummy_call</function> which restores the stack
-	      and frame pointers afer a call to evaluate a function using a
+	      and frame pointers after a call to evaluate a function using a
 	      dummy stack frame. The default value is &null; (undefined). If
 	      <function>push_dummy_call</function> is defined, then this
 	      function should also be defined.
@@ -1302,13 +1459,13 @@ $Id$
 	      <function>push_dummy_code</function>. If this function is not
 	      defined (its default value is &null;), a dummy call will use the
 	      entry point of the target as its return address. A temporary
-	      breakpoint will be set there, so the location must be writeable
+	      breakpoint will be set there, so the location must be writable
 	      and have room for a breakpoint.
 	    </para>
 
 	    <para>
 	      It is possible that this default is not suitable. It might be
-	      unwriteable (in ROM possibly), or the &abi; might require
+	      inheritable (in ROM possibly), or the &abi; might require
 	      code to be executed on return from a call to unwind the stack
 	      before the breakpoint is encountered.
 	    </para>
@@ -1360,7 +1517,7 @@ $Id$
 	      <function>return_value</function>. Determines the return
 	      convention for a particular type. For example on the OpenRISC
 	      1000, structs/unions and large (>32 bit) scalars are returned as
-	      references, while small scalars are returned in GPR11.
+	      references, while small scalars are returned in GPR&nbsp;11.
 	    </para>
 	  </listitem>
 
@@ -1411,7 +1568,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      <function>breakpoint_from_pc</function>. Returns the breakpoint
-	      instruction to be used when the PC is at a particular location
+	      instruction to be used when the &pc; is at a particular location
 	      in memory. For architectures with variable length instructions,
 	      the choice of breakpoint instruction may depend on the length of
 	      the instruction at the program counter. Returns the instruction
@@ -1501,7 +1658,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      <varname>frame_red_zone_size</varname>. Some &abi;s reserve
-	      space beyond the end of the stack for use by leaf funtions
+	      space beyond the end of the stack for use by leaf functions
 	      without prologue or epilogue or by exception handlers (OpenRISC
 	      1000 is in this category). This is known as a <emphasis>red
 	      zone</emphasis> (<acronym>AMD</acronym> terminology). Default
@@ -1641,10 +1798,9 @@ $Id$
 	  <function>fact&nbsp;(1)</function> and
 	  <function>fact&nbsp;(0)</function>. In this example the stack is
 	  falling (as used by the OpenRISC 1000 &abi;). The stack pointer
-	  (<acronym>SP</acronym>) is at the end of the stack (lowest address)
-	  and the frame pointer (<acronym>FP</acronym>) is at the highest
-	  address in the current stack frame. <xref linkend="fig_stack_frame"
-	  /> shows how the stack looks.
+	  (&sp;) is at the end of the stack (lowest address) and the frame
+	  pointer (&fp;) is at the highest address in the current stack
+	  frame. <xref linkend="fig_stack_frame" /> shows how the stack looks.
 	</para>
 
 	<figure id="fig_stack_frame">
@@ -1674,7 +1830,7 @@ $Id$
 	  pointer of the <emphasis>previous frame</emphasis> and offset 4
 	  (this is illustrating a 32-bit architecture) from the stack pointer
 	  is the return address. Local variables are indexed from the frame
-	  pointer, with negative indices. In the function
+	  pointer, with negative indexes. In the function
 	  <function>fact</function>, offset -4 from the frame pointer is the
 	  argument <varname>n</varname>. In the <function>main</function>
 	  function, offset -4 from the frame pointer is the local variable
@@ -1692,7 +1848,7 @@ $Id$
 	</note>
 
 	<para>
-	  It is very easy to get confused when examing stacks. &gdb; has
+	  It is very easy to get confused when examining stacks. &gdb; has
 	  terminology it uses rigorously throughout. The stack frame of the
 	  function currently executing, or where execution stopped is numbered
 	  zero. In this example frame #0 is the stack frame of the call to
@@ -1764,7 +1920,7 @@ $Id$
 	</para>
 
 	<para>
-	  &gdb; functions to analyse the stack are typically given a pointer
+	  &gdb; functions to analyze the stack are typically given a pointer
 	  to the &next; frame to determine information about &this;
 	  frame. Information about &this; frame includes data on where the
 	  registers of the &prev; frame are stored in this stack frame. In
@@ -1780,7 +1936,7 @@ $Id$
 	</para>
 
 	<para>
-	  The process of analysing a target to determine the information that
+	  The process of analyzing a target to determine the information that
 	  should go in &frame_info; is called
 	  <emphasis>sniffing</emphasis>. The functions that carry this out are
 	  called <emphasis>sniffers</emphasis> and typically include
@@ -1797,7 +1953,7 @@ $Id$
 
 	<sect3>
 	  <title>
-	    Analysing Stacks
+	    Analyzing Stacks
 	  </title>
 
 	  <para>
@@ -1817,7 +1973,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<function>frame_unwind_append_sniffer</function> is used to
-		add a new sniffer to analyse &this; frame when given a pointer
+		add a new sniffer to analyze &this; frame when given a pointer
 		to the &next; frame.
 	      </para>
 	    </listitem>
@@ -1968,10 +2124,10 @@ $Id$
 
 	  <para>
 	    It is worth noting that if it cannot be determined in any other
-	    way (for example by their being a register with the name "fp"),
-	    then the result of the <function>this_base</function> function
-	    will be used as the value of the frame pointer variable
-	    <varname>$fp</varname> in &gdb;
+	    way (for example by their being a register with the name
+	    <literal>"fp"</literal>), then the result of the
+	    <function>this_base</function> function will be used as the value
+	    of the frame pointer variable <varname>$fp</varname> in &gdb;
 	  </para>
 	</sect3>
 
@@ -2001,7 +2157,7 @@ $Id$
 	  <para>
 	    It is up to the user to define the structure used (it is a
 	    <type>void&nbsp;*</type> pointer) and arrange allocation and
-	    deallocation of storate. However for general use, &gdb;
+	    deallocation of storage. However for general use, &gdb;
 	    provides <structname>struct&nbsp;trad_frame_cache</structname>, with a
 	    set of accessor routines. This structure holds the stack and code
 	    address of &this; frame, the base address of the frame, a pointer
@@ -2012,7 +2168,7 @@ $Id$
 	  <para>
 	    Typically the first time any sniffer function is called with
 	    &next; frame, the prologue sniffer for &this; frame will be
-	    &null;. The sniffer will analyse the frame, allocate a prologue
+	    &null;. The sniffer will analyze the frame, allocate a prologue
 	    cache structure and populate it. Subsequent calls using the same
 	    &next; frame will pass in this prologue cache, so the data can be
 	    returned with no additional analysis.
@@ -2028,9 +2184,9 @@ $Id$
 	</title>
 
 	<para>
-	  For frames, a cacheing strategy was used, so that the target did not
-	  need to be accessed and reanalysed multiple times for the same
-	  frame. Similarly a cacheing strategy is used to hold the values of
+	  For frames, a caching strategy was used, so that the target did not
+	  need to be accessed and reanalyzed multiple times for the same
+	  frame. Similarly a caching strategy is used to hold the values of
 	  registers.
 	</para>
 
@@ -2321,7 +2477,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      <function>to_prepare_to_store</function>. This function is
-	      called prior to storing registers to set up any addtional
+	      called prior to storing registers to set up any additional
 	      information required. In most cases it will be an empty function.
 	    </para>
 	  </listitem>
@@ -2539,7 +2695,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      <function>to_can_async_p</function>. Function indicating if the
-	      target can execute asynchrnously. This is often true for remote
+	      target can execute asynchronously. This is often true for remote
 	      targets.
 	    </para>
 	  </listitem>
@@ -2591,7 +2747,7 @@ $Id$
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_adding_commands">
       <title>
 	Adding Commands to &gdb;
       </title>
@@ -2825,7 +2981,7 @@ $Id$
       <para>
 	The bulk of the &gdb; source code is in a small number of
 	directories. Some components of &gdb; are libraries used elsewhere
-	(for example &bfd; is used in GNU binutils), and these have their own
+	(for example &bfd; is used in &gnu; binutils), and these have their own
 	directory. The main directories are:
       </para>
 
@@ -2866,16 +3022,16 @@ $Id$
 	  </para>
 
 	  <para>
-	    The subdirectory <filename>config</filename> contains target
+	    The sub-directory <filename>config</filename> contains target
 	    specific configuration information for native targets.
 	  </para>
 	</listitem>
 
 	<listitem>
 	  <para>
-	    <filename>libiberty</filename>. Before POSIX and glibc, this was a
-	    GNU project to provide a set of standard functions. It lives on in
-	    GNU. Most valuable are its freestore management and argument
+	    <filename>libiberty</filename>. Before POSIX and <application>glibc</application>, this was a
+	    &gnu; project to provide a set of standard functions. It lives on in
+	    &gnu;. Most valuable are its free store management and argument
 	    parsing functions.
 	  </para>
 	</listitem>
@@ -2904,7 +3060,7 @@ $Id$
       </title>
 
       <para>
-	Running the &gdb; testsuite requires that the
+	Running the &gdb; test suite requires that the
 	<application>DejaGNU</application> package is installed. The tests can
 	then be run with:
       </para>
@@ -2923,8 +3079,8 @@ $Id$
       </para>
 
       <para>
-	For the most comprehensive tests in an envioronment where host and
-	target differ, DejaGNU needs some additonal configuration. This can be
+	For the most comprehensive tests in an environment where host and
+	target differ, <application>DejaGNU</application> needs some additional configuration. This can be
 	achieved by setting the <constant>DEJAGNU</constant> environment
 	variable to refer to a suitable configuration file, and defining a
 	custom board configuration file in the directory
@@ -2940,10 +3096,10 @@ $Id$
       </title>
 
       <para>
-	Some of &gdb; subdirectories in turn have <filename>doc</filename>
-	subdirectories. The documentation is written in
+	Some of &gdb; sub-directories in turn have <filename>doc</filename>
+	sub-directories. The documentation is written in
 	<application>texinfo</application> (<xref linkend="ref_texinfo" />),
-	from which documents can be generated as &pdf;, PostScript, &html; or
+	from which documents can be generated as &pdf;, <application>PostScript</application>, &html; or
 	<command>info</command> files. The documentation is not built
 	automatically with <command>make&nbsp;all</command>, nor with
 	<command>make&nbsp;doc</command>.
@@ -3101,7 +3257,7 @@ $Id$
       <para>
 	When working with any large code base a TAGS file is invaluable. This
 	allows immediate lookup of any procedure or variable across the entire
-	code base. Normally for any GNU project, this is achieved with the
+	code base. Normally for any &gnu; project, this is achieved with the
 	command <command>make tags</command>. However this does not work for
 	&gdb;&mdash;there is a problem with the <literal>tags</literal> target
 	in the <filename>opcodes</filename> directory.
@@ -3125,7 +3281,7 @@ $Id$
 
     <sect1>
       <title>
-	BFD Specification
+	&bfd; Specification
       </title>
 
       <para>
@@ -3143,10 +3299,10 @@ $Id$
 
       <para>
 	The code resides in the <filename>gdb</filename> sub-directory. The
-	main architectural specfication is in
+	main architectural specification is in
 	<filename>or1k-tdep.c</filename>, with and OpenRISC 1000 wide header
 	in <filename>or1k-tdep.h</filename>. Support for the OpenRISC 1000
-	Remote JTAG interface is in <filename>remote-or1k.c</filename> with
+	Remote &jtag; interface is in <filename>remote-or1k.c</filename> with
 	the detailed protocol in <filename>or1k-jtag.c</filename> and a
 	protocol header in <filename>or1k-jtag.h</filename>.
       </para>
@@ -3168,7 +3324,7 @@ $Id$
 	<para>
 	  <filename>configure.tgt</filename> only specifies binaries, so
 	  cannot show dependencies on headers. To correct this,
-	  <filename>Makefile.in</filename> can be edited, so that automake and
+	  <filename>Makefile.in</filename> can be edited, so that <command>automake</command> and
 	  configure will generate a <filename>Makefile</filename> with the
 	  correct dependencies.
 	</para>
@@ -3234,7 +3390,7 @@ $Id$
 	  be made flexible enough to deal with both 32 and 64-bit
 	  implementations and with variable numbers of registers and
 	  matchpoints. The <varname>is_initialized</varname> flag is required,
-	  because some of this data is obtained fom the specific target on
+	  because some of this data is obtained from the specific target on
 	  connection, so is not available until that time.
 	</para>
 
@@ -3400,9 +3556,9 @@ $Id$
 		the falling stack frame, the stack pointer (&gpr; 1) points to
 		the lowest address on the frame, and the frame pointer (&fp;)
 		to the lowest address on the previous frame. Local variables
-		have negative indices on the &fp;. Function arguments that are
+		have negative indexes on the &fp;. Function arguments that are
 		on the stack (rather than in registers) have positive offsets
-		from the &fp;, ie. they are on the end of the previous stack
+		from the &fp;, i.e. they are on the end of the previous stack
 		frame.
 	      </para>
 
@@ -3416,9 +3572,9 @@ $Id$
 		<para>
 		  This function <emphasis>does not</emphasis> give the value
 		  of the <varname>$fp</varname> variable in &gdb;. That is
-		  provided from any register named "fp", from the deprecated
-		  &fp; register number if it has been set, or from the base
-		  address returned by the frame sniffer.
+		  provided from any register named <literal>"fp"</literal>,
+		  from the deprecated &fp; register number if it has been set,
+		  or from the base address returned by the frame sniffer.
 		</para>
 	      </note>
 	    </listitem>
@@ -3608,8 +3764,8 @@ $Id$
 	<para>
 	  There are a group of functions to return information about the
 	  stack. <function>or1k_return_value</function> given a type returns
-	  an enum for the style of return (via register, on the stack, by
-	  refernce). <function>or1k_skip_prolog</function> returns the address
+	  an <type>enum</type> for the style of return (via register, on the stack, by
+	  reference). <function>or1k_skip_prolog</function> returns the address
 	  at the end of a function
 	  prologue. <function>core_addr_lessthan</function> tests two stack
 	  addresses, so &gdb; can work out whether the stack rises or
@@ -3620,13 +3776,13 @@ $Id$
 	  slot. <function>or1k_unwind_pc</function> and
 	  <function>or1k_unwind_sp</function> get the value of the program
 	  counter and stack pointer respectively from &this; frame, given a
-	  poiner to the &next; frame.
+	  pointer to the &next; frame.
 	</para>
 
 	<para>
 	  These functions all have a 1:1 relationship with &gdbarch;. However
 	  for stack analysis (or "sniffing") more than one approach may be
-	  appopriate, so a list of functions is maintained.
+	  appropriate, so a list of functions is maintained.
 	</para>
 
 	<para>
@@ -3703,7 +3859,7 @@ $Id$
 		<function>or1k_frame_this_id</function>. This function's inputs
 		are a pointer to the &next; frame and the prologue cache
 		(if any exists) for &this; frame. It
-		uses the main OpenRISC 1000 frame analyser,
+		uses the main OpenRISC 1000 frame analyze,
 		<function>or1k_frame_unwind_cache</function> to generate the
 		prologue cache if it does not exist (see below).
 	      </para>
@@ -3740,7 +3896,7 @@ $Id$
 		<function>or1k_frame_prev_register</function>. This function's
 		inputs are a pointer to the &next; frame, the prologue cache
 		(if any exists) for &this; frame and a register number. It
-		uses the main OpenRISC 1000 frame analyser,
+		uses the main OpenRISC 1000 frame analyzer,
 		<function>or1k_frame_unwind_cache</function> to generate the
 		prologue cache if it does not exist (see below).
 	      </para>
@@ -3752,7 +3908,7 @@ $Id$
 		not an l-value), the address where it is saved in memory (if
 		it is saved in memory), the number of a different register
 		which holds the value of this register (if that is the case)
-		and if a buffer is provided the actual value as obttained from
+		and if a buffer is provided the actual value as obtained from
 		memory or the register cache.
 	      </para>
 
@@ -3801,7 +3957,7 @@ $Id$
 		  have actually been executed. It is quite possible the
 		  program counter is in the prologue code, and only
 		  instructions that have actually been executed should be
-		  analysed.
+		  analyzed.
 		</para>
 	      </caution>
 
@@ -3814,7 +3970,7 @@ $Id$
 
 	      <para>
 		<varname>end_iaddr</varname> marks the end of the code we
-		should analyse. Only instructions with addresses less than
+		should analyze. Only instructions with addresses less than
 		this will be considered.
 	      </para>
 
@@ -3857,7 +4013,7 @@ $Id$
 	      </para>
 
 	      <para>
-		The second instruction in the prolog is where the frame
+		The second instruction in the prologue is where the frame
 		pointer of the &prev; frame is saved. It is an error if this
 		is missing. The address where it is saved (the stack pointer
 		of &this; frame plus the offset in the <literal>l.sw</literal>
@@ -3884,7 +4040,7 @@ $Id$
 	      </para>
 
 	      <para>
-		All the subsequent instructions in the prolog should be saves
+		All the subsequent instructions in the prolong should be saves
 		of callee-savable registers. These are checked for until the
 		code address has reached the end of the prologue. For each
 		instruction that is found, the save location of the register
@@ -3946,7 +4102,7 @@ $Id$
 	      </para>
 
 	      <para>
-		Any remaing arguments must be pushed on the end of the
+		Any remaining arguments must be pushed on the end of the
 		stack. There is a difficulty here, since pushing each argument
 		may leave the stack misaligned (OpenRISC 1000 specifies
 		double-word alignment). So the code first works out the space
@@ -3986,7 +4142,7 @@ $Id$
 		&gdb; how a value of a particular type would be returned by
 		the &abi;. Structures/unions and large scalars (> 4 bytes) are
 		placed in memory and returned by reference
-		(<constant>RETURN_VALUE_ABI_RETURNS_ADDRESS</constant>. Smallers
+		(<constant>RETURN_VALUE_ABI_RETURNS_ADDRESS</constant>. Smaller
 		scalars are returned in &gpr;&nbsp;11
 		(<constant>RETURN_VALUE_REGISTER_CONVENTION</constant>).
 	      </para>
@@ -4043,7 +4199,7 @@ $Id$
 		<para>
 		  The OpenRISC 1000 &abi; specifies that frames should be
 		  double-word aligned. However the version of &gcc; in the
-		  current OpenRISC toolchain implements single-word
+		  current OpenRISC tool chain implements single-word
 		  alignment. So the current &gdb; implementation specifies
 		  <constant>OR1K_STACK_ALIGN</constant> to be 4, not 8.
 		</para>
@@ -4086,7 +4242,7 @@ $Id$
 
       <para>
 	The code for the remote target specification for the OpenRISC Remote
-	JTAG protocol is found in the <filename>gdb</filename>
+	&jtag; protocol is found in the <filename>gdb</filename>
 	sub-directory. <filename>remote-or1k.c</filename> contains the target
 	definition. The low-level interface is found in
 	<filename>or1k-jtag.c</filename> with a shared header in
@@ -4096,7 +4252,7 @@ $Id$
       <para>
 	The low-level interface is abstracted to a set of OpenRISC 1000
 	specific functions relating to the behavior of the target, rather than
-	the chosen interface. This allows alternatives to the JTAG interface
+	the chosen interface. This allows alternatives to the &jtag; interface
 	to be implemented in the future. The interface is captured as a set of
 	functions in <structname>struct&nbsp;or1k_extra_ops</structname>.
       </para>
@@ -4235,22 +4391,28 @@ $Id$
 	<para>
 	  There are a group of operations which establish the link to the
 	  target and get a program ready to
-	  run. <function>or1k_close</function> closes the
-	  connection. <function>or1k_create_inferior</function> and
-	  <function>or1k_mourn_inferior</function> respectively set up a
+	  run. <function>or1k_open</function> and
+	  <function>or1k_close</function> respectively open and close the
+	  connection to the target. <function>or1k_create_inferior</function>
+	  and <function>or1k_mourn_inferior</function> respectively set up a
 	  program ready to run on the target, and tidy up after execution has
 	  completed.
 	</para>
 
 	<para>
-	  There are a group of functions which control the execution of the
-	  program on the target. <function>or1k_resume</function> requests
-	  execution to resume (or start for the first
-	  time). <function>or1k_detach</function> disconnects the debugger
-	  from the target, while leaving the program
-	  running. <function>or1k_wait</function> waits for execution on the
+	  There are a two functions which control the execution of the program
+	  on the target. <function>or1k_resume</function> requests execution
+	  to resume (or start for the first
+	  time). <function>or1k_wait</function> waits for execution on the
 	  target to halt, for example due to a breakpoint, by watching for the
-	  processor stalling. <function>or1k_stop</function> stops execution
+	  processor stalling.
+	</para>
+
+	<para>
+	  A group of functions control the debugger's interaction with the
+	  program on the target.  <function>or1k_detach</function> disconnects
+	  the debugger from the target, while leaving the program
+	  running. <function>or1k_stop</function> stops execution
 	  of the target, while <function>or1k_kill</function> stops execution
 	  of the target more forcefully.
 	</para>
@@ -4277,29 +4439,39 @@ $Id$
 	  There are a group of functions to handle breakpoints and
 	  watchpoints, <function>or1k_insert_breakpoint</function>,
 	  <function>or1k_remove_breakpoint</function>,
+	  <function>or1k_insert_hw_breakpoint</function>,
+	  <function>or1k_remove_hw_breakpoint</function>,
 	  <function>or1k_insert_watchpoint</function>,
 	  <function>or1k_remove_watchpoint</function> and
 	  <function>or1k_stopped_by_watchpoint</function>. &gdb; allows remote
-	  targets to distinguish between software and hardware breakpoints,
-	  but the OpenRISC 1000 treats them identically, using the same
-	  functions for both.
+	  targets to distinguish between software and hardware
+	  breakpoints. The standard functions will use a hardware breakpoint
+	  if available, but otherwise use a software breakpoint. The hardware
+	  functions enforce use of a hardware breakpoint. Ordinary (write
+	  access) watchpoints make use of a hardware watchpoint if available,
+	  but otherwise can be implemented in software (with a big performance
+	  penalty). Read and read/write watchpoints can only be implemented in
+	  hardware.
 	</para>
 
 	<para>
 	  Various data fields are then set up. This target controls executing
-	  programs, so is in the <constant>process_stratum</constant>. Since
-	  it is a running process, target has access to all its memory, a
-	  stack, registers and can execute.
+	  programs, so is in the <constant>process_stratum</constant>. Once
+	  the target is connected, it has access to all its memory, a stack,
+	  registers and can execute, although at the time of connection the
+	  processor is stalled, so not actually executing.
 	</para>
 
 	<para>
 	  The last group of functions are <emphasis>not</emphasis> generic to
 	  the OpenRISC 1000&mdash;they differ for each target interface. The
-	  function to open a connection for a JTAG interface is
-	  <function>or1k_jtag_open</function>. The name of the interface is
-	  "jtag" (this means the command to establish the connection will be
-	  <command>target jtag ...</command>). Long name and documentation is
-	  also specific to the interace.
+	  function to open a connection for a &jtag; interface is
+	  <function>or1k_jtag_open</function> (which will then call the
+	  interface independent <function>or1k_open</function> function). The
+	  name of the interface is <literal>"jtag"</literal> (this means the
+	  command to establish the connection will be <command>target jtag
+	  ...</command>). Long name and documentation is also specific to the
+	  interface.
 	</para>
 
 	<para>
@@ -4328,6 +4500,14 @@ $Id$
 	  </para>
 	</note>
 
+	<para>
+	  Much of the operation of the target interface involves manipulating
+	  the debug &spr;s. Rather than continually writing them out to the
+	  target, a cache of their values is maintained in
+	  <varname>or1k_dbgcache</varname>, which is flushed prior to any
+	  operation that will unstall the target (thus causing it to execute).
+	</para>
+
 	<sect3>
 	  <title>
 	    OpenRISC 1000 Remote &jtag; Target Operation Functions
@@ -4337,11 +4517,11 @@ $Id$
 	    <listitem>
 	      <para>
 		<function>or1k_jtag_open</function>. This is the interface
-		specific open function for the OpenRISC JTAG protocol. It
+		specific open function for the OpenRISC &jtag; protocol. It
 		initializes <varname>or1k_target</varname> with the
-		&target_ops; for the OpenRISC JTAG inteface and 
+		&target_ops; for the OpenRISC &jtag; interface and 
 		initializes <varname>or1k_extra_ops</varname> with the extra
-		inteface operations for the OpenRISC 1000 protocol. It then
+		interface operations for the OpenRISC 1000 protocol. It then
 		calls <function>or1k_open</function> which is interface
 		independent.
 	      </para>
@@ -4351,44 +4531,52 @@ $Id$
 	      <para>
 		<function>or1k_open</function>. This is passed the arguments
 		to the <command>target jtag</command> command and establishes
-		the connection to the target. This is achieved through the low
-		level interface routine, <function>or1k_init</function>.
+		the connection to the target. Any existing connections are
+		tidied up by <function>target_preopen</function> and any
+		instances of this target are removed from the target stack by
+		<function>unpush_target</function>. Connection is then
+		established through the low level interface routine,
+		<function>or1k_init</function>.
 	      </para>
 
 	      <para>
-		Having established an interface to the target, its
-		process/thread id is set to the NULL process/thread, since the
-		target does not have any concept of distinct processes or
-		threads in this implementation. The target is then pushed on
-		to the stack of targets, so
-		that it is the current target for this stratum
-		(<function>push_target</function>). Since the board is assumed
-		to be running free, the target is marked as running
-		(<function>target_mark_running</function>). This will set the
-		<varname>has_execution</varname> flag in the &target_ops;.
+		Having established an interface, the target is pushed on to
+		the stack. It is marked running, which sets all the flags
+		associated with a running process and updates the choice of
+		current target (which depending on the stratum could be this
+		target). However, the OpenRISC connection is established with
+		the target processor stalled, so the
+		<literal>to_has_execution</literal> flag is cleared by setting
+		the macro <literal>target_has_execution</literal> to 0. It
+		will be set when <function>or1k_resume</function> unstalls the
+		target.
 	      </para>
 
 	      <para>
-		The frame cache is reinitialized
-		(<function>reinit_frame_cache</function>) and the register
-		cache invalidated
-		(<function>registers_changed</function>). The &gdb; global
-		variable for the current location in the target
-		(<varname>stop_pc</varname>) is set by reading the program
-		counter. Finally the current stack frame is printed. By giving
-		a null stack frame, the frame cache will be populated.
+		As a matter of good housekeeping, any shared library symbols
+		are cleared using <function>no_shared_libraries</function>.
 	      </para>
+
+	      <para>
+		Finally the generic <function>start_remote</function> is
+		called to set up the new target ready for execution. It is
+		possible this could fail, so the call is wrapped in our own
+		function, <function>or1k_start_remote</function>, which has
+		the correct prototype to run using
+		<function>catch_exception</function>. If failure occurs, the
+		target can be popped, before the exception is thrown on to
+		the top level.
+	      </para>
+
 	    </listitem>
 
 	    <listitem>
 	      <para>
 		<function>or1k_close</function>. This closes the connection by
 		calling the low level interface function,
-		<function>to_done</function> if it exists and then clearing
-		the <varname>or1k_extra_ops</varname> pointer. This is the
-		final stage in closing down a remote connection. The target
-		will already have been unpushed and the inferior mourned, so
-		these actions are not required.
+		<function>to_done</function> if it exists. The target will
+		already have been unpushed and the inferior mourned, so these
+		actions are not required.
 	      </para>
 	    </listitem>
 
@@ -4398,28 +4586,29 @@ $Id$
 		program to run on the target, but does not actually start it
 		running. It is called in response to the &gdb;
 		<command>run</command> command and is passed any arguments to
-		that command. However the OpenRISC 1000 JTAG protocol has no
+		that command. However the OpenRISC 1000 &jtag; protocol has no
 		way to send arguments to the target, so these are ignored.
 	      </para>
 
 	      <para>
-		Any existing program is killed
-		(<function>or1k_kill</function>), which has the side effect of
-		stalling the target. Breakpoints are cleared
-		(<function>remove_breakpoings</function>). The wait status is
-		cleared (<function>init_wait_for_inferior</function>) and our
-		local status is market as
-		<constant>OR1K_TARGET_STOPPED</constant>.
+		Debugging is much easier if a local copy of the executable
+		symbol table has been loaded with the <command>file</command>
+		command. This is checked for and a warning issued. However if
+		it is not present, it is perfectly acceptable to debug code on
+		the target without symbol data.
 	      </para>
 
 	      <para>
-		Any breakpoints that have been requested are then inserted
-		(<function>insert_breakpoints</function>) and the &gdb; global
-		entry point, <varname>entry_pt</varname> set from the entry
-		point in the executable (which for OpenRISC 1000 should always
-		be the reset vector at 0x100). Finally all the flags are
-		cleared to allow the program to run in response to a call to
-		resume (<function>clear_proceed_status</function>).
+		A process/thread ID needs to be established for the
+		target. However since we are debugging "bare metal", there is
+		no concept of a target process, so the NULL process/thread ID
+		is used.
+	      </para>
+
+	      <para>
+		All static data structures (breakpoint lists etc) are then
+		cleared within &gdb; by calling
+		<function>init_wait_for_inferior</function>.
 	      </para>
 
 	      <tip>
@@ -4446,13 +4635,11 @@ $Id$
 	      <para>
 		<function>or1k_mourn_inferior</function>. This is the
 		counterpart to <function>or1k_create_inferior</function>,
-		called after execution has completed. It tidies up by removing
-		breakpoints (<function>remove_breakpoints></function>), marking the
-		target as exited (<function>target_mark_exited</function>) and
-		"unpushing" the target from the stack of targets
-		(<function>unpush_target</function>). The remaining tidying up
-		is entirely generic and achieved by calling
-		<function>generic_mourn_inferior</function>.
+		called after execution has completed. It tidies up by calling
+		the generic function
+		<function>generic_mourn_inferior</function>. If the target is
+		still shown as having execution, it is marked as exited, which
+		will cause the selection of a new current target.
 	      </para>
 	    </listitem>
 
@@ -4460,9 +4647,9 @@ $Id$
 	      <para>
 		<function>or1k_detach</function>. This just detaches from the
 		target being debugged, which is achieved by calling
-		<function>or1k_close</function>. In the absence of an attach
-		function, there is no way of re-establishing the connection
-		after this.
+		<function>or1k_close</function>. There is no explicit function
+		to reattach to the target, but a call to
+		<function>or1k_open</function> will achieve the same effect.
 	      </para>
 	    </listitem>
 
@@ -4476,224 +4663,144 @@ $Id$
 	      </para>
 
 	      <para>
-		The behavior of this function is complex, because it must
-		consider a large number of scenarios. Central to the
-		implementation is the behavior of the OpenRISC 1000 &jtag;
-		interface. The debug initialization sets this up, so trap
-		exceptions are not routed via the exception vector, but stall
-		the processor, allowing the debugger to regain control. This
-		is achieved by setting the Debug Reason Register (a &spr;).
+		The behavior of this function is far simpler than its
+		counterpart in &gdb; 5.3. &gdb; will sort out all the issues
+		of re-execution after a breakpoint or watchpoint has been
+		encountered (see <function>or1k_wait</function> below for more
+		on this).
 	      </para>
 
 	      <para>
-		Normal execution is resumed by writing the Next Program
-		Counter &spr; with the address of the next instruction to
-		execute and unstalling the processor.
+		The function clears the Debug Reason Register, clears any
+		watchpoint status bits in Debug Mode Register 2 and then
+		commits the debug registers.
 	      </para>
 
 	      <para>
-		When resuming execution, the debugger needs to consider if the
-		last break was just after a branch or jump instruction. The
-		next instruction is in the delay slot, but by the time
-		execution resumes, the processor may have lost knowledge of
-		the delayed branch it was due to execute (for example if &gdb;
-		had executed a <command>call</command> command). Thus
-		branch/jump instructions must be re-executed to refill the
-		pipeline. In the case of jump-and-link instructions
-		(<literal>l.jal</literal> and <literal>l.jalr</literal>), the
-		link register also needs restoring.
+		If the caller has requested single stepping, this is set using
+		Debug Mode Register 1, otherwise this is cleared.
 	      </para>
 
 	      <para>
-		The issue is further complicated, because the branch/jump
-		instruction may have since had a breakpoint placed on it,
-		which must be lifted to allow re-execution.
-	      </para>
-
-	      <para>
-		The code must also distinguish between single stepping calls
-		and continuous execution. The former requires setting the
-		single step flag in the Debug Mode 1 register.
-	      </para>
-
-	      <para>
-		For single stepped code, after the Debug Mode 1 register is
-		set, the following cases have to be considered.
-	      </para>
-
-	      <orderedlist>
-		<listitem>
-		  <para>
-		    The program counter has been manually reset by &gdb;. This
-		    is indicated by the <varname>or1k_new_pc_set</varname>
-		    global, set when the Next Program Counter &spr; is written
-		    explicitly in <function>or1k_write_spr</function>. Any
-		    previous branch instruction can be ignored. However if the
-		    instruction to be executed is a jump-and-link, the value
-		    of the link register should be save, with a flag to
-		    indicate this is the case. It can then be restored if the
-		    jump-and-link has to be re-executed after a trap.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The previous instruction was a branch or jump. If there is
-		    now a breakpoint at that instruction, replace it by the
-		    original instruction for re-execution. If it was a
-		    jump-and-link, restore the link register and clear the
-		    flag indicating the link register was saved. Set the
-		    program counter to the value of the previous program
-		    counter and re-execute the instruction by unstalling the
-		    processor and waiting. There is no need to restore the
-		    breakpoint&mdash;when single stepping it will be reset
-		    automatically.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The previous instruction was a breakpoint (may now have
-		    been cleared) in a delay slot. For this we need to
-		    re-execute the branch preceding the breakpoint, saving the
-		    link register if it was a jump-and-link). Set the program
-		    counter to the instruction before the Previous Program
-		    Counter and re-execute the instruction by unstalling the
-		    processor and waiting.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    Everything else&mdash; a non-delay slot instruction. If
-		    the instruction is a jump-and-link save its link register
-		    ready for re-execution in the future.
-		  </para>
-		</listitem>
-	      </orderedlist>
-
-	      <para>
-		For continuous execution, once the Debug Mode register 1
-		single-step bit has been cleared, the following cases have to
-		be considered.
-	      </para>
-
-	      <orderedlist>
-		<listitem>
-		  <para>
-		    The program counter has been manually reset by &gdb;. The
-		    program counter is explicitly written into the Next
-		    Program Counter &spr; to ensure any JTAG trap information
-		    is cleared.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The previous instruction was a branch or jump, and there
-		    is currently no breakpoint there. The instruction must be
-		    re-executed. If it was a jump-and-link, the link register
-		    is restored. The program counter is set to the Previous
-		    Program Counter. There is no need to explicitly execute
-		    the instruction&mdash;it will just be the first to be
-		    executed in the continuous execution.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The previous instruction was a branch or jump, and there
-		    is now a breakpoint there. We must remove the breakpoint,
-		    re-execute the instruction, then restore the breakpoint
-		    (since we are not single-stepping it may not be restored
-		    before we get to execute it again). The Debug Mode
-		    Register 1 is set for single stepping, the instruction is
-		    restored, re-executed (unstall the processor and wait),
-		    then the breakpoint instruction is put back and the Debug
-		    Mode Register 1 single stepping flag cleared.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    Everything else&mdash; a non-delay slot instruction. If
-		    the instruction is a jump-and-link save its link register
-		    ready for re-execution in the future.
-		  </para>
-		</listitem>
-	      </orderedlist>
-
-	      <para>
-		At this point any re-execution required is complete. The
-		<varname>or1k_new_pc_set</varname> flag can be cleared and
-		execution recommenced by unstalling the processor.
+		Finally the target can be marked as executing (the first time
+		<function>or1k_resume</function> is called it will not be
+		executing), the debug registers written out, and the processor
+		unstalled.
 	      </para>
 	    </listitem>
 
 	    <listitem>
 	      <para>
 		<function>or1k_wait_with_interrupt</function>. This is a
-		utility function for <function>or1k_resume</function> and
-		<function>or1k_wait</function>. It establishes a signal
-		handler for <constant>SIGINT</constant>, the signal sent by
-		ctrl-C. This means an executing target can be interrupted by
-		using ctrl-C. A single ctrl-C will cause the interrupt handler
-		<function>or1k_interrupt</function> to be called, which
-		requests passive interrupt by setting the &gdb; global,
-		<varname>quit_flag</varname>. A second ctrl-C triggers the
-		<function>or1k_interrupt_twice</function> which forces will
-		query the user to see if they want to kill the debugging by
-		raising an exception.
+		utility function for the <function>or1k_wait</function>. It
+		establishes a signal handler for <constant>SIGINT</constant>,
+		the signal sent by ctrl-C. This means an executing target can
+		be interrupted by using ctrl-C. A single ctrl-C will cause the
+		interrupt handler <function>or1k_interrupt</function> to be
+		called, which requests passive interrupt by setting the &gdb;
+		global, <varname>quit_flag</varname> and then stalls the
+		processor by calling <function>or1k_stop</function>. A second
+		ctrl-C triggers the <function>or1k_interrupt_twice</function>
+		which forces will query the user to see if they want to kill
+		the debugging by raising an exception.
 	      </para>
 
 	      <para>
 		The function then calls the OpenRISC target operation to wait
 		for the processor to stall. When this returns, the old signal
-		hnandler is restored.
+		handler is restored.
 	      </para>
 	    </listitem>
 
 	    <listitem>
 	      <para>
 		<function>or1k_wait </function>. This function waits for the
-		target to stall, and analyses the cause. Information about why
-		the target stalled is returned via the
+		target to stall, and analyzes the cause.  Information about why
+		the target stalled is returned to the caller via the
 		<varname>status</varname> argument. The function returns the
 		process/thread ID of the process which stalled, although for
 		the OpenRISC 1000 this will always be the same value.
 	      </para>
 
 	      <para>
-		After the wait returns, when the processor stalls, the Debug
+		After the wait returns, all register and frame caches are
+		invalid, These are cleared by calling
+		<function>registers_changed</function> (which in turn clears
+		the frame caches).  When the processor stalls, the Debug
 		Reason Register (a &spr;) shows the reason for the stall. This
 		will be due to any exception set in the Debug Stop Register
-		(currently only trap), due to a single step, or (when the
+		(currently only trap), due to a single step, due to a reset
+		(the debugger stalls the processor on reset) or (when the
 		target is the architectural simulator, Or1ksim) due to an exit
 		<literal>l.nop</literal> being executed.
 	      </para>
 
 	      <para>
-		Single step is treated as though it were a trap exception
-		(like a breakpoint). For true breakpoints, the program counter
-		is reset to the value of the Previous Program Counter, so the
-		instruction will be re-executed after the breakpoint.
+		In all cases the previous program counter &spr;
+		points to the instruction just executed and the next program
+		counter &spr; to the instruction about to be executed. For
+		watchpoints and breakpoints, which generate a trap however the
+		instruction at the previous program counter will not have
+		completed execution. As a result, when the program resumes,
+		this instruction should be re-executed without the
+		breakpoint/watchpoint enabled.
 	      </para>
 
 	      <para>
-		The OpenRISC 1000 signal is mapped to its equivalent &gdb;
-		signal name in the <varname>status</varname>. If no signal is
-		found, that ought to be an error, but it also occurs when the
-		Architectural Simulator, Or1ksim, stalls at the end of
-		execution. Until Or1ksim is fixed, this is treated as a trap
-		and the status updated to
-		<constant>TARGET_WAITKIND_EXITED</constant>, with a return
-		code of zero.
+		&gdb; understands this. It is sufficient to set the program
+		counter to the previous program counter. &gdb; will realize
+		that the instruction corresponds to a breakpoint/watchpoint
+		that has just been encountered, lift the breakpoint, single
+		step past the instruction and reimpose the breakpoint. This is
+		achieved by a call to <function>write_pc</function> with the
+		previous program counter value.
 	      </para>
 
 	      <para>
-		If the code hit a breakpoint, then record that in
-		<varname>or1k_hit_breakpoint</varname>. That information is
-		needed when resume works out how to restart an instruction.
+		The OpenRISC 1000 imposes a slight problem here. This approach
+		works fine, except if the breakpoint was in the delay slot of
+		a branch of jump instruction. In this case the re-execution
+		must be not just of the previous instruction, but the one
+		before that (restoring the link register as well if it was a
+		jump-and-link instruction). Furthermore this must only be in
+		the case where the branch was truly the preceding instruction,
+		rather than the delay slot having been the target of a
+		different branch instruction.
+	      </para>
+
+	      <para>
+		In the absence of a "previous previous" program counter, this
+		restart cannot be correct under all circumstances. For the
+		time being, breakpoints on delay slots are not expected to
+		work. However it is highly unlikely a source level debugger
+		would ever place a breakpoint in a delay slot.
+	      </para>
+
+	      <para>
+		Having sorted out the program counter readjustment, any single
+		step is marked as though it were a trap. Single step does not
+		set the trap exception, nor does it need re-executing, but by
+		setting the flag here, the exception will be correctly mapped
+		to the <constant>TARGET_SIGNAL_TRAP</constant> for return to
+		&gdb;
+	      </para>
+
+	      <para>
+		The response is marked as a a stopped processor
+		(<constant>TARGET_WAITKIND_STOPPED</constant>).  All
+		exceptions are mapped to their corresponding &gdb; signals. If
+		no exception has been raised, then the signal is set to the
+		default, unless the instruction just executed was
+		<literal>l.nop&nbsp;1</literal>, which is used by the
+		architectural simulator to indicate termination. In this case
+		the response is marked as
+		<constant>TARGET_WAITKIND_EXITED</constant>, and the associate
+		value set to the exit return code.
+	      </para>
+
+	      <para>
+		The debug reason register (which is sticky) can now be cleared
+		and the process/thread ID returned.
 	      </para>
 	    </listitem>
 
@@ -4710,7 +4817,8 @@ $Id$
 	      <para>
 		<function>or1k_kill</function>. This stops the
 		processor. Hardware trace is cleared, the processor is stalled
-		then reset. The target is unpushed and market as exited.
+		then reset. The target is then mourned, which will close the
+		connection.
 	      </para>
 	    </listitem>
 
@@ -4768,14 +4876,10 @@ $Id$
 	    <listitem>
 	      <para>
 		<function>or1k_insert_breakpoint</function>. This function
-		inserts a breakpoint.
-		<function>or1k_can_use_hardware_breakpoint</function> checks
-		if a hardware breakpoint is available by comparing the number
-		currently active against the number available for the
-		target. If one is available, it is set via
-		<function>or1k_set_breakpoint</function>. Otherwise the
-		generic <function>memory_insert_breakpoint</function> is used
-		to set a software breakpoint.
+		inserts a breakpoint. It tries to insert a hardware breakpoint
+		using <function>or1k_set_breakpoint</function>. If this fails,
+		the generic <function>memory_insert_breakpoint</function> is
+		used to set a software breakpoint.
 	      </para>
 	    </listitem>
 
@@ -4790,10 +4894,8 @@ $Id$
 	      <para>
 		The first free hardware matchpoint is found by searching
 		through the Debug Control Registers for a register without its
-		DVR/DCR Preset (DP) flag set. If a register is not found, the
-		functions returns failure, although that ought not to be
-		possible (the function is only called after checking for
-		availability).
+		&dvr;/&dcr; Preset (DP) flag set using
+		<function>or1k_first_free_matchpoint</function>.
 	      </para>
 
 	      <para>
@@ -4801,11 +4903,10 @@ $Id$
 		breakpoint and the Debug Control Register to trigger the
 		breakpoint when the unsigned effective address of the fetched
 		instruction is equal to the Debug Value Register. The number
-		of matchpoints used is incremented. The matchpoint is marked
-		as unchained in Debug Mode Register&nbsp;1 and the breakpoint
-		enabled in Debug Mode Register&nbsp;2. The debug cache
-		registers are marked as changed so they are written out when
-		the target is next resumed.
+		of matchpoints used is incremented. The corresponding
+		watchpoint is marked as unchained in Debug Mode
+		Register&nbsp;1 and set to trigger a trap exception in Debug
+		Mode Register&nbsp;2.
 	      </para>
 	    </listitem>
 
@@ -4822,16 +4923,14 @@ $Id$
 	      <para>
 		<function>or1k_clear_breakpoint</function>. This is the
 		counterpart to <function>or1k_set_breakpoint</function>. The
-		Debug Control Registers are searched for an entry set to carry
-		out an unsigned match to the effective address for the matched
-		instruction.
+		Debug Control Registers are searched for an entry matching the
+		give address (using <function>or1k_matchpoint_equal</function>).
 	      </para>
 
 	      <para>
-		If a register is found, its DVR/DVR Present flag is cleared,
+		If a register is found, its &dvr;/&dcr; Present flag is cleared,
 		and the matchpoint marked unused in Debug Mode
-		Register&nbsp;2. The debug cached registers are marked as
-		changed and the number of used matchpoints decremented.
+		Register&nbsp;2.
 	      </para>
 	    </listitem>
 
@@ -4849,19 +4948,55 @@ $Id$
 
 	    <listitem>
 	      <para>
-		<function>or1k_insert_watchpoint</function>
+		<function>or1k_insert_watchpoint</function>. This function
+		attempts to insert a hardware watchpoint. For this it requires
+		a pair of OpenRISC 1000 watchpoints chained together. The
+		first will check for a memory access greater than or equal to
+		the start address of interest. The second will check for a
+		memory access less than or equal to the end address of
+		interest. If both criteria are met. The access type can be the
+		load effective address (for <command>rwatch</command>
+		watchpoints), store effective address (for
+		<command>watch</command> watchpoints) or both (for
+		<command>awatch</command> watchpoints).
+	      </para>
+
+	      <para>
+		The pair of watchpoints must be adjacent (so they can be
+		chained together using Debug Mode Register 1), but it is
+		possible that successive breakpoints have fragmented the use
+		of watchpoints. <function>or1k_watchpoint_gc</function> is
+		used to shuffle up all the existing watchpoints which can be
+		moved, to find a pair of free watchpoint if possible.
 	      </para>
 	    </listitem>
 
 	    <listitem>
 	      <para>
-		<function>or1k_remove_watchpoint</function>
+		<function>or1k_remove_watchpoint</function>. This is the
+		counterpart of <function>or1k_insert_watchpoint</function>. It
+		searches for an adjacent pair of watchpoints that match using
+		<function>or1k_matchpoint_equal</function>. If found both are
+		marked unused in their Debug Control Register and cleared from
+		triggering in Debug Mode Register 2.
 	      </para>
 	    </listitem>
 
 	    <listitem>
 	      <para>
-		<function>or1k_stopped_by_watchpoint</function>
+		<function>or1k_stopped_by_watchpoint</function> and
+		<function>or1k_stopped_by_watchpoint</function>. These
+		functions are called to find out about possible watchpoints
+		that have triggered. Both may use of the utility function,
+		<function>or1k_stopped_watchpoint_info</function>, which
+		determines if a watchpoint was triggered, if so which
+		matchpoint and for what
+		address. <function>or1k_stopped_watchpoint</function> just
+		returns a Boolean to indicate if a watchpoint was
+		triggered. <function>or1k_stopped_data_address</function> is
+		called once for each watchpoint that has triggered. It returns
+		the address that triggered the watchpoint and must also clear
+		the watchpoint (in Debug Mode Register 2).
 	      </para>
 	    </listitem>
 	  </itemizedlist>
@@ -4875,7 +5010,79 @@ $Id$
 	</title>
 
 	<para>
+	  The interface to the OpenRISC &jtag; system is found in
+	  <filename>gdb/or1k-jtag.c</filename> and
+	  <filename>gdb/or1k-jtag.h</filename>. The details are not directly
+	  relevant to porting &gdb; so only an overview is given here. Full
+	  details are found in the commenting within the source code.
 	</para>
+
+	<para>
+	  The interface is layered, to maximize use. In particular much of the
+	  functionality is the same whether the target is connected remotely
+	  over TCP/IP or directly via a JP1 header connected to the parallel
+	  port.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      The highest level is the public function interface, which
+	      operate in terms of entities that are visible in &gdb;: open and
+	      close the connection, read and write &spr;s, read and write
+	      memory, stall and unstall the processor, enable and disable
+	      trace and reset the processor. These functions always succeed
+	      and have function prefixes <literal>or1k_jtag_</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The next level is the abstraction provided by the OR1K &jtag;
+	      protocol: read/write a &jtag; register, read/write a block of
+	      &jtag; registers and select a scan chain. These functions may
+	      encounter errors and will deal with them, but otherwise return
+	      no error result. These are static functions (i.e. local to this
+	      file), with prefixes <literal>or1k_jtag_</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The next level is in two sets, one for use with a locally
+	      connected (JP1) &jtag; and one for a remote connection over
+	      TCP/IP corresponding to the functions in the previous
+	      layer. These functions detect with errors and return an error
+	      code to indicate an error has occurred. These are static
+	      functions with prefixes: <literal>jp1_</literal> and
+	      <literal>jtr_</literal> respectively.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The final level comes in separate flavors for locally connected
+	      &jtag; (low level routines to drive the JP1 interface) and
+	      remote use (to build and send/receive packets over
+	      TCP/IP). These functions detect errors and return an error code
+	      to indicate an error has occurred. These are static function
+	      with prefixes <literal>jp1_ll_</literal> and
+	      <literal>jtr_ll_</literal> respectively.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Errors are either dealt with silently or (if fatal) via the &gdb;
+	  error() function.
+	</para>
+
+	<caution>
+	  <para>
+	    Few people now use the JP1 direct connection, and there is no
+	    confidence that this code works at all!
+	  </para>
+	</caution>
 
       </sect2>
 
@@ -4886,9 +5093,29 @@ $Id$
 	The OpenRISC 1000 Disassembler
       </title>
 
-      <para>
+      <para>	
+	The OpenRISC 1000 disassembler is part of the wider
+	<command>binutils</command> utility set and is found in the
+	<filename>opcodes</filename> sub-directory. It provides two versions of
+	the disassembly function, <function>print_insn_big_or32</function> and
+	<function>print_insn_little_or32</function> for use with big-endian
+	and little-endian implementations of the architecture in
+	<filename>or32-dis.c</filename>
       </para>
 
+      <para>
+	The instruction decode uses a finite state automaton (&fsa;) in
+	<filename>or32-opc.c</filename>. This is constructed at start-up by
+	the function <function>build_automata</function> from a table
+	describing the instruction set. This function is invoked from the
+	<function>_initialize_or1k_tdep</function> function immediately after
+	the OpenRISC 1000 architecture has been defined.
+      </para>
+
+      <para>
+	The disassembler takes advantage of any symbol table information to
+	replace branch and jump targets by symbolic names where possible.
+      </para>
     </sect1>
 
     <sect1>
@@ -4897,7 +5124,79 @@ $Id$
       </title>
 
       <para>
+	<xref linkend="sec_adding_commands" /> describes how to extend the
+	&gdb; command set. For the OpenRISC 1000 architecture, the
+	<command>info</command> command is extended to show the value of
+	&spr;s (<command>info&nbsp;spr</command>) and a new command,
+	<command>spr</command> is added to set the value of a &spr;<footnote>
+	<para>
+	    There is a strong case for this being a new sub-command of the
+	    <command>set</command>. However the <command>spr</command> was
+	    introduced in &gdb;&nbsp;5.0, and there is no point in replacing
+	    it now.
+	  </para>
+	  </footnote>.
       </para>
+
+      <para>
+	Both these commands are added in
+	<function>_initialize_or1k_tdep</function> after the architecture has
+	been created and the disassembler automata initialized.
+      </para>
+
+      <sect2>
+	<title>
+	  The <command>info spr</command> Command
+	</title>
+
+	<para>
+	  The new sub-command for <command>info</command> is added using
+	  <function>add_info</function>
+	</para>
+
+	<programlisting>add_info ("spr", or1k_info_spr_command,
+          "Show the value of a special purpose register");</programlisting>
+
+	<para>
+	  The functionality is provided in
+	  <function>or1k_info_spr_command</function>. The user can specify a
+	  group by name or number (the value of all registers in that group is
+	  displayed), or a register name (the value of that register is
+	  displayed) or a group name/number and register name/number (the
+	  value of that register in the group is displayed).
+	</para>
+
+	<para>
+	  The arguments are broken out from the text of the command using
+	  <function>or1k_parse_params</function>, which also handles any
+	  errors in syntax or semantics. If the arguments are successfully
+	  parsed the results are then printed out using the UI independent
+	  function, <function>ui_out_field_fmt</function>.
+	</para>
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>spr</command> Command
+	</title>
+
+	<para>
+	  This new top level command is added, classified as a support command
+	  (<constant>class_support</constant>), using the
+	  <function>add_com</function> command.
+	</para>
+
+	<para>
+	  The functionality is provided in
+	  <function>or1k_spr_command</function>. This also uses
+	  <function>or1k_parse_spr_params</function> to parse the arguments,
+	  although there is now one more (the value to set). The new value is
+	  written into the relevant &spr; (using
+	  <function>or1k_write_spr</function>) and the change recorded using
+	  <function>ui_out_field_fmt</function>.
+	</para>
+
+      </sect2>
 
     </sect1>
 
@@ -4938,22 +5237,6 @@ $Id$
 
 	<glossseealso>little&#32;endian</glossseealso>
       </glossdef>
-    </glossentry>
-
-    <glossentry>
-      <glossterm>Instruction&#32;Set&#32;Simulator</glossterm>
-      <acronym>ISS</acronym>
-      <glossdef>
-	<para>
-	  A software model of a CPU core instruction set. Typically completely
-	  models the instruction semantics, but not the full microarchitecture
-	  of a particular CPU implementation. Timing information may be just
-	  an instruction count, or may (as with the &or1ksim;) offer some
-	  estimate of timing delays due to memory accesses, caching and
-	  virtual memory access.
-	</para>
-      </glossdef>
-
     </glossentry>
 
     <glossentry>
@@ -5041,7 +5324,7 @@ $Id$
 
     <bibliomixed id="ref_gdb_ug">
       <title id="ref_gdb_ug_xr">
-	Debugging with &gdb;: The GNU Source-Level Debugger,
+	Debugging with &gdb;: The &gnu; Source-Level Debugger,
       </title>
       <firstname>Richard</firstname> <surname>Stallman</surname>,
       <firstname>Roland</firstname> <surname>Pesch</surname>,
@@ -5063,7 +5346,7 @@ $Id$
 
     <bibliomixed id="ref_gdb_int">
       <title id="ref_gdb_int_xr">
-	&gdb; Internals: A guide to the internals of the GNU debugger,
+	&gdb; Internals: A guide to the internals of the &gnu; debugger,
       </title>
       <firstname>John</firstname> <surname>Gillmore</surname> and
       <firstname>Stan</firstname> <surname>Shebbs</surname>,
