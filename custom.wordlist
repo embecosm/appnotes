@@ -1,5 +1,6 @@
 accessor
 accessors
+AMD
 automata
 backtrace
 backtraces
@@ -20,11 +21,14 @@ destructor
 Destructor
 disassemblers
 disassembly
+Disassembly
+DMMU
 Doxygen
 executables
 FIFOs
 frameless
 Howto
+IMMU
 infinitum
 IP
 libbfd
@@ -38,6 +42,8 @@ matchpoints
 microarchitecture
 MMU
 MMUs
+Mohor
+Mohor's
 namespace
 Or1ksim
 passthrough
@@ -47,8 +53,10 @@ redirections
 re-implements
 Rohit
 Rx
+steppable
 structs
 subclassing
+tdep
 templated
 Texinfo
 tracepoint

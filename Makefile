@@ -33,7 +33,7 @@ DOCROOT        = gdb_howto
 # ----------------------------------------------------------------------------
 # Others do all the hard work
 
-include $(HOME)/svntrunk/Documentation/local_scripts/linux_article.mk
+include $(HOME)/svntrunk/Documentation/local_scripts/linux_book.mk
 
 
 .PHONY: spell
