@@ -98,7 +98,7 @@
      inkscape:showpageshadow="false"
      inkscape:zoom="1.0848837"
      inkscape:cx="450"
-     inkscape:cy="526.6014"
+     inkscape:cy="393.12969"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg3702">
@@ -111,62 +111,70 @@
        dotted="true" />
   </sodipodi:namedview>
   <defs
-     id="defs3704" />
+     id="defs3704">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 430 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="900 : 430 : 1"
+       inkscape:persp3d-origin="450 : 286.66667 : 1"
+       id="perspective7022" />
+  </defs>
   <text
      xml:space="preserve"
      style="font-size:284.44445801px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-     x="6756.8047"
+     x="7112.3604"
      y="-425.34512"
      id="text4198"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4222"
-       x="6756.8047"
+       x="7112.3604"
        y="-425.34512"
        style="stroke-width:1.4666667">OR1K_JTAG_COMMAND_READ</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4204"
      width="4951.1113"
      height="1573.3334"
-     x="4279.9995"
+     x="4635.5552"
      y="-742.22247" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,-228.88907 L 9237.7775,-228.88907"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,-228.88907 L 9593.333,-228.88907"
      id="path4206" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,304.4443 L 9237.7778,304.4443"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,304.4443 L 9593.3333,304.4443"
      id="path4210" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6754.6172"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7110.1729"
      y="133.33272"
      id="text4212"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4214"
-       x="6754.6172"
+       x="7110.1729"
        y="133.33272"
-       style="stroke-width:0.73333335">length</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">length</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2734"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8291"
      y="666.66614"
      id="text4216"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4220"
-       x="6757.2734"
+       x="7112.8291"
        y="666.66614"
-       style="stroke-width:0.73333335">address</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">address</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4230"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6664,-7333.3341)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2219,-7333.3341)">
     <path
        id="path4224"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -183,7 +191,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4235"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6664,-8393.3335)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2219,-8393.3335)">
     <path
        id="path4237"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -200,7 +208,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4243"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6664,-7860.0002)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2219,-7860.0002)">
     <path
        id="path4245"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -216,7 +224,7 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.46666669999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13334.585"
      y="-387.42416"
      id="text4251"
@@ -225,25 +233,25 @@
        id="tspan4369"
        x="13334.585"
        y="-387.42416"
-       style="stroke-width:1.4666667">status</tspan></text>
+       style="stroke-width:1.46666669999999999;font-size:391.11111111">status</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4255"
      width="4951.1113"
      height="1573.3334"
      x="10857.779"
      y="-742.22247" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
      d="M 10851.111,-228.88892 L 15815.556,-228.88892"
      id="path4257" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
      d="M 10851.111,304.4445 L 15815.556,304.4445"
      id="path4259" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13332.397"
      y="133.33272"
      id="text4261"
@@ -252,10 +260,10 @@
        id="tspan4371"
        x="13332.397"
        y="133.33272"
-       style="stroke-width:0.73333335">data (MS word)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (MS word)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13335.055"
      y="666.66614"
      id="text4265"
@@ -264,7 +272,7 @@
        id="tspan4373"
        x="13335.055"
        y="666.66614"
-       style="stroke-width:0.73333335">data (LS word)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (LS word)</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4269"
@@ -319,58 +327,58 @@
   <text
      xml:space="preserve"
      style="font-size:284.44445801px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-     x="6756.8057"
+     x="7112.3613"
      y="1707.9885"
      id="text4293"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4335"
-       x="6756.8057"
+       x="7112.3613"
        y="1707.9885"
        style="stroke-width:1.4666667">OR1K_JTAG_COMMAND_WRITE</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4297"
      width="4951.1113"
      height="2640"
-     x="4280"
+     x="4635.5557"
      y="1391.1111" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,1904.4443 L 9237.7779,1904.4443"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,1904.4443 L 9593.3334,1904.4443"
      id="path4299" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,2437.7777 L 9237.7779,2437.7777"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,2437.7777 L 9593.3334,2437.7777"
      id="path4301" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6754.6182"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7110.1738"
      y="2266.6663"
      id="text4303"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4305"
-       x="6754.6182"
+       x="7110.1738"
        y="2266.6663"
-       style="stroke-width:0.73333335">length</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">length</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="2799.9998"
      id="text4307"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4309"
-       x="6757.2744"
+       x="7112.8301"
        y="2799.9998"
-       style="stroke-width:0.73333335">address</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">address</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4311"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6676,-5200.0007)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2231,-5200.0007)">
     <path
        id="path4313"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -387,7 +395,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4319"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6676,-6260.0002)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2231,-6260.0002)">
     <path
        id="path4321"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -404,7 +412,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4327"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6676,-5726.6669)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2231,-5726.6669)">
     <path
        id="path4329"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -419,17 +427,17 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636303;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3329,2971.111 L 9237.778,2971.111"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8884,2971.111 L 9593.3335,2971.111"
      id="path4337" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3329,3504.4444 L 9237.778,3504.4444"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8884,3504.4444 L 9593.3335,3504.4444"
      id="path4339" />
   <g
      style="fill-rule:evenodd"
      id="g4341"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6664,-4660.0002)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2219,-4660.0002)">
     <path
        id="path4343"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -446,7 +454,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4349"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6664,-4133.3335)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2219,-4133.3335)">
     <path
        id="path4351"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -462,31 +470,31 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="3333.3254"
      id="text4357"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4365"
-       x="6757.2744"
+       x="7112.8301"
        y="3333.3254"
-       style="stroke-width:0.73333335">data (MS word)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (MS word)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="3866.6536"
      id="text4361"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4367"
-       x="6757.2744"
+       x="7112.8301"
        y="3866.6536"
-       style="stroke-width:0.73333335">data (LS word)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (LS word)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.46666669999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13334.585"
      y="1745.9094"
      id="text4375"
@@ -495,9 +503,9 @@
        id="tspan4377"
        x="13334.585"
        y="1745.9094"
-       style="stroke-width:1.4666667">status</tspan></text>
+       style="stroke-width:1.46666669999999999;font-size:391.11111111">status</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4379"
      width="4951.1113"
      height="506.66669"
@@ -523,58 +531,58 @@
   <text
      xml:space="preserve"
      style="font-size:284.44445801px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-     x="6756.8057"
+     x="7112.3613"
      y="4907.9888"
      id="text4417"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4487"
-       x="6756.8057"
+       x="7112.3613"
        y="4907.9888"
        style="stroke-width:1.4666667">OR1K_JTAG_COMMAND_READ_BLOCK</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4421"
      width="4951.1113"
      height="2106.6667"
-     x="4280.0005"
+     x="4635.5562"
      y="4591.1113" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3333,5104.4444 L 9237.7781,5104.4444"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8888,5104.4444 L 9593.3336,5104.4444"
      id="path4423" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3333,5637.7778 L 9237.7781,5637.7778"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8888,5637.7778 L 9593.3336,5637.7778"
      id="path4425" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6754.6182"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7110.1738"
      y="5466.6665"
      id="text4427"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4429"
-       x="6754.6182"
+       x="7110.1738"
        y="5466.6665"
-       style="stroke-width:0.73333335">length</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">length</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="5999.9995"
      id="text4431"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4433"
-       x="6757.2744"
+       x="7112.8301"
        y="5999.9995"
-       style="stroke-width:0.73333335">address</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">address</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4435"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6678,-2000.001)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2233,-2000.001)">
     <path
        id="path4437"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -591,7 +599,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4443"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6678,-3060.0005)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2233,-3060.0005)">
     <path
        id="path4445"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -608,7 +616,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4451"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6678,-2526.6671)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2233,-2526.6671)">
     <path
        id="path4453"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -623,13 +631,13 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636303;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,6171.1111 L 9237.7782,6171.1111"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,6171.1111 L 9593.3337,6171.1111"
      id="path4459" />
   <g
      style="fill-rule:evenodd"
      id="g4463"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6665,-1460.0004)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.222,-1460.0004)">
     <path
        id="path4465"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -645,19 +653,19 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="6533.3257"
      id="text4479"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4681"
-       x="6757.2744"
+       x="7112.8301"
        y="6533.3257"
-       style="stroke-width:0.73333335">num_regs (n)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">num_regs (n)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.46666669999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13334.585"
      y="4945.9121"
      id="text4491"
@@ -666,25 +674,25 @@
        id="tspan4493"
        x="13334.585"
        y="4945.9121"
-       style="stroke-width:1.4666667">status</tspan></text>
+       style="stroke-width:1.46666669999999999;font-size:391.11111111">status</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66666985;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4495"
      width="4951.1113"
      height="2640"
      x="10857.779"
      y="4591.1113" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
      d="M 10851.111,5637.778 L 15815.556,5637.778"
      id="path4497" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
      d="M 10851.111,6171.1114 L 15815.556,6171.1114"
      id="path4499" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13332.397"
      y="5999.9995"
      id="text4501"
@@ -693,10 +701,10 @@
        id="tspan4545"
        x="13332.397"
        y="5999.9995"
-       style="stroke-width:0.73333335">data (register 0)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (register 0)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13335.055"
      y="7066.6719"
      id="text4505"
@@ -705,7 +713,7 @@
        id="tspan4543"
        x="13335.055"
        y="7066.6719"
-       style="stroke-width:0.73333335">data (register n-1)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (register n-1)</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4509"
@@ -775,83 +783,78 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636303;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
      d="M 10851.112,6704.4447 L 15815.557,6704.4447"
      id="path4541" />
-  <g
-     style="fill-rule:evenodd"
-     id="g4562"
-     transform="matrix(0.9777778,0,0,0.9777778,177.7774,-2444.4444)">
-    <path
-       id="path4553"
-       d="M 10727.273,8909.091 L 12545.455,9090.9091 L 14363.636,8909.091 L 16181.818,9090.9091 L 16181.818,9272.7273 L 14363.636,9090.9091 L 12545.455,9272.7273 L 10727.273,9090.9091 L 10727.273,8909.091 z"
-       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       sodipodi:nodetypes="cccc"
-       id="path4549"
-       d="M 10734.091,9097.7272 L 12547.728,9265.9091 L 14361.364,9097.7272 L 16175,9265.9091"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636398;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       sodipodi:nodetypes="cccc"
-       id="path4555"
-       d="M 10734.091,8915.909 L 12547.728,9084.0909 L 14361.364,8915.909 L 16175,9084.0909"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636398;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-  </g>
+  <path
+     style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 10666.667,6266.667 L 12444.445,6444.4447 L 14222.222,6266.667 L 16000,6444.4447 L 16000,6622.2225 L 14222.222,6444.4447 L 12444.445,6622.2225 L 10666.667,6444.4447 L 10666.667,6266.667 z"
+     id="path4553" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     d="M 10673.333,6451.1113 L 12446.667,6615.5558 L 14220,6451.1113 L 15993.333,6615.5558"
+     id="path4549"
+     sodipodi:nodetypes="cccc" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     d="M 10673.333,6273.3335 L 12446.667,6437.778 L 14220,6273.3335 L 15993.333,6437.778"
+     id="path4555"
+     sodipodi:nodetypes="cccc" />
   <text
      xml:space="preserve"
      style="font-size:284.44445801px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-     x="6756.8057"
+     x="7112.3613"
      y="8101.3223"
      id="text4567"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4623"
-       x="6756.8057"
+       x="7112.3613"
        y="8101.3223"
        style="stroke-width:1.4666667">OR1K_JTAG_COMMAND_WRITE_BLOCK</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4571"
      width="4951.1113"
      height="3706.6667"
-     x="4280.0005"
+     x="4635.5562"
      y="7791.1108" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3333,8304.4443 L 9237.7781,8304.4443"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8888,8304.4443 L 9593.3336,8304.4443"
      id="path4573" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3333,8837.7777 L 9237.7781,8837.7777"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8888,8837.7777 L 9593.3336,8837.7777"
      id="path4575" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6754.6182"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7110.1738"
      y="8660"
      id="text4577"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4579"
-       x="6754.6182"
+       x="7110.1738"
        y="8660"
-       style="stroke-width:0.73333335">length</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">length</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="9193.333"
      id="text4581"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4583"
-       x="6757.2744"
+       x="7112.8301"
        y="9193.333"
-       style="stroke-width:0.73333335">address</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">address</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4585"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6678,1193.3324)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2233,1193.3324)">
     <path
        id="path4587"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -868,7 +871,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4593"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6678,133.33287)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2233,133.33287)">
     <path
        id="path4595"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -885,7 +888,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4601"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6678,666.6663)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2233,666.6663)">
     <path
        id="path4603"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -900,13 +903,13 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636303;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,9371.1105 L 9237.7782,9371.1105"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,9371.1105 L 9593.3337,9371.1105"
      id="path4609" />
   <g
      style="fill-rule:evenodd"
      id="g4611"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6665,1733.333)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.222,1733.333)">
     <path
        id="path4613"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -922,20 +925,20 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2744"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8301"
      y="9726.6592"
      id="text4619"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4621"
-       x="6757.2744"
+       x="7112.8301"
        y="9726.6592"
-       style="stroke-width:0.73333335">num_regs</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">num_regs</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4625"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6665,2277.6921)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.222,2277.6921)">
     <path
        id="path4627"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -952,7 +955,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4633"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6665,2817.7775)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.222,2817.7775)">
     <path
        id="path4635"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -969,7 +972,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4641"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6665,3333.333)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.222,3333.333)">
     <path
        id="path4643"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -984,62 +987,57 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636303;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3331,9904.4443 L 9237.7783,9904.4443"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8886,9904.4443 L 9593.3338,9904.4443"
      id="path4649" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3332,10437.778 L 9237.7781,10437.778"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8887,10437.778 L 9593.3336,10437.778"
      id="path4651" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3329,10971.111 L 9237.7784,10971.111"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8884,10971.111 L 9593.3339,10971.111"
      id="path4653" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6762.8999"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7118.4556"
      y="10266.671"
      id="text4655"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4657"
-       x="6762.8999"
+       x="7118.4556"
        y="10266.671"
-       style="stroke-width:0.73333335">data (register 0)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (register 0)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6762.8999"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7118.4556"
      y="11333.338"
      id="text4659"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4661"
-       x="6762.8999"
+       x="7118.4556"
        y="11333.338"
-       style="stroke-width:0.73333335">data (register n-1)</tspan></text>
-  <g
-     style="fill-rule:evenodd"
-     id="g4663"
-     transform="matrix(0.9777778,0,0,0.9777778,-6400.0003,1822.2219)">
-    <path
-       id="path4665"
-       d="M 10727.273,8909.091 L 12545.455,9090.9091 L 14363.636,8909.091 L 16181.818,9090.9091 L 16181.818,9272.7273 L 14363.636,9090.9091 L 12545.455,9272.7273 L 10727.273,9090.9091 L 10727.273,8909.091 z"
-       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       sodipodi:nodetypes="cccc"
-       id="path4667"
-       d="M 10734.091,9097.7272 L 12547.728,9265.9091 L 14361.364,9097.7272 L 16175,9265.9091"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636398;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       sodipodi:nodetypes="cccc"
-       id="path4669"
-       d="M 10734.091,8915.909 L 12547.728,9084.0909 L 14361.364,8915.909 L 16175,9084.0909"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.63636398;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-  </g>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">data (register n-1)</tspan></text>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 4444.4446,10533.333 L 6222.2226,10711.111 L 7999.9996,10533.333 L 9777.7776,10711.111 L 9777.7776,10888.889 L 7999.9996,10711.111 L 6222.2226,10888.889 L 4444.4446,10711.111 L 4444.4446,10533.333 z"
+     id="path4665" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     d="M 4451.1111,10717.778 L 6224.4451,10882.222 L 7997.7781,10717.778 L 9771.1111,10882.222"
+     id="path4667"
+     sodipodi:nodetypes="cccc" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     d="M 4451.1111,10540 L 6224.4451,10704.444 L 7997.7781,10540 L 9771.1111,10704.444"
+     id="path4669"
+     sodipodi:nodetypes="cccc" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
      d="M 10851.111,5104.4444 L 15815.556,5104.4444"
      id="path4671" />
   <g
@@ -1061,7 +1059,7 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13342.554"
      y="5466.6538"
      id="text4683"
@@ -1070,10 +1068,10 @@
        id="tspan4685"
        x="13342.554"
        y="5466.6538"
-       style="stroke-width:0.73333335">num_regs (n)</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">num_regs (n)</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.46666669999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13334.584"
      y="8139.2422"
      id="text4687"
@@ -1082,9 +1080,9 @@
        id="tspan4689"
        x="13334.584"
        y="8139.2422"
-       style="stroke-width:1.4666667">status</tspan></text>
+       style="stroke-width:1.46666669999999999;font-size:391.11111111">status</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4691"
      width="4951.1113"
      height="506.66669"
@@ -1110,58 +1108,58 @@
   <text
      xml:space="preserve"
      style="font-size:284.44445801px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-     x="6756.8047"
+     x="7112.3604"
      y="12374.654"
      id="text4908"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4952"
-       x="6756.8047"
+       x="7112.3604"
        y="12374.654"
        style="stroke-width:1.4666667">OR1K_JTAG_COMMAND_CHAIN</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4912"
      width="4951.1113"
      height="1573.3334"
-     x="4280"
+     x="4635.5557"
      y="12057.777" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333492;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333543, 53.33333543;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3333,12571.11 L 9237.7777,12571.11"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8888,12571.11 L 9593.3332,12571.11"
      id="path4914" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:13.33333397;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:53.33333573, 53.33333573;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 4273.3333,13104.444 L 9237.778,13104.444"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:17.77777778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:213.33333333,213.33333333;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 4628.8888,13104.444 L 9593.3335,13104.444"
      id="path4916" />
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6754.6172"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7110.1729"
      y="12933.332"
      id="text4918"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4920"
-       x="6754.6172"
+       x="7110.1729"
        y="12933.332"
-       style="stroke-width:0.73333335">length</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">length</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333335;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.9333334, 2.9333334;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6757.2734"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.73333334999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.93333339999999998, 2.93333339999999998;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="7112.8291"
      y="13466.665"
      id="text4922"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4950"
-       x="6757.2734"
+       x="7112.8291"
        y="13466.665"
-       style="stroke-width:0.73333335">scan chain</tspan></text>
+       style="stroke-width:0.73333334999999999;font-size:391.11111111">scan chain</tspan></text>
   <g
      style="fill-rule:evenodd"
      id="g4926"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6667,5466.6657)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2222,5466.6657)">
     <path
        id="path4928"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -1178,7 +1176,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4934"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6667,4406.6662)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2222,4406.6662)">
     <path
        id="path4936"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -1195,7 +1193,7 @@
   <g
      style="fill-rule:evenodd"
      id="g4942"
-     transform="matrix(0.9777778,0,0,0.9777778,2666.6667,4939.9995)">
+     transform="matrix(0.9777778,0,0,0.9777778,3022.2222,4939.9995)">
     <path
        id="path4944"
        d="M 2909.0909,8356.8182 L 2909.0909,8279.5419"
@@ -1211,7 +1209,7 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-size:320.00003052px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.4666667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     style="font-size:391.11111111;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.46666669999999999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="13334.583"
      y="12405.909"
      id="text4954"
@@ -1220,9 +1218,9 @@
        id="tspan4956"
        x="13334.583"
        y="12405.909"
-       style="stroke-width:1.4666667">status</tspan></text>
+       style="stroke-width:1.46666669999999999;font-size:391.11111111">status</tspan></text>
   <rect
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:26.66667175;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:35.55555556;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect4958"
      width="4951.1113"
      height="506.66669"
@@ -1248,13 +1246,13 @@
   <text
      xml:space="preserve"
      style="font-size:391.1111145px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="6748.5845"
+     x="7104.1401"
      y="-1200.267"
      id="text4972"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4976"
-       x="6748.5845"
+       x="7104.1401"
        y="-1200.267">Request</tspan></text>
   <text
      xml:space="preserve"
@@ -1269,57 +1267,57 @@
        y="-1200.267">Response</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="-15.46875"
+     style="font-size:391.1111145px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="-18.90625"
      y="123.03796"
      id="text4984"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan4988"
-       x="-15.46875"
+       x="-18.90625"
        y="123.03796">Read register</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="-4.0625"
+     style="font-size:391.1111145px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="-4.9652777"
      y="2787.5955"
      id="text4990"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan5006"
-       x="-4.0625"
+       x="-4.9652777"
        y="2787.5955">Write register</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="-15.46875"
+     style="font-size:391.1111145px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="-18.90625"
      y="5723.0386"
      id="text4994"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan5008"
-       x="-15.46875"
+       x="-18.90625"
        y="5723.0386">Read block of registers</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="-4.0625"
+     style="font-size:391.1111145px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="-4.9652777"
      y="9723.0381"
      id="text4998"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan5010"
-       x="-4.0625"
+       x="-4.9652777"
        y="9723.0381">Write block of registers</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:320px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="-18.59375"
+     style="font-size:391.1111145px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.75;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+     x="-22.725695"
      y="12957.179"
      id="text5002"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan5012"
-       x="-18.59375"
+       x="-22.725695"
        y="12957.179">Set scan chain</tspan></text>
 </svg>

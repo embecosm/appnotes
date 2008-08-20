@@ -2993,12 +2993,12 @@ struct frame_base
 
       <sect2>
 	<title>
-	  Initial Startup
+	  Initial Start up
 	</title>
 
 	<para>
 	  <xref linkend="fig_startup_flow" /> shows the sequence diagram for
-	  &gdb; startup.
+	  &gdb; start up.
 	</para>
 
 	<figure id="fig_startup_flow">
@@ -3024,7 +3024,7 @@ struct frame_base
 	</figure>
 
 	<para>
-	  On startup, the &gdb; initialization function,
+	  On start up, the &gdb; initialization function,
 	  <function>gdb_init</function> calls all the
 	  <function>_initialize</function> functions, including those for any
 	  architectures or remote targets.
@@ -3051,26 +3051,26 @@ struct frame_base
 	</title>
 
 	<para>
-	  <xref linkend="fig_target_hl_flow_flow" /> shows the high level
+	  <xref linkend="fig_target_hl_flow" /> shows the high level
 	  sequence diagram for &gdb; in response to the
 	  <command>target</command> command.
 	</para>
 
-	<figure id="fig_target_hl_flow_flow">
+	<figure id="fig_target_hl_flow">
 	  <title>
 	    High level sequence diagram for the &gdb;
 	    <command>target</command> command
 	  </title>
 	  <mediaobject>
 	    <imageobject>
-	      <imagedata fileref="target_hl_flow_flow.svg"
+	      <imagedata fileref="target_hl_flow.svg"
 			 format="SVG"
 			 width="14cm"
 			 scalefit="1"
 			 align="center" />
 	    </imageobject>
 	    <imageobject>
-	      <imagedata fileref="target_hl_flow_flow.png"
+	      <imagedata fileref="target_hl_flow.png"
 			 format="PNG"
 			 width="80%"
 			 scalefit="1"
@@ -3080,15 +3080,15 @@ struct frame_base
 	</figure>
 	  
 	<para>
-	  The <command>target</command> command maps directly on to the target
-	  <function>to_open</function>. A typical implementation establishes
-	  physical connection to the target (perhap by opening a TCP/IP link to
-	  a remote target). For a remote target, it then typically calls
-	  <function>start_remote</function>, which waits for the target to
-	  stop (using the target <function>to_wait</function> function),
-	  determines the reason for stopping
-	  (<function>handle_inferior_event</function>) and the marks this as a
-	  normal stop (<function>normal_stop</function>).
+	  The <command>target</command> command maps directly on to the
+	  current target <function>to_open</function>. A typical
+	  implementation establishes physical connection to the target (for
+	  example by opening a TCP/IP link to a remote target). For a remote
+	  target, it then typically calls <function>start_remote</function>,
+	  which waits for the target to stop (using the current target
+	  <function>to_wait</function> function), determines the reason for
+	  stopping (<function>handle_inferior_event</function>) and then marks
+	  this as a normal stop (<function>normal_stop</function>).
 	</para>
 
 	<para>
@@ -3125,11 +3125,307 @@ struct frame_base
 	</figure>
 
 	<para>
+	  <function>handle_inferior_event</function> needs to establish the
+	  program counter at which execution stopped, so calls
+	  <function>read_pc_pid</function>. Since the program counter is a
+	  register, this causes creation of a register cache, for which the
+	  type of each register must be determined by
+	  <function>gdbarch_register_type</function> (a one-off exercise,
+	  since this never changes). Having determined register types, the
+	  register cache is populated with the value of the program counter by
+	  calling the current target <function>to_fetch_registers</function>
+	  for the relevant register.
+	</para>
+
+	<para>
+	  <function>handle_inferior_event</function> then determines if the
+	  stop was due to a breakpoint or watchpoint. The function
+	  <function>watchpoints_triggered</function> uses the target
+	  <function>target_stopped_by_watchpoint</function> to determine if it
+	  was a watchpoint which triggered the stop.
+	</para>
+
+	<para>
 	  The call to <function>normal_stop</function> also invokes the
 	  &gdbarch; functions, calling <function>gdbarch_unwind_pc</function>
 	  to establish the current program counter and and frame sniffer
 	  functions to establish the frame sniffer stack.
 	</para>
+      </sect2>
+
+      <sect2>
+	<title>
+	  The &gdb; <command>load</command> Command
+	</title>
+
+	<para>
+	  <xref linkend="fig_load_flow" /> shows the high level
+	  sequence diagram for &gdb; in response to the
+	  <command>load</command> command. This maps to a call the the current
+	  target's <function>to_load</function> function, which in most cases
+	  will end up calling the current target's
+	  <function>to_xfer_partial</function> function once for each section
+	  of the image to load it into memory.
+	</para>
+
+	<figure id="fig_load_flow">
+	  <title>
+	    Sequence diagram for the &gdb; <command>load</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="load_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="load_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The load function will capture data from the loaded file, most
+	  importantly its start address for execution.
+	</para>
+
+      </sect2>
+	  
+      <sect2>
+	<title>
+	  The &gdb; <command>break</command> Command
+	</title>
+
+	<para>
+	  <xref linkend="fig_break_flow" /> shows the high level sequence
+	  diagram for &gdb; in response to the <command>break</command>
+	  command. This example is for the case where the target of the break
+	  is a symbol (i.e. a function name) in the target executable.
+	</para>
+
+	<figure id="fig_break_flow">
+	  <title>
+	    Sequence diagram for the &gdb; <command>load</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="break_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="break_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  Most of the action with breakpoints occurs when the program is set
+	  running, at which any active breakpoints are installed. However for
+	  any <command>break</command> command, the address for the break must
+	  be set up in the breakpoint data structure.
+	</para>
+
+	<para>
+	  For symbolic addresses, the start of the function can be obtained
+	  from the line number information held for debugging purposes in the
+	  symbol table (known as <emphasis>symbol-and-line</emphasis>
+	  information, or &sal;). For a function, this will yield the start
+	  address of the code. However the breakpoint must be set after the
+	  function prologue. <function>gdbarch_skip_prolog</function> is used to
+	  find that address in the code.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The &gdb; <command>run</command> Command
+	</title>
+
+	<para>
+	  <xref linkend="fig_run_hl_flow" /> shows the high level
+	  sequence diagram for &gdb; in response to the
+	  <command>run</command> command.
+	</para>
+
+	<figure id="fig_run_hl_flow">
+	  <title>
+	    High level sequence diagram for the &gdb;
+	    <command>run</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="run_hl_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="run_hl_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The <command>run</command> command must create the inferior, insert
+	  any active breakpoints and watchpoints, and then start execution of
+	  the inferior. Control does not return to &gdb; until the target
+	  reports that it has stopped.
+	</para>
+
+	<para>
+	  The top level function implementing the <command>run</command>
+	  command is <function>run_command</function>. This creates the
+	  inferior, but calling the current target's
+	  <function>to_create_inferior</function> function. &gdb; supports
+	  targets which can give a dynamic description of their architecture
+	  (for example the number of registers available). This is achieved
+	  through the <function>to_find_description</function> function of the
+	  current target (which is an empty function by default).
+	</para>
+
+	<para>
+	  Execution is started by the <function>proceed</function>. This must
+	  first determine if the code is restarting on an instruction which
+	  will need stepping through a delay slot (so that code never stops on
+	  a delay slot). If this functionality is required, it is implemented
+	  by the <function>gdbarch_single_sep_through_delay</function>
+	  function.
+	</para>
+
+	<para>
+	  Active breakpoints are inserted using the current target's
+	  <function>to_insert_breakpoint</function> function. The code is then
+	  run using the <function>to_resume</function> function of the current
+	  target.
+	</para>
+
+	<para>
+	  &gdb; then calls <function>wait_for_inferior</function>, which will
+	  wait for the target to stop, and then determine the reason for the
+	  stop. Finally <function>normal_stop</function> will remove the
+	  breakpoints from the target code and report to the user the current
+	  state of the target as appropriate.
+	</para>
+
+	<para>
+	  Much of the detailed processing takes place in the
+	  <function>wait_for_inferior</function> and
+	  <function>normal_stop</function> functions (see also their use in
+	  <xref linkend="sec_target_flow" />). These are important functions
+	  and it is useful to look at their behavior in more detail.
+	</para>
+
+	<para>
+	  <xref linkend="fig_run_wait_for_inferior_flow" /> shows the sequence
+	  diagram for <function>wait_for_inferior</function> when handling the
+	  &gdb; <command>run</command> command.
+	</para>
+
+	<figure id="fig_run_wait_for_inferior_flow">
+	  <title>
+	    High level sequence diagram for the &gdb;
+	    <command>run</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="run_wait_for_inferior_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="run_wait_for_inferior_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  Once again the key work is in
+	  <function>handle_inferior_event</function>. The code checks for
+	  watchpoints using the <function>to_stopped_by_watchpoint</function>
+	  function of the current target. The function also checks
+	  breakpoints, but since it already knows the current program counter
+	  (set by <function>target_wait</function> when control is returned),
+	  it needs no further call to the target
+	  operations. <function>target_wait</function> will have reported if
+	  it stopped due to an exception that could be due to a
+	  breakpoint. <function>handle_inferior_event</function> can then look
+	  up the program counter in the list of active breakpoints, to
+	  determine which breakpoint was encountered.
+	</para>
+
+	<para>
+	  <xref linkend="fig_run_normal_stop_flow" /> shows the sequence
+	  diagram for <function>normal_stop</function> when handling the
+	  &gdb; <command>run</command> command. In this example the stop was
+	  due to the target encountering a breakpoint.
+	</para>
+
+	<figure id="fig_run_normal_stop_flow">
+	  <title>
+	    High level sequence diagram for the &gdb;
+	    <command>run</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="run_normal_stop_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="run_normal_stop_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The first action is to remove breakpoints. This ensures that the
+	  target executable is returned to its normal state, without any trap
+	  or similar code inserted.
+	</para>
+
+	<para>
+	  The frame sniffers for the target are identified, using the frame
+	  sniffer for the architecture,
+	  <function>&arch;_frame_sniffer</function>. The current stack frame
+	  is then printed for the user. This requires use of the frame sniffer
+	  to identify the ID (and hence all the other data) of &this; frame
+	  from the &next; frame (<function>&arch;_frame_this_id</function>
+	  here). <function>print_stack_frame</function> will start from the
+	  sentinel frame and work inwards until it finds the stack frame
+	  containing the current stack pointer and program counter.
+	</para>
+
       </sect2>
 
     </sect1>
