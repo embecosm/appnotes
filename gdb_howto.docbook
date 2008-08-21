@@ -3045,7 +3045,7 @@ struct frame_base
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_target_flow">
 	<title>
 	  The &gdb; <command>target</command> Command
 	</title>
@@ -3250,7 +3250,7 @@ struct frame_base
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_run_flow">
 	<title>
 	  The &gdb; <command>run</command> Command
 	</title>
@@ -3342,7 +3342,8 @@ struct frame_base
 
 	<figure id="fig_run_wait_for_inferior_flow">
 	  <title>
-	    High level sequence diagram for the &gdb;
+	    Sequence diagram for the &gdb;
+	    <function>wait_for_inferior</function> function as used by the
 	    <command>run</command> command
 	  </title>
 	  <mediaobject>
@@ -3387,8 +3388,8 @@ struct frame_base
 
 	<figure id="fig_run_normal_stop_flow">
 	  <title>
-	    High level sequence diagram for the &gdb;
-	    <command>run</command> command
+	    Sequence diagram for the &gdb; <function>normal_stop</function>
+	    function as used by the <command>run</command> command
 	  </title>
 	  <mediaobject>
 	    <imageobject>
@@ -3424,6 +3425,252 @@ struct frame_base
 	  here). <function>print_stack_frame</function> will start from the
 	  sentinel frame and work inwards until it finds the stack frame
 	  containing the current stack pointer and program counter.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The &gdb; <command>backtrace</command> Command
+	</title>
+
+	<para>
+	  <xref linkend="fig_bt_hl_flow" /> shows the high level
+	  sequence diagram for &gdb; in response to the
+	  <command>backtrace</command> command. This sequence shows the
+	  behavior for the first call to backtrace after control has returned
+	  to 
+	</para>
+
+	<figure id="fig_bt_hl_flow">
+	  <title>
+	    High level sequence diagram for the &gdb;
+	    <command>backtrace</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="bt_hl_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="bt_hl_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The main command function is <function>backtrace_command</function>,
+	  which uses <function>print_frame_info</function> to print the name
+	  of each function on the stack with its arguments.
+	</para>
+
+	<para>
+	  The first frame is already know from the program counter and stack
+	  pointer of the stopped target, so is printed out by
+	  <function>print_frame</function>. That will ultimately use the
+	  current target's <function>to_xfer_partial</function> function to
+	  get the local argument values.
+	</para>
+
+	<para>
+	  Since this is the first <command>backtrace</command> since the
+	  program stopped, the stack pointer and program counter are each
+	  obtained from the sentinel frame using
+	  <function>get_frame_type</function>. <function>print_frame</function>
+	  is then called for each frame in turn as the stack is unwound until
+	  there are no more stack frames. The information in each frame is
+	  built up using the architecture's frame sniffers.
+	</para>
+
+	<para>
+	  It is useful to look at <function>print_frame</function> in more
+	  detail. <xref linkend="fig_bt_print_frame_flow" /> shows the
+	  sequence diagram for the second series of calls to the
+	  <function>print_frame</function> function when handling the &gdb;
+	  <command>backtrace</command> command, used to print out the stack
+	  frame.
+	</para>
+
+	<figure id="fig_bt_print_frame_flow">
+	  <title>
+	    Sequence diagram for the &gdb; <function>print_frame</function>
+	    function used by the <command>backtrace</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="bt_print_frame_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="bt_print_frame_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The information about the function on the stack frame can be
+	  obtained from the program counter and stack pointer associated with
+	  the stack frame. These are obtained by calls to the
+	  <function>gdbarch_unwind_pc</function> and
+	  <function>gdbarch_unwind_sp</function> functions.
+	</para>
+
+	<para>
+	  Then for each argument, its value must be printed out. The symbol
+	  table debug data will identify the arguments, and enough information
+	  for &gdb; to work out if the value is on the stack or in a
+	  register. The frame sniffer function to get registers from the stack
+	  frame (in this example
+	  <function>&arch;_frame_prev_register</function>) is used to get the
+	  values of any registers as appropriate.
+	</para>
+
+	<para>
+	  The precise sequence of calls depends on the functions in the stack
+	  frame, the arguments they have, and whether those arguments are in
+	  registers or on the stack.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The &gdb; <command>continue</command> Command after a Breakpoint
+	</title>
+
+	<para>
+	  The final sequence shows the behavior when execution is resumed
+	  after a breakpoint with the <command>continue</command> command.
+	  <xref linkend="fig_cont_hl_flow" /> shows the high level
+	  sequence diagram for &gdb; in response to the
+	  <command>backtrace</command> command. This sequence shows the
+	  behavior for the first call to backtrace after control has returned
+	  to 
+	</para>
+
+	<figure id="fig_cont_hl_flow">
+	  <title>
+	    High level sequence diagram for the &gdb;
+	    <command>continue</command> command after a breakpoint
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="cont_hl_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="cont_hl_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The command functionality is provided by the
+	  <function>continue_command</function>, which calls the
+	  <function>proceed</function> function for much of its behavior.
+	</para>
+
+	<para>
+	  <function>proceed</function> calls the
+	  <function>to_resume</function> function of the current target to
+	  resume execution. For this first call, the breakpoint(s) removed
+	  when execution completed after the <command>run</command> command
+	  are <emphasis>not</emphasis> replaced and the target resumption is
+	  only for a single instruction step. This allows the target to be
+	  stepped past the breakpoint without triggering an exception.
+	</para>
+
+	<para>
+	  Then uses <function>wait_for_inferior</function> to wait for control
+	  to return after the single step and diagnose the next
+	  action. Waiting uses the <function>to_wait</function> function of
+	  the current target, then calls
+	  <function>handle_inferior_event</function> to analyze the result. In
+	  this case, <function>handle_inferior_event</function> determines
+	  that a target has just stepped past a breakpoint. It reinserts the
+	  breakpoints and calls the target <function>to_resume</function>
+	  function again, this time to run continuously.
+	</para>
+
+	<para>
+	  <function>wait_for_inferior</function> will use the current target
+	  <function>to_wait</function> function again to wait for the target
+	  to stop executing, then again call the
+	  <function>handle_inferior_event</function> to process the
+	  result. This time, control should return to &gdb;, so breakpoints
+	  are removed, and <function>handle_inferior_event</function> and
+	  <function>wait_for_inferior</function>. <function>proceed</function>
+	  calls <function>normal_stop</function> to tidy up and print out a
+	  message about the current stack frame location where execution has
+	  stopped (see <xref linkend="sec_run_flow" />.).
+	</para>
+
+	<para>
+	  It is useful to examine the behavior of the first call to
+	  <function>handle_inferior_event</function>, to see the sequence for
+	  completing the single step and resuming continuous execution. <xref
+	  linkend="fig_cont_handle_inferior_flow" /> shows the sequence
+	  diagram for the first call to
+	  <function>handle_inferior_event</function>.
+	</para>
+
+	<figure id="fig_cont_handle_inferior_flow">
+	  <title>
+	    Sequence diagram for the &gdb;
+	    <function>handle_inferior_event</function> function after single
+	    stepping an instruction for the <command>continue</command>
+	    command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="cont_handle_inferior_flow.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="cont_handle_inferior_flow.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  <function>handle_inferior_event</function> first determines if a
+	  watchpoint has now been triggered. If this is not the case, it
+	  checks if the processor is now in the delay slot of an instruction
+	  (requiring another single-step immediately). Having determined that
+	  continuous execution is appropriate, it calls the function
+	  <function>keep_going</function> to reinsert active breakpoints
+	  (using the <function>to_insert_breakpoint</function> function of the
+	  current target). Finally it calls the <function>to_resume</function>
+	  function of the current target <emphasis>without the single-step
+	  flag set</emphasis> to resume continuous execution.
 	</para>
 
       </sect2>
