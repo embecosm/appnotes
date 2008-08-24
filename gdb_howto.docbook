@@ -844,15 +844,15 @@ struct gdbarch  gdbarch_init_func (struct gdbarch_info  info,
 
 	  <informalexample>
 	    <programlisting>
-	      struct gdbarch_info
-	      {
-	      const struct bfd_arch_info *bfd_arch_info;
-	      int                         byte_order;
-	      bfd                        *abfd;
-	      struct gdbarch_tdep_info   *tdep_info;
-	      enum gdb_osabi              osabi;
-	      const struct target_desc   *target_desc;
-	      };
+struct gdbarch_info
+{
+  const struct bfd_arch_info *bfd_arch_info;
+  int                         byte_order;
+  bfd                        *abfd;
+  struct gdbarch_tdep_info   *tdep_info;
+  enum gdb_osabi              osabi;
+  const struct target_desc   *target_desc;
+};
 	    </programlisting>
 	  </informalexample>
 
