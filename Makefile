@@ -28,7 +28,7 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT        = gdb_howto
+DOCROOT        = howto-gdb-porting-ean-1-issue-1
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
