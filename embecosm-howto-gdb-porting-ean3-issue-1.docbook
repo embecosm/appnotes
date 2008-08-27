@@ -348,6 +348,10 @@ $Id$
 	<primary>&bfd;</primary>
 	<secondary>User Guide</secondary>
       </indexterm>
+      <indexterm>
+	<primary>Binary File Descriptor</primary>
+	<see>&bfd;</see>
+      </indexterm>
 
       <para>
 	The main &gdb; code base is generally well commented, particularly in
@@ -1410,6 +1414,10 @@ struct gdbarch *gdbarch_alloc (const struct gdbarch_info *info,
 	    <indexterm>
 	      <primary>OpenRISC 1000</primary>
 	      <secondary>&abi;</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Application Binary Interface</primary>
+	      <see>&abi;</see>
 	    </indexterm>
 	  </listitem>
 
@@ -6064,6 +6072,10 @@ struct frame_base
 	  <primary>breakpoint</primary>
 	  <secondary>reinsertion when continuing</secondary>
 	</indexterm>
+	<indexterm>
+	  <primary>watchpoint</primary>
+	  <secondary>reinsertion when continuing</secondary>
+	</indexterm>
 
       </sect2>
 
@@ -6781,7 +6793,10 @@ struct frame_base
 	  <indexterm>
 	    <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
 	    <secondary>commands</secondary>
-	    <tertiary><constant>OR1K_JTAG_COMMAND_READ</constant></tertiary>
+	    <tertiary>read register</tertiary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>OR1K_JTAG_COMMAND_READ</constant></primary>
 	  </indexterm>
 	</listitem>
 
@@ -6794,7 +6809,10 @@ struct frame_base
 	  <indexterm>
 	    <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
 	    <secondary>commands</secondary>
-	    <tertiary><constant>OR1K_JTAG_COMMAND_WRITE</constant></tertiary>
+	    <tertiary>write register</tertiary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>OR1K_JTAG_COMMAND_WRITE</constant></primary>
 	  </indexterm>
 	</listitem>
 
@@ -6809,7 +6827,10 @@ struct frame_base
 	  <indexterm>
 	    <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
 	    <secondary>commands</secondary>
-	    <tertiary><constant>OR1K_JTAG_COMMAND_READ_BLOCK</constant></tertiary>
+	    <tertiary>block read registers</tertiary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>OR1K_JTAG_COMMAND_READ_BLOCK</constant></primary>
 	  </indexterm>
 	</listitem>
 
@@ -6824,7 +6845,12 @@ struct frame_base
 	  <indexterm>
 	    <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
 	    <secondary>commands</secondary>
-	    <tertiary><constant>OR1K_JTAG_COMMAND_WRITE_BLOCK</constant></tertiary>
+	    <tertiary>block write registers</tertiary>
+	  </indexterm>
+	  <indexterm>
+	    <primary>
+	      <constant>OR1K_JTAG_COMMAND_WRITE_BLOCK</constant>
+	    </primary>
 	  </indexterm>
 	</listitem>
 
@@ -6836,7 +6862,10 @@ struct frame_base
 	  <indexterm>
 	    <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
 	    <secondary>commands</secondary>
-	    <tertiary><constant>OR1K_JTAG_COMMAND_CHAIN</constant></tertiary>
+	    <tertiary><constant>setting scan chain</constant></tertiary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>OR1K_JTAG_COMMAND_CHAIN</constant></primary>
 	  </indexterm>
 	</listitem>
       </itemizedlist>
@@ -7050,6 +7079,19 @@ struct frame_base
     <indexterm>
       <primary>&gdb;</primary>
       <secondary>Internals document</secondary>
+    </indexterm>
+
+    <para>
+      The OpenRISC 1000 version of &gdb; is documented briefly in the &gdb;
+      User Guide <xref linkend="ref_gdb_ug" />. A more comprehensive
+      tutorial <xref linkend="ref_or1k_gdb" /> is provided within the
+      <filename>gdb/doc</filename> subdirectory in the file
+      <filename>or1k.texinfo</filename>.
+    </para>
+    <indexterm>
+      <primary>documentation</primary>
+      <secondary>source</secondary>
+      <tertiary>OpenRISC 1000 Target &gdb; User Guide</tertiary>
     </indexterm>
 
     <para>
@@ -9028,6 +9070,22 @@ frame_base_set_default            (gdbarch, &amp;or1k_frame_base);
 	<filename>or1k-jtag.c</filename> with a shared header in
 	<filename>or1k-jtagh</filename>.
       </para>
+      <indexterm>
+	<primary>target operations</primary>
+	<secondary>for OpenRISC 1000</secondary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>gdb</filename> directory</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>remote-or1k.c</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>or1k-jtag.c</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>or1k-jtag.h</filename> file</primary>
+      </indexterm>
 
       <para>
 	The low-level interface is abstracted to a set of OpenRISC 1000
@@ -9037,6 +9095,20 @@ frame_base_set_default            (gdbarch, &amp;or1k_frame_base);
 	and one for targets connected over TCP/IP using the OpenRISC 1000
 	Remote JTAG Protocol.
       </para>
+      <indexterm>
+	<primary>Debug Unit</primary>
+	<secondary>&jtag; interface</secondary>
+	<tertiary>direct connection through parallel port</tertiary>
+      </indexterm>
+      <indexterm>
+	<primary>Debug Unit</primary>
+	<secondary>&jtag; interface</secondary>
+	<tertiary>remote connection over TCP/IP</tertiary>
+	<see>Remote JTAG Protocol (OpenRISC 1000)</see>
+      </indexterm>
+      <indexterm>
+	<primary>Remote JTAG Protocol (OpenRISC 1000)</primary>
+      </indexterm>
 
       <informalexample>
 	<programlisting>
@@ -9061,6 +9133,10 @@ void      or1k_jtag_wait (int  fast);
 	The choice of which implementation to use is determined by the
 	argument to <function>or1k_jtag_init</function>.
       </para>
+      <indexterm>
+	<primary>Remote JTAG Protocol (OpenRISC 1000)</primary>
+	<secondary>interface functions</secondary>
+      </indexterm>
 
       <itemizedlist>
 	<listitem>
@@ -9073,6 +9149,16 @@ void      or1k_jtag_wait (int  fast);
 	    argument, <literal>reset</literal> can be provided to indicate the
 	    target should be reset once connected.
 	  </para>
+	  <indexterm>
+	    <primary><function>or1k_jtag_init</function></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><function>or1k_jtag_close</function></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary>Remote JTAG Protocol (OpenRISC 1000)</primary>
+	    <secondary>resetting the target</secondary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
@@ -9081,6 +9167,12 @@ void      or1k_jtag_wait (int  fast);
 	    <function>or1k_jtag_write_spr</function>. Read or write a special
 	    purpose register.
 	  </para>
+	  <indexterm>
+	    <primary><function>or1k_jtag_read_spr</function></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><function>or1k_jtag_write_spr</function></primary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
@@ -9089,6 +9181,12 @@ void      or1k_jtag_wait (int  fast);
 	    <function>or1k_jtag_write_mem</function>. Read or write a block of
 	    memory.
 	  </para>
+	  <indexterm>
+	    <primary><function>or1k_jtag_read_mem</function></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><function>or1k_jtag_write_mem</function></primary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
@@ -9096,12 +9194,21 @@ void      or1k_jtag_wait (int  fast);
 	    <function>or1k_jtag_stall</function> and
 	    <function>or1k_jtag_unstall</function>. Stall or unstall the target.
 	  </para>
+	  <indexterm>
+	    <primary><function>or1k_jtag_stall</function></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><function>or1k_jtag_unstall</function></primary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
 	  <para>
 	    <function>or1k_jtag_wait</function>. Wait for the target to stall.
 	  </para>
+	  <indexterm>
+	    <primary><function>or1k_jtag_wait</function></primary>
+	  </indexterm>
 	</listitem>
       </itemizedlist>
 
@@ -9114,6 +9221,22 @@ void      or1k_jtag_wait (int  fast);
 	binaries, so dependencies on headers cannot be captured. To do this
 	requires editing the <filename>Makefile.in</filename>.
       </para>
+      <indexterm>
+	<primary><filename>remote-or1k.o</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>or1k-jtag.o</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>configure.tgt</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>Makefile.in</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary>header dependencies</primary>
+	<seealso><filename>Makefile.in</filename> file</seealso>
+      </indexterm>
 
       <tip>
 	<para>
@@ -9122,6 +9245,18 @@ void      or1k_jtag_wait (int  fast);
 	  <command>touch</command> the target specific C source files before
 	  calling <command>make</command> to ensure they are rebuilt.
 	</para>
+	<indexterm>
+	  <primary><command>touch</command> command</primary>
+	  <secondary>
+	    instead of changing <filename>Makefile.in</filename>
+	  </secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><filename>Makefile.in</filename> file</primary>
+	  <secondary>
+	    <command>touch</command> command as alternative to changing
+	  </secondary>
+	</indexterm>
       </tip>
 
       <sect2>
@@ -9135,6 +9270,24 @@ void      or1k_jtag_wait (int  fast);
 	  <varname>or1k_jtag_target</varname> is populated and added as a
 	  target by calling <function>add_target</function>.
 	</para>
+	<indexterm>
+	  <primary>&target_ops;</primary>
+	  <secondary>creation</secondary>
+	  <tertiary>for OpenRISC 1000</tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary>OpenRISC 1000</primary>
+	  <secondary>creating new &target_ops; for</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>_initialize_remote_or1k</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><varname>or1k_jtag_target</varname></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>add_target</function></primary>
+	</indexterm>
 
 	<para>
 	  The majority of the target operations are generic to OpenRISC 1000,
@@ -9142,6 +9295,10 @@ void      or1k_jtag_wait (int  fast);
 	  by abstracting the low level interface through the interface
 	  functions described in <xref linkend="sec_or1k_remote_target" />.
 	</para>
+	<indexterm>
+	  <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
+	  <secondary>interface functions</secondary>
+	</indexterm>
 
 	<para>
 	  Having established all the target functions, the target is added by
@@ -9156,6 +9313,16 @@ void      or1k_jtag_wait (int  fast);
 	  <varname>or1k_target</varname>, defined in
 	  <filename>or1k-tdep.c</filename>.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>target&nbsp;jtag</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><varname>or1k_target</varname></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><filename>or1k-tdep.c</filename> file</primary>
+	</indexterm>
 
 	<note>
 	  <para>
@@ -9167,6 +9334,12 @@ void      or1k_jtag_wait (int  fast);
 	    target. The use of strata by &gdb; means there could possibly be
 	    another target which is active at the same time.
 	  </para>
+	  <indexterm>
+	    <primary><varname>current_target</varname></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary>target_strata</primary>
+	  </indexterm>
 	</note>
 
 	<para>
@@ -9176,6 +9349,14 @@ void      or1k_jtag_wait (int  fast);
 	  <varname>or1k_dbgcache</varname>, which is flushed prior to any
 	  operation that will unstall the target (thus causing it to execute).
 	</para>
+	<indexterm>
+	  <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	  <secondary>Debug Unit</secondary>
+	  <tertiary>debug register cache</tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><varname>or1k_dbgcache</varname></primary>
+	</indexterm>
 
       </sect2>
 
@@ -9185,26 +9366,8 @@ void      or1k_jtag_wait (int  fast);
 	</title>
 
 	<para>
-	  OpenRISC remote targets are always executable, with full access to
-	  memory, stack, registers etc once the connection is established.
-	</para>
-
-	<para>
-	  The function <function>or1k_files_info</function> provides data on
-	  the remote target for use by the
-	  <command>info&nbsp;target</command> command.
-	</para>
-
-	<para>
-	  The last group of functions are <emphasis>not</emphasis> generic to
-	  the OpenRISC 1000&mdash;they differ for each target interface. The
-	  function to open a connection for a &jtag; interface is
-	  <function>or1k_jtag_open</function> (which will then call the
-	  interface independent <function>or1k_open</function> function). The
-	  name of the interface is <literal>"jtag"</literal> (this means the
-	  command to establish the connection will be <command>target jtag
-	  ...</command>). Long name and documentation is also specific to the
-	  interface.
+	  A group of variables and functions give the name of the interface
+	  and varying degrees of information.
 	</para>
 
 	<itemizedlist>
@@ -9216,6 +9379,14 @@ void      or1k_jtag_wait (int  fast);
 	      established by using the command
 	      <command>target&nbsp;jtag&nbsp;...</command>.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_shortname</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>target&nbsp;jtag</command></secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9224,6 +9395,14 @@ void      or1k_jtag_wait (int  fast);
 	      command for use by the &gdb; <command>info target</command>
 	      command.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_longname</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>info&nbsp;target</command></secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9233,6 +9412,20 @@ void      or1k_jtag_wait (int  fast);
 	      full text for help specifically about this target. The text
 	      explains how to connect both directly and over TCP/IP.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_doc</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>help&nbsp;target</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary>
+		<command>help&nbsp;target&nbsp;jtag</command>
+	      </secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9242,14 +9435,42 @@ void      or1k_jtag_wait (int  fast);
 	      the OpenRISC 1000 it provides the name of the program being run
 	      on the target, if known.
 	    </para>
-	  </listitem>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>info&nbsp;target</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_files_info</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_files_info</function></primary>
+	    </indexterm>
 
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  OpenRISC remote targets are always executable, with full access to
+	  memory, stack, registers etc once the connection is established. A
+	  set of variables in &target_ops; for OpenRISC 1000 records this.
+	</para>
+
+	<itemizedlist>
 	  <listitem>
 	    <para>
 	      <varname>to_stratum</varname>. Since the OpenRISC 1000 target
 	      can execute code, this field is set to
 	      <constant>process_stratum</constant>.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_stratum</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>target_strata</primary>
+	      <secondary>for OpenRISC 1000</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9261,6 +9482,26 @@ void      or1k_jtag_wait (int  fast);
 	      target is connected, it has access to all its memory, a stack
 	      and registers, so all these fields are set to 1 (true).
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_has_all_memory</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_has_memory</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_has_stack</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_has_registers</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>register</primary>
+	      <secondary>availability in OpenRISC 1000 target</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9270,6 +9511,14 @@ void      or1k_jtag_wait (int  fast);
 	      stalled, so is not actually executing. So this field is
 	      initialized to 0 (false).
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_has_execution</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
+	      <secondary>execution status</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9280,6 +9529,18 @@ void      or1k_jtag_wait (int  fast);
 	      immediately after it has been executed, or if the watchpoint can
 	      be immediate continued without having any effect.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<varname>to_have_steppable_watchpoint</varname>
+	      </secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<varname>to_have_continuable_watchpoint</varname>
+	      </secondary>
+	    </indexterm>
 
 	    <para>
 	      If the OpenRISC 1000 triggers a hardware watchpoint, the
@@ -9289,6 +9550,11 @@ void      or1k_jtag_wait (int  fast);
 	      trigger again (it is not steppable). Thus both these flags are
 	      set to 0 (false).
 	    </para>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>&gdb; hardware watchpoint</secondary>
+	      <tertiary>restarting after</tertiary>
+	    </indexterm>
 	  </listitem>
 	</itemizedlist>
 
@@ -9306,7 +9572,6 @@ void      or1k_jtag_wait (int  fast);
 	  involves opening and closing the device.
 	</para>
 
-
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -9318,6 +9583,17 @@ void      or1k_jtag_wait (int  fast);
 	      <command>reset</command> indicating the target should be reset
 	      on connection.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_open</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_open</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Remote JTAG Protocol (OpenRISC 1000)</primary>
+	      <secondary>resetting the target</secondary>
+	    </indexterm>
 
 	    <para>
 	      Any existing connections are tidied up by
@@ -9325,12 +9601,21 @@ void      or1k_jtag_wait (int  fast);
 	      target are removed from the target stack by
 	      <function>unpush_target</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>target_preopen</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>unpush_target</function></primary>
+	    </indexterm>
 
 	    <para>
 	      Connection is then established through the low level interface
 	      routine, <function>or1k_jtag_init</function>, which resets the
 	      target if requested.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_jtag_init</function></primary>
+	    </indexterm>
 
 	    <para>
 	      With the connection established, the target's Unit Present &spr;
@@ -9338,6 +9623,34 @@ void      or1k_jtag_wait (int  fast);
 	      the number of &gpr;s and matchpoints is read from the CPU
 	      Configuration &spr; and used to update &gdbarch_tdep;.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>configuration registers</secondary>
+	      <tertiary>Unit Present Register (UPR)</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Unit Present Register (UPR)</primary>
+	      <see>
+		Special Purpose Registers (OpenRISC 1000), configuration
+		registers
+	      </see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>configuration registers</secondary>
+	      <tertiary>CPU Configuration Register (CPUCFGR)</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>CPU Configuration Register (CPUCFGR)</primary>
+	      <see>
+		Special Purpose Registers (OpenRISC 1000), configuration
+		registers
+	      </see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>availability</secondary>
+	    </indexterm>
 
 	    <para>
 	      The target processor is then stalled, to prevent further
@@ -9351,6 +9664,33 @@ void      or1k_jtag_wait (int  fast);
 	      cache will be written out to the &spr;s before execution
 	      recommences.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>debug register cache</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><varname>or1k_dbgcache</varname></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>watchpoint</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>watchpoint</primary>
+	      <secondary>in hardware</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>breakpoint</primary>
+	      <secondary>in hardware</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>single step execution</primary>
+	      <secondary>in hardware</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
 
 	    <para>
 	      Having established a connection, the target is pushed on to
@@ -9359,32 +9699,73 @@ void      or1k_jtag_wait (int  fast);
 	      current target (which depending on the stratum could be this
 	      target). However, the OpenRISC connection is established with
 	      the target processor stalled, so the
-	      <literal>to_has_execution</literal> flag is cleared by setting
-	      the macro <literal>target_has_execution</literal> to 0. It
+	      <varname>to_has_execution</varname> flag is cleared by setting
+	      the macro <varname>target_has_execution</varname> to 0. It
 	      will be set when <function>or1k_resume</function> unstalls the
 	      target.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><varname>to_has_execution</varname></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><varname>target_has_execution</varname></primary>
+	      <see>&target_ops;, convenience macros</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_resume</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
+	      <secondary>execution status</secondary>
+	    </indexterm>
 
 	    <para>
 	      As a matter of good housekeeping, any shared library symbols
 	      are cleared using <function>no_shared_libraries</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>no_shared_libraries</function></primary>
+	    </indexterm>
 
 	    <para>
 	      &gdb; identifies all inferior executables by their process and
 	      thread ID. This port of the OpenRISC 1000 is for bare metal
 	      debugging, so there is no concept of different processes that
 	      may be executing. Consequently we use the
-	      <literal>null_ptid</literal> and the process/thread ID for the
+	      <varname>null_ptid</varname> and the process/thread ID for the
 	      target. This is set in the &gdb; global variable
 	      <varname>inferior_pid</varname>.
 	    </para>
+	    <indexterm>
+	      <primary>OpenRISC 1000</primary>
+	      <secondary>bare metal debugging</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>process and thread ID</primary>
+	      <secondary>for OpenRISC 1000</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>process and thread ID</primary>
+	      <secondary>null value</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><varname>null_ptid</varname></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><varname>inferior_pid</varname></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>inferior</primary>
+	      <secondary>process ID</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
 
 	    <note>
 	      <para>
-		It is important that the inferior process/thread ID is established at this
-		early stage, so that the target can always be uniquely
-		identified.
+		It is important that the inferior process/thread ID is
+		established at this early stage, so that the target can always
+		be uniquely identified.
 	      </para>
 	    </note>
 
@@ -9398,6 +9779,15 @@ void      or1k_jtag_wait (int  fast);
 	      target can be popped, before the exception is thrown on to
 	      the top level.
 	    </para>
+	    <indexterm>
+	      <primary><function>start_remote</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_start_remote</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>catch_exception</function></primary>
+	    </indexterm>
 
 	  </listitem>
 
@@ -9405,11 +9795,17 @@ void      or1k_jtag_wait (int  fast);
 	    <para>
 	      <function>or1k_close</function>. This closes the connection by
 	      calling the low level interface function,
-	      <function>to_done</function> if it exists. The target will
+	      <function>or1k_jtag_close</function>. The target will
 	      already have been unpushed and the inferior mourned (see <xref
 	      linkend="sec_or1k_exec_funcs" />), so these
 	      actions are not required.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_close</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_jtag_close</function></primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9418,6 +9814,12 @@ void      or1k_jtag_wait (int  fast);
 	      target being debugged, which is achieved by calling
 	      <function>or1k_close</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_detach</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_close</function></primary>
+	    </indexterm>
 
 	    <para>
 	      There is no explicit function
@@ -9426,8 +9828,14 @@ void      or1k_jtag_wait (int  fast);
 	      <command>target&nbsp;jtag&nbsp;...</command> command in &gdb;)
 	      will achieve the same effect.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_open</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Remote &jtag; Protocol (OpenRISC 1000)</primary>
+	      <secondary>reattaching to target</secondary>
+	    </indexterm>
 	  </listitem>
-
 	</itemizedlist>
 
       </sect2>
@@ -9438,15 +9846,8 @@ void      or1k_jtag_wait (int  fast);
 	</title>
 
 	<para>
-	  There are a group of functions to access the state of the
-	  target. <function>or1k_fetch_registers</function> and
-	  <function>or1k_store_registers</function> read and write the raw
-	  &gdb; registers (the &gpr;s, program counter and supervision
-	  register), with <function>or1k_prepare_to_store</function> as a
-	  function that can help
-	  this. <function>or1k__xfer_partial</function> is used to read
-	  and write main memory. Object file loading is achieved with the
-	  generic loader, <function>generic_load</function>.
+	  These are a group of functions to access the registers and memory of
+	  the target.
 	</para>
 
 	<itemizedlist>
@@ -9458,6 +9859,17 @@ void      or1k_jtag_wait (int  fast);
 	      for reading of memory or &spr;s. However the &gpr;s are
 	      mapped into the &spr; space, so can be read in this way.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_fetch_registers</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_fetch_registers</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>register</primary>
+	      <secondary>functions for OpenRISC 1000</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9467,6 +9879,17 @@ void      or1k_jtag_wait (int  fast);
 	      contents of the register cache back to the physical registers
 	      on the target.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_store_registers</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_store_registers</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>register</primary>
+	      <secondary>functions for OpenRISC 1000</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9476,6 +9899,17 @@ void      or1k_jtag_wait (int  fast);
 	      provides this function. It is not needed for the OpenRISC
 	      1000, so just returns.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_prepare_to_store</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_prepare_to_store</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>register</primary>
+	      <secondary>functions for OpenRISC 1000</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9485,9 +9919,22 @@ void      or1k_jtag_wait (int  fast);
 	      the target. However the only class of object which needs be
 	      supported is read and write from memory. This is achieved
 	      through the low-level interface routines
-	      <function>or1k_read_mem</function> and
-	      <function>or1k_write_mem</function>.
+	      <function>or1k_jtag_read_mem</function> and
+	      <function>or1k_jtag_write_mem</function>.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_xfer_partial</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_xfer_partial</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_jtag_read_mem</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_jtag_write_mem</function></primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9499,6 +9946,13 @@ void      or1k_jtag_wait (int  fast);
 	      <function>or1k_xfer_partial</function> function to transfer the
 	      bytes of the image.
 	    </para>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_load</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>generic_load</function></primary>
+	    </indexterm>
 	  </listitem>
 	</itemizedlist>
 
@@ -9513,6 +9967,20 @@ void      or1k_jtag_wait (int  fast);
 	  The OpenRISC 1000 can support hardware breakpoints and watchpoints,
 	  if matchpoints are fee in the debug unit.
 	</para>
+	<indexterm>
+	  <primary>OpenRISC 1000</primary>
+	  <secondary>hardware matchpoints and watchpoints</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>watchpoint</primary>
+	  <secondary>in hardware</secondary>
+	  <tertiary>for OpenRISC 1000</tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary>breakpoint</primary>
+	  <secondary>in hardware</secondary>
+	  <tertiary>for OpenRISC 1000</tertiary>
+	</indexterm>
 
 	<note>
 	  <para>
@@ -9527,6 +9995,11 @@ void      or1k_jtag_wait (int  fast);
 	    document uses the terms "&gdb; watchpoint" and "OpenRISC 1000
 	    watchpoint" where there is any risk of confusion.
 	  </para>
+	<indexterm>
+	  <primary>OpenRISC 1000</primary>
+	  <secondary>hardware matchpoints and watchpoints</secondary>
+	  <tertiary>distinction from &gdb; watchpoint</tertiary>
+	</indexterm>
 	</note>
 
 	<itemizedlist>
@@ -9540,6 +10013,35 @@ void      or1k_jtag_wait (int  fast);
 	      <function>or1k_insert_breakpoint</function> and
 	      <function>or1k_insert_hw_breakpoint</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_set_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_insert_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_insert_breakpoint</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_insert_hw_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<function>to_insert_hw_breakpoint</function>
+	      </secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>&gdb; hardware breakpoint</secondary>
+	      <tertiary>insertion</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>breakpoint</primary>
+	      <secondary>in hardware</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
 
 	    <para>
 	      The first free hardware matchpoint is found by searching
@@ -9547,6 +10049,23 @@ void      or1k_jtag_wait (int  fast);
 	      &dvr;/&dcr; Preset (DP) flag set using
 	      <function>or1k_first_free_matchpoint</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_first_free_matchpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit</primary>
+	      <secondary>matchpoint</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Value Registers (DVR0-7)</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Control Registers (DCR0-7)</tertiary>
+	    </indexterm>
 
 	    <para>
 	      The Debug Value Register is set to the address of the breakpoint
@@ -9556,6 +10075,11 @@ void      or1k_jtag_wait (int  fast);
 	      is marked as unchained in Debug Mode Register&nbsp;1 and set to
 	      trigger a trap exception in Debug Mode Register&nbsp;2.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Mode Registers (DMR1-2)</tertiary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9566,6 +10090,35 @@ void      or1k_jtag_wait (int  fast);
 	      <function>remove_breakpoint</function> and
 	      <function>remove_hw_breakpoint</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_clear_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_remove_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_remove_breakpoint</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_remove_hw_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<function>to_remove_hw_breakpoint</function>
+	      </secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>&gdb; hardware breakpoint</secondary>
+	      <tertiary>removal</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>breakpoint</primary>
+	      <secondary>in hardware</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
 
 	    <para>
 	      The Debug Control Registers are searched for an entry matching
@@ -9584,6 +10137,17 @@ void      or1k_jtag_wait (int  fast);
 	      the generic <function>memory_insert_breakpoint</function> is
 	      used to set a software breakpoint.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_insert_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_insert_breakpoint</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary>hbreak</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9594,6 +10158,13 @@ void      or1k_jtag_wait (int  fast);
 	      to clear a software breakpoint using the generic
 	      <function>memory_remove_breakpoint</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_remove_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_remove_breakpoint</function></secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9606,6 +10177,24 @@ void      or1k_jtag_wait (int  fast);
 	      hardware breakpoint is not available, they do not attempt to
 	      use a software (memory) breakpoint instead.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_insert_hw_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<function>to_insert_hw_breakpoint</function>
+	      </secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_remove_hw_breakpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<function>to_remove_hw_breakpoint</function>
+	      </secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9622,6 +10211,39 @@ void      or1k_jtag_wait (int  fast);
 	      <command>watch</command> watchpoints) or both (for &gdb;
 	      <command>awatch</command> watchpoints).
 	    </para>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>&gdb; hardware watchpoint</secondary>
+	      <tertiary>insertion</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>watchpoint</primary>
+	      <secondary>in hardware</secondary>
+	      <tertiary>for OpenRISC 1000</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>OpenRISC 1000</primary>
+	      <secondary>hardware matchpoints and watchpoints</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary>rwatch</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary>watch</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary>awatch</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_insert_watchpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_insert_watchpoint</function></secondary>
+	    </indexterm>
 
 	    <para>
 	      The pair of OpenRISC 1000 watchpoints must be adjacent (so they
@@ -9632,6 +10254,14 @@ void      or1k_jtag_wait (int  fast);
 	      shuffle up all the existing OpenRISC 1000 watchpoints which can
 	      be moved, to find a pair if possible.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Mode Registers (DMR1-2)</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_watchpoint_gc</function></primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9643,12 +10273,32 @@ void      or1k_jtag_wait (int  fast);
 	      both are marked unused in their Debug Control Register and
 	      cleared from triggering in Debug Mode Register 2.
 	    </para>
+	    <indexterm>
+	      <primary>Debug Unit (OpenRISC 1000)</primary>
+	      <secondary>&gdb; hardware watchpoint</secondary>
+	      <tertiary>removal</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_remove_watchpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_remove_watchpoint</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_matchpoint_equal</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Mode Registers (DMR1-2)</tertiary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      <function>or1k_stopped_by_watchpoint</function> and
-	      <function>or1k_stopped_by_watchpoint</function>. These functions
+	      <function>or1k_stopped_data_address</function>. These functions
 	      are called to find out about &gdb; watchpoints which may have
 	      triggered. Both make use of the utility function,
 	      <function>or1k_stopped_watchpoint_info</function>, which
@@ -9661,6 +10311,34 @@ void      or1k_jtag_wait (int  fast);
 	      the address that triggered the watchpoint and must also clear
 	      the watchpoint (in Debug Mode Register 2).
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_stopped_by_watchpoint</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<function>to_stopped_by_watchpoint</function>
+	      </secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_stopped_data_address</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>
+		<function>to_stopped_data_address</function>
+	      </secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>
+		<function>or1k_stopped_watchpoint_info</function>
+	      </primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Mode Registers (DMR1-2)</tertiary>
+	    </indexterm>
 	  </listitem>
 	</itemizedlist>
 
@@ -9679,11 +10357,31 @@ void      or1k_jtag_wait (int  fast);
 	  <function>to_resume</function> functions of the target
 	  respectively.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>run</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&target_ops;</primary>
+	  <secondary><function>to_create_inferior</function></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&target_ops;</primary>
+	  <secondary><function>to_resume</function></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>inferior</primary>
+	  <secondary>remote creation</secondary>
+	</indexterm>
 
 	<para>
 	  Once execution has started, &gdb; waits until the target
 	  <function>to_wait</function> function returns control.
 	</para>
+	<indexterm>
+	  <primary>&target_ops;</primary>
+	  <secondary><function>to_wait</function></secondary>
+	</indexterm>
 
 	<para>
 	  In addition the target provides operations to stop execution.
@@ -9698,6 +10396,33 @@ void      or1k_jtag_wait (int  fast);
 	      <command>stepi</command>, <command>next</command> and
 	      <command>nexti</command> instructions.
 	    </para>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>run</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>step</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>stepi</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>next</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>nexti</command></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>or1k_resume</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_resume</function></secondary>
+	    </indexterm>
 
 	    <para>
 	      The behavior of this function is far simpler than its
@@ -9714,11 +10439,24 @@ void      or1k_jtag_wait (int  fast);
 	      watchpoint status bits in Debug Mode Register 2 and then
 	      commits the debug registers.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Reason Register</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Mode Registers (DMR1-2)</tertiary>
+	    </indexterm>
 
 	    <para>
 	      If the caller has requested single stepping, this is set using
 	      Debug Mode Register 1, otherwise this is cleared.
 	    </para>
+	    <indexterm>
+	      <primary>single step execution</primary>
+	    </indexterm>
 
 	    <para>
 	      Finally the target can be marked as executing (the first time
@@ -9737,12 +10475,26 @@ void      or1k_jtag_wait (int  fast);
 	      process/thread ID of the process which stalled, although for
 	      the OpenRISC 1000 this will always be the same value.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_wait</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_wait</function></secondary>
+	    </indexterm>
 
 	    <para>
 	      While waiting for the target to stall (using
 	      <function>or1k_jtag_wait</function>), a signal handler is
 	      installed, so the user can interrupt execution with ctrl-C.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_jtag_wait</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>OpenRISC 1000</primary>
+	      <secondary>interrupt during debugging</secondary>
+	    </indexterm>
 
 	    <para>
 	      After the wait returns, all register and frame caches are
@@ -9750,6 +10502,18 @@ void      or1k_jtag_wait (int  fast);
 	      <function>registers_changed</function> (which in turn clears
 	      the frame caches).
 	    </para>
+	    <indexterm>
+	      <primary><function>registers_changed</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>register</primary>
+	      <secondary>cache</secondary>
+	      <tertiary>invalidating</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>prologue cache</primary>
+	      <secondary>invalidating</secondary>
+	    </indexterm>
 
 	    <para>
 	      When the processor stalls, the Debug Reason Register (a &spr;)
@@ -9760,6 +10524,20 @@ void      or1k_jtag_wait (int  fast);
 	      simulator, &or1ksim;) due to an exit
 	      <literal>l.nop&nbsp;1</literal> being executed.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Reason Register</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>Debug Stop Register</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&or1ksim;</primary>
+	      <secondary>exit handling in &gdb;</secondary>
+	    </indexterm>
 
 	    <para>
 	      In all cases the previous program counter &spr;
@@ -9771,6 +10549,24 @@ void      or1k_jtag_wait (int  fast);
 	      this instruction should be re-executed without the
 	      breakpoint/watchpoint enabled.
 	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>program counters</secondary>
+	      <tertiary>Previous Program Counter (PPC)</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	      <secondary>program counters</secondary>
+	      <tertiary>Next Program Counter (NPC)</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>breakpoint</primary>
+	      <secondary>restarting after</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>watchpoint</primary>
+	      <secondary>restarting after</secondary>
+	    </indexterm>
 
 	    <para>
 	      &gdb; understands this. It is sufficient to set the program
@@ -9781,6 +10577,17 @@ void      or1k_jtag_wait (int  fast);
 	      achieved by a call to <function>write_pc</function> with the
 	      previous program counter value.
 	    </para>
+	    <indexterm>
+	      <primary>breakpoint</primary>
+	      <secondary>reinsertion when continuing</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>watchpoint</primary>
+	      <secondary>reinsertion when continuing</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>write_pc</function></primary>
+	    </indexterm>
 
 	    <para>
 	      The OpenRISC 1000 imposes a slight problem here. This approach
@@ -9793,6 +10600,20 @@ void      or1k_jtag_wait (int  fast);
 	      rather than the delay slot having been the target of a
 	      different branch instruction.
 	    </para>
+	    <indexterm>
+	      <primary>breakpoint</primary>
+	      <secondary>restarting after</secondary>
+	      <tertiary>problem with OpenRISC 1000</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>watchpoint</primary>
+	      <secondary>restarting after</secondary>
+	      <tertiary>problem with OpenRISC 1000</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>OpenRISC 1000</primary>
+	      <secondary>link register</secondary>
+	    </indexterm>
 
 	    <para>
 	      In the absence of a "previous previous" program counter, this
@@ -9810,6 +10631,12 @@ void      or1k_jtag_wait (int  fast);
 	      to the <constant>TARGET_SIGNAL_TRAP</constant> for return to
 	      &gdb;
 	    </para>
+	    <indexterm>
+	      <primary><constant>TARGET_SIGNAL_TRAP</constant></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>single step execution</primary>
+	    </indexterm>
 
 	    <para>
 	      The response is marked as a a stopped processor
@@ -9823,6 +10650,16 @@ void      or1k_jtag_wait (int  fast);
 	      <constant>TARGET_WAITKIND_EXITED</constant>, and the associate
 	      value set to the exit return code.
 	    </para>
+	    <indexterm>
+	      <primary><constant>TARGET_WAITKIND_STOPPED</constant></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><constant>TARGET_WAITKIND_EXITED</constant></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb;</primary>
+	      <secondary>signals</secondary>
+	    </indexterm>
 
 	    <para>
 	      The debug reason register (which is sticky) can now be cleared
@@ -9837,6 +10674,16 @@ void      or1k_jtag_wait (int  fast);
 	      single step mode is set and the processor unstalled, so
 	      execution will have stopped at the end of an instruction.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_stop</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_stop</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>single step execution</primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9847,6 +10694,17 @@ void      or1k_jtag_wait (int  fast);
 	      have broken down, so the target is then mourned, which will
 	      close the connection.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_kill</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_kill</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>inferior</primary>
+	      <secondary>remote destruction (mourning)</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9858,6 +10716,21 @@ void      or1k_jtag_wait (int  fast);
 	      that command. However the OpenRISC 1000 &jtag; protocol has no
 	      way to send arguments to the target, so these are ignored.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_create_inferior</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_create_inferior</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>inferior</primary>
+	      <secondary>remote creation</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>run</command></secondary>
+	    </indexterm>
 
 	    <para>
 	      Debugging is much easier if a local copy of the executable
@@ -9866,12 +10739,19 @@ void      or1k_jtag_wait (int  fast);
 	      it is not present, it is perfectly acceptable to debug code on
 	      the OpenRISC 1000 target without symbol data.
 	    </para>
+	    <indexterm>
+	      <primary>&gdb; commands</primary>
+	      <secondary><command>file</command></secondary>
+	    </indexterm>
 
 	    <para>
 	      All static data structures (breakpoint lists etc) are then
 	      cleared within &gdb; by calling
 	      <function>init_wait_for_inferior</function>.
 	    </para>
+	    <indexterm>
+	      <primary><function>init_wait_for_inferior</function></primary>
+	    </indexterm>
 
 	    <tip>
 	      <para>
@@ -9884,6 +10764,10 @@ void      or1k_jtag_wait (int  fast);
 		to that <command>xterm</command>. The redirections are
 		arguments to the &gdb; <command>run</command> command.
 	      </para>
+	      <indexterm>
+		<primary><command>ddd</command></primary>
+		<secondary>problem with argument passing</secondary>
+	      </indexterm>
 
 	      <para>
 		&gdb; for OpenRISC 1000 does not support this. The
@@ -9903,6 +10787,20 @@ void      or1k_jtag_wait (int  fast);
 	      still shown as having execution, it is marked as exited, which
 	      will cause the selection of a new current target.
 	    </para>
+	    <indexterm>
+	      <primary><function>or1k_mourn_inferior</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><function>generic_mourn_inferior</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary><function>to_mourn_inferior</function></secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>inferior</primary>
+	      <secondary>remote destruction (mourning)</secondary>
+	    </indexterm>
 	  </listitem>
 	</itemizedlist>
 
@@ -9920,6 +10818,12 @@ void      or1k_jtag_wait (int  fast);
 	  relevant to porting &gdb; so only an overview is given here. Full
 	  details are found in the commenting within the source code.
 	</para>
+	<indexterm>
+	  <primary><filename>gdb/or1k-jtag.c</filename> file</primary>
+	</indexterm>
+	<indexterm>
+	  <primary><filename>gdb/or1k-jtag.h</filename> file</primary>
+	</indexterm>
 
 	<para>
 	  The interface is layered, to maximize use. In particular much of the
@@ -9927,6 +10831,11 @@ void      or1k_jtag_wait (int  fast);
 	  over TCP/IP or directly via a JP1 header connected to the parallel
 	  port.
 	</para>
+	<indexterm>
+	  <primary>Debug Unit (OpenRISC 1000)</primary>
+	  <secondary>&jtag; interface</secondary>
+	  <tertiary>layered interface</tertiary>
+	</indexterm>
 
 	<itemizedlist>
 	  <listitem>
@@ -9938,6 +10847,9 @@ void      or1k_jtag_wait (int  fast);
 	      functions always succeed and have function prefixes
 	      <literal>or1k_jtag_</literal>.
 	    </para>
+	    <indexterm>
+	      <primary><literal>or1k_jtag_</literal> functions</primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9949,6 +10861,9 @@ void      or1k_jtag_wait (int  fast);
 	      no error result. These are static functions (i.e. local to this
 	      file), with prefixes <literal>or1k_jtag_</literal>.
 	    </para>
+	    <indexterm>
+	      <primary><literal>or1k_jtag_</literal> functions</primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9961,6 +10876,12 @@ void      or1k_jtag_wait (int  fast);
 	      functions with prefixes: <literal>jp1_</literal> and
 	      <literal>jtr_</literal> respectively.
 	    </para>
+	    <indexterm>
+	      <primary><literal>jp1_</literal> functions</primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><literal>jtr_</literal> functions</primary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -9973,19 +10894,35 @@ void      or1k_jtag_wait (int  fast);
 	      with prefixes <literal>jp1_ll_</literal> and
 	      <literal>jtr_ll_</literal> respectively.
 	    </para>
+	    <indexterm>
+	      <primary><literal>jp1_ll_</literal> functions</primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><literal>jtr_ll_</literal> functions</primary>
+	    </indexterm>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
 	  Errors are either dealt with silently or (if fatal) via the &gdb;
-	  error() function.
+	  <function>error</function> function.
 	</para>
+	<indexterm>
+	  <primary>Debug Unit (OpenRISC 1000)</primary>
+	  <secondary>&jtag; interface</secondary>
+	  <tertiary>error handling</tertiary>
+	</indexterm>
 
 	<caution>
 	  <para>
 	    Few people now use the JP1 direct connection, and there is no
 	    confidence that this code works at all!
 	  </para>
+	  <indexterm>
+	    <primary>Debug Unit (OpenRISC 1000)</primary>
+	    <secondary>&jtag; interface</secondary>
+	    <tertiary>JP1 interface limitations</tertiary>
+	  </indexterm>
 	</caution>
 
       </sect2>
@@ -10006,6 +10943,30 @@ void      or1k_jtag_wait (int  fast);
 	and little-endian implementations of the architecture in
 	<filename>or32-dis.c</filename>
       </para>
+      <indexterm>
+	<primary>disassembly</primary>
+	<secondary>for OpenRISC 1000</secondary>
+      </indexterm>
+      <indexterm>
+	<primary><command>binutils</command></primary>
+	<secondary>disassembly function</secondary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>opcodes</filename> directory</primary>
+      </indexterm>
+      <indexterm>
+	<primary><filename>or32-dis.c</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><function>print_insn_big_or32</function></primary>
+      </indexterm>
+      <indexterm>
+	<primary><function>print_insn_little_or32</function></primary>
+      </indexterm>
+      <indexterm>
+	<primary>&target_ops;</primary>
+	<secondary><function>to_print_insn</function></secondary>
+      </indexterm>
 
       <para>
 	The instruction decode uses a finite state automaton (&fsa;) in
@@ -10015,6 +10976,15 @@ void      or1k_jtag_wait (int  fast);
 	<function>_initialize_or1k_tdep</function> function immediately after
 	the OpenRISC 1000 architecture has been defined.
       </para>
+      <indexterm>
+	<primary><filename>or32-opc.c</filename> file</primary>
+      </indexterm>
+      <indexterm>
+	<primary><function>build_automata</function></primary>
+      </indexterm>
+      <indexterm>
+	<primary><function>_initialize_or1k_tdep</function></primary>
+      </indexterm>
 
       <para>
 	The disassembler takes advantage of any symbol table information to
@@ -10041,12 +11011,28 @@ void      or1k_jtag_wait (int  fast);
 	  </para>
 	  </footnote>.
       </para>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>adding new commands</secondary>
+	<tertiary>for OpenRISC 1000</tertiary>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary><command>info spr</command> (OpenRISC 1000)</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary><command>spr</command> (OpenRISC 1000)</secondary>
+      </indexterm>
 
       <para>
 	Both these commands are added in
 	<function>_initialize_or1k_tdep</function> after the architecture has
 	been created and the disassembler automata initialized.
       </para>
+      <indexterm>
+	<primary><function>_initialize_or1k_tdep</function></primary>
+      </indexterm>
 
       <sect2>
 	<title>
@@ -10057,6 +11043,21 @@ void      or1k_jtag_wait (int  fast);
 	  The new sub-command for <command>info</command> is added using
 	  <function>add_info</function>
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>info</command> (OpenRISC 1000)</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>info spr</command> (OpenRISC 1000)</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	  <secondary>examining in &gdb;</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>add_info</function></primary>
+	</indexterm>
 
 	<informalexample>
 	  <programlisting>
@@ -10073,6 +11074,9 @@ add_info ("spr", or1k_info_spr_command,
 	  displayed) or a group name/number and register name/number (the
 	  value of that register in the group is displayed).
 	</para>
+	<indexterm>
+	  <primary><function>or1k_info_spr_command</function></primary>
+	</indexterm>
 
 	<para>
 	  The arguments are broken out from the text of the command using
@@ -10081,6 +11085,16 @@ add_info ("spr", or1k_info_spr_command,
 	  parsed the results are then printed out using the UI independent
 	  function, <function>ui_out_field_fmt</function>.
 	</para>
+	<indexterm>
+	  <primary><function>or1k_parse_params</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>ui_out_field_fmt</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>UI independent output</secondary>
+	</indexterm>
       </sect2>
 
       <sect2>
@@ -10093,6 +11107,20 @@ add_info ("spr", or1k_info_spr_command,
 	  (<constant>class_support</constant>), using the
 	  <function>add_com</function> command.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>spr</command> (OpenRISC 1000)</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	  <secondary>setting in &gdb;</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>add_com</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><constant>class_support</constant></primary>
+	</indexterm>
 
 	<para>
 	  The functionality is provided in
@@ -10103,6 +11131,22 @@ add_info ("spr", or1k_info_spr_command,
 	  <function>or1k_write_spr</function>) and the change recorded using
 	  <function>ui_out_field_fmt</function>.
 	</para>
+	<indexterm>
+	  <primary><function>or1k_spr_command</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>or1k_parse_params</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>or1k_write_spr</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>ui_out_field_fmt</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>UI independent output</secondary>
+	</indexterm>
 
       </sect2>
 
@@ -10122,15 +11166,14 @@ add_info ("spr", or1k_info_spr_command,
 	  The low-level interface between an application program and the
 	  operating system, thus ensuring binary compatibility between programs.
 	</para>
-
-	<para>
-	  C++ notoriously suffers from lack of agreed standards in this area.
-	</para>
+	<indexterm>
+	  <primary>&abi;</primary>
+	</indexterm>
       </glossdef>
     </glossentry>
 
     <glossentry>
-      <glossterm>Big&#32;Endian</glossterm>
+      <glossterm>big&#32;endian</glossterm>
       <glossdef>
 	<para>
 	  A description of the relationship between byte and word addressing
@@ -10138,17 +11181,20 @@ add_info ("spr", or1k_info_spr_command,
 	  least significant byte in a data word resides at the highest
 	  byte address (of the bytes in the word) in memory.
 	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
 
 	<para>
 	  The alternative is little endian addressing.
 	</para>
 
-	<glossseealso>Little&#32;Endian</glossseealso>
+	<glossseealso>little&#32;endian</glossseealso>
       </glossdef>
     </glossentry>
 
     <glossentry>
-      <glossterm>Little&#32;Endian</glossterm>
+      <glossterm>little&#32;endian</glossterm>
       <glossdef>
 	<para>
 	  A description of the relationship between byte and word addressing
@@ -10156,12 +11202,15 @@ add_info ("spr", or1k_info_spr_command,
 	  least significant byte in a data word resides at the lowest
 	  byte address (of the bytes in the word) in memory.
 	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
 
 	<para>
 	  The alternative is big endian addressing.
 	</para>
 
-	<glossseealso>Big&#32;Endian</glossseealso>
+	<glossseealso>big&#32;endian</glossseealso>
       </glossdef>
     </glossentry>
 
@@ -10176,11 +11225,14 @@ add_info ("spr", or1k_info_spr_command,
 	  simply by creating a new &bfd; back end and adding it to the
 	  library.
 	</para>
+	<indexterm>
+	  <primary>&bfd;</primary>
+	</indexterm>
       </glossdef>
     </glossentry>
 
     <glossentry>
-      <glossterm>Frame Pointer</glossterm>
+      <glossterm>frame pointer</glossterm>
       <glossdef>
 	<para>
 	  In stack based languages, the stack pointer typically refers to the
@@ -10188,6 +11240,9 @@ add_info ("spr", or1k_info_spr_command,
 	  which refers to the beginning of the local frame. Not all
 	  stack based architectures make use of a frame pointer.
 	</para>
+	<indexterm>
+	  <primary>frame pointer</primary>
+	</indexterm>
 	<glossseealso>Stack Frame</glossseealso>
       </glossdef>
     </glossentry>
@@ -10200,17 +11255,32 @@ add_info ("spr", or1k_info_spr_command,
 	  In the OpenRISC 1000 architecture, one of between 16 and 32 general
 	  purpose integer registers.
 	</para>
+	<indexterm>
+	  <primary>General Purpose Registers (OpenRISC 1000)</primary>
+	</indexterm>
 
 	<para>
 	  Although these registers are general purpose, some have specific
 	  roles defined by the architecture and the &abi;. &gpr;&nbsp;0 is
 	  always 0 and should not be written to. &gpr;&nbsp;1 is the stack
 	  pointer, &gpr;&nbsp;2 the frame pointer and &gpr;&nbsp;9 the return
-	  address set by <literal>l.jal</literal> and
-	  <literal>l.jalr</literal> instructions. &gpr;&nbsp;3 through
+	  address set by <literal>l.jal</literal> (known as the link register)
+	  and <literal>l.jalr</literal> instructions. &gpr;&nbsp;3 through
 	  &gpr;&nbsp;8 are used to pass arguments to functions, with scalar
 	  results returned in &gpr;&nbsp;11.
 	</para>
+	<indexterm>
+	  <primary>stack pointer</primary>
+	  <secondary>in OpenRISC 1000</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>frame pointer pointer</primary>
+	  <secondary>in OpenRISC 1000</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>OpenRISC 1000</primary>
+	  <secondary>link register</secondary>
+	</indexterm>
 
 	<glossseealso>Application Binary Interface</glossseealso>
       </glossdef>
@@ -10226,6 +11296,9 @@ add_info ("spr", or1k_info_spr_command,
 	  Architecture</emphasis> for test access ports used for testing
 	  printed circuit boards and chips using boundary scan.
 	</para>
+	<indexterm>
+	  <primary>&jtag;</primary>
+	</indexterm>
 
 	<para>
 	  This standard allows external reading of state within the board or
@@ -10274,6 +11347,9 @@ add_info ("spr", or1k_info_spr_command,
 	  in groups of 2048 registers. The present architecture defines 12
 	  groups in total.
 	</para>
+	<indexterm>
+	  <primary>Special Purpose Registers (OpenRISC 1000)</primary>
+	</indexterm>
 
 	<para>
 	  In general each group controls one component of the processor. Thus
@@ -10287,13 +11363,16 @@ add_info ("spr", or1k_info_spr_command,
     </glossentry>
 
     <glossentry>
-      <glossterm>Stack Frame</glossterm>
+      <glossterm>stack frame</glossterm>
       <glossdef>
 	<para>
 	  In procedural languages, a dynamic data structure used to hold the
 	  values of local variables in a procedure at a particular point of
 	  execution.
 	</para>
+	<indexterm>
+	  <primary>stack frame</primary>
+	</indexterm>
 
 	<para>
 	  Typically successive stack frames are placed next to each other in a
@@ -10302,8 +11381,11 @@ add_info ("spr", or1k_info_spr_command,
 	  pointer</emphasis>. It will be the first address of the next stack
 	  pointer.
 	</para>
+	<indexterm>
+	  <primary>stack pointer</primary>
+	</indexterm>
 
-	<glossseealso>Frame Pointer</glossseealso>
+	<glossseealso>frame pointer</glossseealso>
       </glossdef>
     </glossentry>
 
@@ -10337,6 +11419,10 @@ add_info ("spr", or1k_info_spr_command,
       <pubdate>
 	June 2008.
       </pubdate>
+      <indexterm>
+	<primary>OpenRISC 1000</primary>
+	<secondary>tool chain</secondary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_gdb_ug">
@@ -10359,6 +11445,10 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://sourceware.org/gdb/current/onlinedocs/gdb_toc.html"/>
       </bibliosource>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>User Guide</secondary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_gdb_int">
@@ -10380,6 +11470,10 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://sourceware.org/gdb/current/onlinedocs/gdbint_toc.html"/>
       </bibliosource>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>Internals document</secondary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_bfd">
@@ -10396,6 +11490,10 @@ add_info ("spr", or1k_info_spr_command,
       <pubdate>
 	2006
       </pubdate>.
+      <indexterm>
+	<primary>&bfd;</primary>
+	<secondary>User Guide</secondary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_or1k_gdb">
@@ -10416,6 +11514,11 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://www.embecosm.com/downloads/or1k/or1k.html"/>
       </bibliosource>
+      <indexterm>
+	<primary>documentation</primary>
+	<secondary>source</secondary>
+	<tertiary>OpenRISC 1000 Target &gdb; User Guide</tertiary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_doxygen">
@@ -10430,6 +11533,9 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://www.doxygen.org"/>
       </bibliosource>
+      <indexterm>
+	<primary>Doxygen</primary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_or1k">
@@ -10453,6 +11559,11 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf"/>
       </bibliosource>
+      <indexterm>
+	<primary>OpenRISC 1000</primary>
+	<secondary>architecture</secondary>
+	<tertiary>manual</tertiary>
+      </indexterm>
     </bibliomixed>
 
     <bibliomixed id="ref_texinfo">
@@ -10486,6 +11597,11 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://opencores.org/projects.cgi/web/or1k/orpsoc"/>
       </bibliosource>
+      <indexterm>
+	<primary>Debug Unit (OpenRISC 1000)</primary>
+	<secondary>&jtag; interface</secondary>
+	<tertiary>ORPSoC version</tertiary>
+      </indexterm>
     </bibliomixed>
 	
     <bibliomixed id="ref_or1k_debug">
@@ -10506,6 +11622,11 @@ add_info ("spr", or1k_info_spr_command,
 	<ulink
 	    url="http://opencores.org/cvsweb.shtml/dbg_interface/doc/DbgSupp.pdf"/>
       </bibliosource>
+      <indexterm>
+	<primary>Debug Unit (OpenRISC 1000)</primary>
+	<secondary>&jtag; interface</secondary>
+	<tertiary>Igor Mohor version</tertiary>
+      </indexterm>
     </bibliomixed>
 
   </bibliography>

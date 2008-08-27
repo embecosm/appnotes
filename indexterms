@@ -1,0 +1,781 @@
+_initialize functions
+_initialize_arch_os_nat
+_initialize_arch_remote
+_initialize_arch_tdep
+_initialize_or1k_tdep
+_initialize_remote_arch
+_initialize_remote_or1k
+ABI
+  and function prologue
+  for OpenRISC 1000 - see OpenRISC 1000, ABI
+add_target
+address space
+align_down
+align_up
+application binary interface - see &abi;
+arch-os-nat.c file
+arch-tdep.c file
+arch_frame_sniffer
+arch_frame_this_id
+arch_gdbarch_init
+arch_frame_prev_register
+arch_frame_prev_sniffer
+backtrace_command
+BFD
+  back end
+  for OpenRISC 1000 - see OpenRISC 1000, BFD
+  User Guide
+    source - see documentation, source, BFD User Guide
+bfd directory
+bfd.texinfo file
+bfd_arch_or32
+binutils
+  disassembly function
+break_command
+breakpoint
+  functions in struct gdbarch
+  functions in struct target_ops
+  in hardware
+    for OpenRISC 1000
+  insertion and removal
+  instruction
+    size
+    restriction on location
+  program counter adjustment after
+  reinsertion when continuing
+  restarting after
+    problem with OpenRISC 1000
+build_automata
+byte order
+catch_exception
+class_support
+cli-cmds.h file
+cmdlist
+COFF
+  and OpenRISC 1000
+config sub-directory - see also gdb directory
+config/arch/os.mh file
+config/arch/nm-os.h file
+configure command
+configure.tgt file
+  gdb_sim parameter
+  header file dependencies
+  OpenRISC 1000 targets supported
+  target matching
+continue_command
+core_addr_lessthan
+core_addr_greaterthan
+current_interp_command_loop
+current target - see target operations, current target
+current_target
+Debug Unit (OpenRISC 1000)
+  availability
+  GDB hardware breakpoint
+    insertion
+    removal
+  GDB hardware watchpoint
+    insertion
+    removal
+    restarting after
+  JTAG interface
+    access to main memory
+    access to General Purpose Registers
+    access to Special Purpose Registers
+    CPU control
+    direct connection through parallel port
+    error handling
+    Igor Mohor version
+    JP1 interface limitations
+    layered interface
+    ORPSoC version
+    remote connection over TCP/IP - see Remote JTAG Protocol (OpenRISC 1000)
+  matchpoint
+  registers - see Special Purpose Registers (OpenRISC 1000), Debug Unit
+  watchpoint counter
+default_memory_insert_breakpoint
+default_memory_remove_breakpoint
+default_print_registers_info
+default_register_reggroup_p
+defs.h file
+delay slot
+  struct gdbarch functions to handle
+  in OpenRISC 1000
+disassembly
+  for OpenRISC 1000
+ddd
+  problem with argument passing
+documentation
+  building
+    automatic
+  HTML output format
+  for OpenRISC 1000 GDB
+  info output format
+  PDF output format
+  PostScript output format
+  source
+    BFD User Guide
+    GDB User Guide
+    GDB Internals document
+    OpenRISC 1000 Target GDB User Guide
+Doxygen
+  use with GDB for OpenRISC 1000
+dummy frame - see stack frame, dummy
+dummy target - see target operations, dummy target
+DWARF2
+dwarf2_frame_sniffer
+ELF
+  and OpenRISC 1000
+enum bfd_architecture_type
+enum command_class
+exec - seealso program
+executable program - see exec
+find_pc_partial_function
+frame base sniffer - see struct frame_base
+frame ID - see stack frame, frame ID
+frame number - see stack frame, frame number
+frame pointer
+  in OpenRISC 1000
+  value in $fp - see GDB, built in variables, $fp
+  value in stack frame - see stack frame, frame pointer value in
+frame_base_append_sniffer
+frame_base_set_default
+frame_unwind_append_sniffer
+frame_unwind_id
+frame_unwind_register_unsigned
+frameless function - see stack frame, frameless function
+function epilogue
+  OpenRISC 1000 - see OpenRISC 1000, function epilogue
+function prologue
+  cache - see prologue cache
+  OpenRISC 1000 - see OpenRISC 1000, function prologue
+GDB
+  built in variables
+    $fp
+    $pc
+    $ps
+  Internals document
+    source - see documentation, source, GDB Internals document
+  naming conventions
+  new architecture description
+  signals
+  TAGS file
+  target creation
+  UI independent output
+  User Guide
+    source - see documentation, source, GDB User Guide
+  value types - see struct type
+GDB commands
+  adding new commands
+    for OpenRISC 1000
+  awatch
+  backtrace
+  break
+  call
+  callback functions
+  classification
+  configuration
+  continue
+  disassemble
+  file
+  help
+  help target
+  help target jtag
+  info
+  info spr (OpenRISC 1000)
+  info target
+  internal representation
+  next
+  nexti
+  print
+  procedure flows - see procedure flows
+  run
+  rwatch
+  spr (OpenRISC 1000)
+  step
+  stepi
+  target
+  target jtag
+  target remote
+  target sim
+  watch
+gdb directory
+gdb_byte
+gdb_init
+gdb_main
+gdb/testsuite sub-directory
+gdb.log file
+gdb.sim file
+gdb.texinfo file
+gdbarch.h file
+gdbarch_alloc
+gdbarch_list_lookup_by_info
+gdbarch_register
+gdbarch_register_type - see struct gdbarch, accessor functions
+gdbarch_single_step_through_delay - see struct gdbarch, accessor functions
+gdbarch_skip_prologue - see struct gdbarch, accessor functions
+gdbarch_unwind_pc - see struct gdbarch, accessor functions
+gdbarch_unwind_sp - see struct gdbarch, accessor functions
+gdbint.texinfo file
+General Purpose Registers (OpenRISC 1000)
+  access via JTAG interface - see Debug Unit (OpenRISC 1000), JTAG interface, access to General Purpose Registers
+generic_load
+generic_mourn_inferior
+get_func_type
+GPRs (OpenRISC 1000) - see General Purpose Registers (OpenRISC 1000)
+handle_inferior_event
+hardware breakpoint - see breakpoint, in hardware
+hardware watchpoint - see watchpoint, in hardware
+header dependencies - see also Makefile.in file
+include directory
+inferior
+  process ID
+    for OpenRISC 1000
+  remote creation
+  remote destruction (mourning)
+inferior_pid
+info spr - see GDB commands, info spr (OpenRISC 1000)
+infolist
+init_wait_for_inferior
+initialize_current_architecture
+jp1_ functions
+jp1_ll_ functions
+JTAG
+JTAG (OpenRISC 1000) - see Debug Unit (OpenRISC 1000), JTAG interface
+jtr1_ functions
+jtr1_ll_ functions
+keep_going
+libiberty
+  floating point formats
+libsim.a file
+Linux
+  and OpenRISC 1000
+linux_trad_target
+Makefile.in file
+  touch command as alternative to changing
+matchpoint (OpenRISC 1000) - see Debug Unit (OpenRISC 1000), matchpoint
+no_shared_libraries
+native debugging
+  target creation
+next frame - see stack frame, terminology, next frame
+nm.h file
+normal_stop
+OpenRISC 1000
+  ABI
+    argument passing
+    result return register
+    stack frame alignment
+    variations from documented standard
+  additional GDB commands
+  architecture
+    GPRs - see General Purpose Registers (OpenRISC 1000)
+    information functions
+    main memory
+    manual
+    SPRs - see Special Purpose Registers (OpenRISC 1000)
+  bare metal debugging
+  BFD
+  breakpoint instruction
+  creating new struct gdbarch for
+  creating new struct target_ops for
+  endianism
+  frame handling
+  function epilogue
+  function prologue
+  hardware data representation
+  hardware matchpoints and watchpoints
+    distinction from GDB watchpoint
+  interrupt during debugging
+  legacy GDB 5.3 port
+  link register
+  naming conventions
+  red zone
+  register assignment in GDB
+  register types in GDB
+  Remote JTAG Protocol - see Remote JTAG Protocol (OpenRISC 1000)
+  source files for GDB port
+  supported targets in &gdb;
+  tool chain
+opcodes directory
+or1k-jtag.c file
+or1k-jtag.h file
+or1k-jtag.o file
+or1k-tdep.c file
+or1k-tdep.h file
+or1k_breakpoint_from_pc
+or1k_clear_breakpoint
+or1k_create_inferior
+or1k_dbgcache
+or1k_detach
+or1k_dump_tdep
+or1k_fetch_registers
+or1k_files_info
+or1k_first_free_matchpoint
+OR1K_FP_REGNUM
+or1k_frame_base
+or1k_frame_base_address
+or1k_frame_fp_loc
+or1k_frame_prev_register
+or1k_frame_size
+or1k_frame_size_check
+or1k_frame_sniffer
+or1k_frame_this_id
+or1k_frame_unwind_cache
+or1k_gdbarch_init
+or1k_get_saved_reg
+or1k_info_spr_command
+or1k_insert_breakpoint
+or1k_insert_hw_breakpoint
+or1k_isert_watchpoint
+or1k_jtag_ functions
+or1k_jtag_close
+OR1K_JTAG_COMMAND_READ
+OR1K_JTAG_COMMAND_WRITE
+OR1K_JTAG_COMMAND_READ_BLOCK
+OR1K_JTAG_COMMAND_WRITE_BLOCK
+OR1K_JTAG_COMMAND_CHAIN
+or1k_jtag_init
+or1k_jtag_read_mem
+or1k_jtag_read_spr
+or1k_jtag_stall
+or1k_jtag_target
+or1k_jtag_wait
+or1k_jtag_write_mem
+or1k_jtag_write_spr
+or1k_jtag_unstall
+or1k_kill
+or1k_link_address
+or1k_matchpoint_equal
+or1k_mourn_inferior
+OR1K_NUM_PSEUDO_REGS
+OR1K_NUM_REGS
+or1k_open
+or1k_parse_params
+OR1K_PC_REGNUM
+or1k_prepare_to_store
+or1k_pseudo_register_read
+or1k_pseudo_register_write
+or1k_push_dummy_call
+or1k_register_info
+or1k_register_name
+or1k_register_type
+or1k_remove_breakpoint
+or1k_remove_hw_breakpoint
+or1k_remove_watchpoint
+or1k_resume
+or1k_return_value
+or1k_set_breakpoint
+or1k_single_step_through_delay
+or1k_skip_prologue
+OR1K_SP_REGNUM
+OR1K_SR_REGNUM
+or1k_spr_command
+OR1K_STACK_FRAME_ALIGN
+or1k_start_remote
+or1k_stop
+or1k_stopped_by_watchpoint
+or1k_stopped_data_address
+or1k_stopped_watchpoint_info
+or1k_store_registers
+or1k_target
+or1k_unwind_pc
+or1k_unwind_sp
+or1k_wait
+or1k_watchpoint_gc
+or1k_xfer_partial
+Or1ksim
+  bug fixes
+  debug interface variants
+  exit handling in GDB
+or32-dis.c file
+or32-opc.c file
+parse_breakpoint_sals
+previous frame - see stack frame, terminology, previous frame
+print_frame
+print_frame_args
+print_frame_info
+print_stacK_frame
+procedure flows
+proceed
+process and thread ID
+  for OpenRISC 1000
+program - seealso exec
+program counter
+  functions in struct gdbarch
+  in OpenRISC 1000
+  value in stack frame
+    for OpenRISC 1000
+  as Special Purpose Register (OpenRISC 1000)
+prologue cache
+  and stack frame sniffer
+    memory management
+  for OpenRISC 1000
+  invalidating
+pseudo-register
+read_pc_pid
+red zone - see stack frame, red zone
+regcache_cooked_read
+regcache_cooked_read_signed
+regcache_cooked_read_unsigned
+regcache_cooked_write
+regcache_cooked_write_signed
+regcache_cooked_write_unsigned
+register
+  availability in OpenRISC 1000 target
+  cache
+    synchronization with target
+    invalidating
+  cache access functions
+  cooked
+  fields in struct gdbarch
+  floating point
+  functions for OpenRISC 1000
+  functions in struct gdbarch
+  functions in struct target_ops
+  pseudo-
+  raw
+  simulator functions
+  vector
+registers_changed
+remote debugging
+  remote command execution
+  Remote Serial Protocol - see Remote Serial Protocol
+  remote terminal access
+remote inferior - see inferior
+Remote JTAG Protocol (OpenRISC 1000)
+  commands
+    read register
+    write register
+    block read registers
+    block write registers
+    setting scan chain
+  execution status
+  implementation over TCP/IP
+  interface functions
+    or1k_jtag_close
+    or1k_jtag_init
+    or1k_jtag_read_mem
+    or1k_jtag_read_spr
+    or1k_jtag_stall
+    or1k_jtag_wait
+    or1k_jtag_write_mem
+    or1k_jtag_write_spr
+    or1k_jtag_unstall
+  packet format
+  reattaching to target
+  replacement by Remote Serial Protocol
+  resetting the target
+Remote Serial Protocol
+  server side implementation
+remote-or1k.c file
+remote-or1k.o file
+remote-sim.h file
+remove_breakpoints
+run_command
+sentinel frame - see stack frame, sentinel frame
+skip_prologue_using_sal
+sim directory
+sim_close - see simulator library, functions, sim_close
+sim_create_inferior - see simulator library, functions, sim_create_inferior
+sim_do_command - see simulator library, functions, sim_do_command
+sim_fetch_register - see simulator library, functions, sim_fetch_register
+sim_info - see simulator library, functions, sim_info
+sim_load - see simulator library, functions, sim_load
+sim_open - see simulator library, functions, sim_open
+sim_read - see simulator library, functions, sim_read
+sim_resume - see simulator library, functions, sim_resume
+sim_stop - see simulator library, functions, sim_stop
+sim_stop_reason - see simulator library, functions, sim_stop_reason
+sim_store_register - see simulator library, functions, sim_store_register
+sim_write - see simulator library, functions, sim_write
+simulator library
+  creation
+  directory for code
+  functions
+    sim_close
+    sim_create_inferior
+    sim_do_command
+    sim_fetch_register
+    sim_info
+    sim_load
+    sim_open
+    sim_read
+    sim_resume
+    sim_stop
+    sim_stop_reason
+    sim_store_register
+    sim_write
+single step execution
+  in hardware
+    for OpenRISC 1000
+sniffer - see stack frame, sniffer
+Special Purpose Registers (OpenRISC 1000)
+  access via JTAG interface - see Debug Unit (OpenRISC 1000), JTAG interface, access to Special Purpose Registers
+  configuration registers
+    CPU Configuration Register (CPUCFGR)
+    Debug Configuration Register (DCFGR)
+    Unit Present Register (UPR)
+  Debug Unit
+    Debug Control Registers (DCR0-7)
+    Debug Mode Registers (DMR1-2)
+    Debug Reason Register (DRR) 
+    Debug Stop Register (DSR)
+    Debug Value Registers (DVR0-7)
+    Debug Watchpoint Counter Registers (DWCR0-1)
+    debug register cache
+  examining in GDB
+  program counters
+    Next Program Counter (NPC)
+    Previous Program Counter (PPC)
+  setting in GDB
+  Supervision Register (SR)
+spr - see GDB commands, spr (OpenRISC 1000)
+SPRs (OpenRISC 1000) - see Special Purpose Registers (OpenRISC 1000)
+stack frame
+  alignment
+    for OpenRISC 1000
+  analysis
+  backtrace
+  base address
+    for OpenRISC 1000
+  dummy
+    for OpenRISC 1000
+    functions in struct gdbarch
+  example
+  falling
+    OpenRISC 1000 as example
+  frame ID
+  frame number
+  frame pointer value in
+    for OpenRISC 1000
+  frameless function
+    for OpenRISC 1000
+  fields in struct gdbarch
+  functions for OpenRISC 1000
+  functions in struct gdbarch
+  red zone
+  return address
+    for OpenRISC 1000
+  rising
+  sentinel frame
+  sniffer
+    and prologue cache - see prologue cache, and stack frame sniffer
+    for OpenRISC 1000
+    functions
+  stack pointer value in
+    for OpenRISC 1000
+  terminology
+    inner frame - see next frame
+    innermost frame
+    newer frame - see next frame
+    next frame
+    older frame - see previous frame
+    outer frame - see previous frame
+    previous frame
+    this frame
+  unwinder
+    for OpenRISC 1000
+stack pointer
+  functions in struct gdbarch
+  in OpenRISC 1000
+  value in stack frame - see stack frame, stack pointer value in
+start_remote
+status register
+  value in $ps - see GDB, built in variables, $ps
+  in OpenRISC 1000 - see Special Purpose Registers (OpenRISC 1000), Supervision Register
+strata - see target strata
+struct cmd_list_element
+struct frame_base
+  fields
+    unwind
+  for OpenRISC 1000
+  functions
+    this_args
+    this_base
+    this_locals
+struct frame_id
+struct frame_info
+struct frame_unwind
+  fields
+    type
+    unwind_data
+  for OpenRISC 1000
+  functions
+    dealloc_cache
+    prev_pc
+    prev_register
+    sniffer
+    this_id
+struct gdbarch
+  accessor functions
+  architecture lookup
+  creating new instance
+    for OpenRISC 1000
+  data representation
+  default values
+  fields
+    char_signed
+    double_bit
+    double_format
+    float_bit
+    float_format
+    fp0_regnum
+    frame_red_zone_size
+    int_bit
+    long_bit
+    long_double_bit
+    long_double_format
+    long_long_bit
+    num_regs
+    num_pseudo_regs
+    pc_regnum
+    ps_regnum
+    ptr_bit
+    short_bit
+    sp_regnum
+    values for OpenRISC 1000
+  functions
+    adjust_breakpoint_address
+    breakpoint_from_pc
+    decr_pc_after_break
+    find_description
+    frame_align
+    frame_num_args
+    implemenations for OpenRISC 1000
+    inner_than
+    memory_insert_breakpoint
+    memory_remove_breakpoint
+    print_float_info
+    print_insn
+    print_registers_info
+    print_vector_info
+    pseudo_register_read
+    pseudo_register_write
+    read_pc
+    register_name
+    register_reggroup_p
+    register_type
+    return_value
+    single_step_through_delay
+    skip_prologue
+    unwind_pc
+    unwind_sp
+    write_pc
+  reference to BFD
+  register handling
+  set_gdbarch functions
+  stack frame handling
+struct gdbarch_info
+  byte order
+  fields in the structure
+  for OpenRISC 1000
+struct gdbarch_tdep
+  for OpenRISC 1000
+struct target_ops
+  breakpoint handling
+  convenience macros
+  creation
+    for OpenRISC 1000
+  default values
+  fields
+    to_doc
+    to_has_all_memory
+    to_has_execution
+    to_has_memory
+    to_has_registers
+    to_has_stack
+    to_longname
+    to_shortname
+    to_stratum
+  functions
+    to_attach
+    to_can_use_hw_breakpoint
+    to_close
+    to_detach
+    to_disconnect
+    to_fetch_registers
+    to_files_info
+    to_insert_breakpoint
+    to_insert_hw_breakpoint
+    to_insert_watchpoint
+    to_kill
+    to_load
+    to_open
+    to_prepare_to_store
+    to_rcmd
+    to_remove_breakpoint
+    to_remove_hw_breakpoint
+    to_remove_watchpoint
+    to_resume
+    to_stop
+    to_stopped_by_watchpoint
+    to_stopped_data_address
+    to_store_registers
+    to_terminal_inferior
+    to_wait
+    to_xclose
+    to_xfer_partial
+  memory management
+  opening and closing a connection
+  register access
+  starting and stopping programs
+  state information
+struct trad_frame_cache
+  meaning of cached data fields
+  choice of register data function
+struct type
+  built in types
+    builtin_type_int32
+    builtin_type_void
+Supervision Register - see Special Purpose Registers (OpenRISC 1000), Supervision Register
+symbol side
+symbol-and-line (SAL) information
+TAGS file - see GDB, TAGS file
+target operations - see also struct target_ops
+  convenience macros - see struct target_ops, convenience macrors
+  current target
+  dummy target
+  for OpenRISC 1000
+target side
+target strata
+  for OpenRISC 1000
+target.h file
+target_create_inferior - see struct target_ops, convenience macros
+target_fetch_registers - see struct target_ops, convenience macros
+target_find_description - see struct target_ops, convenience macros
+target_has_execution - see struct target_ops, convenience macros
+target_insert_breakpoint - see struct target_ops, convenience macros
+target_load - see struct target_ops, convenience macros
+target_open - see struct target_ops, convenience macros
+target_preopen
+target_remove_breakpoint - see struct target_ops, convenience macros
+target_resume - see struct target_ops, convenience macros
+target_stopped_by_watchpoint - see struct target_ops, convenience macros
+target_wait - see struct target_ops, convenience macros
+target_xfer_partial - see struct target_ops, convenience macros
+testing
+  running tests
+  test results
+this frame - see stack frame, terminology, this frame
+touch command
+  instead of changing Makefile.in
+trad_frame_cache_zalloc
+trad_frame_get_id
+trad_frame_get_register
+trad_frame_set_reg_realreg
+trad_frame_set_reg_addr
+trad_frame_set_reg_value
+trad_frame_set_this_base
+Unit Present Register (UPR) - see Special Purpose Registers (OpenRISC 1000), configuration registers
+unpush_target
+unwinder - see stack frame, unwinder
+user inteface
+wait_for_inferior
+watchpoint
+  functions in struct target_ops
+  in hardware
+    for OpenRISC 1000
+  in OpenRISC 1000 - see Debug Unit (OpenRISC 1000), watchpoint
+  reinsertion when continuing
+  restarting after
+    problem with OpenRISC 1000
+write_pc
