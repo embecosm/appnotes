@@ -28,7 +28,7 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT          = or1k_setup
+DOCROOT          = embecosm-or1k-setup-ean2-i1
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
