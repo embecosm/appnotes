@@ -1,0 +1,2271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- =========================================================================
+Useful entities
+========================================================================== -->
+
+<!-- ========== Acronyms and abbreviations ========== -->
+
+<!ENTITY abi   "<acronym>ABI</acronym>">
+<!ENTITY bfd   "<acronym>BFD</acronym>">
+<!ENTITY coff  "<acronym>COFF</acronym>">
+<!ENTITY dcr   "<acronym>DCR</acronym>">
+<!ENTITY dvr   "<acronym>DVR</acronym>">
+<!ENTITY elf   "<acronym>ELF</acronym>">
+<!ENTITY fp    "<acronym>FP</acronym>">
+<!ENTITY fsa   "<acronym>FSA</acronym>">
+<!ENTITY gcc   "<acronym>GCC</acronym>">
+<!ENTITY gdb   "<acronym>GDB</acronym>">
+<!ENTITY gnu   "<acronym>GNU</acronym>">
+<!ENTITY gpr   "<acronym>GPR</acronym>">
+<!ENTITY html  "<acronym>HTML</acronym>">
+<!ENTITY iss   "<acronym>ISS</acronym>">
+<!ENTITY jtag  "<acronym>JTAG</acronym>">
+<!ENTITY pc    "<acronym>PC</acronym>">
+<!ENTITY pdf   "<acronym>PDF</acronym>">
+<!ENTITY posix "<acronym>POSIX</acronym>">
+<!ENTITY rtems "<acronym>RTEMS</acronym>">
+<!ENTITY rsp   "<acronym>RSP</acronym>">
+<!ENTITY sal   "<acronym>SAL</acronym>">
+<!ENTITY soc   "<acronym>SoC</acronym>">
+<!ENTITY sp    "<acronym>SP</acronym>">
+<!ENTITY spr   "<acronym>SPR</acronym>">
+<!ENTITY usb   "<acronym>USB</acronym>">
+
+<!-- ========== commonly used things ========== -->
+
+<!ENTITY or1k         "OpenRISC&nbsp;1000">
+<!ENTITY null         "<constant>NULL</constant>">
+<!ENTITY this         "<emphasis>THIS</emphasis>">
+<!ENTITY prev         "<emphasis>PREVIOUS</emphasis>">
+<!ENTITY next         "<emphasis>NEXT</emphasis>">
+<!ENTITY arch         "<emphasis>arch</emphasis>">
+<!ENTITY os           "<emphasis>os</emphasis>">
+
+<!ENTITY frame_info   "<structname>struct&nbsp;frame_info</structname>">
+<!ENTITY gdbarch      "<structname>struct&nbsp;gdbarch</structname>">
+<!ENTITY gdbarch_info "<structname>struct&nbsp;gdbarch_info</structname>">
+<!ENTITY gdbarch_tdep "<structname>struct&nbsp;gdbarch_tdep</structname>">
+<!ENTITY regcache     "<structname>struct&nbsp;regcache</structname>">
+<!ENTITY target_ops   "<structname>struct&nbsp;target_ops</structname>">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
+
+<!ENTITY binutils "<application class='software'>binutils</application>">
+<!ENTITY linux    "<application class='software'>Linux</application>">
+<!ENTITY or1ksim  "<application class='software'>Or1ksim</application>">
+<!ENTITY systemc  "<application class='software'>SystemC</application>" >
+
+<!-- = Hardware applications = -->
+
+<!-- = Commands = -->
+
+<!ENTITY xterm "<application>xterm</application>" >
+
+<!-- = Libraries = -->
+
+<!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
+
+<!-- ========== Cross references ========== -->
+
+<!-- = Organizations = -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY lgpl "GNU Lesser General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY gpl_www "GNU General Public License (<ulink url='http://www.gnu.org/licenses/gpl.html'>GNU General Public License</ulink>)">
+
+]>
+
+<!-- ==========================================================================
+
+Copyright (c) 2008 Embecosm Limited <info@embecosm.com>.
+
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
+
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
+
+===============================================================================
+
+Application note describing how to write a GDB RSP server
+
+$Id$
+
+=========================================================================== -->
+
+<book lang="en_GB">
+  <title>
+    Howto: Remote Serial Protocol for the &gnu; Debugger
+  </title>
+  <subtitle>
+    Writing a RSP Server
+  </subtitle>
+
+  <bookinfo>
+
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>
+      October 2008
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 4. Issue 1
+    </releaseinfo>
+
+    <copyright>
+      <year>
+	2008
+      </year>
+      <holder>
+	&embecosm; Limited
+      </holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>
+	Legal Notice
+      </title>
+
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, Jeremy Bennett of &embecosm_www;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The software for &gnu; Debugger, including the code to support the
+	&or1k; written by &embecosm; and used in this document is licensed
+	under the &gpl_www;. For detailed licensing information see the files
+	<filename>COPYING</filename>, <filename>COPYING3</filename>,
+	<filename>COPYING.LIB</filename> and <filename>COPYING3.LIB</filename>
+	in the source code.
+      </para>
+
+      <para>
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
+      </para>
+
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      This document complements the existing documentation for &gdb; (<xref
+      linkend="ref_gdb_ug" />, <xref linkend="ref_gdb_int" />). It is intended
+      to help software engineers implementing a server for the &gdb; Remote
+      Serial Protocol (&rsp;) for the first time.
+    </para>
+
+    <para>
+      This application note is based on the author's experience to date. It
+      will be updated in future issues. Suggestions for improvements are
+      always welcome.
+    </para>
+
+<sect1>
+      <title>
+	Rationale
+      </title>
+
+      <para>
+	The &gdb; User Guide <xref linkend="ref_gdb_ug" /> documents the
+	Remote Serial Protocol (&rsp;) for communicating with remote
+	targets. The target must act as a server for the &rsp;, and the source
+	distribution includes stub implementations for architectures such
+	as the Motorola 680xx and Sun SPARC. The User Guide offers advice on
+	how these stubs can be modified and integrated for new targets.
+      </para>
+
+      <para>
+	However the examples have not been changed for several years, and the
+	advice on using the stubs is now out of date. The documentation also
+	lacks any explanation of the dynamics of the protocol&mdash;the
+	sequence of commands/responses used to effect the various &gdb;
+	commands.
+      </para>
+
+      <para>
+	This document aims to fill that gap, by explaining how the &rsp; works
+	today and how it can be used to write a server for a target to be
+	debugged with &gdb;.
+      </para>
+
+      <para>
+	Throughout examples are provided from the author's experience
+	implementing a &rsp; server for the &or1k; architecture. This document
+	captures the learning experience, with the intention of helping
+	others.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+	If you are about to start a port of &gdb; to a new architecture, this
+	document is for you. If at the end of your endeavors you are better
+	informed, please help by adding to this document.
+      </para>
+
+      <para>
+	If you have already been through the porting process, please help
+	others by adding to this document.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Further Sources of Information
+      </title>
+
+      <sect2>
+	<title>
+	  Written Documentation
+	</title>
+
+	<para>
+	  The main user guide for &gdb; <xref linkend="ref_gdb_ug" /> explains
+	  how remote debugging works and provides the reference for the
+	  various &rsp; packets.
+	</para>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>User Guide</secondary>
+	</indexterm>
+
+	<para>
+	  The main &gdb; code base is generally well commented, particularly
+	  in the headers for the major interfaces. Inevitably this must be the
+	  definitive place to find out exactly how a particular function
+	  behaves. In particular the source code for the &rsp; client side in
+	  <filename>gdb/remote.c</filename> provides the definitive guide on
+	  the expected dynamics of the protocol.
+	</para>
+
+	<para>
+	  The files making up the &rsp; server for the &or1k; are
+	  comprehensively commented, and can be processed with Doxygen <xref
+	  linkend="ref_doxygen" />. Each function's behavior, its parameters
+	  and any return value is described.
+	</para>
+	<indexterm>
+	  <primary>Doxygen</primary>
+	  <secondary>use with &gdb; for &or1k;</secondary>
+	</indexterm>
+
+	<para>
+	  This application note complements the Embecosm Application Note 3,
+	  "HOWTO: Porting the &gnu; Debugger" <xref linkend="ref_app_note_3"
+	  />.  Details of the &or1k; can be found in its Architecture Manual
+	  <xref linkend="ref_or1k" />. The &or1k; architectural simulator and
+	  tool chain is documented in Embecosm Application Note 2 <xref
+	  linkend="ref_app_note_2" />.
+	</para>
+
+    
+      </sect2>
+
+      <sect2>
+	<title>
+	  Other Information Channels
+	</title>
+
+	<para>
+	  The main GDB website is at <ulink
+	  url="http://sourceware.org/gdb/">sourceware.org/gdb/</ulink>. It is
+	  supplemented by the less formal &gdb; Wiki at <ulink
+	  url="http://sourceware.org/gdb/wiki/">sourceware.org/gdb/wiki/</ulink>. 
+	</para>
+
+	<para>
+	  The &gdb; developer community communicate through the &gdb; mailing
+	  lists and using <acronym>IRC</acronym> chat. These are always good
+	  places to find solutions to problems.
+	</para>
+
+	<para>
+	  The main mailing list for discussion is gdb@sourceware.org, although
+	  for detailed understanding, the patches mailing list,
+	  gdb-patches@sourceware.org. See the main &gdb; website for details
+	  of subscribing to these mailing lists.
+	</para>
+
+	<para>
+	  <acronym>IRC</acronym> is channel <literal>#gdb</literal> on
+	  <literal>irc.freenode.net</literal>.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	About &embecosm;
+      </title>
+
+      <para>
+	&embecosm; is a consultancy specializing in open source tools, models
+	and training for the embedded software community. All &embecosm;
+	products are freely available under open source licenses.
+      </para>
+      <indexterm>
+	<primary>&embecosm;</primary>
+      </indexterm>
+
+      <para>
+	&embecosm; offers a range of commercial services.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Customization of open source tools and software, including porting
+	    to new architectures.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Support, tutorials and training for open source tools and software.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Custom software development for the embedded market, including
+	    bespoke software models of hardware.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Independent evaluation of software tools.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	For further information, visit the &embecosm; website at <ulink
+	url="http://www.embecosm.com/">www.embecosm.com</ulink>.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+
+  <chapter id="chap_rsp_overview">
+    <title>
+      Overview of the Remote Serial Protocol
+    </title>
+
+    <para>
+      The &gdb; Remote Serial Protocol (&rsp;) provides a high level protocol
+      allowing &gdb; to connect to any target remotely. If a target's
+      architecture is defined in &gdb; and the target implements the server
+      side of the &rsp; protocol, then the debugger will be able to connect
+      remotely to that target.
+    </para>
+
+    <para>
+      The protocol supports a wide range of connection types: direct serial
+      devices, UDP/IP, TCP/IP and *nix style pipes. Historically &rsp; has
+      only required 7-bit clean connections. However more recent commands
+      added to the protocol assume an 8-bit clean connection. It is also worth
+      noting, that although UDP/IP is supported, lost packets with unreliable
+      transport methods such as this may lead to &gdb; reporting errors.
+    </para>
+
+    <para>
+      &rsp; is most commonly is of value in embedded environments, where it is
+      not possible to run &gdb; natively on the target.
+    </para>
+
+    <para>
+      The protocol is layered, approximately following the OSI model as shown
+      in <xref linkend="fig_rsp_layers" />.
+    </para>
+
+    <figure id="fig_rsp_layers">
+      <title>
+	OSI Layers in the Remote Serial Protocol
+      </title>
+      <mediaobject>
+	  <imageobject>
+	    <imagedata fileref="rsp-layers.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="rsp-layers.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+      </mediaobject>
+    </figure>
+
+    <sect1>
+      <title>
+	Client-Server Relationship
+      </title>
+
+      <para>
+	The &gdb; session acts as the &rsp; client with the target acting as
+	server. The client issues packets which are requests for
+	information or action. Depending on the nature of the client packet,
+	the server may respond with a packet of its own.
+      </para>
+
+      <para>
+	This is the only circumstance under which the server sends a
+	packet: in reply to a packet from the client requiring a response.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Session Layer: The Serial Connection
+      </title>
+
+      <para>
+	The serial connection is established in response to a
+	<command>target&nbsp;remote</command>,
+	<command>target&nbsp;extended-remote</command> or
+	<command>target&nbsp;extended-async</command> command from the &gdb;
+	client. The way the server handles this depends on the nature of the
+	serial connection:
+      </para>
+
+      <itemizedlist>
+
+	<listitem>
+	  <para>
+	    <emphasis>Connection via a serial device</emphasis>. The target
+	    should be listening for connections on the device. This may either
+	    be via routine polling or via an event driven interface. Once the
+	    connection is established, packets are read from and written to
+	    the device.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis>Connection via TCP/IP or UDP/IP</emphasis>. The target
+	    should be listening on a socket connected to the specified
+	    port. This may either be via routine polling or via an event
+	    driven interface. Accepting a new connection (the &posix;
+	    <function>accept</function> function) will yield a file
+	    descriptor, which can be used for reading and writing packets.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis>Connection via a pipe</emphasis>. The target will be
+	    created, with standard input and output as the file descriptors
+	    for packet reading and writing.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>
+	In each case there is no specific requirement that the target be
+	either running of stopped. &gdb; will establish via &rsp; commands the
+	state of the target once the connection is established.
+      </para>
+
+      <para>
+	&gdb; is almost entirely non-preemptive, which is reflected in the
+	sequence of packet exchanges of &rsp;. The exception is when &gdb;
+	wishes to interrupt an executing program (typically via ctrl-C). A
+	single byte, 0x03, is sent (no packet structure). If the target is
+	prepared to handle such interrupts it should recognize such
+	bytes. Unless the target is routinely polling for input (which may be
+	the case for simulators), a prompt response typically will require an
+	event driven reader for the connection.
+      </para>
+
+   </sect1>
+
+    <sect1>
+      <title>
+	Presentation Layer: Packet Transfer
+      </title>
+
+      <para>
+	The basic format of a RSP packet is shown in <xref
+	linkend="fig_packet_format" />.
+      </para>
+
+      <figure id="fig_packet_format">
+	<title>
+	  OSI Layers in the Remote Serial Protocol
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="packet-format.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="packet-format.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	For almost all packets, binary data is represented as two hexadecimal
+	digits per byte of data. The checksum is the unsigned sum of all the
+	characters in the packet data modulo 256. It is represented as a pair
+	of hexadecimal digits.
+      </para>
+
+      <para>
+	Where the characters '#' or '$' appear in the packet data, they must
+	be escaped. The escape character is ASCII 0x7d ('}'), and is followed
+	by the original character XORed with 0x20. The character '}' itself
+	must also be escaped.
+      </para>
+
+      <para>
+	The small number of packets which transmit data as raw binary (thus
+	requiring an 8-bit clean connection) must also escape the characters
+	'#', '$' and '}' if they occur in the binary data.
+      </para>
+
+      <para>
+	Reply packets sent by the server may use run-length encoding. The
+	format is to follow the character being repeated by '*' and then the
+	character whose ASCII code is 28 greater than the total repeat, so
+	long as it remains a printable ASCII character (i.e. not greater than
+	126). Thus the string "XXXXX" would be represented as "X*!" ('!' is
+	ASCII 33).
+      </para>
+
+      <para>
+	This feature is suitable for run-lengths of 4, 5 and 8-97. Run lengths
+	of 6 and 7 cannot be used, since the repeat characters would be '#'
+	and '$' and interfere with the recognition of the packet itself before
+	decoding. For these cases, a run length of 5 is used, followed by 1 or
+	2 instances of the repeated character as required. '*' and '}' cause
+	no problem, since they are part of decoding, and their use in a
+	run-length would be recognized as such.
+      </para>
+
+      <note>
+	<para>
+	  There is no requirement for a server to use run length encoding.
+	</para>
+      </note>
+
+      <sect2>
+	<title>
+	  Packet Acknowledgement
+	</title>
+
+	<para>
+	  Each packet should be acknowledged with a single character. '+' to
+	  indicate satisfactory receipt, with valid checksum or '-' to
+	  indicate failure and request retransmission.
+	</para>
+
+	<para>
+	  Retransmission should be requested until a satisfactory packet is
+	  received.
+	</para>
+      </sect2>
+
+      <sect2>
+	<title>
+	  Interrupt
+	</title>
+
+	<para>
+	  The &gdb; client may wish to interrupt the server (e.g. when the
+	  user has pressed ctrl-C). This is indicated by transmissiting the
+	  character 0x03 between packets.
+	</para>
+
+	<para>
+	  If the server wishes to handle such interrupts, it should
+	  recognize such characters and process as appropriate. However not
+	  all servers are capable of handling such requests. The server is
+	  free to ignore such out-of-band characters.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Application Layer: Remote Serial Protocol
+      </title>
+
+      <para>
+	&rsp; commands from the client to the server are textual strings,
+	optionally followed by arguments. Each command is sent in its own
+	packet. The commands fall into four groups:
+      </para>
+
+      <orderedlist>
+
+	<listitem>
+	  <para>
+	    <emphasis>Commands requiring no acknowedgement</emphasis>. These
+	    commands are: <command>f</command>, <command>i</command>,
+	    <command>I</command>, <command>k</command>, <command>R</command>,
+	    <command>t</command> and  <command>vFlashDone</command>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis>Commands requiring a simple acknowledgement
+	    packet</emphasis>. The acknowledgement is either
+	    <command>OK</command>, <command>Enn</command> (where
+	    <command>nn</command> is an error number) or for some commands an
+	    empty packet (meaning "unsupported"). These commands are:
+	    <command>!</command>, <command>A</command>, <command>D</command>,
+	    <command>G</command>, <command>H</command>, <command>M</command>,
+	    <command>P</command>, <command>Qxxxx</command>,
+	    <command>T</command>, <command>vFlashErase</command>,
+	    <command>vFlashWrite</command>, <command>X</command>,
+	    <command>z</command> and <command>Z</command>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis>Commands that return result data or an error
+	    code.</emphasis>. These commands are: <command>?</command>,
+	    <command>c</command>, <command>C</command>, <command>g</command>,
+	    <command>m</command>, <command>p</command>,
+	    <command>qxxxx</command>, <command>s</command>,
+	    <command>S</command> and most <command>vxxxx</command>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis>Deprecated commands which should no longer be
+	    used</emphasis>. These commands are <command>b</command>,
+	    <command>B</command>, <command>d</command> and
+	    <command>r</command>.
+	  </para>
+	</listitem>
+
+      </orderedlist>
+
+      <para>
+	This application note does not document all these commands, except
+	where clarification is needed, since thy are all documented in
+	Appendix D of the main &gdb; user guide (<xref
+	linkend="ref_gdb_ug"/>).
+      </para>
+
+      <tip>
+	<para>
+	  Many commands come in pairs: for example <command>g</command> and
+	  <command>G</command>. In general the lower case is used for the
+	  command to read or delete data, or the command in its simpler
+	  form. The upper case is used to write or install data, or for a more
+	  complex form of the command.
+	</para>
+      </tip>
+
+      <para>
+	The &rsp; was developed ever several years, and represents an evolved
+	standard, but one which had to keep backward compatibility. As a
+	consequence the detailed syntax can be inconsistent. For example most
+	commands are separated from their arguments by ':', but some use ','
+	for this purpose.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Putting it All Together to Build a Server
+      </title>
+
+      <para>
+	There are three approaches to adding a &rsp; server to a target.
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    Run the <command>gdbserver</command> program on the target. A
+	    variant of this uses a custom server program to drive a physical
+	    interface to real hardware. This is most commonly seen with
+	    programs, running on the host, which drive a &jtag; link connected
+	    via a parallel port of USB.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Implement code on the target to establish a connection, recognize
+	    the packets and implement the behavior.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    For simulators, add code to the simulator to establish a
+	    connection, recognize the packets and implement the behavior in
+	    the simulator.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+      <para>
+	When remote debugging, &gdb; assumes that the target server will
+	terminate the connection if the target program exits. However there is
+	a variant, invoked by <command>target&nbsp;extended-remote</command>,
+	which makes the server persistent, allowing the user to restart a
+	program, or run an alternative program. This is discussed in more
+	detail later (see <xref linkend="sec_extended_remote"/>).
+      </para>
+
+      <para>
+	In general &gdb; assumes that when it connects to a target via &rsp;,
+	that target will be stopped. However there is a variant of remote
+	debugging, invoked by <command>target&nbsp;extended-async</command>
+	which allows the target to continue running. This is discussed in more
+	detail later (see <xref linkend="sec_extended_async"/>).
+      </para>
+
+      <sect2>
+	<title>
+	  Using <command>gdbserver</command>
+	</title>
+
+	<para>
+	  The <command>gdbserver</command> command is well documented in the
+	  &gdb; User Guide <xref linkend="ref_gdb_ug"/>. This approach is
+	  suitable for powerful targets, where it is easy to invoke a program
+	  from the command line.
+	</para>
+
+	<para>
+	  Generally this approach is not suitable for embedded systems.
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_server_code_on_target">
+	<title>
+	  Implementing Server Code on the Target
+	</title>
+
+	<para>
+	  This is the usual approach for embedded systems, and is the strategy
+	  encapsulated in the server stubs supplied with the &gdb; source
+	  code.
+	</para>
+
+	<para>
+	  There are two key components of the code:
+	</para>
+
+	<orderedlist>
+	  <listitem>
+	    <para>
+	      Code to establish the serial connection with the client
+	      &gdb; session.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Code for the target's interrupt handlers, so all exceptions are
+	      routed through the &rsp; server.
+	    </para>
+	  </listitem>
+	</orderedlist>
+
+	<para>
+	  In the stub code, the user must implement the serial connection by
+	  supplying functions <function>getDebugChar</function> and
+	  <function>putDebugChar</function>. The user must supply the function
+	  <function>exceptionHandler</function> to set up exception handling.
+	</para>
+
+	<para>
+	  The serial connection is usually established on the first call to
+	  <function>getDebugChar</function>. This is standard &posix; code to
+	  access either the serial device, or to listen for a TCP/IP or UDP/IP
+	  connection. The target may choose to block here, if it does not wish
+	  to run without control from a &gdb; client.
+	</para>
+
+	<para>
+	  If the serial connection choses not to block on
+	  <function>getDebugChar</function> then the exception handler should
+	  be prepared for this response, allowing the exception to be
+	  processed as normal.
+	</para>
+
+	<note>
+	  <para>
+	    The stub &rsp; server code supplied with the &gdb; source
+	    distribution assumes <function>getDebugChar</function> blocks
+	    until the connection is established.
+	  </para>
+	</note>
+
+	<para>
+	  In general the server interacts with the client only when it has
+	  received control due to a target exception.
+	</para>
+
+	<para>
+	  At startup, the first time this occurs, the target will be waiting
+	  for the &gdb; client to send a packet to which it can respond. These
+	  dialogues will continue until the client &gdb; session wishes to
+	  <command>continue</command> or <command>step</command> the target
+	  (<command>c</command>, <command>C</command>, <command>i</command>,
+	  <command>I</command>, <command>s</command> or <command>S</command>
+	  packet).
+	</para>
+
+	<para>
+	  Thereafter control is received only when another exception has
+	  occurred, following a <command>continue</command> or
+	  <command>step</command>. In this case, the first action of the
+	  target &rsp; server should be to send the reply packet back to the
+	  client &gdb; session.
+	</para>
+
+	<caution>
+	  <para>
+	    The key limitation in the stub &rsp; server code supplied with the
+	    &gdb; source distribution is that it only deals with the second
+	    case. In other words, it always sends a reply packet to the
+	    client, even on first execution.
+	  </para>
+
+	  <para>
+	    This causes two problems. First, the
+	    <function>putDebugChar</function> is called before
+	    <function>getDebugChar</function>, so it must be able to establish
+	    the connection.
+	  </para>
+
+	  <para>
+	    Secondly, the initial reply is sent without a request packet from
+	    the client &gdb; session. As a result this reply will typically be
+	    queued and appear as the reply to the first request packet from
+	    &gdb; and thus client requests and server responses will be out of
+	    step.
+	  </para>
+	</caution>
+
+	<para>
+	  The final issue that server code needs to address is the issue of
+	  BREAK signalling from the client. This is a raw 0x03 byte sent from
+	  the client between packets. Typically this is in response to a
+	  ctrl-C from the client &gdb; session.
+	</para>
+
+	<para>
+	  If the target server wishes to handle such signalling, it must
+	  provide an event driven <function>getDebugChar</function>, triggered
+	  when data is received, which can act on such BREAK signals.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Implementing Server Code for Simulators
+	</title>
+
+	<para>
+	  Simulators are commonly integrated separately into &gdb;, and
+	  accessed using the <command>target sim</command> command.
+	</para>
+
+	<para>
+	  However it can also be useful to connect to them by using the
+	  &rsp;. This allows the &gdb; experience to be identical whether
+	  simulator or real silicon is used.
+	</para>
+
+	<para>
+	  The general approach is the same as that for implementing code on a
+	  target (see <xref linkend="sec_server_code_on_target"/>). However
+	  the code forms part of the simulator, not the target. The &rsp;
+	  handler will be attached to the simulators handling of events,
+	  rather than the events themselves.
+	</para>
+
+	<para>
+	  In general the simulator will use the same form of connection as
+	  when debugging real silicon. Where the &rsp; server for real silicon
+	  is implemented on the target, or <command>gdbserver</command> is
+	  used a serial device or TCP/IP or UDP/IP. Where the &rsp; interface
+	  for real silicon is via a pipe to a program driving &jtag; a pipe
+	  interface should be used to launch the simulator.
+	</para>
+
+	<para>
+	  The example used in <xref linkend="chap_example"/> is based on a
+	  simulator for the OpenRISC 1000.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Implementing a Custom Server for &jtag;
+	</title>
+
+	<para>
+	  Many embedded systems will offer &jtag; ports for debugging. Most
+	  commonly these are connected to a host workstation running &gdb; via
+	  the parallel port of USB.
+	</para>
+
+	<para>
+	  In the past users would implement a custom target interface in &gdb;
+	  to drive the &jtag; interface directly. However with &rsp; it makes
+	  more sense to write a &rsp; server program, which runs standalone on
+	  the host. This program maps &rsp; commands and responses to the
+	  underlying &jtag; interface.
+	</para>
+
+	<para>
+	  Logically this is rather like a custom <command>gdbserver</command>,
+	  although it runs on the host rather than the target. The
+	  implementation techniques are similar to those required for
+	  interfacing to a simulator.
+	</para>
+
+	<para>
+	  This is one situation, where using the pipe interface is
+	  sensible. The pipe interface is used to launch the program which
+	  will talk to the &jtag; interface. If this approach is used, then
+	  debugging via a simulator should also use a pipe interface to launch
+	  the simulator, thus allowing the debugging experience to be the same
+	  whether real silicon or a simulator is used.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Mapping &gdb; Commands to &rsp;
+    </title>
+
+    <sect1>
+      <title>
+	Remote Debugging in &gdb;
+      </title>
+
+      <para>
+	&gdb; provides three flavours of remote debugging via the &rsp;
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    <command>target remote</command>. This is the &gdb; command
+	    documented in the &gdb; User Guide (<xref
+	    linkend="ref_gdb_ug"/>).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <command>target extended-remote</command>. The &rsp; server is
+	    made persistent. When the target exits, the server does not close
+	    the connection. The user is able to restart the target program, or
+	    load and run an alternative program.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <command>target extended-async</command>. &gdb; generally assumes
+	    that the target is stopped when in dialogue with the &gdb;
+	    client. In asynchronous remote debugging, the target continues
+	    execution while the client &gdb; session has control.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+      <sect2>
+	<title>
+	  Standard Remote Debugging
+	</title>
+
+	<para>
+	  A &rsp; server supporting standard remote debugging (i.e. using the
+	  &gdb; <command>target&nbsp;remote</command> command) must implement
+	  at least the following &rsp; packets:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <command>?</command>. Report why the target halted.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>c</command>, <command>C</command>, <command>s</command>
+	      and <command>S</command>. Continue or step the target (possibly
+	      with a particular signal).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>D</command>. Detach from the client.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>g</command> and <command>G</command>. Read or write
+	      general registers.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>qC</command> and <command>H</command>. Report the
+	      current thread or set the thread for subsequent operations. The
+	      significance of this will depend on whether the target supports
+	      threads.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>k</command>. Kill the target. The semantics of this are
+	      not clearly defined. Most targets should probably ignore it.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>m</command> and <command>M</command>. Read or write
+	      main memory.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>p</command> and <command>P</command>. Read or write a
+	      specific register.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>qOffsets</command>. Report the offsets to use when
+	      relocating downloaded code.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>qSupported</command>. Report the features supported by
+	      the &rsp; server. As a minimum, just the packet size can be
+	      reported.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>qSymbol::</command> (i.e. the
+	      <command>qSymbol</command> packet with no arguments). Request
+	      any symbol table data. A minimal implementation should request
+	      no data.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>vCont?</command>. Report what <command>vCont</command>
+	      actions are supported. A minimal implementation should return
+	      an empty packet to indicate no actions are supported.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>X</command>. Load binary data.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>z</command> and <command>Z</command>. Clear or set
+	      breakpoints or watchpoints.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2 id="sec_extended_remote">
+	<title>
+	  Extended Remote Debugging
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_extended_async">
+	<title>
+	  Asynchronous Remote Debugging
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&gdb; Command Dialogues
+      </title>
+
+      <para>
+	The following sections show diagramatically how various &gdb; commands
+	map onto &rsp; packet exchanges to implement the desired behavior.
+      </para>
+
+      <sect2 id="sec_exchange_target_remote">
+	<title>
+	  The <command>target&nbsp;remote</command> Command
+	</title>
+
+	<para>
+	  The &rsp; packet exchanges to implement the &gdb;
+	  <command>target&nbsp;remote</command> command are shown as a
+	  sequence diagram in <xref linkend="fig_exchange_target_remote"/>.
+	</para>
+
+	<figure id="fig_exchange_target_remote">
+	  <title>
+	    &rsp; packet exchanges for the &gdb;
+	    <command>target&nbsp;remote</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-target-remote.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-target-remote.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  This is the initial dialog once the connection has been
+	  established. The first thing the client needs to know is what this
+	  &rsp; server supports. The only feature that matters is to report
+	  the packet size that is supported. The largest packet that will be
+	  needed is to hold a command with the hexadecimal values of all the
+	  general registers (for the <command>G</command> packets). In this
+	  example, there are a total of 35 32-bit registers, each requiring 8
+	  hex characters + 1 character for the 'G', a total of 281
+	  (hexadecimal 0x119) characters.
+	</para>
+
+	<para>
+	  The client then asks why the target halted. For a standard remote
+	  connection (rather than extended or asynchronous remote connection),
+	  the target must be running, even if it has halted for a signal. So
+	  the client will verify that the reply is not <command>W</command>
+	  (exited) or <command>X</command> (terminated with signal). In this
+	  case the target reports it has stopped due to a TRAP exception.
+	</para>
+
+	<para>
+	  The next packet is an instruction from the client that any future
+	  <command>step</command> or <command>continue</command> commands
+	  should apply to all threads. This is followed by a request
+	  (<command>qC</command>) for information on the thread currently
+	  running. In this example the target is "bare metal", so there is no
+	  concept of threads. An empty response is interpreted as "use the
+	  existing value", which suits in this case&mdash;since it is never
+	  set explicitly, it will be the NULL thread ID, which is appropriate.
+	</para>
+
+	<para>
+	  The next packet requests any offsets for loading binary data. At the
+	  minimum this must return offsets for the text, data and BSS sections
+	  of an executable&mdash;in this example all zero.
+	</para>
+
+	<note>
+	  <para>
+	    The BSS component <emphasis>must</emphasis> be specified, contrary
+	    to the advice in the &gdb; User Guide.
+	  </para>
+	</note>
+
+	<para>
+	  The client then fetches the value of all the registers, so it can
+	  populate its register cache. It first specifies that operations such
+	  as these apply to all threads (<command>Hg-1</command> packet), then
+	  requests the value of all registers (<command>g</command> packet).
+	</para>
+
+	<para>
+	  Finally the client offers to supply any symbolic data required by
+	  the client. In this example, no data is needed, so a reply of "OK"
+	  is sent.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) target remote :51000
+Remote debugging using :51000
+0x00000100 in _start ()
+(gdb)
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>load</command> Command
+	</title>
+
+	<para>
+	  The &rsp; packet exchanges to implement the &gdb;
+	  <command>load</command> command are shown as a sequence diagram in
+	  <xref linkend="fig_exchange_load"/>. In this example a program with
+	  a text section of 4752 (0x1290) bytes at address 0x0 and data
+	  section of 15 (0xe) bytes at address 0x1290 is loaded.
+	</para>
+
+	<figure id="fig_exchange_load">
+	  <title>
+	    &rsp; packet exchanges for the &gdb;
+	    <command>load</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-load.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-load.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The first packet is a binary write of zero bytes
+	  (<command>X0,0:</command>). A reply of "OK" indicates the target
+	  supports binary writing, an empty reply indicates that binary write
+	  is not supported, in which case the data will be loaded using
+	  <command>M</command> packets.
+	</para>
+
+	<note>
+	  <para>
+	    This initial dialogue is 7-bit clean, even though it uses the
+	    <command>X</command> packet. It can therefore safely be used with
+	    connections that are not 8-bit clean.
+	  </para>
+	</note>
+
+	<caution>
+	  <para>
+	    The use of a null reply to indicate that <command>X</command>
+	    packet transfers are not supported is not documented in the &gdb;
+	    User Guide.
+	  </para>
+	</caution>
+
+	<para>
+	  Having established in this case that binary transfers are permitted,
+	  each section of the loaded binary is transmitted in blocks of up to
+	  256 binary data bytes.
+	</para>
+
+	<para>
+	  Had binary transfers not been permitted, the sections would have
+	  been transferred using <command>M</command> packets, using pairs of
+	  hexadecimal digits for each byte.
+	</para>
+
+	<para>
+	  Finally the client sets the value of the program counter to the
+	  entry point of the code using a <command>P</command> packet. In this
+	  example the program counter is general register 33 and the entry
+	  point is address 0x100.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) load hello
+Loading section .text, size 0x1290 lma 0x0
+Loading section .rodata, size 0xe lma 0x1290
+Start address 0x100, load size 4766
+Transfer rate: 5 KB/sec, 238 bytes/write.
+(gdb)
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Examining Registers
+	</title>
+
+	<para>
+	  Examining registers in &gdb; causes no &rsp; packets to be
+	  exchanged. This is because the &gdb; client always obtains values
+	  for all the registers whenever it halts and caches that data. So for
+	  example in the following command sequence, there is no &rsp;
+	  traffic.
+	</para>
+
+	<programlisting>
+(gdb) print $pc
+$1 = (void (*)()) 0x1264 &lt;main+16&gt;
+(gdb) 
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Examining Memory
+	</title>
+
+	<para>
+	  All &gdb; commands which involve examining memory are mapped by the
+	  client to a series of <command>m</command> packets. Unlike
+	  registers, memory values are <emphasis>not</emphasis> cached by the
+	  client, so repeated examination of a memory location will lead to
+	  multiple <command>m</command> packets for the same location.
+	</para>
+
+	<para>
+	  The packet exchanges to implement the &gdb;
+	  <command>disassemble</command> command for a simple function are
+	  shown as a sequence diagram in <xref
+	  linkend="fig_exchange_disas"/>. In this example the
+	  <function>simputc</function> function is disassembled.
+	</para>
+
+	<figure id="fig_exchange_disas">
+	  <title>
+	    &rsp; packet exchanges for the &gdb;
+	    <command>disassemble</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-disas.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-disas.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The <command>disassemble</command> command in the &gdb; client
+	  generates a series of &rsp; <command>m</command> packets, to obtain
+	  the instructions required one at a time.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) disas simputc
+Dump of assembler code for function simputc:
+0x00001020 &lt;simputc+0&gt;: l.addi   r1,r1,-8
+0x00001024 &lt;simputc+4&gt;: l.sw     0(r1),r2
+0x00001028 &lt;simputc+8&gt;: l.addi   r2,r1,8
+0x0000102c &lt;simputc+12&gt;:        l.sw     -4(r2),r3
+0x00001030 &lt;simputc+16&gt;:        l.nop    4
+0x00001034 &lt;simputc+20&gt;:        l.lwz    r2,0(r1)
+0x00001038 &lt;simputc+24&gt;:        l.jr     r9
+0x0000103c &lt;simputc+28&gt;:        l.addi   r1,r1,8
+End of assembler dump.
+(gdb)
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>stepi</command> Command
+	</title>
+
+	<para>
+	  The &rsp; offers two mechanisms for stepping and continuing
+	  programs. The original mechanism has the thread concerned specified
+	  with a <command>Hc</command> packet, and then the thread stepped or
+	  continued with a <command>s</command>, <command>S</command>,
+	  <command>c</command> or <command>C</command> packet.
+	</para>
+
+	<para>
+	  The newer mechanism uses the <command>vCont:</command> packet to
+	  specify the command and the thread ID in a single packet. The
+	  availability of the <command>vCont:</command> packet is established
+	  using the <command>vCont?</command> packet.
+	</para>
+
+	<para>
+	  The simplest &gdb; execution command is the <command>stepi</command>
+	  command to step the target a single machine instruction. The &rsp;
+	  packet exchanges to implement the &gdb; <command>stepi</command>
+	  command are shown as a sequence diagram in <xref
+	  linkend="fig_exchange_stepi"/>. In this example the instruction at
+	  address 0x100 is executed.
+	</para>
+
+	<figure id="fig_exchange_stepi">
+	  <title>
+	    &rsp; packet exchanges for the &gdb; <command>stepi</command>
+	    command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-stepi.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-stepi.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The first exchange is related to the definition of the architecture
+	  used in this example. Before stepping any instruction, &gdb; needs
+	  to know if there is any special behavior due to this instruction
+	  occupying a delay slot. This is achieved by calling the
+	  <function>gdbarch_single_step_through_delay</function> function. In
+	  this example, that function reads the instruction at the previous
+	  program counter (in this case address 0x0) to see if it was an
+	  instruction with a delay slot. This is achieved by using the
+	  <command>m</command> packet to obtain the 4 bytes of instruction at
+	  that address.
+	</para>
+
+	<para>
+	  The next packet, <command>vCont?</command> from the client seeks to
+	  establish if the server supports the <command>vCont</command>
+	  packet. A null response indicates that it is not.
+	</para>
+
+	<note>
+	  <para>
+	    The <command>vCont?</command> packet is used only once, and the
+	    result cached by the &gdb; client. Subsequent step or continue
+	    commands will not result in this packet being reissued.
+	  </para>
+	</note>
+
+	<para>
+	  The client then establishes the thread to be used for the step with
+	  the <command>Hc0</command> packet. The value 0 indicates that any
+	  thread may be used by the server.
+	</para>
+
+	<note>
+	  <para>
+	    Note the difference to the earlier use of the
+	    <command>Hc</command> packet (see <xref
+	    linkend="sec_exchange_target_remote"/>), where a value of -1 was
+	    used to mean <emphasis>all</emphasis> threads.
+	  </para>
+	</note>
+
+	<note>
+	  <para>
+	    The &gdb; client remembers the thread currently in use. It does
+	    not issue futher <command>Hc</command> packets unless the thread
+	    has to change.
+	  </para>
+	</note>
+
+	<para>
+	  The actual step is invoked by the <command>s</command> packet. This
+	  does not return a result to the &gdb; client until it has
+	  completed. The reply indicates that the server stopped for signal 5
+	  (TRAP exception).
+	</para>
+
+	<caution>
+	  <para>
+	    In the &rsp;, the <command>s</command> packet indicates stepping
+	    of a single machine instruction, <emphasis>not</emphasis> a high
+	    level. In this way it maps to &gdb;'s <command>stepi</command>
+	    command, <emphasis>not</emphasis> its <command>step</command>
+	    command (which confusingly can be abbreviated to just
+	    <command>s</command>).
+	  </para>
+	</caution>
+
+	<para>
+	  The last two exchanges are a <command>g</command> and
+	  <command>m</command> packet. These allow &gdb; to reload its
+	  register cache and note the instruction just executed.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) stepi
+0x00000104 in _start ()
+(gdb)
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>step</command> Command
+	</title>
+
+	<para>
+	  The &gdb; <command>step</command>
+	  command to step the target a single high level instruction is
+	  similar to the <command>stepi</command> instruction, and works by
+	  using multiple <command>s</command> packets. However additional
+	  packet exchanges are also required to provide information to be
+	  displayed about the high level data structures, such as the stack.
+	</para>
+
+	<para>
+	  The &rsp; packet exchanges to implement the &gdb;
+	  <command>step</command> command are shown as a sequence diagram in
+	  <xref linkend="fig_exchange_step"/>. In this example the first
+	  instruction of a C <function>main</function> function is executed.
+	</para>
+
+	<figure id="fig_exchange_step">
+	  <title>
+	    &rsp; packet exchanges for the &gdb; <command>step</command>
+	    command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-step.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-step.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The exchanges start similarly to the <command>stepi</command>,
+	  although, since this is not the first step, there are no
+	  <command>vCont?</command> or <command>Hc</command> packets.
+	</para>
+
+	<para>
+	  The high level language step is mapped by the client &gdb; session
+	  into a series of <command>s</command> packets, after each of which
+	  the register cache is refreshed by a <command>g</command> packet.
+	</para>
+
+	<para>
+	  After the step, are a series of reads of data words, using
+	  <command>m</command> packets. The first group are from the
+	  code. This is the first execution in a new function, and the frame
+	  analysis functions of the &gdb; client are analyising the function
+	  prologue, to establish the location of key values (stack pointer,
+	  frame pointer, return address).
+	</para>
+
+	<para>
+	  The second group access the stack frame to obtain information
+	  required by &gdb;. In this example the return address from the
+	  current stack frame.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) step
+main () at hello.c:41
+41        simputs( "Hello World!\n" );
+(gdb) 
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>cont</command> Command
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>break</command> Command
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>watch</command> Command
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <command>run</command> Command
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_example">
+    <title>
+      &rsp; Server Implementation Example
+    </title>
+
+    <sect1>
+      <title>
+	The &or1k; Architectural Simulator, &or1ksim;
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	The Serial Connection
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	The Packet Interface
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	High Level Protocol Implementation
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Summary
+    </title>
+
+    <para>
+      This application note has described in detail the steps required to
+      implement a &rsp; server for a new architecture. That process has been
+      illustrated using the port for the &or1k; architecture.
+    </para>
+
+    <para>
+      Suggestions for corrections or improvements are welcomed. Please contact
+      the author at <ulink
+      url="mailto:jeremy.bennett@embecosm.com"><literal>jeremy.bennett@embecosm.com</literal></ulink>.
+    </para>
+
+  </chapter>
+
+  <glossary id="sec_glossary">
+    <title>
+      Glosary
+    </title>
+
+    <glossentry>
+      <glossterm>big&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a big endian architecture, the
+	  least significant byte in a data word resides at the highest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
+
+	<para>
+	  The alternative is little endian addressing.
+	</para>
+
+	<glossseealso>little&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Common Object File Format</glossterm>
+      <acronym>COFF</acronym>
+      <glossdef>
+	<para>
+	  A specification of a format for executable, object code, and shared
+	  library computer files used on Unix systems. Now largely replaced by
+	  &elf;
+	</para>
+
+	<glossseealso>Executable and Linkable Format (&elf;)</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Executable and Linkable Format</glossterm>
+      <acronym>ELF</acronym>
+      <glossdef>
+	<para>
+	  a common standard file format for executables, object code, shared
+	  libraries, and core dumps. It is the standard binary file format for
+	  Unix and Unix-like systems on x86, where it has largely replaced
+	  &coff;.
+	</para>
+
+	<para>
+	  Formerly known as the  Extensible Linking Format.
+	</para>
+
+	<glossseealso>Common Object File Format (&coff;)</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>General Purpose Register</glossterm>
+      <acronym>GPR</acronym>
+      <glossdef>
+	<para>
+	  In the &or1k; architecture, one of between 16 and 32 general
+	  purpose integer registers.
+	</para>
+	<indexterm>
+	  <primary>General Purpose Register</primary>
+	</indexterm>
+
+	<para>
+	  Although these registers are general purpose, some have specific
+	  roles defined by the architecture and the &abi;. &gpr;&nbsp;0 is
+	  always 0 and should not be written to. &gpr;&nbsp;1 is the stack
+	  pointer, &gpr;&nbsp;2 the frame pointer and &gpr;&nbsp;9 the return
+	  address set by <literal>l.jal</literal> (known as the link register)
+	  and <literal>l.jalr</literal> instructions. &gpr;&nbsp;3 through
+	  &gpr;&nbsp;8 are used to pass arguments to functions, with scalar
+	  results returned in &gpr;&nbsp;11.
+	</para>
+	<indexterm>
+	  <primary>stack pointer</primary>
+	  <secondary>in &or1k;</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>frame pointer</primary>
+	  <secondary>in &or1k;</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&or1k;</primary>
+	  <secondary>link register</secondary>
+	</indexterm>
+
+	<glossseealso>Application Binary Interface</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Joint Test Action Group</glossterm>
+      <acronym>JTAG</acronym>
+      <glossdef>
+	<para>
+	  &jtag; is the usual name used for the IEEE 1149.1 standard entitled
+	  <emphasis>Standard Test Access Port and Boundary-Scan
+	  Architecture</emphasis> for test access ports used for testing
+	  printed circuit boards and chips using boundary scan.
+	</para>
+	<indexterm>
+	  <primary>&jtag;</primary>
+	</indexterm>
+
+	<para>
+	  This standard allows external reading of state within the board or
+	  chip. It is thus a natural mechanism for debuggers to connect to
+	  embedded systems.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a little endian architecture, the
+	  least significant byte in a data word resides at the lowest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
+
+	<para>
+	  The alternative is big endian addressing.
+	</para>
+
+	<glossseealso>big&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Memory Management Unit</glossterm>
+      <acronym>MMU</acronym>
+      <glossdef>
+	<para>
+	  A hardware component which maps virtual address references to
+	  physical memory addresses via a page lookup table. An exception
+	  handler may be required to bring non-existent memory pages into
+	  physical memory from backing storage when accessed.
+	</para>
+
+	<para>
+	  On a Harvard architecture (i.e. with separate logical instruction
+	  and data address spaces), two MMUs are typically needed.
+	</para>
+	<indexterm>
+	  <primary>Harvard architecture</primary>
+	</indexterm>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Real Time Executive for Multiprocessor Systems</glossterm>
+      <acronym>RTEMS</acronym>
+      <glossdef>
+	<para>
+	  An operating system for real-time embedded systems offering a POSIX
+	  interface. It offers no concept of processes or memory management.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Special Purpose Register</glossterm>
+      <acronym>GPR</acronym>
+      <glossdef>
+	<para>
+	  In the &or1k; architecture, one of up to 65536 registers
+	  controlling all aspects of the processor. The registers are arranged
+	  in groups of 2048 registers. The present architecture defines 12
+	  groups in total.
+	</para>
+	<indexterm>
+	  <primary>Special Purpose Register</primary>
+	</indexterm>
+
+	<para>
+	  In general each group controls one component of the processor. Thus
+	  there is a group to control the DMMU, the IMMU the data and
+	  instruction caches and the debug unit. Group 0 is the system group
+	  and includes all the system configuration registers, the next and
+	  previous program counters, supervision register and saved exception
+	  registers.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>System on Chip</glossterm>
+      <acronym>SoC</acronym>
+      <glossdef>
+	<para>
+	  A silicon chip which includes one or more processor cores.
+	</para>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_app_note_2">
+      <title id="ref_app_note_2_xr">
+	&embecosm; Application Note 2. The &opencores; &or1k; Simulator and
+	Tool Chain: Installation Guide.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	June 2008.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>tool chain</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_3">
+      <title id="ref_app_note_3_xr">
+	&embecosm; Application Note 3. Howto: Porting the &gnu; Debugger:
+	Practical Experience with the &or1k; Architecture
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	August 2008.
+      </pubdate>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>porting</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gdb_ug">
+      <title id="ref_gdb_ug_xr">
+	Debugging with &gdb;: The &gnu; Source-Level Debugger,
+      </title>
+      <firstname>Richard</firstname> <surname>Stallman</surname>,
+      <firstname>Roland</firstname> <surname>Pesch</surname>,
+      <firstname>Stan</firstname> <surname>Shebbs</surname>, et al,
+      issue <issuenum>9</issuenum>.
+      <publisher>
+	<publishername>
+	  Free Software Foundation
+	</publishername>
+      </publisher>
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://sourceware.org/gdb/current/onlinedocs/gdb_toc.html"/>
+      </bibliosource>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>User Guide</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gdb_int">
+      <title id="ref_gdb_int_xr">
+	&gdb; Internals: A guide to the internals of the &gnu; debugger,
+      </title>
+      <firstname>John</firstname> <surname>Gillmore</surname> and
+      <firstname>Stan</firstname> <surname>Shebbs</surname>,
+      issue <issuenum>2</issuenum>.
+      <publisher>
+	<publishername>
+	  Cygnus Solutions
+	</publishername>
+      </publisher>
+      <pubdate>
+	2006
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://sourceware.org/gdb/current/onlinedocs/gdbint_toc.html"/>
+      </bibliosource>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>Internals document</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_doxygen">
+      <title id="ref_gdb_doxygen_xr">
+	Doxygen: Source code documentation generator tool,
+      </title>
+      <firstname>Dimitri</firstname> <surname>van Heesch</surname>,
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://www.doxygen.org"/>
+      </bibliosource>
+      <indexterm>
+	<primary>Doxygen</primary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_or1k">
+      <title id="ref_gdb_or1k_xr">
+	&or1k; Architectural Manual,
+      </title>
+      <firstname>Damjan</firstname> <surname>Lampret</surname>,
+      <firstname>Chen-Min</firstname> <surname>Chen</surname>,
+      <firstname>Marko</firstname> <surname>Mlinar</surname>,
+      <firstname>Johan</firstname> <surname>Rydberg</surname>,
+      <firstname>Matan</firstname> <surname>Ziv-Av</surname>,
+      <firstname>Chris</firstname> <surname>Ziomkowski</surname>,
+      <firstname>Greg</firstname> <surname>McGary</surname>,
+      <firstname>Bob</firstname> <surname>Gardner</surname>,
+      <firstname>Rohit</firstname> <surname>Mathur</surname> and
+      <firstname>Maria</firstname> <surname>Bolado</surname>,
+      <pubdate>
+	November 2005
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://www.opencores.org/cvsget.cgi/or1k/docs/openrisc_arch.pdf"/>
+      </bibliosource>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>architecture</secondary>
+	<tertiary>manual</tertiary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_orpsoc">
+      <title>
+	&or1k;: ORPSoC
+      </title>
+      <firstname>Damjan</firstname> <surname>Lampret</surname> et al.
+      <publisher>
+	<publishername>
+	  OpenCores
+	</publishername>
+      </publisher>
+      <bibliosource class="uri">
+	<ulink
+	    url="http://opencores.org/projects.cgi/web/or1k/orpsoc"/>
+      </bibliosource>
+      <indexterm>
+	<primary>Debug Unit</primary>
+	<secondary>&jtag; interface</secondary>
+	<tertiary>ORPSoC version</tertiary>
+      </indexterm>
+    </bibliomixed>
+	
+    <bibliomixed id="ref_or1k_debug">
+      <title>
+	SoC Debug Interface
+      </title>
+      <firstname>Igor</firstname> <surname>Mohor</surname>,
+      issue <issuenum>3.0</issuenum>.
+      <publisher>
+	<publishername>
+	  OpenCores
+	</publishername>
+      </publisher>
+      <pubdate>
+	14 April, 2004
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://opencores.org/cvsweb.shtml/dbg_interface/doc/DbgSupp.pdf"/>
+      </bibliosource>
+      <indexterm>
+	<primary>Debug Unit</primary>
+	<secondary>&jtag; interface</secondary>
+	<tertiary>Igor Mohor version</tertiary>
+      </indexterm>
+    </bibliomixed>
+
+  </bibliography>
+
+  <index />
+</book>
