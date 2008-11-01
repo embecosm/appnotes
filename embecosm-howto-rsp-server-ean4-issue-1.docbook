@@ -1066,7 +1066,7 @@ $Id$
       </title>
 
       <para>
-	&gdb; provides three flavours of remote debugging via the &rsp;
+	&gdb; provides four flavours of remote debugging via the &rsp;
       </para>
 
       <orderedlist>
@@ -1089,12 +1089,24 @@ $Id$
 
 	<listitem>
 	  <para>
-	    <command>target extended-async</command>. &gdb; generally assumes
-	    that the target is stopped when in dialogue with the &gdb;
-	    client. In asynchronous remote debugging, the target continues
-	    execution while the client &gdb; session has control.
+	    <command>target async</command>. &gdb; generally assumes that the
+	    target is stopped when in dialogue with the &gdb; client. In
+	    asynchronous remote debugging, the target continues execution
+	    while the client &gdb; session has control. However this is
+	    entirely a function of the &gdb; client, and has no impact on the
+	    &rsp; server implementation.
 	  </para>
 	</listitem>
+
+	<listitem>
+	  <para>
+	    <command>target extended-async</command>. This is the asynchronous
+	    version of extended remote debugging. It too is entirely a
+	    function of the &gdb; client, and has no impact on the &rsp;
+	    server implementation.
+	  </para>
+	</listitem>
+
       </orderedlist>
 
       <sect2>
@@ -1104,8 +1116,8 @@ $Id$
 
 	<para>
 	  A &rsp; server supporting standard remote debugging (i.e. using the
-	  &gdb; <command>target&nbsp;remote</command> command) must implement
-	  at least the following &rsp; packets:
+	  &gdb; <command>target&nbsp;remote</command> command) should
+	  implement at least the following &rsp; packets:
 	</para>
 
 	<itemizedlist>
@@ -1221,7 +1233,45 @@ $Id$
 	</title>
 
 	<para>
+	  A &rsp; server supporting standard remote debugging (i.e. using the
+	  &gdb; <command>target&nbsp;remote</command> command) should
+	  implement at least the following &rsp; packets in addition to those
+	  required for standard remote debugging:
 	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <command>!</command>. Advise the target that extended remote
+	      debugging is being used.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>R</command>. Restart the program being run.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>vAttach</command>. Attach to a new process with a
+	      specified process ID. This packet need not be implemented if the
+	      target has no concept of a process ID, but should return an
+	      error code.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>vRun</command>. Specify a new program and arguments to
+	      run. A minimal implementation may restrict this to the case
+	      where only the current program may be run again.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
 
       </sect2>
 
@@ -1231,6 +1281,17 @@ $Id$
 	</title>
 
 	<para>
+	  There are two flavours of asynchronous remote debugging,
+	  corresponding to the two synchronous remote debugging styles. These
+	  are established with the <command>target&nbsp;async</command> and
+	  <command>target&nbsp;extended-async</command> commands
+	</para>
+
+	<para>
+	  Whether or not asynchronous debugging is in operation should be
+	  invisible to the &rsp; server on the target. It is entirely a
+	  feature of the &gdb; client. This is why there is no equivalent of the
+	  <command>!</command> packet to indicate asynchronous debugging.
 	</para>
 
       </sect2>
@@ -1239,12 +1300,14 @@ $Id$
 
     <sect1>
       <title>
-	&gdb; Command Dialogues
+	&gdb; Standard Remote Command Dialogues
       </title>
 
       <para>
 	The following sections show diagramatically how various &gdb; commands
-	map onto &rsp; packet exchanges to implement the desired behavior.
+	map onto &rsp; packet exchanges to implement the desired behavior with
+	standard remote debugging (i.e when connecting with
+	<command>target&nbsp;remote</command>).
       </para>
 
       <sect2 id="sec_exchange_target_remote">
@@ -1676,7 +1739,7 @@ End of assembler dump.
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_exchange_step">
 	<title>
 	  The <command>step</command> Command
 	</title>
@@ -1760,13 +1823,89 @@ main () at hello.c:41
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_exchange_cont">
 	<title>
 	  The <command>cont</command> Command
 	</title>
 
 	<para>
+	  The packet exchange for the &gdb; <command>continue</command> is
+	  very similar to that for the <command>step</command> (see <xref
+	  linkend="sec_exchange_step"/>). The difference is that in the
+	  absence of a breakpoint, the target program may complete
+	  execution. A simple implementation need not trap the
+	  exit&mdash;&gdb; will handle the loss of connection quite cleanly.
 	</para>
+
+	<para>
+	  The &rsp; packet exchanges to implement the &gdb;
+	  <command>continue</command> command are shown as a sequence diagram
+	  in <xref linkend="fig_exchange_cont"/>. In this example the target
+	  executes to completion and exits, without returning a reply packet
+	  to the &gdb; client.
+	</para>
+
+	<figure id="fig_exchange_cont">
+	  <title>
+	    &rsp; packet exchanges for the &gdb; <command>continue</command>
+	    command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-cont.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-cont.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+	
+	<para>
+	  The packet exchange is initially the same as that for a &gdb;
+	  <command>step</command> or <command>stepi</command> command (see
+	  <xref linkend="fig_exchange_stepi"/>).
+	</para>
+
+	<para>
+	  In this example the
+	  <function>gdbarch_single_step_through_delay</function> function
+	  finds that the previously executed instruction is a jump instruction
+	  (<command>m</command> packet). Since the target may be in a delay
+	  slot, it executes a single step (<command>s</command> packet) to
+	  step past that slot, followed by notification of the TRAP exception
+	  (<command>S05</command> packet) and register cache reload
+	  (<command>g</command> packet).
+	</para>
+
+	<para>
+	  The next call to
+	  <function>gdbarch_single_step_through_delay</function> determines
+	  that the previous instruction did not have a delay slot
+	  (<command>m</command> packet), so the <command>c</command> packet
+	  can be used to resume execution of the target.
+	</para>
+
+	<para>
+	  Since the target exits, there is no reply to the &gdb;
+	  client. However it correctly interprets the loss of connection to
+	  the server as target execution. Through this exchange, the &gdb;
+	  client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) continue
+Continuing.
+Remote connection closed
+(gdb)
+	</programlisting>
 
       </sect2>
 
@@ -1776,8 +1915,111 @@ main () at hello.c:41
 	</title>
 
 	<para>
+	  The &gdb; command to set breakpoints, <command>break</command> does
+	  not immediately cause a &rsp; interaction. &gdb; only actually sets
+	  breakpoints immediately before execution (for example by a
+	  <command>continue</command> or <command>step</command> command) and
+	  immediately clears them when a breakpoint is hit. This minimizes the
+	  risk of a program being left with breakpoints inserted, for example
+	  when a serial link fails.
 	</para>
 
+	<para>
+	  The &rsp; packet exchanges to implement the &gdb;
+	  <command>break</command> command and a subsequent
+	  <command>continue</command> are shown as a sequence diagram in <xref
+	  linkend="fig_exchange_break"/>. In this example a breakpoint is set
+	  at the start of the function <function>simputs</function>.
+	</para>
+
+	<figure id="fig_exchange_break">
+	  <title>
+	    &rsp; packet exchanges for the &gdb; <command>break</command>
+	    and <command>continue</command> commands
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-break.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-break.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The command sequence is very similar to that of the plain
+	  <command>continue</command> command (see <xref
+	  linkend="sec_exchange_cont"/>). With two key differences.
+	</para>
+
+	<para>
+	  First, immediately before the <command>c</command> packet, the
+	  breakpoint is set with a <command>Z0</command> packet. Secondly, as
+	  soon as the register cache has been refreshed (<command>g</command>
+	  packet) when control returns, the program counter is stepped back to
+	  re-execute the instruction at the location of the TRAP with a
+	  <command>P</command> packet and the breakpoint is cleared with a
+	  <command>z0</command> packet. In this case only a single breakpoint
+	  (at location 0x1150, the start of function
+	  <function>simputs</function>) is set. If there were multiple
+	  breakpoints, they would all be set immediately before the
+	  <command>c</command> packet and cleared immediately after the
+	  <command>g</command> packet.
+	</para>
+
+	<para>
+	  The resetting of hte program counter is a consequence of the
+	  <function>decr_pc_after_break</function> value in the &gdb;
+	  architecture of this example. It means that when execution resumes,
+	  the instruction which was replaced by a trap instruction will be
+	  executed first.
+	</para>
+
+	<note>
+	  <para>
+	    Perhaps rather surprisingly, it is the responsibility of the
+	    target &rsp; server, not the &gdb; client to keep track of the
+	    substituted instructions.
+	  </para>
+	</note>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) break simputs
+Breakpoint 1 at 0x1150: file utils.c, line 90.
+(gdb) c
+Continuing.
+
+Breakpoint 1, simputs (str=0x1290 "Hello World!\n") at utils.c:90
+90        for( i = 0; str[i] != '\0' ; i++ ) {
+(gdb) 
+	</programlisting>
+
+	<para>
+	  The example here showed the use of a memory breakpoint (also known as
+	  a software breakpoint). &gdb; also supports use of hardware
+	  watchpoints explicitly through the <command>hbreak</command>
+	  command. These behave analogously to memory breakpoints in &rsp;,
+	  but using <command>z1</command> and <command>Z1</command> packets.
+	</para>
+
+	<para>
+	  If a &rsp; server implementation does not support hardware
+	  breakpoints it should return an empty packet to any request for
+	  insertion or deletion.
+	</para>
       </sect2>
 
       <sect2>
@@ -1786,19 +2028,220 @@ main () at hello.c:41
 	</title>
 
 	<para>
+	  If hardware watchpoints are supported (the default assumption in
+	  &gdb;), then the setting and clearing of watchpoints is very similar
+	  to breakpoints, but using <command>z2</command> and
+	  <command>Z2</command> packets (for write watchpoints),
+	  <command>z3</command> and <command>Z3</command> packets (for read
+	  watchpoints) and <command>z4</command> and <command>Z4</command>
+	  packets (for access watchpoints)
+	</para>
+
+	<para>
+	  &gdb; also supports software write watchpoints. These are
+	  implemented by single stepping the target, and examiniming the
+	  watched value after each step. This is painfully slow when &gdb; is
+	  running native. Under &rsp;, where each step involves an number of
+	  packet exchanges, the performance drops ever further. Software
+	  watchpointing should be restricted to the shortest section of code
+	  possible.
 	</para>
 
       </sect2>
 
       <sect2>
 	<title>
-	  The <command>run</command> Command
+	  The <command>detach</command> and <command>disconnect</command>
+	  Commands
 	</title>
 
 	<para>
+	  The rules for <command>detach</command> mandate that it breaks the
+	  connection with the target, and allows the target to resume
+	  execution. By contrast, the <command>disconnect</command> simple
+	  breaks the connection. A reconnection (using the
+	  <command>target&nbsp;remote</command> command should be able to
+	  resume debugging at the point where the previous connection was
+	  broken.
 	</para>
 
+	<para>
+	  The <command>disconnect</command> command just closes the serial
+	  connection. It is up to the target server to notice the connection
+	  has broken, and to try to re-establish a connection.
+	</para>
+
+	<para>
+	  The <command>detach</command> command requires a &rsp; exchange with
+	  the target for a clean shutdown. The &rsp; packet exchanges to
+	  implement the command are shown as a sequence diagram in <xref
+	  linkend="fig_exchange_detach"/>.
+	</para>
+
+	<figure id="fig_exchange_detach">
+	  <title>
+	    &rsp; packet exchanges for the &gdb; <command>detach</command>
+	    command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-detach.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-detach.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The exchange is a simple <command>D</command> packet to which the
+	  target responds with an <command>OK</command> packet, before closing
+	  the connection.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) detach
+Ending remote debugging.
+(gdb)
+	</programlisting>
+
+	<para>
+	  The <command>disconnect</command> command has no dialog of
+	  itself. The &gdb; client shows the following output in a typical
+	  session. However there are no additional packet exchanges due to the
+	  disconnect.
+	</para>
+
+	<programlisting>
+(gdb) target remote :51000
+Remote debugging using :51000
+0x00000100 in _start ()
+(gdb) load hello
+Loading section .text, size 0x1290 lma 0x0
+Loading section .rodata, size 0xe lma 0x1290
+Start address 0x100, load size 4766
+Transfer rate: 5 KB/sec, 238 bytes/write.
+(gdb) break main
+Breakpoint 1 at 0x1264: file hello.c, line 41.
+(gdb) c
+Continuing.
+
+Breakpoint 1, main () at hello.c:41
+41        simputs( "Hello World!\n" );
+(gdb) disconnect
+Ending remote debugging.
+(gdb) target remote :51000
+Remote debugging using :51000
+main () at hello.c:41
+41        simputs( "Hello World!\n" );
+(gdb) c
+Continuing.
+Remote connection closed
+(gdb) 
+	</programlisting>
+
+	<para>
+	  Unlike with the <command>detach</command> command, when debugging is
+	  reconnected through <command>target&nbsp;remote</command>, the
+	  target is still at the point where execution terminated previously.
+	</para>
       </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&gdb; Extended Remote Command Dialogues
+      </title>
+
+      <para>
+	The following sections show diagramatically how various &gdb; commands
+	map onto &rsp; packet exchanges to implement the desired behavior with
+	extended remote debugging (i.e when connecting with
+	<command>target&nbsp;extended-remote</command>).
+      </para>
+
+      <sect2>
+	<title>
+	  The <command>target&nbsp;extended-remote</command> Command
+	</title>
+
+	<para>
+	  The &rsp; packet exchanges to implement the &gdb;
+	  <command>target&nbsp;extended-remote</command> command are shown as a
+	  sequence diagram in <xref linkend="fig_exchange_ext_target_remote"/>.
+	</para>
+
+	<figure id="fig_exchange_ext_target_remote">
+	  <title>
+	    &rsp; packet exchanges for the &gdb;
+	    <command>target&nbsp;remote</command> command
+	  </title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-ext-target-remote.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="exchange-ext-target-remote.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The dialogue is almost identical to that for standard remote
+	  debugging (see <xref linkend="sec_exchange_target_remote"/>). The
+	  difference is the penultimate <command>!</command> packet, notifying
+	  the target that this is an extended remote connection.
+	</para>
+
+	<para>
+	  Through this exchange, the &gdb; client shows the following output:
+	</para>
+
+	<programlisting>
+(gdb) target extended-remote :51000
+Remote debugging using :51000
+0x00000100 in _start ()
+(gdb) 
+	</programlisting>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&gdb; Asynchronous Remote Command Dialogues
+      </title>
+
+      <para>
+	The dialogues for asynchronous debugging in general parallel their
+	synchronous equivalents. Thus the packet exchanges for
+	<command>target&nbsp;async</command> are identical to those for
+	<command>target&nbsp;remote</command> and the packet exchanges for
+	<command>target&nbsp;extended-async</command> are identical to those for
+	<command>target&nbsp;extended-remote</command>.
+      </para>
 
     </sect1>
 
@@ -1808,6 +2251,11 @@ main () at hello.c:41
     <title>
       &rsp; Server Implementation Example
     </title>
+
+    <para>
+      The examples used are based on the &rsp; server implementation for the
+      OpenRISC 1000.
+    </para>
 
     <sect1>
       <title>
