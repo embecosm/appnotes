@@ -9,13 +9,9 @@ Useful entities
 <!-- ========== Acronyms and abbreviations ========== -->
 
 <!ENTITY abi   "<acronym>ABI</acronym>">
-<!ENTITY bfd   "<acronym>BFD</acronym>">
-<!ENTITY coff  "<acronym>COFF</acronym>">
+<!ENTITY crc   "<acronym>CRC</acronym>">
 <!ENTITY dcr   "<acronym>DCR</acronym>">
 <!ENTITY dvr   "<acronym>DVR</acronym>">
-<!ENTITY elf   "<acronym>ELF</acronym>">
-<!ENTITY fp    "<acronym>FP</acronym>">
-<!ENTITY fsa   "<acronym>FSA</acronym>">
 <!ENTITY gcc   "<acronym>GCC</acronym>">
 <!ENTITY gdb   "<acronym>GDB</acronym>">
 <!ENTITY gnu   "<acronym>GNU</acronym>">
@@ -23,14 +19,11 @@ Useful entities
 <!ENTITY html  "<acronym>HTML</acronym>">
 <!ENTITY iss   "<acronym>ISS</acronym>">
 <!ENTITY jtag  "<acronym>JTAG</acronym>">
-<!ENTITY pc    "<acronym>PC</acronym>">
-<!ENTITY pdf   "<acronym>PDF</acronym>">
+<!ENTITY osi   "<acronym>OSI</acronym>">
+<!ENTITY npc   "<acronym>NPC</acronym>">
 <!ENTITY posix "<acronym>POSIX</acronym>">
-<!ENTITY rtems "<acronym>RTEMS</acronym>">
 <!ENTITY rsp   "<acronym>RSP</acronym>">
-<!ENTITY sal   "<acronym>SAL</acronym>">
 <!ENTITY soc   "<acronym>SoC</acronym>">
-<!ENTITY sp    "<acronym>SP</acronym>">
 <!ENTITY spr   "<acronym>SPR</acronym>">
 <!ENTITY usb   "<acronym>USB</acronym>">
 
@@ -38,37 +31,19 @@ Useful entities
 
 <!ENTITY or1k         "OpenRISC&nbsp;1000">
 <!ENTITY null         "<constant>NULL</constant>">
-<!ENTITY this         "<emphasis>THIS</emphasis>">
-<!ENTITY prev         "<emphasis>PREVIOUS</emphasis>">
-<!ENTITY next         "<emphasis>NEXT</emphasis>">
-<!ENTITY arch         "<emphasis>arch</emphasis>">
-<!ENTITY os           "<emphasis>os</emphasis>">
-
-<!ENTITY frame_info   "<structname>struct&nbsp;frame_info</structname>">
-<!ENTITY gdbarch      "<structname>struct&nbsp;gdbarch</structname>">
-<!ENTITY gdbarch_info "<structname>struct&nbsp;gdbarch_info</structname>">
-<!ENTITY gdbarch_tdep "<structname>struct&nbsp;gdbarch_tdep</structname>">
-<!ENTITY regcache     "<structname>struct&nbsp;regcache</structname>">
-<!ENTITY target_ops   "<structname>struct&nbsp;target_ops</structname>">
 
 <!-- ========== applications ========== -->
 
 <!-- = software applications = -->
 
-<!ENTITY binutils "<application class='software'>binutils</application>">
 <!ENTITY linux    "<application class='software'>Linux</application>">
 <!ENTITY or1ksim  "<application class='software'>Or1ksim</application>">
-<!ENTITY systemc  "<application class='software'>SystemC</application>" >
 
 <!-- = Hardware applications = -->
 
 <!-- = Commands = -->
 
-<!ENTITY xterm "<application>xterm</application>" >
-
 <!-- = Libraries = -->
-
-<!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
 
 <!-- ========== Cross references ========== -->
 
@@ -116,10 +91,10 @@ $Id$
 
 <book lang="en_GB">
   <title>
-    Howto: Remote Serial Protocol for the &gnu; Debugger
+    Howto: &gdb; Remote Serial Protocol
   </title>
   <subtitle>
-    Writing a RSP Server
+    Writing a &rsp; Server
   </subtitle>
 
   <bookinfo>
@@ -208,7 +183,7 @@ $Id$
       </para>
 
       <para>
-	The software for &gnu; Debugger, including the code to support the
+	The software for the &gnu; Debugger, including the code to support the
 	&or1k; written by &embecosm; and used in this document is licensed
 	under the &gpl_www;. For detailed licensing information see the files
 	<filename>COPYING</filename>, <filename>COPYING3</filename>,
@@ -256,6 +231,18 @@ $Id$
 	as the Motorola 680xx and Sun SPARC. The User Guide offers advice on
 	how these stubs can be modified and integrated for new targets.
       </para>
+      <indexterm>
+	<primary>stub code for &rsp; server</primary>
+      </indexterm>
+      <indexterm>
+	<primary>server stub code</primary>
+	<see>for &rsp;</see>
+      </indexterm>
+      <indexterm>
+	<primary>example</primary>
+	<secondary>stub code for &rsp;server</secondary>
+	<see>stub code for &rsp; server</see>
+      </indexterm>
 
       <para>
 	However the examples have not been changed for several years, and the
@@ -272,11 +259,14 @@ $Id$
       </para>
 
       <para>
-	Throughout examples are provided from the author's experience
+	Throughout, examples are provided from the author's experience
 	implementing a &rsp; server for the &or1k; architecture. This document
 	captures the learning experience, with the intention of helping
 	others.
       </para>
+      <indexterm>
+	<primary>&or1k; example</primary>
+      </indexterm>
 
     </sect1>
 
@@ -335,7 +325,7 @@ $Id$
 	</para>
 	<indexterm>
 	  <primary>Doxygen</primary>
-	  <secondary>use with &gdb; for &or1k;</secondary>
+	  <secondary>use with &rsp; server for &or1k;</secondary>
 	</indexterm>
 
 	<para>
@@ -346,7 +336,11 @@ $Id$
 	  tool chain is documented in Embecosm Application Note 2 <xref
 	  linkend="ref_app_note_2" />.
 	</para>
-
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>porting</secondary>
+	  <tertiary>Howto</tertiary>
+	</indexterm>
     
       </sect2>
 
@@ -361,24 +355,56 @@ $Id$
 	  supplemented by the less formal &gdb; Wiki at <ulink
 	  url="http://sourceware.org/gdb/wiki/">sourceware.org/gdb/wiki/</ulink>. 
 	</para>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>website</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>wiki</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>website</primary>
+	  <see>&gdb;</see>
+	</indexterm>
+	<indexterm>
+	  <primary>wiki</primary>
+	  <see>&gdb;</see>
+	</indexterm>
 
 	<para>
 	  The &gdb; developer community communicate through the &gdb; mailing
 	  lists and using <acronym>IRC</acronym> chat. These are always good
 	  places to find solutions to problems.
 	</para>
-
-	<para>
-	  The main mailing list for discussion is gdb@sourceware.org, although
-	  for detailed understanding, the patches mailing list,
-	  gdb-patches@sourceware.org. See the main &gdb; website for details
-	  of subscribing to these mailing lists.
-	</para>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary><acronym>IRC</acronym></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><acronym>IRC</acronym></primary>
+	  <see>&gdb;</see>
+	</indexterm>
 
 	<para>
 	  <acronym>IRC</acronym> is channel <literal>#gdb</literal> on
 	  <literal>irc.freenode.net</literal>.
 	</para>
+
+	<para>
+	  The main mailing list for discussion is gdb@sourceware.org, although
+	  for detailed insight, take a look at the patches mailing list,
+	  gdb-patches@sourceware.org. See the main &gdb; website for details
+	  of subscribing to these mailing lists.
+	</para>
+	<indexterm>
+	  <primary>&gdb;</primary>
+	  <secondary>mailing lists</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>mailing lists</primary>
+	  <see>&gdb;</see>
+	</indexterm>
 
       </sect2>
 
@@ -455,26 +481,51 @@ $Id$
 
     <para>
       The protocol supports a wide range of connection types: direct serial
-      devices, UDP/IP, TCP/IP and *nix style pipes. Historically &rsp; has
-      only required 7-bit clean connections. However more recent commands
+      devices, UDP/IP, TCP/IP and &posix; pipes. Historically &rsp;
+      has only required 7-bit clean connections. However more recent commands
       added to the protocol assume an 8-bit clean connection. It is also worth
       noting, that although UDP/IP is supported, lost packets with unreliable
       transport methods such as this may lead to &gdb; reporting errors.
     </para>
+    <indexterm>
+      <primary>7-bit clean</primary>
+    </indexterm>
+    <indexterm>
+      <primary>8-bit clean</primary>
+    </indexterm>
+    <indexterm>
+      <primary>serial device connection</primary>
+    </indexterm>
+    <indexterm>
+      <primary>direct serial connection</primary>
+      <see>serial device connection</see>
+    </indexterm>
+    <indexterm>
+      <primary>UDP/IP connection</primary>
+    </indexterm>
+    <indexterm>
+      <primary>TCP/IP connection</primary>
+    </indexterm>
+    <indexterm>
+      <primary>pipe connection</primary>
+    </indexterm>
 
     <para>
-      &rsp; is most commonly is of value in embedded environments, where it is
+      &rsp; is most commonly of value in embedded environments, where it is
       not possible to run &gdb; natively on the target.
     </para>
 
     <para>
-      The protocol is layered, approximately following the OSI model as shown
+      The protocol is layered, approximately following the &osi; model as shown
       in <xref linkend="fig_rsp_layers" />.
     </para>
+    <indexterm>
+      <primary>&osi; layers</primary>
+    </indexterm>
 
     <figure id="fig_rsp_layers">
       <title>
-	OSI Layers in the Remote Serial Protocol
+	&osi; Layers in the Remote Serial Protocol
       </title>
       <mediaobject>
 	  <imageobject>
@@ -500,8 +551,8 @@ $Id$
       </title>
 
       <para>
-	The &gdb; session acts as the &rsp; client with the target acting as
-	server. The client issues packets which are requests for
+	The &gdb; program acts as the &rsp; client with the target acting as
+	the &rsp; server. The client issues packets which are requests for
 	information or action. Depending on the nature of the client packet,
 	the server may respond with a packet of its own.
       </para>
@@ -519,12 +570,39 @@ $Id$
 
       <para>
 	The serial connection is established in response to a
-	<command>target&nbsp;remote</command>,
-	<command>target&nbsp;extended-remote</command> or
-	<command>target&nbsp;extended-async</command> command from the &gdb;
+	<command>target&nbsp;remote</command> or
+	<command>target&nbsp;extended-remote</command> command from the &gdb;
 	client. The way the server handles this depends on the nature of the
 	serial connection:
       </para>
+      <indexterm>
+	<primary>&osi; layers</primary>
+	<secondary>session layer</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>session layer</primary>
+	<see>&osi; layers</see>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary><command>target&nbsp;remote</command> command</secondary>
+      </indexterm>
+      <indexterm>
+	<primary><command>target&nbsp;remote</command> command</primary>
+	<see>&gdb; commands</see>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;extended-remote</command> command
+	</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>
+	  <command>target&nbsp;extended-remote</command> command
+	</primary>
+	<see>&gdb; commands</see>
+      </indexterm>
 
       <itemizedlist>
 
@@ -536,6 +614,11 @@ $Id$
 	    connection is established, packets are read from and written to
 	    the device.
 	  </para>
+	  <indexterm>
+	    <primary>
+	      serial device connection
+	    </primary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
@@ -547,6 +630,16 @@ $Id$
 	    <function>accept</function> function) will yield a file
 	    descriptor, which can be used for reading and writing packets.
 	  </para>
+	  <indexterm>
+	    <primary>
+	      UDP/IP connection
+	    </primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary>
+	      TCP/IP connection
+	    </primary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
@@ -555,13 +648,18 @@ $Id$
 	    created, with standard input and output as the file descriptors
 	    for packet reading and writing.
 	  </para>
+	  <indexterm>
+	    <primary>
+	      pipe connection
+	    </primary>
+	  </indexterm>
 	</listitem>
 
       </itemizedlist>
 
       <para>
 	In each case there is no specific requirement that the target be
-	either running of stopped. &gdb; will establish via &rsp; commands the
+	either running or stopped. &gdb; will establish via &rsp; commands the
 	state of the target once the connection is established.
       </para>
 
@@ -578,19 +676,35 @@ $Id$
 
    </sect1>
 
-    <sect1>
+    <sect1 id="sec_presentation_layer">
       <title>
 	Presentation Layer: Packet Transfer
       </title>
 
       <para>
-	The basic format of a RSP packet is shown in <xref
+	The basic format of a &rsp; packet is shown in <xref
 	linkend="fig_packet_format" />.
       </para>
+      <indexterm>
+	<primary>&osi; layers</primary>
+	<secondary>presentation layer</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>presentation layer</primary>
+	<see>&osi; layers</see>
+      </indexterm>
+      <indexterm>
+	<primary>&rsp; packet</primary>
+	<secondary>format</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>packet format</primary>
+	<see>&rsp; packet</see>
+      </indexterm>
 
       <figure id="fig_packet_format">
 	<title>
-	  OSI Layers in the Remote Serial Protocol
+	  &rsp; Packet Format
 	</title>
 	<mediaobject>
 	  <imageobject>
@@ -616,6 +730,14 @@ $Id$
 	characters in the packet data modulo 256. It is represented as a pair
 	of hexadecimal digits.
       </para>
+      <indexterm>
+	<primary>&rsp; packet</primary>
+	<secondary>checksum</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>checksum</primary>
+	<see>&rsp; packet</see>
+      </indexterm>
 
       <para>
 	Where the characters '#' or '$' appear in the packet data, they must
@@ -623,21 +745,73 @@ $Id$
 	by the original character XORed with 0x20. The character '}' itself
 	must also be escaped.
       </para>
+      <indexterm>
+	<primary>&rsp; packet</primary>
+	<secondary>escaped characters</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>escaped characters</primary>
+	<see>&rsp; packet</see>
+      </indexterm>
+      <indexterm>
+	<primary>#</primary>
+	<secondary>escaped character</secondary>
+	<see>&rsp; packet</see>
+      </indexterm>
+      <indexterm>
+	<primary>$</primary>
+	<secondary>escaped character</secondary>
+	<see>&rsp; packet</see>
+      </indexterm>
+      <indexterm>
+	<primary>}</primary>
+	<secondary>escaped character</secondary>
+	<see>&rsp; packet</see>
+      </indexterm>
 
       <para>
 	The small number of packets which transmit data as raw binary (thus
 	requiring an 8-bit clean connection) must also escape the characters
 	'#', '$' and '}' if they occur in the binary data.
       </para>
+      <indexterm>
+	<primary>&rsp; packet</primary>
+	<secondary>binary data</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>binary data</primary>
+	<see>&rsp; packet</see>
+      </indexterm>
 
       <para>
 	Reply packets sent by the server may use run-length encoding. The
 	format is to follow the character being repeated by '*' and then the
 	character whose ASCII code is 28 greater than the total repeat, so
 	long as it remains a printable ASCII character (i.e. not greater than
-	126). Thus the string "XXXXX" would be represented as "X*!" ('!' is
-	ASCII 33).
+	126). Thus the string <literal>"XXXXX"</literal> would be represented
+	as <literal>"X*!"</literal> (<literal>'!'</literal> is ASCII 33).
       </para>
+      <indexterm>
+	<primary>&rsp; packet</primary>
+	<secondary>reply packet</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>reply packet</primary>
+	<see>&rsp; packet</see>
+      </indexterm>
+      <indexterm>
+	<primary>&rsp; packet</primary>
+	<secondary>run-length encoding</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>run-length encoding</primary>
+	<see>&rsp; packet</see>
+      </indexterm>
+      <indexterm>
+	<primary>*</primary>
+	<secondary>run-length encoding</secondary>
+	<see>&rsp; packet</see>
+      </indexterm>
 
       <para>
 	This feature is suitable for run-lengths of 4, 5 and 8-97. Run lengths
@@ -657,7 +831,7 @@ $Id$
 
       <sect2>
 	<title>
-	  Packet Acknowledgement
+	  Packet Acknowledgment
 	</title>
 
 	<para>
@@ -665,6 +839,20 @@ $Id$
 	  indicate satisfactory receipt, with valid checksum or '-' to
 	  indicate failure and request retransmission.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet</primary>
+	  <secondary>acknowledgment</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>+</primary>
+	  <secondary>packet acknowledgment</secondary>
+	  <see>&rsp; packet</see>
+	</indexterm>
+	<indexterm>
+	  <primary>-</primary>
+	  <secondary>packet acknowledgment</secondary>
+	  <see>&rsp; packet</see>
+	</indexterm>
 
 	<para>
 	  Retransmission should be requested until a satisfactory packet is
@@ -679,9 +867,17 @@ $Id$
 
 	<para>
 	  The &gdb; client may wish to interrupt the server (e.g. when the
-	  user has pressed ctrl-C). This is indicated by transmissiting the
+	  user has pressed ctrl-C). This is indicated by transmitting the
 	  character 0x03 between packets.
 	</para>
+	<indexterm>
+	  <primary>interrupt</primary>
+	  <secondary>from client to server</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>control-C</primary>
+	  <see>interrupt</see>
+	</indexterm>
 
 	<para>
 	  If the server wishes to handle such interrupts, it should
@@ -702,24 +898,41 @@ $Id$
       <para>
 	&rsp; commands from the client to the server are textual strings,
 	optionally followed by arguments. Each command is sent in its own
-	packet. The commands fall into four groups:
+	packet. The packets fall into four groups:
       </para>
+      <indexterm>
+	<primary>&osi; layers</primary>
+	<secondary>application layer</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>application layer</primary>
+	<see>&osi; layers</see>
+      </indexterm>
 
       <orderedlist>
 
 	<listitem>
 	  <para>
-	    <emphasis>Commands requiring no acknowedgement</emphasis>. These
+	    <emphasis>Packets requiring no acknowledgment</emphasis>. These
 	    commands are: <command>f</command>, <command>i</command>,
 	    <command>I</command>, <command>k</command>, <command>R</command>,
 	    <command>t</command> and  <command>vFlashDone</command>.
 	  </para>
+	  <indexterm>
+	    <primary>&rsp; packets</primary>
+	    <secondary>types</secondary>
+	    <see>packet types</see>
+	  </indexterm>
+	  <indexterm>
+	    <primary>packet types</primary>
+	    <secondary>requiring no acknowledgment</secondary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
 	  <para>
-	    <emphasis>Commands requiring a simple acknowledgement
-	    packet</emphasis>. The acknowledgement is either
+	    <emphasis>Packets requiring a simple acknowledgment
+	    packet</emphasis>. The acknowledgment is either
 	    <command>OK</command>, <command>Enn</command> (where
 	    <command>nn</command> is an error number) or for some commands an
 	    empty packet (meaning "unsupported"). These commands are:
@@ -730,26 +943,38 @@ $Id$
 	    <command>vFlashWrite</command>, <command>X</command>,
 	    <command>z</command> and <command>Z</command>.
 	  </para>
+	  <indexterm>
+	    <primary>packet types</primary>
+	    <secondary>requiring simple acknowledgment</secondary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
 	  <para>
-	    <emphasis>Commands that return result data or an error
+	    <emphasis>Packets that return result data or an error
 	    code.</emphasis>. These commands are: <command>?</command>,
 	    <command>c</command>, <command>C</command>, <command>g</command>,
 	    <command>m</command>, <command>p</command>,
 	    <command>qxxxx</command>, <command>s</command>,
 	    <command>S</command> and most <command>vxxxx</command>.
 	  </para>
+	  <indexterm>
+	    <primary>packet types</primary>
+	    <secondary>returning data or error</secondary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
 	  <para>
-	    <emphasis>Deprecated commands which should no longer be
+	    <emphasis>Deprecated packets which should no longer be
 	    used</emphasis>. These commands are <command>b</command>,
 	    <command>B</command>, <command>d</command> and
 	    <command>r</command>.
 	  </para>
+	  <indexterm>
+	    <primary>packet types</primary>
+	    <secondary>deprecated</secondary>
+	  </indexterm>
 	</listitem>
 
       </orderedlist>
@@ -772,7 +997,7 @@ $Id$
       </tip>
 
       <para>
-	The &rsp; was developed ever several years, and represents an evolved
+	The &rsp; was developed over several years, and represents an evolved
 	standard, but one which had to keep backward compatibility. As a
 	consequence the detailed syntax can be inconsistent. For example most
 	commands are separated from their arguments by ':', but some use ','
@@ -796,8 +1021,11 @@ $Id$
 	    variant of this uses a custom server program to drive a physical
 	    interface to real hardware. This is most commonly seen with
 	    programs, running on the host, which drive a &jtag; link connected
-	    via a parallel port of USB.
+	    via a parallel port or &usb;.
 	  </para>
+	  <indexterm>
+	    <primary><command>gdbserver</command></primary>
+	  </indexterm>
 	</listitem>
 
 	<listitem>
@@ -824,6 +1052,12 @@ $Id$
 	program, or run an alternative program. This is discussed in more
 	detail later (see <xref linkend="sec_extended_remote"/>).
       </para>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;remote</command>
+	</secondary>
+      </indexterm>
 
       <para>
 	In general &gdb; assumes that when it connects to a target via &rsp;,
@@ -832,6 +1066,15 @@ $Id$
 	which allows the target to continue running. This is discussed in more
 	detail later (see <xref linkend="sec_extended_async"/>).
       </para>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;extended-remote</command>
+	</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>extended remote debugging</primary>
+      </indexterm>
 
       <sect2>
 	<title>
@@ -844,6 +1087,9 @@ $Id$
 	  suitable for powerful targets, where it is easy to invoke a program
 	  from the command line.
 	</para>
+	<indexterm>
+	  <primary><command>gdbserver</command></primary>
+	</indexterm>
 
 	<para>
 	  Generally this approach is not suitable for embedded systems.
@@ -861,6 +1107,9 @@ $Id$
 	  encapsulated in the server stubs supplied with the &gdb; source
 	  code.
 	</para>
+	<indexterm>
+	  <primary>stub code for &rsp; server</primary>
+	</indexterm>
 
 	<para>
 	  There are two key components of the code:
@@ -888,6 +1137,30 @@ $Id$
 	  <function>putDebugChar</function>. The user must supply the function
 	  <function>exceptionHandler</function> to set up exception handling.
 	</para>
+	<indexterm>
+	  <primary>stub code for &rsp; server</primary>
+	  <secondary><function>getDebugChar</function></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>getDebugChar</function></primary>
+	  <see>stub code for &rsp; server</see>
+	</indexterm>
+	<indexterm>
+	  <primary>stub code for &rsp; server</primary>
+	  <secondary><function>putDebugChar</function></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>putDebugChar</function></primary>
+	  <see>stub code for &rsp; server</see>
+	</indexterm>
+	<indexterm>
+	  <primary>stub code for &rsp; server</primary>
+	  <secondary><function>exceptionHandler</function></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>exceptionHandler</function></primary>
+	  <see>stub code for &rsp; server</see>
+	</indexterm>
 
 	<para>
 	  The serial connection is usually established on the first call to
@@ -898,7 +1171,7 @@ $Id$
 	</para>
 
 	<para>
-	  If the serial connection choses not to block on
+	  If the serial connection chooses not to block on
 	  <function>getDebugChar</function> then the exception handler should
 	  be prepared for this response, allowing the exception to be
 	  processed as normal.
@@ -918,14 +1191,62 @@ $Id$
 	</para>
 
 	<para>
-	  At startup, the first time this occurs, the target will be waiting
+	  At start up, the first time this occurs, the target will be waiting
 	  for the &gdb; client to send a packet to which it can respond. These
-	  dialogues will continue until the client &gdb; session wishes to
+	  dialogs will continue until the client &gdb; session wishes to
 	  <command>continue</command> or <command>step</command> the target
 	  (<command>c</command>, <command>C</command>, <command>i</command>,
 	  <command>I</command>, <command>s</command> or <command>S</command>
 	  packet).
 	</para>
+	<indexterm>
+	  <primary><command>c</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>c</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>C</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>C</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>i</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>i</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>I</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>I</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>s</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>s</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>S</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>S</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  Thereafter control is received only when another exception has
@@ -934,6 +1255,22 @@ $Id$
 	  target &rsp; server should be to send the reply packet back to the
 	  client &gdb; session.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>continue</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>continue</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>step</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
 
 	<caution>
 	  <para>
@@ -942,7 +1279,11 @@ $Id$
 	    case. In other words, it always sends a reply packet to the
 	    client, even on first execution.
 	  </para>
-
+	  <indexterm>
+	    <primary>stub code for &rsp; server</primary>
+	    <secondary>limitations</secondary>
+	  </indexterm>
+	    
 	  <para>
 	    This causes two problems. First, the
 	    <function>putDebugChar</function> is called before
@@ -961,13 +1302,17 @@ $Id$
 
 	<para>
 	  The final issue that server code needs to address is the issue of
-	  BREAK signalling from the client. This is a raw 0x03 byte sent from
+	  BREAK signaling from the client. This is a raw 0x03 byte sent from
 	  the client between packets. Typically this is in response to a
 	  ctrl-C from the client &gdb; session.
 	</para>
+	<indexterm>
+	  <primary>interrupt</primary>
+	  <secondary>from client to server</secondary>
+	</indexterm>
 
 	<para>
-	  If the target server wishes to handle such signalling, it must
+	  If the target server wishes to handle such signaling, it must
 	  provide an event driven <function>getDebugChar</function>, triggered
 	  when data is received, which can act on such BREAK signals.
 	</para>
@@ -989,6 +1334,10 @@ $Id$
 	  &rsp;. This allows the &gdb; experience to be identical whether
 	  simulator or real silicon is used.
 	</para>
+	<indexterm>
+	  <primary>simulator</primary>
+	  <secondary>connecting via &rsp;</secondary>
+	</indexterm>
 
 	<para>
 	  The general approach is the same as that for implementing code on a
@@ -1002,9 +1351,10 @@ $Id$
 	  In general the simulator will use the same form of connection as
 	  when debugging real silicon. Where the &rsp; server for real silicon
 	  is implemented on the target, or <command>gdbserver</command> is
-	  used a serial device or TCP/IP or UDP/IP. Where the &rsp; interface
-	  for real silicon is via a pipe to a program driving &jtag; a pipe
-	  interface should be used to launch the simulator.
+	  used, connection via a serial device, TCP/IP or UDP/IP is
+	  appropriate. Where the &rsp; interface for real silicon is via a
+	  pipe to a program driving &jtag; a pipe interface should be used to
+	  launch the simulator.
 	</para>
 
 	<para>
@@ -1022,8 +1372,12 @@ $Id$
 	<para>
 	  Many embedded systems will offer &jtag; ports for debugging. Most
 	  commonly these are connected to a host workstation running &gdb; via
-	  the parallel port of USB.
+	  the parallel port or &usb;.
 	</para>
+	<indexterm>
+	  <primary>&jtag;</primary>
+	  <secondary>supporting with &rsp; server</secondary>
+	</indexterm>
 
 	<para>
 	  In the past users would implement a custom target interface in &gdb;
@@ -1048,6 +1402,9 @@ $Id$
 	  the simulator, thus allowing the debugging experience to be the same
 	  whether real silicon or a simulator is used.
 	</para>
+	<indexterm>
+	  <primary>pipe connection</primary>
+	</indexterm>
 
       </sect2>
 
@@ -1066,7 +1423,7 @@ $Id$
       </title>
 
       <para>
-	&gdb; provides four flavours of remote debugging via the &rsp;
+	&gdb; provides two flavors of remote debugging via the &rsp;
       </para>
 
       <orderedlist>
@@ -1076,8 +1433,12 @@ $Id$
 	    documented in the &gdb; User Guide (<xref
 	    linkend="ref_gdb_ug"/>).
 	  </para>
+	  <indexterm>
+	    <primary>&gdb; commands</primary>
+	    <secondary><command>target&nbsp;remote</command></secondary>
+	  </indexterm>
 	</listitem>
-
+	
 	<listitem>
 	  <para>
 	    <command>target extended-remote</command>. The &rsp; server is
@@ -1085,26 +1446,15 @@ $Id$
 	    the connection. The user is able to restart the target program, or
 	    load and run an alternative program.
 	  </para>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    <command>target async</command>. &gdb; generally assumes that the
-	    target is stopped when in dialogue with the &gdb; client. In
-	    asynchronous remote debugging, the target continues execution
-	    while the client &gdb; session has control. However this is
-	    entirely a function of the &gdb; client, and has no impact on the
-	    &rsp; server implementation.
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    <command>target extended-async</command>. This is the asynchronous
-	    version of extended remote debugging. It too is entirely a
-	    function of the &gdb; client, and has no impact on the &rsp;
-	    server implementation.
-	  </para>
+	  <indexterm>
+	    <primary>&gdb; commands</primary>
+	    <secondary>
+	      <command>target&nbsp;extended-remote</command>
+	    </secondary>
+	  </indexterm>
+	  <indexterm>
+	    <primary>extended remote debugging</primary>
+	  </indexterm>
 	</listitem>
 
       </orderedlist>
@@ -1126,20 +1476,53 @@ $Id$
 	    <para>
 	      <command>?</command>. Report why the target halted.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>?</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>?</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      <command>c</command>, <command>C</command>, <command>s</command>
 	      and <command>S</command>. Continue or step the target (possibly
-	      with a particular signal).
+	      with a particular signal). A minimal implementation may not
+	      support stepping or continuing with a signal.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>c</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>C</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>s</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>S</command>packet</secondary>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      <command>D</command>. Detach from the client.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>D</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>D</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1147,6 +1530,22 @@ $Id$
 	      <command>g</command> and <command>G</command>. Read or write
 	      general registers.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>g</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>g</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>G</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>G</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1156,6 +1555,22 @@ $Id$
 	      significance of this will depend on whether the target supports
 	      threads.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qC</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qC</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>H</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>H</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1163,6 +1578,14 @@ $Id$
 	      <command>k</command>. Kill the target. The semantics of this are
 	      not clearly defined. Most targets should probably ignore it.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>k</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>k</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1170,6 +1593,22 @@ $Id$
 	      <command>m</command> and <command>M</command>. Read or write
 	      main memory.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>m</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>m</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>M</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>M</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1177,6 +1616,22 @@ $Id$
 	      <command>p</command> and <command>P</command>. Read or write a
 	      specific register.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>p</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>p</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>P</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>P</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1184,6 +1639,14 @@ $Id$
 	      <command>qOffsets</command>. Report the offsets to use when
 	      relocating downloaded code.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qOffsets</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qOffsets</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1192,6 +1655,14 @@ $Id$
 	      the &rsp; server. As a minimum, just the packet size can be
 	      reported.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qSupported</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qSupported</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1201,6 +1672,14 @@ $Id$
 	      any symbol table data. A minimal implementation should request
 	      no data.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qSymbol</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qSymbol</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1209,12 +1688,28 @@ $Id$
 	      actions are supported. A minimal implementation should return
 	      an empty packet to indicate no actions are supported.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>vCont?</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>vCont?</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      <command>X</command>. Load binary data.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>X</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>X</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1222,6 +1717,22 @@ $Id$
 	      <command>z</command> and <command>Z</command>. Clear or set
 	      breakpoints or watchpoints.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>z</command>packets</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>z</command>packets</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>Z</command>packets</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>Z</command>packets</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 	</itemizedlist>
 
@@ -1246,12 +1757,28 @@ $Id$
 	      <command>!</command>. Advise the target that extended remote
 	      debugging is being used.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>!</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>!</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      <command>R</command>. Restart the program being run.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>R</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>R</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1261,6 +1788,14 @@ $Id$
 	      target has no concept of a process ID, but should return an
 	      error code.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>vAttach</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>vAttach</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	  <listitem>
@@ -1269,6 +1804,14 @@ $Id$
 	      run. A minimal implementation may restrict this to the case
 	      where only the current program may be run again.
 	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>vRun</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>vRun</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
 	  </listitem>
 
 	</itemizedlist>
@@ -1281,18 +1824,143 @@ $Id$
 	</title>
 
 	<para>
-	  There are two flavours of asynchronous remote debugging,
-	  corresponding to the two synchronous remote debugging styles. These
-	  are established with the <command>target&nbsp;async</command> and
-	  <command>target&nbsp;extended-async</command> commands
+	  The most recent versions of &gdb; have started to introduce the
+	  concept of asynchronous debugging. This is primarily for use with
+	  targets capable of "non-stop" execution. Such targets are able to
+	  stop the execution of a single thread in a multithreaded
+	  environment, allowing it to be debugged while others continue to
+	  execute.
+	</para>
+	<indexterm>
+	  <primary>asynchronous remote debugging</primary>
+	</indexterm>
+	<indexterm>
+	  <primary>non-stop execution</primary>
+	</indexterm>
+
+	<para>
+	  This still represents technology under development. In
+	  &gdb;&nbsp;6.8, the commands <command>target&nbsp;async</command>
+	  and <command>target&nbsp;extended-async</command> were provided to
+	  specify remote debugging of a non-stop target in asynchronous
+	  fashion.
 	</para>
 
 	<para>
-	  Whether or not asynchronous debugging is in operation should be
-	  invisible to the &rsp; server on the target. It is entirely a
-	  feature of the &gdb; client. This is why there is no equivalent of the
-	  <command>!</command> packet to indicate asynchronous debugging.
+	  The mechanism will change in the future, with &gdb; flags set to
+	  specify asynchronous interpretation of commands, which are
+	  otherwise unchanged. Readers particularly interested in this area
+	  should look at the current development version of &gdb; and the
+	  discussions in the various &gdb; newsgroups.
 	</para>
+
+	<para>
+	  Asynchronous debugging requires that the target support packets
+	  specifying execution of particular threads. The most significant of
+	  these are:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <command>H</command>. To specify which thread a subsequent
+	      command should apply to.
+	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>H</command>packet</secondary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>q</command> (various packets). The query packets
+	      related to threads, <command>qC</command>,
+	      <command>qfThreadInfo</command>,
+	      <command>qsThreadInfo</command>, <command>qGetTLSAddr</command>
+	      and <command>qThreadExtraInfo</command> will need to be
+	      implemented.
+	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qfThreadInfo</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qfThreadInfo</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qsThreadInfo</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qsThreadInfo</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>qThreadExtraInfo</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>qThreadExtraInfo</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>T</command>. To report if a particular thread is alive.
+	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>T</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>T</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>vCont</command>. To specify step or continue actions
+	      specific to one or more threads.
+	    </para>
+	    <indexterm>
+	      <primary>&rsp; packet types</primary>
+	      <secondary><command>vCont</command>packet</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><command>vCont</command>packet</primary>
+	      <see>&rsp; packet types</see>
+	    </indexterm>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  In addition, non-stop targets should also support the
+	  <command>T</command> response to <command>continue</command> or
+	  <command>step</command> commands, so that status of individual
+	  threads can be reported.
+	</para>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>T</command> stop packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>T</command> stop packet</primary>
+	  <see>&rsp; stop packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>continue</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
 
       </sect2>
 
@@ -1300,13 +1968,13 @@ $Id$
 
     <sect1>
       <title>
-	&gdb; Standard Remote Command Dialogues
+	&gdb; Standard Remote Command Dialogs
       </title>
 
       <para>
-	The following sections show diagramatically how various &gdb; commands
-	map onto &rsp; packet exchanges to implement the desired behavior with
-	standard remote debugging (i.e when connecting with
+	The following sections show diagrammatically how various &gdb;
+	commands map onto &rsp; packet exchanges. These implement the desired
+	behavior with standard remote debugging (i.e when connecting with
 	<command>target&nbsp;remote</command>).
       </para>
 
@@ -1320,6 +1988,14 @@ $Id$
 	  <command>target&nbsp;remote</command> command are shown as a
 	  sequence diagram in <xref linkend="fig_exchange_target_remote"/>.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>target&nbsp;remote</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>target&nbsp;remote</command></secondary>
+	</indexterm>
 
 	<figure id="fig_exchange_target_remote">
 	  <title>
@@ -1355,16 +2031,68 @@ $Id$
 	  hex characters + 1 character for the 'G', a total of 281
 	  (hexadecimal 0x119) characters.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>qSupported</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>?</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>H</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>qC</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>qOffsets</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>g</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>qSymbol</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  The client then asks why the target halted. For a standard remote
-	  connection (rather than extended or asynchronous remote connection),
-	  the target must be running, even if it has halted for a signal. So
-	  the client will verify that the reply is not <command>W</command>
-	  (exited) or <command>X</command> (terminated with signal). In this
-	  case the target reports it has stopped due to a TRAP exception.
+	  connection (rather than extended remote connection), the target must
+	  be running, even if it has halted for a signal. So the client will
+	  verify that the reply is not <command>W</command> (exited) or
+	  <command>X</command> (terminated with signal). In this case the
+	  target reports it has stopped due to a TRAP exception.
 	</para>
-
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>S</command> stop packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>S</command> stop packet</primary>
+	  <see>&rsp; stop packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>W</command> stop packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>W</command> stop packet</primary>
+	  <see>&rsp; stop packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>X</command> stop packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>X</command> stop packet</primary>
+	  <see>&rsp; stop packet types</see>
+	</indexterm>
+	    
 	<para>
 	  The next packet is an instruction from the client that any future
 	  <command>step</command> or <command>continue</command> commands
@@ -1375,11 +2103,20 @@ $Id$
 	  existing value", which suits in this case&mdash;since it is never
 	  set explicitly, it will be the NULL thread ID, which is appropriate.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>continue</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
 
 	<para>
-	  The next packet requests any offsets for loading binary data. At the
-	  minimum this must return offsets for the text, data and BSS sections
-	  of an executable&mdash;in this example all zero.
+	  The next packet (<command>qOffsets</command>) requests any offsets
+	  for loading binary data. At the minimum this must return offsets for
+	  the text, data and BSS sections of an executable&mdash;in this
+	  example all zero.
 	</para>
 
 	<note>
@@ -1398,8 +2135,8 @@ $Id$
 
 	<para>
 	  Finally the client offers to supply any symbolic data required by
-	  the client. In this example, no data is needed, so a reply of "OK"
-	  is sent.
+	  the server. In this example, no data is needed, so a reply of
+	  <literal>"OK"</literal> is sent.
 	</para>
 
 	<para>
@@ -1427,6 +2164,18 @@ Remote debugging using :51000
 	  a text section of 4752 (0x1290) bytes at address 0x0 and data
 	  section of 15 (0xe) bytes at address 0x1290 is loaded.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>load</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>load</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>load</command></secondary>
+	</indexterm>
 
 	<figure id="fig_exchange_load">
 	  <title>
@@ -1453,19 +2202,41 @@ Remote debugging using :51000
 
 	<para>
 	  The first packet is a binary write of zero bytes
-	  (<command>X0,0:</command>). A reply of "OK" indicates the target
-	  supports binary writing, an empty reply indicates that binary write
-	  is not supported, in which case the data will be loaded using
-	  <command>M</command> packets.
+	  (<command>X0,0:</command>). A reply of <literal>"OK"</literal>
+	  indicates the target supports binary writing, an empty reply
+	  indicates that binary write is not supported, in which case the data
+	  will be loaded using <command>M</command> packets.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet</primary>
+	  <secondary>binary data</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>X</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>M</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>P</command> packet</secondary>
+	</indexterm>
 
 	<note>
 	  <para>
-	    This initial dialogue is 7-bit clean, even though it uses the
+	    This initial dialog is 7-bit clean, even though it uses the
 	    <command>X</command> packet. It can therefore safely be used with
 	    connections that are not 8-bit clean.
 	  </para>
 	</note>
+	<indexterm>
+	  <primary>7-bit clean</primary>
+	</indexterm>
+	<indexterm>
+	  <primary>8-bit clean</primary>
+	</indexterm>
 
 	<caution>
 	  <para>
@@ -1521,7 +2292,11 @@ Transfer rate: 5 KB/sec, 238 bytes/write.
 	  example in the following command sequence, there is no &rsp;
 	  traffic.
 	</para>
-
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>print</command></secondary>
+	</indexterm>
+	    
 	<programlisting>
 (gdb) print $pc
 $1 = (void (*)()) 0x1264 &lt;main+16&gt;
@@ -1542,6 +2317,10 @@ $1 = (void (*)()) 0x1264 &lt;main+16&gt;
 	  client, so repeated examination of a memory location will lead to
 	  multiple <command>m</command> packets for the same location.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>m</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  The packet exchanges to implement the &gdb;
@@ -1550,6 +2329,18 @@ $1 = (void (*)()) 0x1264 &lt;main+16&gt;
 	  linkend="fig_exchange_disas"/>. In this example the
 	  <function>simputc</function> function is disassembled.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>disassemble</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>disassemble</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>disassemble</command></secondary>
+	</indexterm>
 
 	<figure id="fig_exchange_disas">
 	  <title>
@@ -1613,6 +2404,26 @@ End of assembler dump.
 	  continued with a <command>s</command>, <command>S</command>,
 	  <command>c</command> or <command>C</command> packet.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>H</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>s</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>S</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>c</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>C</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  The newer mechanism uses the <command>vCont:</command> packet to
@@ -1620,6 +2431,14 @@ End of assembler dump.
 	  availability of the <command>vCont:</command> packet is established
 	  using the <command>vCont?</command> packet.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>vCont</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>vCont?</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  The simplest &gdb; execution command is the <command>stepi</command>
@@ -1629,6 +2448,18 @@ End of assembler dump.
 	  linkend="fig_exchange_stepi"/>. In this example the instruction at
 	  address 0x100 is executed.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>stepi</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>stepi</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>stepi</command></secondary>
+	</indexterm>
 
 	<figure id="fig_exchange_stepi">
 	  <title>
@@ -1665,7 +2496,19 @@ End of assembler dump.
 	  <command>m</command> packet to obtain the 4 bytes of instruction at
 	  that address.
 	</para>
-
+	<indexterm>
+	  <primary>&gdb; architecture specification</primary>
+	</indexterm>
+	<indexterm>
+	  <primary>
+	    <function>gdbarch_single_step_through_delay</function>
+	  </primary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>m</command> packet</secondary>
+	</indexterm>
+	  
 	<para>
 	  The next packet, <command>vCont?</command> from the client seeks to
 	  establish if the server supports the <command>vCont</command>
@@ -1698,7 +2541,7 @@ End of assembler dump.
 	<note>
 	  <para>
 	    The &gdb; client remembers the thread currently in use. It does
-	    not issue futher <command>Hc</command> packets unless the thread
+	    not issue further <command>Hc</command> packets unless the thread
 	    has to change.
 	  </para>
 	</note>
@@ -1709,23 +2552,35 @@ End of assembler dump.
 	  completed. The reply indicates that the server stopped for signal 5
 	  (TRAP exception).
 	</para>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>S</command> stop packet</secondary>
+	</indexterm>
 
 	<caution>
 	  <para>
 	    In the &rsp;, the <command>s</command> packet indicates stepping
 	    of a single machine instruction, <emphasis>not</emphasis> a high
-	    level. In this way it maps to &gdb;'s <command>stepi</command>
-	    command, <emphasis>not</emphasis> its <command>step</command>
-	    command (which confusingly can be abbreviated to just
-	    <command>s</command>).
+	    level statement. In this way it maps to &gdb;'s
+	    <command>stepi</command> command, <emphasis>not</emphasis> its
+	    <command>step</command> command (which confusingly can be
+	    abbreviated to just <command>s</command>).
 	  </para>
 	</caution>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
 
 	<para>
 	  The last two exchanges are a <command>g</command> and
 	  <command>m</command> packet. These allow &gdb; to reload its
 	  register cache and note the instruction just executed.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>g</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  Through this exchange, the &gdb; client shows the following output:
@@ -1752,6 +2607,14 @@ End of assembler dump.
 	  packet exchanges are also required to provide information to be
 	  displayed about the high level data structures, such as the stack.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
 
 	<para>
 	  The &rsp; packet exchanges to implement the &gdb;
@@ -1759,6 +2622,26 @@ End of assembler dump.
 	  <xref linkend="fig_exchange_step"/>. In this example the first
 	  instruction of a C <function>main</function> function is executed.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>m</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>s</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>g</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>s</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>S</command> stop packet</secondary>
+	</indexterm>
 
 	<figure id="fig_exchange_step">
 	  <title>
@@ -1788,6 +2671,14 @@ End of assembler dump.
 	  although, since this is not the first step, there are no
 	  <command>vCont?</command> or <command>Hc</command> packets.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>vCont?</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>H</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  The high level language step is mapped by the client &gdb; session
@@ -1799,7 +2690,7 @@ End of assembler dump.
 	  After the step, are a series of reads of data words, using
 	  <command>m</command> packets. The first group are from the
 	  code. This is the first execution in a new function, and the frame
-	  analysis functions of the &gdb; client are analyising the function
+	  analysis functions of the &gdb; client are analyzing the function
 	  prologue, to establish the location of key values (stack pointer,
 	  frame pointer, return address).
 	</para>
@@ -1836,6 +2727,14 @@ main () at hello.c:41
 	  execution. A simple implementation need not trap the
 	  exit&mdash;&gdb; will handle the loss of connection quite cleanly.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>continue</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>continue</command></secondary>
+	</indexterm>
 
 	<para>
 	  The &rsp; packet exchanges to implement the &gdb;
@@ -1873,6 +2772,34 @@ main () at hello.c:41
 	  <command>step</command> or <command>stepi</command> command (see
 	  <xref linkend="fig_exchange_stepi"/>).
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>m</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>vCont?</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>H</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>s</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>g</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>c</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>S</command> stop packet</secondary>
+	</indexterm>
 
 	<para>
 	  In this example the
@@ -1884,6 +2811,14 @@ main () at hello.c:41
 	  (<command>S05</command> packet) and register cache reload
 	  (<command>g</command> packet).
 	</para>
+	<indexterm>
+	  <primary>&gdb; architecture specification</primary>
+	</indexterm>
+	<indexterm>
+	  <primary>
+	    <function>gdbarch_single_step_through_delay</function>
+	  </primary>
+	</indexterm>
 
 	<para>
 	  The next call to
@@ -1923,6 +2858,30 @@ Remote connection closed
 	  risk of a program being left with breakpoints inserted, for example
 	  when a serial link fails.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>break</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>break</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>break</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>breakpoint></primary>
+	  <secondary>memory (software) breakpoint</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>memory (software) breakpoint</primary>
+	  <see>breakpoint</see>
+	</indexterm>
+	<indexterm>
+	  <primary>software (memory) breakpoint</primary>
+	  <see>breakpoint</see>
+	</indexterm>
 
 	<para>
 	  The &rsp; packet exchanges to implement the &gdb;
@@ -1960,6 +2919,30 @@ Remote connection closed
 	  <command>continue</command> command (see <xref
 	  linkend="sec_exchange_cont"/>). With two key differences.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>m</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>Z</command> packets</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>c</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>g</command> packet</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>z</command> packets</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; stop packet types</primary>
+	  <secondary><command>S</command> stop packet</secondary>
+	</indexterm>
 
 	<para>
 	  First, immediately before the <command>c</command> packet, the
@@ -1975,14 +2958,55 @@ Remote connection closed
 	  <command>c</command> packet and cleared immediately after the
 	  <command>g</command> packet.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>z</command> packets</secondary>
+	  <tertiary>
+	    <command>z0</command> packet (memory breakpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>z0</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>Z</command> packets</secondary>
+	  <tertiary>
+	    <command>Z0</command> packet (memory breakpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>Z0</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
 
 	<para>
-	  The resetting of hte program counter is a consequence of the
-	  <function>decr_pc_after_break</function> value in the &gdb;
-	  architecture of this example. It means that when execution resumes,
-	  the instruction which was replaced by a trap instruction will be
-	  executed first.
+	  In this example, the client ensures that the program counter is set
+	  to point to the TRAP instruction just executed,
+	  <emphasis>not</emphasis> the instruction following.
 	</para>
+
+	<para>
+	  An alternative to adjusting the program counter in the target is to
+	  use the &gdb; architecture value
+	  <function>decr_pc_after_break</function> value to specify that the
+	  program counter should be wound back. In this case an additional
+	  <command>P</command> packet would be used to reset the program
+	  counter register. Whichever approach is used, it means that when
+	  execution resumes, the instruction which was replaced by a trap
+	  instruction will be executed first.
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>P</command> packet</secondary>
+	</indexterm>
+	</para>
+	<indexterm>
+	  <primary><function>decr_pc_after_break</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; architecture specification</primary>
+	</indexterm>
 
 	<note>
 	  <para>
@@ -2014,6 +3038,48 @@ Breakpoint 1, simputs (str=0x1290 "Hello World!\n") at utils.c:90
 	  command. These behave analogously to memory breakpoints in &rsp;,
 	  but using <command>z1</command> and <command>Z1</command> packets.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>z</command> packets</secondary>
+	  <tertiary>
+	    <command>z1</command> packet (memory breakpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>z1</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>Z</command> packets</secondary>
+	  <tertiary>
+	    <command>Z1</command> packet (memory breakpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>Z1</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>breakpoint</primary>
+	  <secondary>hardware</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>hardware breakpoint</primary>
+	  <see>breakpoint</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>hbreak</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>hbreak</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>hbreak</command></secondary>
+	</indexterm>
 
 	<para>
 	  If a &rsp; server implementation does not support hardware
@@ -2036,16 +3102,100 @@ Breakpoint 1, simputs (str=0x1290 "Hello World!\n") at utils.c:90
 	  watchpoints) and <command>z4</command> and <command>Z4</command>
 	  packets (for access watchpoints)
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>watch</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>watch</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>watch</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>rwatch</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>rwatch</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>rwatch</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>awatch</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>awatch</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>awatch</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>z</command> packets</secondary>
+	  <tertiary>
+	    <command>z3</command> packet (read watchpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>z3</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>Z</command> packets</secondary>
+	  <tertiary>
+	    <command>Z3</command> packet (read watchpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>Z3</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>z</command> packets</secondary>
+	  <tertiary>
+	    <command>z4</command> packet (access watchpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>z4</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>Z</command> packets</secondary>
+	  <tertiary>
+	    <command>Z4</command> packet (access watchpoint)
+	  </tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>Z4</command> packet</primary>
+	  <see>&rsp; packet types</see>
+	</indexterm>
 
 	<para>
 	  &gdb; also supports software write watchpoints. These are
-	  implemented by single stepping the target, and examiniming the
+	  implemented by single stepping the target, and examining the
 	  watched value after each step. This is painfully slow when &gdb; is
 	  running native. Under &rsp;, where each step involves an number of
 	  packet exchanges, the performance drops ever further. Software
 	  watchpointing should be restricted to the shortest section of code
 	  possible.
 	</para>
+	<indexterm>
+	  <primary>watchpoint</primary>
+	  <secondary>software</secondary>
+	</indexterm>
 
       </sect2>
 
@@ -2058,12 +3208,36 @@ Breakpoint 1, simputs (str=0x1290 "Hello World!\n") at utils.c:90
 	<para>
 	  The rules for <command>detach</command> mandate that it breaks the
 	  connection with the target, and allows the target to resume
-	  execution. By contrast, the <command>disconnect</command> simple
-	  breaks the connection. A reconnection (using the
-	  <command>target&nbsp;remote</command> command should be able to
+	  execution. By contrast, the <command>disconnect</command> command
+	  simply breaks the connection. A reconnection (using the
+	  <command>target&nbsp;remote</command> command) should be able to
 	  resume debugging at the point where the previous connection was
 	  broken.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>detach</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>detach</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>detach</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>disconnect</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>disconnect</command> command</primary>
+	  <see>&gdb; commands</see>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary><command>disconnect</command></secondary>
+	</indexterm>
 
 	<para>
 	  The <command>disconnect</command> command just closes the serial
@@ -2106,6 +3280,10 @@ Breakpoint 1, simputs (str=0x1290 "Hello World!\n") at utils.c:90
 	  target responds with an <command>OK</command> packet, before closing
 	  the connection.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>D</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  Through this exchange, the &gdb; client shows the following output:
@@ -2163,15 +3341,18 @@ Remote connection closed
 
     <sect1>
       <title>
-	&gdb; Extended Remote Command Dialogues
+	&gdb; Extended Remote Command Dialogs
       </title>
 
       <para>
-	The following sections show diagramatically how various &gdb; commands
+	The following sections show diagrammatically how various &gdb; commands
 	map onto &rsp; packet exchanges to implement the desired behavior with
 	extended remote debugging (i.e when connecting with
 	<command>target&nbsp;extended-remote</command>).
       </para>
+      <indexterm>
+	<primary>extended remote debugging</primary>
+      </indexterm>
 
       <sect2>
 	<title>
@@ -2183,6 +3364,18 @@ Remote connection closed
 	  <command>target&nbsp;extended-remote</command> command are shown as a
 	  sequence diagram in <xref linkend="fig_exchange_ext_target_remote"/>.
 	</para>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary>
+	    <command>target&nbsp;extended-remote</command>
+	  </secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; &gdb; command dialogs</primary>
+	  <secondary>
+	    <command>target&nbsp;extended-remote</command>
+	  </secondary>
+	</indexterm>
 
 	<figure id="fig_exchange_ext_target_remote">
 	  <title>
@@ -2208,11 +3401,15 @@ Remote connection closed
 	</figure>
 
 	<para>
-	  The dialogue is almost identical to that for standard remote
+	  The dialog is almost identical to that for standard remote
 	  debugging (see <xref linkend="sec_exchange_target_remote"/>). The
 	  difference is the penultimate <command>!</command> packet, notifying
 	  the target that this is an extended remote connection.
 	</para>
+	<indexterm>
+	  <primary>&rsp; packet types</primary>
+	  <secondary><command>!</command> packet</secondary>
+	</indexterm>
 
 	<para>
 	  Through this exchange, the &gdb; client shows the following output:
@@ -2231,17 +3428,60 @@ Remote debugging using :51000
 
     <sect1>
       <title>
-	&gdb; Asynchronous Remote Command Dialogues
+	&gdb; Asynchronous Remote Command Dialogs
       </title>
 
       <para>
-	The dialogues for asynchronous debugging in general parallel their
-	synchronous equivalents. Thus the packet exchanges for
-	<command>target&nbsp;async</command> are identical to those for
-	<command>target&nbsp;remote</command> and the packet exchanges for
-	<command>target&nbsp;extended-async</command> are identical to those for
-	<command>target&nbsp;extended-remote</command>.
+	The dialogs for asynchronous debugging in general parallel their
+	synchronous equivalents. The only differences are in those commands
+	which can specify a particular thread to execute or stop.
       </para>
+      <indexterm>
+	<primary>asynchronous debugging</primary>
+      </indexterm>
+
+      <para>
+	Thus the packet exchanges for <command>target&nbsp;async</command> are
+	identical to those for <command>target&nbsp;remote</command> and the
+	packet exchanges for <command>target&nbsp;extended-async</command> are
+	identical to those for <command>target&nbsp;extended-remote</command>.
+      </para>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;remote</command>
+	</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;extended-remote</command>
+	</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;async</command>
+	</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>
+	  <command>target&nbsp;async</command> command
+	</primary>
+	<see>&gdb; commands</see>
+      </indexterm>
+      <indexterm>
+	<primary>&gdb; commands</primary>
+	<secondary>
+	  <command>target&nbsp;extended-async</command>
+	</secondary>
+      </indexterm>
+      <indexterm>
+	<primary>
+	  <command>target&nbsp;extended-async</command> command
+	</primary>
+	<see>&gdb; commands</see>
+      </indexterm>
 
     </sect1>
 
@@ -2254,16 +3494,1199 @@ Remote debugging using :51000
 
     <para>
       The examples used are based on the &rsp; server implementation for the
-      OpenRISC 1000.
+      &or1k; architectural simulator, &or1ksim;.
     </para>
+
+    <para>
+      The target is "bare metal". There is no operating system infrastructure
+      necessarily present. In this context, commands relating to threads or
+      the file system are of no meaning and not implemented.
+    </para>
+    <indexterm>
+      <primary>bare metal</primary>
+    </indexterm>
 
     <sect1>
       <title>
 	The &or1k; Architectural Simulator, &or1ksim;
       </title>
 
+      <sect2>
+	<title>
+	  The &or1k; Architecture
+	</title>
+
+	<para>
+	  The &or1k; architecture defines a family of free, open source RISC
+	  processor cores. It is a 32 or 64-bit load and store RISC
+	  architecture designed with emphasis on performance, simplicity, low
+	  power requirements, scalability and versatility.
+	</para>
+	<indexterm>
+	  <primary>&or1k;</primary>
+	  <secondary>architecture</secondary>
+	</indexterm>
+
+	<para>
+	  The &or1k; is fully documented in its Architecture Manual <xref
+	  linkend="ref_or1k" />.
+	</para>
+
+	<para>
+	  From a debugging perspective, there are three data areas that are
+	  manipulated by the instruction set.
+	</para>
+
+	<orderedlist>
+
+	  <listitem>
+	    <para>
+	      Main memory. A uniform address space with 32 or 64-bit
+	      addressing. Provision for separate or unified instruction and
+	      data and instruction caches. Provision for separate or unified,
+	      1 or 2-level data and instruction MMUs.
+	    </para>
+	    <indexterm>
+	      <primary>&or1k;</primary>
+	      <secondary>architecture</secondary>
+	      <tertiary>main memory</tertiary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      General Purpose Registers (&gpr;s). Up to 32 registers, 32 or
+	      64-bit in length.
+	    </para>
+	    <indexterm>
+	      <primary>&or1k;</primary>
+	      <secondary>architecture</secondary>
+	      <tertiary>&gpr;s</tertiary>
+	      <see>General Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>General Purpose Register</primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gpr;s</primary>
+	      <see>General Purpose Register</see>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Special Purpose Registers (&spr;s). Up to 32 groups each with up
+	      to 2048 registers, up to 32 or 64-bit in length. These registers
+	      provide all the administrative functionality of the processor:
+	      program counter, processor status, saved exception registers,
+	      debug interface, MMU and cache interfaces, etc.
+	    </para>
+	    <indexterm>
+	      <primary>&or1k;</primary>
+	      <secondary>architecture</secondary>
+	      <tertiary>&spr;s</tertiary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&spr;s</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	  </listitem>
+
+	</orderedlist>
+
+	<para>
+	  The Special Purpose Registers (&spr;s) represent a challenge for
+	  &gdb;, since they represent neither addressable memory, nor have the
+	  characteristics of a register set (generally modest in number).
+	</para>
+
+	<para>
+	  A number of &spr;s are of particular significance to the &gdb;
+	  implementation.
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <emphasis>Configuration registers</emphasis>. The Unit Present
+	      register (&spr;&nbsp;1, <literal>UPR</literal>), CPU
+	      Configuration register (&spr;&nbsp;2,
+	      <literal>CPUCFGR</literal>) and Debug Configuration register
+	      (&spr;&nbsp;7, <literal>DCFGR</literal>) identify the features
+	      available in the particular &or1k; implementation. This includes
+	      the instruction set in use, number of general purpose registers
+	      and configuration of the hardware debug interface.
+	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>configuration registers</secondary>
+	      <tertiary>
+		CPU Configuration Register
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>configuration registers</secondary>
+	      <tertiary>
+		Debug Configuration Register
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><acronym>DCFGR</acronym></primary>
+	      <see>Debug Configuration Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Configuration Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>configuration registers</secondary>
+	      <tertiary>
+		Unit Present Register
+	      </tertiary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <emphasis>Program counters</emphasis>. The Previous Program
+	      Counter (&spr;&nbsp;0x12, <literal>PPC</literal>) is the address
+	      of the instruction just executed. The Next Program Counter
+	      (&spr;&nbsp;0x10, <literal>NPC</literal>) is the address of the
+	      next instruction to be executed. The <literal>NPC</literal> is
+	      the value reported by &gdb;s <command>$pc</command> variable.
+	    </para>
+	    <indexterm>
+	      <primary>&gdb;</primary>
+	      <secondary>built in variables</secondary>
+	      <tertiary><command>$pc</command></tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>program counters</secondary>
+	      <tertiary>Previous Program Counter</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>program counters</secondary>
+	      <tertiary>Next Program Counter</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>program counter</primary>
+	      <secondary>as Special Purpose Register</secondary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <emphasis>Supervision Register</emphasis>. The supervision
+	      register (&spr;&nbsp;0x11, <literal>SR</literal>) represents the
+	      current status of the processor. It is the value reported by
+	      &gdb;s status register variable, <command>$ps</command>.
+	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Supervision Register</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><acronym>SR</acronym></primary>
+	      <see>Supervision Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&gdb;</primary>
+	      <secondary>built in variables</secondary>
+	      <tertiary><command>$ps</command></tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Supervision Register</primary>
+	      <see>
+		Special Purpose Register
+	      </see>
+	    </indexterm>
+	  </listitem>
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The &or1k; Debug Unit
+	</title>
+
+	<para>
+	  Of particular importance are the &spr;s in group 6 controlling the
+	  debug unit (if present). The debug unit can trigger a
+	  <emphasis>trap</emphasis> exception in response to any one of up to
+	  10 <emphasis>watchpoints</emphasis>. Watchpoints are logical
+	  expressions built by combining <emphasis>matchpoints</emphasis>,
+	  which are simple point tests of particular behavior (has a specified
+	  address been accessed for example).
+	</para>
+	<indexterm>
+	  <primary>Debug Unit</primary>
+	</indexterm>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Debug Value and Control registers</emphasis>. There
+	      are up to 8 pairs of Debug Value
+	      (&spr;&nbsp;0x3000&ndash;0x3007, <literal>DVR0</literal> through
+	      <literal>DVR7</literal>) and Debug Control
+	      (&spr;&nbsp;0x3008&ndash;0x300f, <literal>DCR0</literal> through
+	      <literal>DCR7</literal>) registers. Each pair is associated with
+	      one hardware <emphasis>matchpoint</emphasis>. The Debug Value
+	      register in each pair gives a value to compare against. The
+	      Debug Control register indicates whether the matchpoint is
+	      enabled, the type of value to compare against (instruction fetch
+	      address, data load and/or store address data load and/or store
+	      value) and the comparison to make (equal, not equal, less than,
+	      less than or equal, greater than, greater than or equal), both
+	      signed and unsigned. If the matchpoint is enabled and the test
+	      met, the corresponding matchpoint is triggered.
+	    </para>
+	    <indexterm>
+	      <primary>Debug Unit</primary>
+	      <secondary>registers</secondary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>
+		Debug Value Registers
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&dvr;</primary>
+	      <see>Debug Value Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Value Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>
+		Debug Control Registers
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Control Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&dcr;</primary>
+	      <see>Debug Control Register</see>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <emphasis>Debug Watchpoint counters</emphasis>. There are two
+	      16-bit Debug Watchpoint Counter registers
+	      (&spr;&nbsp;0x3012&ndash;0x3013, <literal>DWCR0</literal> and
+	      <literal>DWCR1</literal>), associated with two further
+	      matchpoints. The upper 16 bits are a value to match, the lower
+	      16 bits a counter. The counter is incremented when specified
+	      matchpoints are triggered (see Debug Mode register 1). When the
+	      count reaches the match value, the corresponding matchpoint is
+	      triggered.
+	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>
+		Debug Watchpoint Counter Registers
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><acronym>DWCR</acronym></primary>
+	      <see>Debug Watchpoint Counter Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Watchpoint Counter Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit</primary>
+	      <secondary>watchpoint counter</secondary>
+	    </indexterm>
+	    
+	    <caution>
+	      <para>
+		There is potential ambiguity in that counters are incremented
+		in response to matchpoints and also generate their own
+		matchpoints. It is not good practice to set a counter to
+		increment on its own matchpoint!
+	      </para>
+	    </caution>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <emphasis>Debug Mode registers</emphasis>. There are two Debug
+	      Mode registers to control the behavior of the the debug unit
+	      (&spr;&nbsp;0x3010&ndash;0x3011, <literal>DMR1</literal> and
+	      <literal>DMR2</literal>). <literal>DMR1</literal> provides a
+	      pair of bits for each of the 10 matchpoints (8 associated with
+	      &dvr;/&dcr; pairs, 2 associated with counters). These specify
+	      whether the watchpoint is triggered by the associated
+	      matchpoint, by the matchpoint AND-ed with the previous
+	      watchpoint or by the matchpoint OR-ed with the previous
+	      watchpoint. By building chains of watchpoints, complex logical
+	      tests of hardware behavior can be built up.
+	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>
+		Debug Mode Registers
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><acronym>DMR</acronym></primary>
+	      <see>Debug Mode Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Mode Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit</primary>
+	      <secondary>matchpoint</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>matchpoint</primary>
+	      <seealso>Debug Unit</seealso>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Unit</primary>
+	      <secondary>watchpoint</secondary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>watchpoint</primary>
+	      <secondary>in &or1k;</secondary>
+	      <see>Debug Unit</see>
+	    </indexterm>
+
+	    <para>
+	      Two further bits in <literal>DMR1</literal> enable single step
+	      behavior (a trap exception occurs on completion of each
+	      instruction) and branch step behavior (a trap exception occurs
+	      on completion of each branch instruction).
+	    </para>
+
+	    <para>
+	      <literal>DMR2</literal> contains an enable bit for each counter,
+	      10 bits indicating which watchpoints are assigned to which
+	      counter and 10 bits indicating which watchpoints generate a trap
+	      exception. It also contains 10 bits of output, indicating which
+	      watchpoints have generated a trap exception.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <emphasis>Debug Stop and Reason registers</emphasis>. In normal
+	      operation, all &or1k; exceptions are handled through the
+	      exception vectors at locations 0x100 through 0xf00. The Debug
+	      Stop register (&spr;&nbsp;0x3014, <literal>DSR</literal>) is
+	      used to assign particular exceptions instead to the &jtag;
+	      interface. These exceptions stall the processor, allowing the
+	      machine state to be analyzed through the &jtag;
+	      interface. Typically a debugger will enable this for trap
+	      exceptions used for breakpointing.
+	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>
+		Debug Stop Register
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><acronym>DSR</acronym></primary>
+	      <see>Debug Stop Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Stop Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	    
+	    <para>
+	      Where an exception has been diverted to the development
+	      interface, the Debug Reason register (&spr;&nbsp;0x3021,
+	      <literal>DRR</literal>) indicates which exception caused the
+	      diversion. Note that although single stepping and branch
+	      stepping cause a trap, if they are assigned to the &jtag;
+	      interface, they <emphasis>do not</emphasis> set the
+	      <literal>TE</literal> bit in the <literal>DRR</literal>. This
+	      allows an external debugger to distinguish between breakpoint
+	      traps and single/branch step traps.
+	    </para>
+	    <indexterm>
+	      <primary>Special Purpose Register</primary>
+	      <secondary>Debug Unit</secondary>
+	      <tertiary>
+		Debug Reason Register
+	      </tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary><acronym>DRR</acronym></primary>
+	      <see>Debug Reason Register</see>
+	    </indexterm>
+	    <indexterm>
+	      <primary>Debug Reason Register</primary>
+	      <see>Special Purpose Register</see>
+	    </indexterm>
+	  </listitem>
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The &or1k; &jtag; Interface
+	</title>
+	
+	<para>
+	  In a physical &or1k; chip, debugging would be via the &jtag;
+	  interface. However since the examples used here are based on the
+	  architectural simulator, the &jtag; interface is not described
+	  further here.
+	</para>
+	<indexterm>
+	  <primary>Debug Unit</primary>
+	  <secondary>&jtag; interface</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&jtag;</primary>
+	  <see>Debug Unit</see>
+	</indexterm>
+      </sect2>
+
+      <sect2 id="sec_or1k_abi">
+	<title>
+	  Application Binary Interface (&abi;)
+	</title>
+	
+	<para>
+	  The &abi; for the &or1k; is described in Chapter 16 of the
+	  Architecture Manual <xref linkend="ref_or1k" />. However the actual
+	  &gcc; compiler implementation differs very slightly from the
+	  documented &abi;. Since precise understanding of the &abi; is
+	  critical to &gdb;, those differences are documented here.
+	</para>
+	<indexterm>
+	  <primary>&or1k;</primary>
+	  <secondary>&abi;</secondary>
+	  <tertiary>variations from documented standard</tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary>&abi;</primary>
+	  <secondary>&or1k;</secondary>
+	  <see>&or1k;</see>
+	</indexterm>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Register Usage: R12 is used as another callee-saved register. It
+	      is never used to return the upper 32 bits of a 64-bit result on
+	      a 32-bit architecture. All values greater than 32-bits are
+	      returned by a pointer.
+	    </para>
+	    <indexterm>
+	      <primary>&or1k;</primary>
+	      <secondary>&abi;</secondary>
+	      <tertiary>result return register</tertiary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Although the specification requires stack frames to be
+	      <emphasis>double</emphasis> word aligned, the current &gcc;
+	      compiler implements <emphasis>single</emphasis> word alignment.
+	    </para>
+	    <indexterm>
+	      <primary>&or1k;</primary>
+	      <secondary>&abi;</secondary>
+	      <tertiary>stack frame alignment</tertiary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>stack frame</primary>
+	      <secondary>alignment</secondary>
+	      <tertiary>for &or1k;</tertiary>
+	    </indexterm>
+	  </listitem>
+	  
+	  <listitem>
+	    <para>
+	      Integral values more than 32 bits (64 bits on 64-bit
+	      architectures), structures and unions are returned as pointers
+	      to the location of the result. That location is provided by the
+	      <emphasis>calling</emphasis> function, which passes it as a
+	      first argument in &gpr; 3. In other words, where a function
+	      returns a result of this type, the first true argument to the
+	      function will appear in R4 (or R5/R6 if it is a 64-bit argument
+	      on a 32-bit architecture).
+	    </para>
+	    <indexterm>
+	      <primary>&or1k;</primary>
+	      <secondary>&abi;</secondary>
+	      <tertiary>argument passing</tertiary>
+	    </indexterm>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2 id="sec_or1ksim">
+	<title>
+	  &or1ksim;: the &or1k; Architectural Simulator
+	</title>
+
+	<para>
+	  &or1ksim; is an instruction set simulator (&iss;) for the &or1k;
+	  architecture. At present only the 32-bit architecture is modeled. In
+	  addition to modeling the core processor, &or1ksim; can model a
+	  number of peripherals, to provide the functionality of a complete
+	  System-on-Chip (&soc;).
+	</para>
+	<indexterm>
+	  <primary>&or1ksim;</primary>
+	</indexterm>
+
+	<para>
+	  &or1ksim; implements the &rsp; server side. It is the implementation
+	  of this &rsp; server which forms the example for this application
+	  note.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&or1k; &gdb; Architectural Specification
+      </title>
+
       <para>
+	The &gdb; architectural specification
+	(<structname>gdbarch</structname>) for &or1k; is fully documented in
+	Embecosm Application Note 3 (<xref linkend="ref_app_note_3"/>). This
+	section notes some important features, which will be of relevance to the
+	&rsp; server implementation.
       </para>
+      <indexterm>
+	<primary>&gdb; architecture specification</primary>
+      </indexterm>
+
+      <itemizedlist>
+
+	<listitem>
+	  <para>
+	    All data sizes are specified to match the &abi; for the &or1k;
+	  </para>
+	  <indexterm>
+	    <primary>&or1k;</primary>
+	    <secondary>&abi;</secondary>
+	  </indexterm>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    All memory breakpoints are implemented at the program counter
+	    using the <literal>l.trap&nbsp;1</literal> opcode, which like all
+	    &or1k; instructions is 4 bytes long.
+	  </para>
+	  <indexterm>
+	    <primary>breakpoint</primary>
+	    <secondary>memory (software)</secondary>
+	    <tertiary>implementation for &or1k;</tertiary>
+	  </indexterm>
+
+	  <para>
+	    This means that after a trap due to a breakpoint, the program
+	    counter must be stepped back, to allow re-execution on resumption
+	    of the instruction that was replaced by <literal>l.trap</literal>
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A total of 35 registers are defined to &gdb;: The 32 general
+	    purpose registers, the previous program counter, the next program
+	    counter (colloquially known as <emphasis>the</emphasis> program
+	    counter) and the supervision register. There are no
+	    pseudo-registers.
+	  </para>
+	  <indexterm>
+	    <primary>&gdb;</primary>
+	    <secondary>register specification</secondary>
+	  </indexterm>
+	</listitem>
+
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Overview of the &rsp; Server Implementation
+      </title>
+
+      <para>
+	All the code for the &or1k; &rsp; server interface can be found in
+	<filename>debug/rsp-server.c</filename>. The interface is specified in
+	the header file, <filename>debug/rsp-server.h</filename>.
+      </para>
+      <indexterm>
+	<primary>&rsp; server for &or1k;</primary>
+	<secondary>location of source code</secondary>
+      </indexterm>
+
+      <para>
+	The code is commented for post-processing with
+	<command>doxygen</command> (<xref linkend="ref_doxygen"/>).
+      </para>
+
+      <sect2>
+	<title>
+	  External Code Interface
+	</title>
+
+	<para>
+	  The external interface to the &rsp; server code is through three
+	  <type>void</type> functions.
+	</para>
+	<indexterm>
+	  <primary>&rsp; server for &or1k;</primary>
+	  <secondary>external code interface</secondary>
+	</indexterm>
+
+	<orderedlist>
+
+	  <listitem>
+	    <para>
+	      <function>rsp_init&nbsp;()</function>. Called at start up to
+	      initialize the &rsp; server. It initializes global data
+	      structures (discussed in <xref
+	      linkend="sec_rsp_data_structures"/>) and then sets up a TCP/IP
+	      listener on the configured &rsp; port.
+	    </para>
+	    <indexterm>
+	      <primary><function>rsp_init</function></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>handle_rsp&nbsp;()</function>. Called repeatedly when the
+	      processor is stalled to read packets from any &gdb; client and
+	      process them.
+	    </para>
+	    <indexterm>
+	      <primary><function>handle_rsp</function></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>rsp_exception&nbsp;()</function>. Called from the
+	      simulator to record any exceptions that occur, for subsequent
+	      use by <function>handle_rsp&nbsp;()</function>. It takes a
+	      single argument, the &or1k; exception handler entry address,
+	      which is mapped by the &rsp; server to the equivalent &gdb;
+	      target signal.
+	    </para>
+	    <indexterm>
+	      <primary><function>rsp_exception</function></primary>
+	    </indexterm>
+	  </listitem>
+
+	</orderedlist>
+
+      </sect2>
+
+      <sect2 id="sec_rsp_data_structures">
+	<title>Global Data Structures</title>
+
+	<para>
+	  The &rsp; server has one data structure, <varname>rsp</varname>,
+	  shared amongst its implementing functions (and is thus declared
+	  <literal>static</literal> in <filename>rsp-server.c</filename>).
+	</para>
+	<indexterm>
+	  <primary>&rsp; server for &or1k;</primary>
+	  <secondary>global data structures</secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&rsp; server for &or1k;</primary>
+	  <secondary>global data structures</secondary>
+	  <tertiary><varname>rsp</varname> data structure</tertiary>
+	</indexterm>
+	<indexterm>
+	  <primary><varname>rsp</varname> data structure</primary>
+	  <see>&rsp; server for &or1k;</see>
+	</indexterm>
+
+	<programlisting>
+static struct
+{
+  int                client_waiting;
+  int                proto_num;
+  int                server_fd;
+  int                client_fd;
+  int                sigval;
+  unsigned long int  start_addr;
+  struct mp_entry   *mp_hash[MP_HASH_SIZE];
+} rsp;
+	</programlisting>
+
+	<para>
+	  The fields are:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <varname>client_waiting</varname>. A flag to indicate if the
+	      target has previously been set running (by a &gdb;
+	      <command>continue</command> or <command>step</command>)
+	      instruction, in which case the client will be waiting for a
+	      response indicating when and why the server has stopped.
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.client_waiting</varname></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>proto_num</varname>. The number of the communication
+	      protocol used (in this case TCP/IP).
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.proto_num</varname></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>server_fd</varname>. File handle of the server
+	      connection to the &rsp; port, listening for connections. Set to
+	      -1 if it is not open.
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.server_fd</varname></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>client_fd</varname>. File handle of the current client
+	      connection to the &rsp; port, on which all packet transfers take
+	      place. Set to -1 if it is not open.
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.client_fd</varname></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>sigval</varname>. The last exception raised by the
+	      target as a &gdb; target signal number. Set by the simulator
+	      calling <function>rsp_exception</function>.
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.sigval</varname></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>start_addr</varname>. The start address of the last
+	      run. Needed to support the restart function of extended remote
+	      debugging.
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.start_addr</varname></primary>
+	    </indexterm>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>mp_hash</varname>. Pointer to the hash table of
+	      matchpoints set (see <xref linkend="sec_mp_hash"/>).
+	    </para>
+	    <indexterm>
+	      <primary><varname>rsp.mp_hash</varname></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&rsp; server for &or1k;</primary>
+	      <secondary>matchpoint hash table</secondary>
+	    </indexterm>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  The &rsp; server also draws on several &or1ksim; data
+	  structures. Most notably <varname>config</varname> for configuration
+	  data and <varname>cpu_state</varname> for all the CPU state data.
+	</para>
+	<indexterm>
+	  <primary><varname>cpu_state</varname> data structure</primary>
+	</indexterm>
+
+	<sect3 id="sec_mp_hash">
+	  <title>
+	    The Matchpoint Hash Table
+	  </title>
+
+	  <para>
+	    The matchpoint hash table is implemented as an open hash table,
+	    where the hash table entry is calculated as the address of the
+	    matchpoint modulo the size of the hash table
+	    (<constant>MP_HASH_SIZE</constant>) and the key is formed from the
+	    address and the matchpoint type. Matchpoint types are defined for
+	    memory and hardware breakpoints and hardware write, read and
+	    access watchpoints:
+	  </para>
+	  <indexterm>
+	    <primary>&rsp; server for &or1k;</primary>
+	    <secondary>matchpoint hash table</secondary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>MP_HASH_SIZE</constant></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary>matchpoint</primary>
+	    <secondary>types for &or1k;</secondary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>BP_MEMORY</constant></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>BP_HARDWARE</constant></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>WP_WRITE</constant></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>WP_READ</constant></primary>
+	  </indexterm>
+	  <indexterm>
+	    <primary><constant>WP_ACCESS</constant></primary>
+	  </indexterm>
+
+	  <programlisting>
+enum mp_type {
+  BP_MEMORY   = 0,
+  BP_HARDWARE = 1,
+  WP_WRITE    = 2,
+  WP_READ     = 3,
+  WP_ACCESS   = 4
+};
+          </programlisting>
+
+	  <para>
+	    Each entry in the table holds the instruction at the location of
+	    the matchpoint, which in the case of memory breakpoints will have
+	    been replaced by <literal>l.trap</literal>
+	  </para>
+
+	  <programlisting>
+struct mp_entry
+{
+  enum mp_type       type;
+  unsigned long int  addr;
+  unsigned long int  instr;
+  struct mp_entry   *next;
+};
+	  </programlisting>
+
+	  <para>
+	    Linking through the <varname>next</varname> field allows multiple
+	    entries with the same hash value to be stored.
+	  </para>
+
+	  <para>
+	    Interface to the hash table is through four functions:
+	  </para>
+
+	  <itemizedlist>
+
+	    <listitem>
+	      <para>
+		<function>mp_hash_init&nbsp;()</function>. <type>void</type>
+		function which sets all the hash table slots to &null;
+	      </para>
+	      <indexterm>
+		<primary><function>mp_hash_init</function></primary>
+	      </indexterm>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>mp_hash_add&nbsp;()</function>. <type>void</type>
+		function which adds an entry to the hash table (if it is not
+		already there). It takes three arguments, the matchpoint type
+		and address and the instruction stored at that
+		address. Repeated adding of the same entry has no effect,
+		which provides convenient behavior for debugging over noisy
+		connections where packets may be duplicated.
+	      </para>
+	      <indexterm>
+		<primary><function>mp_hash_add</function></primary>
+	      </indexterm>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>mp_hash_lookup&nbsp;()</function>. Function to look up a
+		key in the hash table. It takes a matchpoint type and address
+		and returns a pointer to the entry (as a pointer to
+		<structname>struct&nbsp;mp_entry</structname>) or &null; if
+		the key is not found.
+	      </para>
+	      <indexterm>
+		<primary><function>mp_hash_lookup</function></primary>
+	      </indexterm>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<function>mp_hash_delete&nbsp;()</function>. Function with the
+		same behavior as <function>mp_hash_lookup</function>, but also
+		deletes the entry from the hash table if it is found there. If
+		the entry is not found, it silently does nothing (and returns
+		&null;).
+	      </para>
+	      <indexterm>
+		<primary><function>mp_hash_delete</function></primary>
+	      </indexterm>
+
+	      <note>
+		<para>
+		  This function returns a pointer to the
+		  <structname>struct&mdash;mp_entry</structname> deleted from
+		  the hash table if the key is found. To avoid memory leaks it
+		  is important that the caller delete this structure (using
+		  <function>free&nbsp;()</function>) when the data has been
+		  extracted.
+		</para>
+	      </note>
+	    </listitem>
+
+	  </itemizedlist>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Top Level Behavior
+	</title>
+
+	<para>
+	  The &rsp; server initialization,
+	  <function>rsp_init&nbsp;()</function> is called from the main
+	  simulator initialization, <function>sim_init&nbsp;()</function> in
+	  <filename>toplevel-support.c</filename>.
+	</para>
+	<indexterm>
+	  <primary><function>rsp_init</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><function>sim_init</function></primary>
+	</indexterm>
+
+	<para>
+	  The main simulation initialization is also modified to start the
+	  processor stalled on a TRAP exception if &rsp; debugging is
+	  enabled. This ensures that the handler will be called initially.
+	</para>
+	<indexterm>
+	  <primary>&rsp; server for &or1k;</primary>
+	  <secondary>initialization</secondary>
+	</indexterm>
+
+	<para>
+	  The main loop of &or1ksim;, called after initialization, is in the
+	  function <function>exec_main</function> in
+	  <filename>cpu/or32/execute.c</filename>.
+	</para>
+	<indexterm>
+	  <primary><function>exec_main</function></primary>
+	</indexterm>
+
+	<para>
+	  If &rsp; debugging is enabled in the &or1ksim; configuration, the
+	  code to interact with the &rsp; client
+	  (<function>handle_rsp</function>) is called at the start of each
+	  iteration, <emphasis>but only if the processor is
+	  stalled</emphasis>. The handler is called repeatedly until an
+	  interaction with the client unstalls the processor (i.e. a
+	  <command>step</command> or <command>continue</command> function.
+	</para>
+	<indexterm>
+	  <primary><function>handle_rsp</function></primary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>step</command></secondary>
+	</indexterm>
+	<indexterm>
+	  <primary>&gdb; commands</primary>
+	  <secondary><command>continue</command></secondary>
+	</indexterm>
+
+	<programlisting>
+void
+exec_main ()
+{
+  long long time_start;
+
+  while (1)
+    {
+      time_start = runtime.sim.cycles;
+      if (config.debug.enabled)
+        {
+          while (runtime.cpu.stalled)
+            {
+              if (config.debug.rsp_enabled)
+                {
+                  handle_rsp ();
+                }
+
+              ...
+        </programlisting>
+
+	<para>
+	  Since interaction with the client can only occur when
+	  the processor is stalled, BREAK signals (i.e. ctrl-C) cannot be
+	  intercepted.
+	</para>
+
+	<para>
+	  It would be possible to poll the connection on
+	  <emphasis>every</emphasis> instruction iteration, but the
+	  performance overhead on the simulator would be unacceptable.
+	</para>
+
+	<para>
+	  An implementation to pick up BREAK signals should use event driven
+	  I/O - i.e. with a signal handler for <literal>SIGIO</literal>. An
+	  alternative is to poll the interface less frequently when the CPU is
+	  not stalled. Since &or1ksim; executes at several MIPS, polling every
+	  100,000 cycles would mean a response to ctrl-C of less than 100ms,
+	  while adding no significant overhead.
+	</para>
+
+	<sect3>
+	  <title>
+	    Exception handling
+	  </title>
+
+	  <para>
+	    The &rsp; interface will only pick up those exceptions which cause
+	    the processor to stall. These are the exceptions routed to the
+	    debug interface, rather than through their exception vectors, and
+	    are specified in the Debug Stop Register (set during
+	    initialization). In the present implementation, only TRAP
+	    exceptions are picked up this way, allowing the debugger to
+	    process memory based breakpoints. However an alternative
+	    implementation could allow the debugger to see all exceptions.
+	  </para>
+
+	  <para>
+	    Exceptions will be processed at the start of each iteration by
+	    <function>handle_rsp</function>. However the handler needs to know
+	    which signal caused the exception. This is achieved by modifying
+	    the main debug unit exception handling function
+	    (<function>debug_ignore_exception</function> in
+	    <filename>debug/debug-unit.c</filename>) to call
+	    <function>rsp_exception</function> if &rsp; is enabled for any
+	    exception handled by the debug unit. This function stores the
+	    exception (translated to a &gdb; target signal) in
+	    <varname>rsp.sigval</varname>.
+	  </para>
+
+	  <programlisting>
+int
+debug_ignore_exception (unsigned long  except)
+{
+  int           result = 0;
+  unsigned long dsr    = cpu_state.sprs[SPR_DSR];
+
+  switch (except)
+    {
+    case EXCEPT_RESET:    result = (dsr &amp; SPR_DSR_RSTE);  break;
+    case EXCEPT_BUSERR:   result = (dsr &amp; SPR_DSR_BUSEE); break;
+
+  ...
+
+  cpu_state.sprs[SPR_DRR] |= result;
+  set_stall_state (result != 0);
+
+  if (config.debug.rsp_enabled &amp;&amp; (0 != result))
+    {
+      rsp_exception (except);
+    }
+
+  return  (result != 0);
+
+}       /* debug_ignore_exception () */
+	  </programlisting>
+
+	  <para>
+	    For almost all exceptions, this approach is suitable. However TRAP
+	    exceptions due to single stepping are taken at the end of each
+	    instruction execution and do not use the standard exception
+	    handling mechanism.
+	  </para>
+
+	  <para>
+	    The <function>exec_main</function> already includes code to handle
+	    this towards the end of the main loop. This is extended with a
+	    call to <function>rsp_exception</function> if &rsp; debugging is
+	    enabled.
+	  </para>
+
+	  <programlisting>
+      if (config.debug.enabled)
+        {
+          if (cpu_state.sprs[SPR_DMR1] &amp; SPR_DMR1_ST)
+            {
+              set_stall_state (1);
+
+              if (config.debug.rsp_enabled)
+                {
+                  rsp_exception (EXCEPT_TRAP);
+                }
+            }
+        }
+	  </programlisting>
+
+	</sect3>
+
+      </sect2>
 
     </sect1>
 
@@ -2272,8 +4695,73 @@ Remote debugging using :51000
 	The Serial Connection
       </title>
 
-      <para>
-      </para>
+      <sect2>
+	<title>
+	  Establishing the Server Listener Socket
+	</title>
+
+	<para>
+	  A TCP/IP socket to listen on the &rsp; port is created in
+	  <function>rsp_init</function>, and its file descriptor stored in
+	  <varname>rsp.server_fd</varname>. As a variant, if the port is
+	  configured to be 0, the socket uses the port specified for the
+	  <literal>or1ksim-rsp</literal> service.
+	</para>
+
+	<para>
+	  The setup uses standard &posix; calls to establish the socket and
+	  associate it with a TCP/IP port. The interface is set to be
+	  non-blocking and marked as a passive port (using a call to
+	  <function>listen&nbsp;()</function>), with at most one outstanding
+	  client request. There is no meaning to the server handling more than
+	  one client &gdb; connection.
+	</para>
+
+	<para>
+	  The main &rsp; handler function <function>handle_rsp&nbsp;()</function>
+	  checks that the server port is still open. This may be closed if
+	  there is a serious error. In the present implementation,
+	  <function>handle_rsp&nbsp;()</function> gives up at this point, but
+	  a richer implementation could try reopening a new server port.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Establishing the Client Connection
+	</title>
+
+	<para>
+	  If a client connection is yet to be established, then
+	  <function>handle_rsp&nbsp;()</function> blocks until a connection request
+	  is made. A valid request is handled by
+	  <function>rsp_server_request&nbsp;()</function>, which opens a
+	  connection to the client, saving the file descriptor in
+	  <varname>rsp.client_fd</varname>.
+	</para>
+
+	<para>
+	  This connection is also non-blocking. Nagel's algorithm is also
+	  disabled, since all packet bytes should be sent immediately, rather
+	  than being queued to build larger blocks.
+	</para>
+      </sect2>
+
+      <sect2>
+	<title>
+	  Communicating with the Client
+	</title>
+
+	<para>
+	  Having established a client connection if necessary,
+	  <function>handle_rsp&nbsp;()</function> blocks until packet data is
+	  available. It then calls <function>rsp_client_request</function> to
+	  read the packet, provide the required behavior and generate any
+	  reply packets.
+	</para>
+
+      </sect2>
 
     </sect1>
 
@@ -2282,8 +4770,244 @@ Remote debugging using :51000
 	The Packet Interface
       </title>
 
+      <sect2>
+	<title>
+	  Packet Representation
+	</title>
+
+	<para>
+	  Although packets are character based, they cannot simply be
+	  represented as strings, since binary packets may contain the end of
+	  string character (zero). Packets are therefore represented as a
+	  simple <literal>struct</literal>, <structname>rsp_buf</structname>:
+	</para>
+
+	<programlisting>
+struct rsp_buf
+{
+  char  data[GDB_BUF_MAX];
+  int   len;
+};
+	</programlisting>
+
+	<para>
+	  For convenience, all packets have a zero added at location
+	  <varname>data[len]</varname>, allowing the data field of non-binary
+	  packets to be printed as a simple string for debugging purposes.
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_getting_packets">
+	<title>
+	  Getting Packets
+	</title>
+
+	<para>
+	  The packet reading function is <function>get_packet</function>. It
+	  looks for a well formed packet, beginning with '$', with '#' at the
+	  end of data and a valid 2 byte checksum (see <xref
+	  linkend="fig_packet_format"/> in <xref
+	  linkend="sec_presentation_layer"/> for packet representation
+	  details).
+	</para>
+
+	<para>
+	  If a valid packet is found, '+' is returned using
+	  <function>put_rsp_char&nbsp;()</function> (see <xref
+	  linkend="sec_char_output"/>) and the packet is returned as a
+	  pointer to a <structname>struct&nbsp;rsp_buf</structname>. Otherwise
+	  '-' is returned and the loop repeated to get a new packet
+	  (presumably retransmitted by the client).
+	</para>
+
+	<para>
+	  The buffer is statically allocated within
+	  <function>get_packet</function>. This is acceptable, since two
+	  received packets cannot be in use simultaneously.
+	</para>
+
+	<para>
+	  In general errors are silently ignored (the connection could be poor
+	  quality). However bad checksums are noted in a warning message. In
+	  the event of end of file being encountered,
+	  <function>get_packet&nbsp;()</function> returns immediately with
+	  &null; as result.
+	</para>
+
+	<sect3 id="sec_char_input">
+	  <title>
+	    Character Input
+	  </title>
+
+	  <para>
+	    The individual characters are read using
+	    <function>get_rsp_char&nbsp;()</function>. The result is returned
+	    as an <type>int</type>, allowing -1 to be used to indicate end of
+	    file, or other error. In the event of end of file, or error, the
+	    client connection is closed and <varname>rsp.client_fd</varname>
+	    set to -1.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2 id="sec_sending_packets">
+	<title>
+	  Sending Packets
+	</title>
+
+	<para>
+	  The packet writing function is <function>put_packet</function>. It
+	  takes as argument a <structname>struct&nbsp;rsp_buf</structname> and
+	  creates a well formed packet, beginning with '$', with '#' at the
+	  end of data and a valid 2 byte checksum (see <xref
+	  linkend="fig_packet_format"/> in <xref
+	  linkend="sec_presentation_layer"/> for packet representation
+	  details).
+	</para>
+
+	<para>
+	  The acknowledgment character is read using
+	  <function>get_rsp_char&nbsp;()</function> (see <xref
+	  linkend="sec_char_input"/>). If successful ('+'), the function
+	  returns. Otherwise the packet is repeatedly resent until ('+') is
+	  received as a response.
+	</para>
+
+	<para>
+	  Errors on writing are silently ignored. If the read of the
+	  acknowledgment returns -1 (indicating failure of the connection or
+	  end-of-file), <function>put_packet&nbsp;()</function> returns
+	  immediately.
+	</para>
+
+	<sect3 id="sec_char_output">
+	  <title>
+	    Character Output
+	  </title>
+
+	  <para>
+	    The individual characters are written by
+	    <function>put_packet&nbsp;()</function> using
+	    <function>put_rsp_char&nbsp;()</function>. In the event of an error
+	    other than a retry request or interrupt a warning is printed and
+	    the connection closed.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Convenience Functions
+      </title>
+
       <para>
+	A number of convenience functions are provided for &rsp; protocol
+	behavior that is repeatedly required.
       </para>
+
+      <sect2>
+	<title>
+	  Convenience String Packet Output
+	</title>
+
+	<para>
+	  Many response packets take the form of a fixed string. As a
+	  convenience <function>put_str_packet&nbsp;()</function> is provided. This
+	  takes a constant string argument, from which a
+	  <structname>struct&nbsp;rsp_buf</structname> is constructed. This is
+	  then sent using <function>put_packet&nbsp;()</function>.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Conversion Between Binary and Hexadecimal Characters
+	</title>
+
+	<para>
+	  The function <function>hex&nbsp;()</function> takes an ASCII character
+	  which is a valid hexadecimal digit (upper or lower case) and returns
+	  its value (0-15 decimal). Any invalid digit returns -1.
+	</para>
+
+	<para>
+	  The static array <varname>hexchars[]</varname> declared at the top
+	  level in <filename>rsp-server.c</filename> provides a mapping from a
+	  hexadecimal digit value (in the range 0-15 decimal) to its ASCII
+	  character representation.
+	</para>
+      </sect2>
+
+      <sect2>
+	<title>
+	  Register Conversion to Characters
+	</title>
+
+	<para>
+	  For several packets, register values must be represented as strings
+	  of characters in target endian order. For convenience, the functions
+	  <function>reg2hex&nbsp;()</function> and <function>hex2reg&nbsp;()</function>
+	  are provided. Each takes a pointer to a buffer for the
+	  characters. For <function>reg2hex&nbsp;()</function> a value to be
+	  converted is passed. For <function>hex2reg&nbsp;()</function> the value
+	  represented is returned as a result.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Data "Unescaping"
+	</title>
+
+	<para>
+	  The function <function>rsp_unescape&nbsp;()</function> takes a pointer to
+	  a data buffer and a length and "unescapes" the buffer in place. The
+	  length is the size of the data <emphasis>after</emphasis> all escape
+	  characters have been removed.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Setting the Program Counter
+	</title>
+
+	<para>
+	  The program counter (i.e. the address of the next instruction to be
+	  executed) is held in Special Purpose Register 16 (next program counter). Within
+	  &or1ksim; this is cached in <varname>cpu_state.pc</varname>.
+	</para>
+
+	<para>
+	  When changing the next program counter in &or1ksim; it is necessary to change
+	  associated data which controls the delay slot pipeline. If there is
+	  a delayed transfer, the flag <varname>cpu_state.delay_insn</varname>
+	  is set. The address of the next instruction to be executed (which
+	  is affected by the delay slot) is held in the global variable,
+	  <varname>pc_next</varname>.
+	</para>
+
+	<para>
+	  The utility function <function>set_npc</function> takes an address
+	  as argument. If that address is different to the current value of
+	  &npc;, then the &npc; (in <varname>cpu_state.pc</varname>) is updated to
+	  the new address, the delay slot pipeline is cleared
+	  (<varname>cpu_state.delay_insn</varname> is set to zero) and the
+	  following instruction (<varname>pcnext</varname>) is set to
+	  <varname>cpu_state.pc</varname>+4.
+	</para>
+
+      </sect2>
 
     </sect1>
 
@@ -2293,7 +5017,1059 @@ Remote debugging using :51000
       </title>
 
       <para>
+	The high level protocol is driven from the function
+	<function>rsp_client_request&nbsp;()</function>, which is called from
+	<function>handle_rsp</function> once a client connection is established.
       </para>
+
+      <para>
+	This function calls <function>get_packet&nbsp;()</function> to get the next
+	packet from the client, and then switches on the first character of
+	the packet data to determine the action to be taken.
+      </para>
+
+      <para>
+	The following sections discuss the implementation details of the
+	various packet types that must be supported.
+      </para>
+
+      <sect2>
+	<title>
+	  Deprecated Packets
+	</title>
+
+	<para>
+	  Packets requesting functionality that is now deprecated are ignored
+	  (possibly with an error response if that is expected) and a warning
+	  message printed. The packets affected are: <command>b</command> (set
+	  baud rate), <command>B</command> (set a breakpoint),
+	  <command>d</command> (disable debug) and <command>r</command> (reset
+	  the system).
+	</para>
+
+	<para>
+	  In each case the warning message indicates the recommended way to
+	  achieve the desired functionality.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Unsupported Packets
+	</title>
+
+	<para>
+	  The development of an interface such as &rsp; can be incremental,
+	  where functionality is added in stages. A number of packets are not
+	  supported. In a few cases this is because the functionality is
+	  meaningless for the current target, but in the majority of cases,
+	  the functionality can be supported as the server is developed
+	  further in the future.
+	</para>
+
+	<para>
+	  The unsupported packets are:
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <command>A</command>. Specifying the arguments for a program is
+	      hard on bare metal. It requires
+	      determining whether the code has yet entered its
+	      <function>main</function> function and if not patching in
+	      pointers to the new arguments.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>C</command> and <command>S</command>. Continuing or
+	      stepping with a signal is currently not supported. Implementing
+	      this would require insertion of an exception, which is not
+	      difficult, so this will be an enhancement for the near future.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>F</command>. File I/O is not meaningful with a bare
+	      metal target, where a file-system may not be present.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>i</command> and <command>I</command>. The target is an
+	      architectural simulator, executing one instruction at a time. So
+	      cycle accurate stepping is not available.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>t</command>. The meaning (or use) of the search command
+	      is not clear, so this packet is not currently implemented.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Simple Packets
+	</title>
+
+	<para>
+	  Some packets are very simple to handle, either requiring no
+	  response, or a simple fixed text response.
+	</para>
+
+	<itemizedlist>
+
+	  <listitem>
+	    <para>
+	      <command>!</command>. A simple reply of <literal>"OK"</literal>
+	      indicates the target will support extended remote debugging.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>D</command>. The detach is acknowledged with a reply
+	      packet of <literal>"OK"</literal> <emphasis>before</emphasis>
+	      the client connection is closed and
+	      <varname>rsp.client_fd</varname> set to -1. The semantics of
+	      detach require the target to resume execution, so the processor
+	      is unstalled using
+	      <function>set_stall_state&nbsp;(0)</function>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>H</command>. This sets the thread number of subsequent
+	      operations. Since thread numbers are of no relevance to this
+	      environment, a response of <literal>"OK"</literal> is always
+	      acceptable.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>k</command>. The kill request is used in extended mode
+	      before a restart or request to run a new program
+	      (<command>vRun</command> packet). Since the CPU is already
+	      stalled, it seems to have no additional semantic meaning. Since
+	      it requires no reply it can be silently ignored.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <command>T</command>. Since this is a bare level target, there
+	      is no concept of separate threads. The one thread is always
+	      active, so a reply of <literal>"OK"</literal> is always
+	      acceptable.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Reporting the Last Exception
+	</title>
+
+	<para>
+	  The response to the <command>?</command> packet is provided by
+	  <function>rsp_report_execption</function>. This is always a
+	  <command>S</command> packet. The signal value (as a &gdb; target
+	  signal) is held in <varname>rsp.sigval</varname>, and is presented
+	  as two hexadecimal digits.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Continuing
+	</title>
+
+	<para>
+	  The <command>c</command> packet is processed by
+	  <function>rsp_continue&nbsp;()</function>. Any address from which to
+	  continue is broken out from the packet using
+	  <function>sscanf&nbsp;()</function>. If no address is given,
+	  execution continues from the current program counter (in
+	  <varname>cpu_state.pc</varname>).
+	</para>
+
+	<para>
+	  The continue functionality is provided by the function
+	  <function>rsp_continue_generic&nbsp;()</function> which takes an address
+	  and an &or1ksim; exception as arguments, allowing it to be shared
+	  with the processing of the <command>C</command> packet (continue
+	  with signal) in the future. For the <command>c</command> packet,
+	  <constant>EXCEPT_NONE</constant> is used.
+	</para>
+
+	<para>
+	  <function>rsp_continue_generic</function> at present ignores its
+	  exception argument (the <command>C</command> packet is not
+	  supported). It sets the program counter to the address supplied
+	  (using <function>set_npc</function>).
+	</para>
+
+	<para>
+	  The control registers of the debug unit must then be set
+	  appropriately. The Debug Reason Register and watchpoint generation
+	  flags in Debug Mode Register 2 are cleared. The Debug Stop Register
+	  is set to trigger on TRAP exceptions (so memory breakpoints are
+	  picked up), and the single step flag is cleared in Debug Mode
+	  Register 1.
+	</para>
+
+	<programlisting>
+  cpu_state.sprs[SPR_DRR]   = 0;
+  cpu_state.sprs[SPR_DMR2] &amp;= ~SPR_DMR2_WGB;
+  cpu_state.sprs[SPR_DMR1] &amp;= ~SPR_DMR1_ST;
+  cpu_state.sprs[SPR_DSR]  |= SPR_DSR_TE;
+	</programlisting>
+
+	<para>
+	  The processor is then unstalled
+	  (<function>set_stall_state&nbsp;(0)</function>) and the client
+	  waiting flag (<varname>rsp.client_waiting</varname>) set. This
+	  latter means that when <function>handle_rsp</function> is next
+	  entered, it will know that a reply is outstanding, and return the
+	  appropriate stop packet required when the processor stalls after a
+	  <command>continue</command> or <command>step</command> command.
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_read_write_all_regs">
+	<title>
+	  Reading and Writing All Registers
+	</title>
+
+	<para>
+	  The <command>g</command> and <command>G</command> packets
+	  respectively read and write all registers, and are handled by the
+	  functions <function>rsp_read_all_regs&nbsp;()</function> and
+	  <function>rsp_write_all_regs&nbsp;()</function>.
+	</para>
+
+	<sect3>
+	  <title>
+	    Reading All Registers
+	  </title>
+
+	  <para>
+	    The register data is provided in a reply packet as a stream of
+	    hexadecimal digits for each register in &gdb; register order. For
+	    the &or1k; this is the 32 &gpr;s followed by the Previous Program
+	    Counter, Next Program Counter and Supervision Register
+	    &spr;s. Each register is presented in target endian order, using
+	    the utility function <function>reg2hex&nbsp;()</function>.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Writing All Registers
+	  </title>
+
+	  <para>
+	    The register data follows the <command>G</command> as a stream of
+	    hexadecimal digits for each register in &gdb; register order. For
+	    the &or1k; this is the 32 &gpr;s followed by the Previous Program
+	    Counter, Next Program Counter and Supervision Register &spr;s. Each
+	    register is supplied in target endian order and decoded using the
+	    utility function <function>hex2reg&nbsp;()</function>.
+	  </para>
+
+	  <para>
+	    The corresponding values are set in the &or1ksim; data
+	    structures. For the &gpr;s this is in the
+	    <varname>cpu_state.regs</varname> array. For the Previous Program
+	    Counter and Supervision Register it is the relevant entry in the
+	    <varname>cpu_state.sprs</varname> array. The Next Program Counter
+	    is set using the <function>set_npc&nbsp;()</function> utility function,
+	    which ensures associated variables, controlling the delay pipeline
+	    are also updated appropriately.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Reading and Writing Memory
+	</title>
+
+	<para>
+	  The <command>m</command> and <command>M</command> packets
+	  respectively read and write blocks of memory, with the data
+	  represented as hexadecimal characters. The processing is provided by
+	  <function>rsp_read_mem&nbsp;()</function> and
+	  <function>rsp_write_mem&nbsp;()</function>.
+	</para>
+
+	<sect3>
+	  <title>
+	    Reading Memory
+	  </title>
+
+	  <para>
+	    The syntax of the packet is
+	    <command>m,addr,len:</command>. <function>sscanf</function> is
+	    used to break out the address and length fields (both in hex).
+	  </para>
+
+	  <para>
+	    The reply packet is a stream of bytes, starting from the lowest
+	    address, each represented as a pair of hex characters. Each byte
+	    is read from memory using the simulator function
+	    <function>eval_direct8&nbsp;()</function>, having first verified the
+	    memory area is valid using
+	    <function>verify_memoryarea&nbsp;()</function>.
+	  </para>
+
+	  <para>
+	    The packet is only sent if all bytes are read
+	    satisfactorily. Otherwise an error packet,
+	    <literal>"E01"</literal> is sent. The actual error number does not
+	    matter&mdash;it is not used by the client.
+	  </para>
+
+	  <caution>
+	    <para>
+	      The use of <function>eval_direct8&nbsp;()</function> is not correct,
+	      since it ignores any caching or memory management. As a result
+	      the current implementation is only correct for configurations
+	      with no MMU or cache.
+	    </para>
+	  </caution>
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Writing Memory
+	  </title>
+
+	  <para>
+	    The syntax of the packet is <command>m,addr,len:</command>
+	    followed by the data to be written as a stream of bytes, starting
+	    from the lowest address, each represented as a pair of hex
+	    characters. <function>sscanf</function> is used to break out the
+	    address and length fields (both in hex).
+	  </para>
+
+	  <para>
+	    Each byte is written to memory using
+	    <function>set_program8&nbsp;()</function> (which ignores any read
+	    only constraints on the modeled memory), having first verified
+	    that the memory address is valid using
+	    <function>verify_memoryarea&nbsp;()</function>.
+	  </para>
+
+	  <para>
+	    If all bytes are written successfully, a reply packet
+	    <literal>"OK"</literal> is sent. Otherwise an error reply,
+	    <literal>"E01"</literal> is sent. The actual error number does not
+	    matter&mdash;it is not used by the client.
+	  </para>
+
+	  <caution>
+	    <para>
+	      The use of <function>set_program8&nbsp;()</function> is not correct,
+	      since it ignores any caching or memory management. As a result
+	      the current implementation is only correct for configurations
+	      with no MMU or cache.
+	    </para>
+	  </caution>
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Reading and Writing Individual Registers
+	</title>
+
+	<para>
+	  The <command>p</command> and <command>P</command> packets are
+	  implemented respectively by <function>rsp_read_reg&nbsp;()</function> and
+	  <function>rsp_write_reg&nbsp;()</function>.
+	</para>
+
+	<para>
+	  These functions are very similar in implementation to
+	  <function>rsp_read_all_regs&nbsp;()</function> and 
+	  <function>rsp_write_all_regs&nbsp;()</function> (see <xref
+	  linkend="sec_read_write_all_regs"/>).
+	</para>
+
+	<para>
+	  The two differences are that the packet data must be parsed to
+	  identify the register affected, and (clearly) only one register is
+	  read or written.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Query Packets
+	</title>
+
+	<para>
+	  Query packets all start with <command>q</command>. The functionality
+	  is all provided in the function <function>rsp_set&nbsp;()</function>.
+	</para>
+
+	<sect3>
+	  <title>
+	    Deprecated Query Packets
+	  </title>
+
+	  <para>
+	    The <command>qL</command> and <command>qP</command> packets to
+	    obtain information about threads are now obsolete, and are ignored
+	    with a warning. An empty reply (meaning not supported) is sent to
+	    each.
+	  </para>
+
+	  <para>
+	    These packets have been replaced by <command>qC</command>,
+	    <command>qfThreadInfo</command>, <command>qsThreadInfo</command>
+	    and <command>qThreadExtraInfo,</command> packets (see <xref
+	    linkend="sec_query_threads"/>). 
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Unsupported Query Packets
+	  </title>
+
+	  <para>
+	    A number of query packets are not needed in an initial
+	    implementation, or make no sense for a bare metal target.
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<command>qCRC</command>. This can be implemented later by
+		writing the code to compute a &crc; for a memory area. A warning
+		is printed and an error packet ("E01") returned.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<command>qGetTLSAddr</command>. This is a highly operating
+		system dependent function to return the location of thread
+		local storage. It has no meaning in a simple bare metal
+		target. An empty reply is used to indicate that the feature is
+		not supported.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<command>qRcmd</command>. This packet is used to run a
+		remote command. Although this does not have a direct meaning,
+		it is a useful way of passing arbitrary requests to the target
+		independent of &gdb; and &rsp;. It will likely be used in the
+		future to implement commands to display and set Special
+		Purpose Registers (<command>info&nbsp;spr</command> and
+		<command>spr</command>). These commands cannot be implemented
+		using the main packets, since &spr;s do not appear in either
+		the memory map or the register file.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<command>qXfer:</command>. This packet is used to transfer
+		"special" data to and from the target. A number of variants
+		are already defined, to access particular features, some
+		specific to certain targets and operating systems.
+	      </para>
+
+	      <para>
+		This is the alternative way to provide &spr; access, but
+		providing a new variant <command>qXfer</command> specific to
+		the &or1k;. However and new <command>qXfer</command> does
+		demand integration within &gdb;.
+	      </para>
+
+	      <para>
+		<command>qXfer</command> functionality must be specifically
+		enabled using the <command>qSupported</command> packet (see
+		<xref linkend="sec_qSupported"/>). For the present this is not
+		provided.
+	      </para>
+	    </listitem>
+
+	  </itemizedlist>
+
+	</sect3>
+
+	<sect3 id="sec_query_threads">
+	  <title>
+	    Queries About Threads
+	  </title>
+
+	  <para>
+	    Although threads are not meaningful on the bare metal target,
+	    sensible replies can be given to most of the thread related
+	    queries by using -1 to mean "all threads".
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<command>qC</command>. An empty reply is used, which is
+		interpreted as "use the previously selected thread". Since no
+		thread is ever explicitly selected by the target, this will
+		allow the client &gdb; session to use its default &null;
+		thread, which is what is wanted.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<command>qfThreadInfo</command> and
+		<command>qsThreadInfo</command>. These packets are used to
+		report the currently active
+		threads. <command>qfThreadInfo</command> is used to report the
+		first set of information and <command>qsThreadInfo</command>
+		for all subsequent information, until a reply packet of
+		<literal>"l"</literal> indicates the last packet.
+	      </para>
+
+	      <para>
+		In this implementation, a reply packet of
+		<literal>"m-1"</literal> (all packets are active is used for
+		<command>qfThreadInfo</command> and a reply packet of
+		<literal>"l"</literal> is used for
+		<command>qsThreadInfo</command> to indicate there is no more
+		information.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<command>qThreadExtraInfo</command>. This should return a
+		printed string, encoded as ASCII characters as hexadecimal
+		digits with attributes of the thread specified as argument.
+	      </para>
+
+	      <para>
+		The argument is always ignored (this target only has one
+		thread), and the reply <literal>"Runnable"</literal> is sent
+		back
+	      </para>
+	    </listitem>
+
+	  </itemizedlist>
+
+	</sect3>
+
+
+	<sect3>
+	  <title>
+	    Query About Executable Relocation
+	  </title>
+
+	  <para>
+	    The <command>qOffsets</command> packet requests a reply string of
+	    the format <literal>"Text=xx;Data=yy;Bss=zz"</literal> to identify
+	    the offsets used in relocating the sections of code to be
+	    downloaded.
+	  </para>
+
+	  <para>
+	    No relocation is used in this target, so the fixed string
+	    <literal>"Text=0;Data=0;Bss=0"</literal> is sent as a reply.
+	  </para>
+
+	  <caution>
+	    <para>
+	      The &gdb; User Guide (<xref linkend="ref_gdb_ug"/>) suggests the
+	      final <literal>";Bss=zz"</literal> is optional. This is not the
+	      case. It must be specified.
+	    </para>
+	  </caution>
+	</sect3>
+
+	<sect3 id="sec_qSupported">
+	  <title>
+	    Query About Supported Functionality
+	  </title>
+
+	  <para>
+	    The <command>qSupported</command> packet asks the client for
+	    information about features for which support is optional. By
+	    default, none are supported. The features are maximum packet size
+	    and support for the various <command>qXfer</command> packets and
+	    the <command>QPassSignals</command> packet.
+	  </para>
+
+	  <para>
+	    Of these only the packet size is of relevance to this target, so a
+	    reply of <literal>"PacketSize=xx"</literal>, where
+	    <literal>"xx"</literal> is the maximum packet size
+	    (<constant>GDB_BUF_MAX</constant>) is sent.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Query About Symbol Table Data
+	  </title>
+
+	  <para>
+	    A <command>qSymbol::</command> packet (i.e. a
+	    <command>qSymbol</command> packet with no data) is used as an
+	    offer from the client to provide symbol table information. The
+	    server may respond with packets of the form
+	    <command>qSymbol:name</command> to request information about the
+	    symbol <command>name</command>.
+	  </para>
+
+	  <para>
+	    A reply of <literal>"OK"</literal> is used to indicate that no
+	    further symbol table information is required. For the current
+	    implementation, no information is required, so
+	    <literal>"OK"</literal> is always sent as the response.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Set Packets
+	</title>
+
+	<para>
+	  Set packets all start with <command>Q</command>. The functionality
+	  is all provided in <function>rsp_set&nbsp;()</function>.
+	</para>
+
+	<para>
+	  The <command>QPassSignals</command> packet is used to pass signals
+	  to the target process. This is not supported, and not reported as
+	  supported in a <command>qSupported</command> packet (see <xref
+	  linkend="sec_qSupported"/>), so should never be received.
+	</para>
+
+	<para>
+	  If a <command>QPassSignals</command> packet is received, an empty
+	  response is used to indicate no support.
+	</para>
+
+	<sect3>
+	  <title>
+	    Tracepoint Packets
+	  </title>
+
+	  <para>
+	    All the remaining set packets (<command>QTDP</command>,
+	    <command>QFrame</command>, <command>QTStart</command>,
+	    <command>QTStop</command>, <command>QTinit</command> and
+	    <command>QTro</command>) are concerned with
+	    tracepoints. Tracepoints are not currently supported with the
+	    &or1ksim; target, so an empty reply packet is sent to indicate
+	    this.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2 id="sec_restart">
+	<title>
+	  Restart the Target
+	</title>
+
+	<para>
+	  The start address of the current target is held in
+	  <varname>rsp.start_addr</varname>. The program counter is set to
+	  this address using <function>set_npc</function>.
+	</para>
+
+	<para>
+	  The processor is not unstalled, since there would be no way to
+	  regain control if this happened. It is up to the &gdb; client to
+	  restart execution (with <command>continue</command> or
+	  <command>step</command> if that is what is desired).
+	</para>
+
+	<para>
+	  This packet should only be used in extended remote debugging.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Stepping
+	</title>
+	
+	<para>
+	  The step packet (<command>s</command>) requests a single machine
+	  instruction step. Its implementation is almost identical to that of
+	  the continue (<command>c</command>) packet, but using the functions
+	  <function>rsp_step&nbsp;()</function> and
+	  <function>rsp_step_generic&nbsp;()</function>. 
+	</para>
+	
+	<para>
+	  The sole difference is that the generic function sets, rather than
+	  clears the single stepping flag in Debug Mode Register 1. This ensures
+	  a trap exception is raised after the next instruction completes
+	  execution.
+	</para>
+	
+	<programlisting>
+  cpu_state.sprs[SPR_DRR]   = 0;
+  cpu_state.sprs[SPR_DMR2] &amp;= ~SPR_DMR2_WGB;
+  cpu_state.sprs[SPR_DMR1] |= SPR_DMR1_ST;
+  cpu_state.sprs[SPR_DSR]  |= SPR_DSR_TE;
+	</programlisting>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <command>v</command> Packets
+	</title>
+
+	<para>
+	  The <command>v</command> packets provide additional flexibility in
+	  controlling execution on the target. Much of this is related to
+	  non-stop targets with multithreading support and to flash memory
+	  control and need not be supported in a simple implementation.
+	</para>
+
+	<para>
+	  All the <command>v</command> packet functionality is provided in the
+	  function <function>rsp_vpkt&nbsp;()</function>.
+	</para>
+
+	<sect3>
+	  <title>
+	    Extended Debugging Support
+	  </title>
+
+	  <para>
+	    The <command>vAttach</command> and <command>vRun</command> packets
+	    are only required for extended remote debugging.
+	  </para>
+
+	  <para>
+	    <command>vRun</command> is used to specify a new program to be
+	    run, or if no program is specified that the existing target
+	    program be run again. In the current implementation, only this
+	    latter option is supported. Any program specified is ignored with
+	    a warning. The semantics of the <command>vRun</command> command
+	    are that the target is left in the stopped state, and the stopped
+	    condition reported back to the client.
+	  </para>
+
+	  <para>
+	    The <command>vRun</command> packet may also specify arguments to
+	    pass to the program to be run. In the current implementation those
+	    arguments are ignored with a warning.
+	  </para>
+
+	  <para>
+	    This behavior is identical to that of the <command>R</command>
+	    (restart) packet (see <xref linkend="sec_restart"/>) with the
+	    addition of a reply packet. The implementation uses exactly this
+	    functionality, with a reply packet reporting a TRAP exception.
+	  </para>
+
+	  <programlisting>
+      rsp_restart ();
+      put_str_packet ("S05");
+	  </programlisting>
+
+	  <para>
+	    The <command>vAttach</command> packet allows a client to attach to
+	    a new process. In this target, there is only one process, so the
+	    process argument is ignored and no action taken. However a stop
+	    response is required, so a reply packet indicating a TRAP
+	    exception is sent
+	    (<function>put_str_packet&nbsp;("S05")</function>.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Non-stop Support
+	  </title>
+
+	  <para>
+	    The <command>vCont</command> packet provides a more fine grained
+	    control over individual threads than the <command>c</command> or
+	    <command>s</command> packets.
+	  </para>
+
+	  <para>
+	    Support for <command>vCont</command> packets is established with a
+	    <command>vCont?</command> packet which should always be
+	    supported. In the current implementation, <command>vCont</command>
+	    is not supported, so an empty response is provided to any
+	    <command>vCont?</command> packet.
+	  </para>
+
+	</sect3>
+	
+	<sect3>
+	  <title>
+	    File Handling
+	  </title>
+
+	  <para>
+	    The <command>vFile</command> packet allows a file operation to be
+	    implemented on a target platform.  In the absence of any file
+	    system with the bare metal target, this packet is not
+	    supported. An empty response is sent and a warning printed.
+	  </para>
+	</sect3>
+	    
+	<sect3>
+	  <title>
+	      Flash Memory
+	  </title>
+
+	  <para>
+	    The <command>vFlashErase</command>, <command>vFlashWrite</command>
+	    and <command>vFlashDone</command> packets provide support for
+	    targets with flash memory systems.
+	  </para>
+
+	  <para>
+	    At present these are not supported on the target and an error
+	    reply ("E01") is returned. However &or1ksim; can model flash
+	    memory, and these packets could be supported in the future.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Binary Data Transfer
+	</title>
+
+	<para>
+	  The <command>X</command> provides for data to be written to the
+	  target in binary format. This is the mechanism of choice for program
+	  loading (the &gdb; <command>load</command> command). &gdb; will
+	  first probe the target with an empty <command>X</command> packet
+	  (which is 7-bit clean). If an <literal>"OK"</literal> response is
+	  received, subsequent transfers will use the <command>X</command>
+	  packet. Otherwise <command>M</command> packets will be used. Thus
+	  even 7-bit clean implementations should still support replying to an
+	  empty <command>X</command> packet.
+	</para>
+
+	<para>
+	  The example implementation is found in
+	  <function>rsp_write_mem_bin</function>. Even though the data is
+	  binary, it must still be escaped so that '#', '$' and '}' characters
+	  are not mistaken for new packets or escaped characters.
+	</para>
+
+	<para>
+	  Each byte is read, and if escaped, restored to its original
+	  value. The data is written using
+	  <function>set_program8&nbsp;()</function>, having first verified the
+	  memory location with <function>verify_memoryarea&nbsp;()</function>.
+	</para>
+
+	<para>
+	  If all bytes are successfully written, a reply packet of
+	  <literal>"OK"</literal> is sent. Otherwise and error packet ("E01")
+	  is sent. The error number does not matter&mdash;it is ignored by the
+	  target.
+	</para>
+
+	<caution>
+	  <para>
+	    The use of <function>set_program8&nbsp;()</function> is not correct,
+	    since it ignores any caching or memory management. As a result the
+	    current implementation is only correct for configurations with no
+	    instruction MMU or instruction cache.
+	  </para>
+	</caution>
+      </sect2>
+
+      <sect2>
+	<title>
+	  Matchpoint Handling
+	</title>
+
+	<para>
+	  Matchpoint is the general term used for breakpoints (both memory and
+	  hardware) and watchpoints (write, read and access). Matchpoints are
+	  removed with <command>z</command>command> packets and set with
+	  <command>Z</command> packets. The functionality is provided
+	  respectively in <function>resp_remove_matchpoint&nbsp;()</function>
+	  and <function>resp_insert_matchpoint&nbsp;()</function>.
+	</para>
+
+	<para>
+	  The current implementation only supports memory (soft)
+	  breakpoints. However the &or1k; architecture and &or1ksim; have
+	  hardware breakpoint and watchpoint functionality within the debug
+	  unit, which will be supported in the future.
+	</para>
+
+	<para>
+	  The target is responsible for keeping track of any memory
+	  breakpoints set. This is managed through the hash table pointed to
+	  by <varname>rsp.mp_hash</varname>. Each matchpoint is recorded in a
+	  matchpoint entry:
+	</para>
+
+	<programlisting>
+struct mp_entry
+{
+  enum mp_type       type;
+  unsigned long int  addr;
+  unsigned long int  instr;
+  struct mp_entry   *next;
+};
+	</programlisting>
+
+	<para>
+	  When an instruction is replaced by <literal>l.trap</literal> for a
+	  memory breakpoint, the replace instruction is recorded in the hash
+	  table as a <structname>struct&nbsp;mp_entry</structname> with type
+	  <constant>BP_MEMORY</constant>. This allows it to be replaced when
+	  the the breakpoint is cleared.
+	</para>
+
+	<para>
+	  The hash table is accessed by the functions
+	  <function>mp_hash_init&nbsp;()</function>,
+	  <function>mp_hash_add&nbsp;()</function>,
+	  <function>mp_hash_lookup&nbsp;()</function> and
+	  <function>mp_hash_delete&nbsp;()</function>. These are described in
+	  more detail in <xref linkend="sec_mp_hash"/>
+	</para>
+
+	<sect3>
+	  <title>
+	    Setting Matchpoints
+	  </title>
+
+	  <para>
+	    Only memory (soft) breakpoints are supported. The instruction is
+	    read from memory at the location of the breakpoint and stored in
+	    the hash table (using <function>mp_hash_add&nbsp;()</function>). A
+	    <literal>l.trap</literal> instruction
+	    (<constant>OR1K_TRAP_INSTR</constant>) is inserted in its place
+	    using <function>set_program32&nbsp;()</function> and a reply of
+	    <literal>"OK"</literal> sent back.
+	  </para>
+
+	  <programlisting>
+      mp_hash_add (type, addr, eval_direct32 (addr, 0, 0));
+      set_program32 (addr, OR1K_TRAP_INSTR);
+      put_str_packet ("OK");
+	  </programlisting>
+
+	  <caution>
+	    <para>
+	      The use of <function>eval_direct32&nbsp;()</function> with second and
+	      third arguments both zero and
+	      <function>set_program32&nbsp;()</function> is not correct, since
+	      it ignores any caching or memory management. As a result the
+	      current implementation is only correct for configurations with
+	      no instruction MMU or instruction cache.
+	    </para>
+	  </caution>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Clearing Matchpoints
+	  </title>
+
+	  <para>
+	    Only memory (soft) breakpoints are supported. The instruction that
+	    was substituted by <literal>l.trap</literal> is retrieved and
+	    deleted from the hash table using
+	    <function>mp_hash_delete&nbsp;()</function>. The instruction is
+	    then put back in its original location using
+	    <function>set_program32&nbsp;()</function>.
+	  </para>
+
+	  <para>
+	    <function>mp_hash_delete&nbsp;()</function> returns the
+	    <structname>struct&nbsp;mp_entry</structname> that was removed
+	    from the hash table. Once the instruction information has been
+	    retrieved, its memory must be returned by calling
+	    <function>free&nbsp;()</function>.
+	  </para>
+
+	  <para>
+	    It is possible to receive multiple requests to delete a breakpoint
+	    if the serial connection is poor (due to retransmissions). By
+	    checking that the entry is in the hash table, actual deletion of
+	    the breakpoint and restoration of the instruction happens at most
+	    once.
+	  </para>
+
+	  <programlisting>
+      mpe = mp_hash_delete (type, addr);
+
+      if (NULL != mpe)
+        {
+          set_program32 (addr, mpe->instr);
+          free (mpe);
+        }
+
+      put_str_packet ("OK");
+          </programlisting>
+
+	  <caution>
+	    <para>
+	      The use of <function>set_program32&nbsp;()</function> is not
+	      correct, since it ignores any caching or memory management. As a
+	      result the current implementation is only correct for
+	      configurations with no instruction MMU or instruction cache.
+	    </para>
+	  </caution>
+
+	</sect3>
+
+      </sect2>
 
     </sect1>
 
@@ -2320,7 +6096,7 @@ Remote debugging using :51000
 
   <glossary id="sec_glossary">
     <title>
-      Glosary
+      Glossary
     </title>
 
     <glossentry>
@@ -2341,39 +6117,6 @@ Remote debugging using :51000
 	</para>
 
 	<glossseealso>little&#32;endian</glossseealso>
-      </glossdef>
-    </glossentry>
-
-    <glossentry>
-      <glossterm>Common Object File Format</glossterm>
-      <acronym>COFF</acronym>
-      <glossdef>
-	<para>
-	  A specification of a format for executable, object code, and shared
-	  library computer files used on Unix systems. Now largely replaced by
-	  &elf;
-	</para>
-
-	<glossseealso>Executable and Linkable Format (&elf;)</glossseealso>
-      </glossdef>
-    </glossentry>
-
-    <glossentry>
-      <glossterm>Executable and Linkable Format</glossterm>
-      <acronym>ELF</acronym>
-      <glossdef>
-	<para>
-	  a common standard file format for executables, object code, shared
-	  libraries, and core dumps. It is the standard binary file format for
-	  Unix and Unix-like systems on x86, where it has largely replaced
-	  &coff;.
-	</para>
-
-	<para>
-	  Formerly known as the  Extensible Linking Format.
-	</para>
-
-	<glossseealso>Common Object File Format (&coff;)</glossseealso>
       </glossdef>
     </glossentry>
 
@@ -2493,7 +6236,7 @@ Remote debugging using :51000
 
     <glossentry>
       <glossterm>Special Purpose Register</glossterm>
-      <acronym>GPR</acronym>
+      <acronym>SPR</acronym>
       <glossdef>
 	<para>
 	  In the &or1k; architecture, one of up to 65536 registers
@@ -2507,7 +6250,7 @@ Remote debugging using :51000
 
 	<para>
 	  In general each group controls one component of the processor. Thus
-	  there is a group to control the DMMU, the IMMU the data and
+	  there is a group to control the DMMU, the IMMU, the data and
 	  instruction caches and the debug unit. Group 0 is the system group
 	  and includes all the system configuration registers, the next and
 	  previous program counters, supervision register and saved exception

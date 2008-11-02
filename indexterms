@@ -1,0 +1,344 @@
++
+  packet acknowledgement - see RSP packet
+-
+  packet acknowlegement - see RSP packet
+*
+  run-length encoding - see RSP packet
+#
+  escaped character - see RSP packet
+$
+  escaped character - see RSP packet
+}
+  escaped character - see RSP packet
+? packet - see RSP packet types
+! packet - see RSP packet types
+7-bit clean
+8-bit clean
+ABI
+  OpenRISC 1000 - see OpenRISC 1000
+access watchpoint - see watchpoint
+application layer - see OSI layers
+asynchronous debugging
+awatch command - see GDB commands
+bare metal
+binary data - see RSP packet
+BP_HARDWARE
+BP_MEMORY
+break command - see GDB commands
+breakpoint
+  hardware
+  memory (software)
+c packet - see RSP packet types
+C packet - see RSP packet types
+checksum - see RSP packet
+continue command - see GDB commands
+control-C - see interrupt
+cpu_state data structure
+D packet - see RSP packet types
+DCFGR - see Debug Configuration Register
+DCR - see Debug Control Register
+Debug Configuration Register - see Special Purpose Register
+Debug Control Register - see Special Purpose Register
+Debug Mode Register - see Special Purpose Register
+Debug Reason Register - see Special Purpose Register
+Debug Stop Register - see Special Purpose Register
+Debug Unit
+  JTAG interface
+    Igor Mohor version
+    ORPSoC version
+  matchpoint
+  registers - see Special Purpose Register
+  watchpoint
+  watchpoint counter
+Debug Value Register - see Special Purpose Register
+Debug Watchpoint Counter Register - see Special Purpose Register
+detach command - see GDB commands
+direct serial connection - see serial device connection
+disassemble command - see GDB commands
+disconnect command - see GDB commands
+DMR - see Debug Mode Register
+Doxygen
+  use with RSP server for OpenRISC
+DRR - see Debug Reason Register
+DSR - see Debug Stop Register
+DVR - see Debug Value Register
+DWCR - see Debug Watchpoint Counter Register
+Embecosm
+endianism
+escaped characters
+example
+  stub code for RSP server - see stub code for RSP server
+exceptionHandler - see stub code for RSP servers
+exec_main
+extended remote debugging
+frame pointer                              
+  in OpenRISC 1000
+g packet - see RSP packet types
+G packet - see RSP packet types
+GDB
+  built in variables			
+    $pc
+    $ps
+  Internals document
+  IRC
+  mailing lists
+  porting
+    Howto
+  register specification
+  User Guide
+  website
+  wiki
+GDB architecture specification
+GDB commands
+  awatch
+  break
+  continue
+  detach
+  disassemble
+  disconnect
+  hbreak
+  load
+  rwatch
+  step
+  stepi
+  target async
+  target extended-async
+  target extended-remote
+  target remote
+  watch
+gdbarch_single_step_through_delay
+General Purpose Register
+getDebugChar - see stub code for RSP servers
+GPRs - see General Purpose Register
+H packet - see RSP packet types
+hardware breakpoint - see breakpoint
+Harvard architecture
+hbreak command - see GDB commands
+i packet - see RSP packet types
+I packet - see RSP packet types
+interrupt
+  from client to server
+IRC - see GDB
+JTAG
+  - supporting with RSP server
+k packet - see RSP packet types
+load command - see GDB commands
+m packet - see RSP packet types
+M packet - see RSP packet types
+mailing lists - see GDB
+matchpoint - see also Debug Unit
+  types for &or1k;
+memory (software) breakpoint - see breakpoint
+mp_hash_add
+mp_hash_delete
+mp_hash_init
+mp_hash_lookup
+MP_HASH_SIZE
+non-stop execution
+OpenRISC 1000				
+  ABI					
+    argument passing
+    result return register
+    stack frame alignment
+    variations from documented standard
+  architecture
+    GPRs - see General Purpose Register
+    main memory
+    manual
+    SPRs - see Special Purpose Register
+  example
+  link register
+  tool chain
+Or1ksim
+OSI layers
+  application layer
+  presentation layer
+  session layer
+p packet - see RSP packet types
+P packet - see RSP packet types
+packet format - see RSP packet
+pipe connection
+presentation layer - see OSI layers
+program counter			
+  as Special Purpose Register
+putDebugChar - see stub code for RSP servers
+qC packet - see RSP packet types
+qfThreadInfo - see RSP packet types
+qOffsets packet - see RSP packet types
+qsThreadInfo - see RSP packet types
+qSupported packet - see RSP packet types
+qSymbol packet - see RSP packet types
+qThreadExtraInfo - see RSP packet types
+R packet - see RSP packet types
+read watchpoint - see watchpoint
+reply packet - see RSP packet
+RSP GDB command dialogs
+  awatch
+  break
+  continue
+  detach
+  disassemble
+  disconnect
+  hbreak
+  load
+  rwatch
+  step
+  stepi
+  target extended-remote
+  target remote
+  watch
+RSP packet
+  acknowlegement
+  binary data
+  checksum
+  escaped characters
+  format
+  reply packet
+  run-length encoding
+RSP packet types
+  ? packet
+  ! packet
+  c packet
+  C packet
+  D packet
+  g packet
+  G packet
+  H packet
+  i packet
+  I packet
+  k packet
+  m packet
+  M packet
+  p packet
+  P packet
+  R packet
+  qC packet
+  qfThreadInfo packet
+  qOffsets packet
+  qsThreadInfo packet
+  qSupported packet
+  qSymbol packet
+  qThreadExtraInfo packet
+  s packet
+  S packet
+  T packet
+  vAttach packet
+  vCont packet
+  vCont? packet
+  vRun packet
+  X packet
+  z packets
+    z0 packet (memory breakpoint)
+    z1 packet (hardware breakpoint)
+    z2 packet (write watchpoint)
+    z3 packet (read watchpoint)
+    z4 packet (access watchpoint)
+  Z packets
+    Z0 packet (memory breakpoint)
+    Z1 packet (hardware breakpoint)
+    Z2 packet (write watchpoint)
+    Z3 packet (read watchpoint)
+    Z4 packet (access watchpoint)
+RSP server for OpenRISC 1000
+  external code interface
+  global data structures
+  initialization
+  location of source code
+  matchpoint hash table
+RSP stop packet types
+  S stop packet
+  T stop packet
+  W stop packet
+  X stop packet
+rsp.client_waiting
+rsp.proto_num
+rsp.server_fd
+rsp.client_fd
+rsp.sigval
+rsp.start_addr
+rsp.mp_hash
+rsp_init
+run-length encoding - see RSP packet
+rwatch command - see GDB commands
+s packet - see RSP packet types
+S packet - see RSP packet types
+S stop packet - see RSP stop packet types
+serial device connection
+server stub code
+  for RSP - see stub code for RSP server
+session layer - see OSI layers
+sim_init
+simulator
+  connecting via RSP
+software (memory) breakpoint - see breakpoint
+Special Purpose Register
+  configuration registers		
+    CPU Configuration Register
+    Debug Configuration Register
+    Unit Present Register
+  Debug Unit                           
+    Debug Control Registers
+    Debug Mode Registers
+    Debug Reason Register
+    Debug Stop Register
+    Debug Value Registers
+    Debug Watchpoint Counter Registers
+  program counters
+    Next Program Counter
+    Previous Program Counter
+  Supervision Register
+SPRs - see Special Purpose Register
+SR - see Supervision Register
+stack frame
+  alignment
+    for OpenRISC 1000
+stack pointer
+  in OpenRISC 1000
+step command - see GDB commands
+stepi command - see GDB commands
+stub code for RSP server
+  exceptionHandler
+  limitations
+  getDebugChar
+  putDebugChar
+Supervision Register - see Special Purpose Register
+T packet - see RSP packet types
+T stop packet - see RSP stop packet types
+target async command - see GDB commands
+target extended-async command - see GDB commands
+target extended-remote command - see GDB commands
+target remote command - see GDB commands
+TCP/IP connection
+UDP/IP connection
+vAttach packet - see RSP packet types
+vCont packet - see RSP packet types
+vCont? packet - see RSP packet types
+vRun packet - see RSP packet types
+W stop packet - see RSP stop packet types
+watch command - see GDB commands
+watchpoint
+  access
+  in OpenRISC 1000 - see Debug Unit
+  read
+  software
+  write
+website - see GDB
+wiki - see GDB
+WP_ACCESS
+WP_READ
+WP_WRITE
+write watchpoint - see watchpoint
+X packet - see RSP packet types
+X stop packet - see RSP stop packet types
+z packets - see RSP packet types
+Z packets - see RSP packet types
+z0 packet - see RSP packet types
+z1 packet - see RSP packet types
+z2 packet - see RSP packet types
+z3 packet - see RSP packet types
+z4 packet - see RSP packet types
+Z0 packet - see RSP packet types
+Z1 packet - see RSP packet types
+Z2 packet - see RSP packet types
+Z3 packet - see RSP packet types
+Z4 packet - see RSP packet types

@@ -9,8 +9,13 @@ breakpoint
 breakpointed
 breakpointing
 breakpoints
+BSS
+Bss
 callee
+checksum
+checksums
 configurability
+CRC
 ctrl
 Damjan
 deallocation
@@ -44,7 +49,12 @@ MMU
 MMUs
 Mohor
 Mohor's
+multithreaded
+multithreading
+Nagel's
 namespace
+natively
+opcode
 Or1ksim
 passthrough
 pre-dates
@@ -53,6 +63,7 @@ redirections
 re-implements
 Rohit
 Rx
+SPARC
 steppable
 structs
 subclassing
@@ -63,7 +74,10 @@ tracepoint
 tracepoints
 TTYs
 Tx
+UDP
 UI
+Unescaping
+unescapes
 unhandled
 unpushed
 unstall
@@ -76,6 +90,9 @@ unwinder
 upcall
 upcalls
 watchpoint
+watchpointing
 watchpoints
 Wiki
+wiki
 www
+XORed
