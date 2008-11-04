@@ -1,39 +1,46 @@
-+
-  packet acknowledgement - see RSP packet
--
-  packet acknowlegement - see RSP packet
 *
   run-length encoding - see RSP packet
-#
-  escaped character - see RSP packet
-$
-  escaped character - see RSP packet
-}
-  escaped character - see RSP packet
 ? packet - see RSP packet types
 ! packet - see RSP packet types
 7-bit clean
 8-bit clean
+A packet - see RSP packet types
 ABI
   OpenRISC 1000 - see OpenRISC 1000
 access watchpoint - see watchpoint
 application layer - see OSI layers
 asynchronous debugging
 awatch command - see GDB commands
+b packet - see RSP packet types
+B packet - see RSP packet types
 bare metal
 binary data - see RSP packet
-BP_HARDWARE
-BP_MEMORY
+BP_HARDWARE constant
+BP_MEMORY constant
 break command - see GDB commands
 breakpoint
   hardware
   memory (software)
 c packet - see RSP packet types
 C packet - see RSP packet types
+cache - see memory cache
 checksum - see RSP packet
 continue command - see GDB commands
 control-C - see interrupt
+convenience functions
+  binary to hex character conversion
+  binary to hex character register conversion
+  data "unescaping"
+  fixed string reply packets
+  hex char to binary conversion
+  hex char to binary register conversion
+  next program counter
 cpu_state data structure
+  cpu_state.delay_insn
+  cpu_state.pc
+  cpu_state.regs
+  cpu_state.sprs
+d packet - see RSP packet types
 D packet - see RSP packet types
 DCFGR - see Debug Configuration Register
 DCR - see Debug Control Register
@@ -52,6 +59,8 @@ Debug Unit
   watchpoint counter
 Debug Value Register - see Special Purpose Register
 Debug Watchpoint Counter Register - see Special Purpose Register
+debug_ignore_exception function
+deprecated packet types - see RSP packets
 detach command - see GDB commands
 direct serial connection - see serial device connection
 disassemble command - see GDB commands
@@ -66,13 +75,19 @@ DWCR - see Debug Watchpoint Counter Register
 Embecosm
 endianism
 escaped characters
+eval_direct8 function
+eval_direct32 function
 example
   stub code for RSP server - see stub code for RSP server
 exceptionHandler - see stub code for RSP servers
-exec_main
+exec_main function
 extended remote debugging
+F packet - see RSP packet types
+fixed response packet types for OpenRISC 100 - see RSP packet
+flash memory
 frame pointer                              
   in OpenRISC 1000
+free function
 g packet - see RSP packet types
 G packet - see RSP packet types
 GDB
@@ -108,12 +123,16 @@ GDB commands
   watch
 gdbarch_single_step_through_delay
 General Purpose Register
-getDebugChar - see stub code for RSP servers
+get_packet function
+get_rsp_char function
+getDebugChar function - see stub code for RSP servers
 GPRs - see General Purpose Register
 H packet - see RSP packet types
+handle_rsp function
 hardware breakpoint - see breakpoint
 Harvard architecture
 hbreak command - see GDB commands
+hex2reg function
 i packet - see RSP packet types
 I packet - see RSP packet types
 interrupt
@@ -122,18 +141,29 @@ IRC - see GDB
 JTAG
   - supporting with RSP server
 k packet - see RSP packet types
+listen function
 load command - see GDB commands
 m packet - see RSP packet types
 M packet - see RSP packet types
 mailing lists - see GDB
 matchpoint - see also Debug Unit
+  clearing for OpenRISC 1000
+  setting for OpenRISC 1000
   types for &or1k;
 memory (software) breakpoint - see breakpoint
-mp_hash_add
-mp_hash_delete
-mp_hash_init
-mp_hash_lookup
-MP_HASH_SIZE
+memory cache
+  limitations with access for &or1k;
+memory management unit
+  limitations with access for &or1k;
+MMU - see memory management unit
+mp_entry data structure
+mp_hash_add function
+mp_hash_delete function
+mp_hash_init function
+mp_hash_lookup function
+MP_HASH_SIZE constant
+Nagel's algorithm
+non-blocking execution
 non-stop execution
 OpenRISC 1000				
   ABI					
@@ -149,28 +179,43 @@ OpenRISC 1000
   example
   link register
   tool chain
+OR1K_TRAP_INSTR constant
 Or1ksim
+or1ksim-rsp TCP/IP service
 OSI layers
   application layer
   presentation layer
   session layer
 p packet - see RSP packet types
 P packet - see RSP packet types
+packet
+  data structure for OpenRISC 1000 - see RSP packet
 packet format - see RSP packet
+pc_next variable
 pipe connection
 presentation layer - see OSI layers
 program counter			
   as Special Purpose Register
+put_packet function
+put_rsp_char function
+put_str_packet function
 putDebugChar - see stub code for RSP servers
 qC packet - see RSP packet types
-qfThreadInfo - see RSP packet types
+qCRC packet - see RSP packet types
+qfThreadInfo packet - see RSP packet types
+qGetTLSAddr packet - see RSP packet types
 qOffsets packet - see RSP packet types
-qsThreadInfo - see RSP packet types
+QPassSignals - see RSP packet types
+qRcmd packet - see RSP packet types
+qsThreadInfo packet - see RSP packet types
 qSupported packet - see RSP packet types
 qSymbol packet - see RSP packet types
 qThreadExtraInfo - see RSP packet types
+qXfer
+r packet - see RSP packet types
 R packet - see RSP packet types
 read watchpoint - see watchpoint
+reg2hex function
 reply packet - see RSP packet
 RSP GDB command dialogs
   awatch
@@ -188,19 +233,30 @@ RSP GDB command dialogs
   target remote
   watch
 RSP packet
-  acknowlegement
+  acknowledgement
   binary data
   checksum
+  data structure for OpenRISC 1000
+  deprecated packets
+  error handling
   escaped characters
+  fixed response for OpenRISC 100
   format
+  maximum size
   reply packet
   run-length encoding
+  unsupported for OpenRISC 1000
 RSP packet types
   ? packet
   ! packet
+  A packet
+  b packet
+  B packet
   c packet
   C packet
+  d packet
   D packet
+  F packet
   g packet
   G packet
   H packet
@@ -211,21 +267,34 @@ RSP packet types
   M packet
   p packet
   P packet
+  r packet
   R packet
-  qC packet
-  qfThreadInfo packet
-  qOffsets packet
-  qsThreadInfo packet
-  qSupported packet
-  qSymbol packet
-  qThreadExtraInfo packet
+  q packets
+    deprecated query packets
+    qC packet
+    qfThreadInfo packet
+    qOffsets packet
+    qPassSignals
+    qRcmd
+    qsThreadInfo packet
+    qSupported packet
+    qSymbol packet
+    qThreadExtraInfo packet
+    unsupported for OpenRISC 1000
+  Q packets
+    QPassSymbols packet
+    tracepoint packets
+    unsupported for OpenRISC 1000
   s packet
   S packet
+  t packet
   T packet
-  vAttach packet
-  vCont packet
-  vCont? packet
-  vRun packet
+  v packets
+    unsupported for OpenRISC 1000
+    vAttach packet
+    vCont packet
+    vCont? packet
+    vRun packet
   X packet
   z packets
     z0 packet (memory breakpoint)
@@ -250,14 +319,27 @@ RSP stop packet types
   T stop packet
   W stop packet
   X stop packet
-rsp.client_waiting
-rsp.proto_num
-rsp.server_fd
-rsp.client_fd
-rsp.sigval
-rsp.start_addr
-rsp.mp_hash
-rsp_init
+rsp data structure
+  rsp.proto_num
+  rsp.server_fd
+  rsp.client_fd
+  rsp.sigval
+  rsp.start_addr
+  rsp.mp_hash
+rsp_buf data structure
+rsp_client_request function
+rsp_continue function
+rsp_continue_generic function
+rsp_exception function
+rsp_init function
+rsp_query function
+rsp_restart function
+rsp_server_request function
+rsp_set function
+rsp_step function
+rsp_step_generic function
+rsp_unescape function
+rsp_write_mem_bin function
 run-length encoding - see RSP packet
 rwatch command - see GDB commands
 s packet - see RSP packet types
@@ -267,7 +349,11 @@ serial device connection
 server stub code
   for RSP - see stub code for RSP server
 session layer - see OSI layers
-sim_init
+set_npc
+set_program8 function
+set_program32 function
+SIGIO
+sim_init function
 simulator
   connecting via RSP
 software (memory) breakpoint - see breakpoint
@@ -289,6 +375,7 @@ Special Purpose Register
   Supervision Register
 SPRs - see Special Purpose Register
 SR - see Supervision Register
+sscanf function
 stack frame
   alignment
     for OpenRISC 1000
@@ -302,6 +389,7 @@ stub code for RSP server
   getDebugChar
   putDebugChar
 Supervision Register - see Special Purpose Register
+t packet - see RSP packet types
 T packet - see RSP packet types
 T stop packet - see RSP stop packet types
 target async command - see GDB commands
@@ -309,10 +397,15 @@ target extended-async command - see GDB commands
 target extended-remote command - see GDB commands
 target remote command - see GDB commands
 TCP/IP connection
+  or1ksim-rsp service
+TRAP exception
+  using l.trap for OpenRISC 1000
 UDP/IP connection
+unsupported packet types for OpenRISC 1000 - see RSP packet
 vAttach packet - see RSP packet types
 vCont packet - see RSP packet types
 vCont? packet - see RSP packet types
+verify_memoryarea function
 vRun packet - see RSP packet types
 W stop packet - see RSP stop packet types
 watch command - see GDB commands
@@ -324,9 +417,9 @@ watchpoint
   write
 website - see GDB
 wiki - see GDB
-WP_ACCESS
-WP_READ
-WP_WRITE
+WP_ACCESS constant
+WP_READ constant
+WP_WRITE constant
 write watchpoint - see watchpoint
 X packet - see RSP packet types
 X stop packet - see RSP stop packet types
