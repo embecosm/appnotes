@@ -355,6 +355,8 @@ or1k_prepare_to_store
 or1k_pseudo_register_read
 or1k_pseudo_register_write
 or1k_push_dummy_call
+or1k_rcmd
+or1k_read_spr
 or1k_register_info
 or1k_register_name
 or1k_register_type
@@ -381,6 +383,7 @@ or1k_unwind_pc
 or1k_unwind_sp
 or1k_wait
 or1k_watchpoint_gc
+or1k_write_spr
 or1k_xfer_partial
 Or1ksim
   bug fixes
@@ -412,6 +415,7 @@ prologue cache
   invalidating
 pseudo-register
 read_pc_pid
+readspr
 red zone - see stack frame, red zone
 regcache_cooked_read
 regcache_cooked_read_signed
@@ -779,3 +783,4 @@ watchpoint
   restarting after
     problem with OpenRISC 1000
 write_pc
+writespr

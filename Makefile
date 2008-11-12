@@ -28,7 +28,7 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT        = embecosm-howto-gdb-porting-ean3-issue-1
+DOCROOT        = embecosm-howto-gdb-porting-ean3-issue-2
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work

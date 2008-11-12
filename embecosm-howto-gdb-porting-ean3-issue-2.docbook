@@ -133,11 +133,11 @@ $Id$
     </corpauthor>
 
     <pubdate>
-      August 2008
+      November 2008
     </pubdate>
 
     <releaseinfo>
-      Application Note 3. Issue 1
+      Application Note 3. Issue 2
     </releaseinfo>
 
     <copyright>
@@ -4741,7 +4741,8 @@ struct frame_base
       <para>
 	The &gdb; <emphasis>Remote Serial Protocol</emphasis> is a general
 	purpose protocol for connecting to remote targets. It is invoked
-	through the <command>target remote</command> command.
+	through the <command>target&nbsp;remote</command> and
+	<command>target&nbsp;extended-remote</command> commands.
       </para>
       <indexterm>
 	<primary>Remote Serial Protocol</primary>
@@ -4752,10 +4753,14 @@ struct frame_base
       </indexterm>
 
       <para>
-	The protocol is a simple text command-response protocol. Any remote
+	The protocol is a simple text command-response protocol.  The &gdb;
+	session acts as the client to the protocol. It issues commands to the
+	server, which in turn must be implemented by the target.  Any remote
 	target can communicate with &gdb; by implementing the server side of
 	the &rsp;. A number of stub implementations are provided for various
-	architectures, which can be used as the basis of new implementations.
+	architectures, which can be used as the basis of new
+	implementations. The protocol is fully documented as an appendix
+	within the main &gdb; User Guide <xref linkend="ref_gdb_ug"/>.
       </para>
       <indexterm>
 	<primary>Remote Serial Protocol</primary>
@@ -4767,6 +4772,44 @@ struct frame_base
 	implemented using the &rsp;, rather than by creating a new remote
 	target protocol.
       </para>
+
+      <sect2>
+	<title>
+	  &rsp; Client Implementation
+	</title>
+
+	<para>
+	  The client implementation can be found in the source files
+	  <filename>remote.h</filename> and <filename>remote.c</filename> in
+	  the <filename>gdb</filename> subdirectory. These implement a set of
+	  target operations, as described in <xref
+	  linkend="sec_target_ops"/>. Each of the standard operations is
+	  mapped into a sequence of &rsp; interactions with the server on the
+	  target.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  &rsp; Server Implementation
+	</title>
+
+	<para>
+	  &rsp; server implementation is a large subject in its own right, and
+	  does not form a direct part of the &gdb; implementation (since it is
+	  part of the target, not the debugger).
+	</para>
+
+	<para>
+	  A comprehensive "Howto" has been written by Embecosm, describing the
+	  implementation techniques for &rsp; servers, illustrated by examples
+	  using the &or1k; architectural simulator, &or1ksim; as &rsp; target
+	  <xref linkend="ref_app_note_4"/>.
+	</para>
+
+      </sect2>
+
     </sect1>
 
     <sect1>
@@ -6939,6 +6982,20 @@ struct frame_base
 	The &or1k; Remote &jtag; Protocol
       </title>
 
+      <important>
+	<para>
+	  The latest version of &gdb; for &or1k; implements the &gdb; Remote
+	  Serial Protocol, which is the preferred mechanism for connecting to
+	  remote targets <xref linkend="ref_app_note_4"/>.
+	</para>
+
+	<para>
+	  However the protocol described here is retained for backward
+	  compatibility. It is used here as a tutorial vehicle to illustrate
+	  how a custom debugging protocol can be used within &gdb;
+	</para>
+      </important>
+
       <para>
 	To facilitate remote debugging by &gdb;, the OpenRISC defines a
 	software protocol describing &jtag; accesses, suitable for transport
@@ -7956,10 +8013,12 @@ set_gdbarch_register_reggroup_p   (gdbarch, or1k_register_reggroup_p);
 	<para>
 	  The representation of the <emphasis>raw</emphasis> registers (see
 	  <xref linkend="sec_regcache" />) is: registers 0-31 are the
-	  corresponding &gpr;s, register 32 is the program counter and
-	  register 33 is the supervision register. For convenience, constants
-	  are defined in the header, <filename>or1k_tdep.h</filename>, for all
-	  the special registers.
+	  corresponding &gpr;s, register 32 is the previous program counter,
+	  33 is the next program counter (often just called
+	  <emphasis>the</emphasis> program counter) and register 34 is the
+	  supervision register. For convenience, constants are defined in the
+	  header, <filename>or1k_tdep.h</filename>, for all the special
+	  registers.
 	</para>
 
 	<informalexample>
@@ -7986,7 +8045,7 @@ set_gdbarch_register_reggroup_p   (gdbarch, or1k_register_reggroup_p);
 	  <programlisting>
 #define OR1K_MAX_GPR_REGS    32
 #define OR1K_NUM_PSEUDO_REGS  0
-#define OR1K_NUM_REGS        (OR1K_MAX_GPR_REGS + 2)
+#define OR1K_NUM_REGS        (OR1K_MAX_GPR_REGS + 3)
 #define OR1K_TOTAL_NUM_REGS  (OR1K_NUM_REGS + OR1K_NUM_PSEUDO_REGS)
 	  </programlisting>
 	</informalexample>
@@ -11106,6 +11165,84 @@ void      or1k_jtag_wait (int  fast);
 
       </sect2>
 
+      <sect2 id="sec_or1k_exec_comms">
+	<title>
+	  &or1k; Target Functions to Execute Commands
+	</title>
+
+	<para>
+	  The &or1k; target does not really have a way to execute
+	  commands. However implementing &spr; access as remote commands
+	  provides a mechanism for access, which is independent of the target
+	  access protocol. In particular the &gdb; architecture need know
+	  nothing about the actual remote protocol used.
+	</para>
+
+	<para>
+	  &spr; access is implemented as though the target were able to run
+	  two commands, <command>readspr</command> to get a value from a &spr;
+	  and <command>writespr</command> to set a value in a &spr;. Each
+	  takes a first argument, specified in hexadecimal, which is the &spr;
+	  number. <command>writespr</command> takes a second argument,
+	  specified in hexadecimal, which is the value to be
+	  written. <command>readspr</command> returns the value read as a
+	  number in hexadecimal.
+	</para>
+	<indexterm>
+	  <primary><command>readspr</command></primary>
+	</indexterm>
+	<indexterm>
+	  <primary><command>writespr</command></primary>
+	</indexterm>
+
+	<para>
+	  When access is needed to the &spr;s it is achieved by passing one of
+	  these commands as argument to the <function>to_rcmd</function>
+	  function of the target.
+	</para>
+	<indexterm>
+	  <primary>&target_ops;</primary>
+	      <secondary>functions</secondary>
+	  <tertiary><function>to_rcmd</function></tertiary>
+	</indexterm>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>or1k_rcmd</function>. The command to execute
+	      (<command>readspr</command> or <command>writespr</command>) is
+	      passed as the first argument. Results of the command are written
+	      back throug the second argument, which is a UI independent file
+	      handle.
+	    </para>
+
+	    <para>
+	      <command>readspr</command> is mapped to the corresponding call
+	      to <function>or1k_jtag_read_spr</function>.
+	      <command>writespr</command> is mapped to the corresponding call
+	      to <function>or1k_jtag_write_spr</function>. In the case of an
+	      error (for example badly formed command), the result
+	      <literal>"E01"</literal> is returned. If
+	      <command>writespr</command> is successful,
+	      <literal>"OK"</literal> is returned as result. If
+	      <command>readspr</command> is successful, the value as
+	      hexadecimal is returned as result. In all cases the result is
+	      written as a string to the UI independent file handle specified
+	      as second argument to the function.
+	    </para>
+	    <indexterm>
+	      <primary><function>or1k_rcmd</function></primary>
+	    </indexterm>
+	    <indexterm>
+	      <primary>&target_ops;</primary>
+	      <secondary>functions</secondary>
+	      <tertiary><function>to_rcmd</function></tertiary>
+	    </indexterm>
+	  </listitem>
+	</itemizedlist>
+
+      </sect2>
+
       <sect2 id="sec_jtag_interface">
 	<title>
 	  The Low Level &jtag; Interface
@@ -11396,6 +11533,20 @@ add_info ("spr", or1k_info_spr_command,
 	  <primary>&gdb;</primary>
 	  <secondary>UI independent output</secondary>
 	</indexterm>
+
+	<para>
+	  The &spr; is read using the convenience function
+	  <function>or1k_read_spr</function>. This converts the access to a
+	  call of the command <command>readspr</command>, which can be passed
+	  to the target usings its <function>to_rcmd</function> target
+	  operation (see <xref linkend="sec_or1k_exec_comms"/>). This will
+	  allow the &spr; to be accessed in the way most appropriate to the
+	  current target access method.
+	</para>
+	<indexterm>
+	  <primary><function>or1k_read_spr</function></primary>
+	</indexterm>
+
       </sect2>
 
       <sect2>
@@ -11428,8 +11579,7 @@ add_info ("spr", or1k_info_spr_command,
 	  <function>or1k_spr_command</function>. This also uses
 	  <function>or1k_parse_spr_params</function> to parse the arguments,
 	  although there is now one more (the value to set). The new value is
-	  written into the relevant &spr; (using
-	  <function>or1k_write_spr</function>) and the change recorded using
+	  written into the relevant &spr; and the change recorded using
 	  <function>ui_out_field_fmt</function>.
 	</para>
 	<indexterm>
@@ -11447,6 +11597,19 @@ add_info ("spr", or1k_info_spr_command,
 	<indexterm>
 	  <primary>&gdb;</primary>
 	  <secondary>UI independent output</secondary>
+	</indexterm>
+
+	<para>
+	  The &spr; is written using the convenience function
+	  <function>or1k_write_spr</function>. This converts the access to a
+	  call of the command <command>writespr</command>, which can be passed
+	  to the target usings its <function>to_rcmd</function> target
+	  operation (see <xref linkend="sec_or1k_exec_comms"/>). This will
+	  allow the &spr; to be accessed in the way most appropriate to the
+	  current target access method.
+	</para>
+	<indexterm>
+	  <primary><function>or1k_write_spr</function></primary>
 	</indexterm>
 
       </sect2>
@@ -11765,7 +11928,7 @@ add_info ("spr", or1k_info_spr_command,
     <bibliomixed id="ref_app_note_2">
       <title id="ref_app_note_2_xr">
 	&embecosm; Application Note 2. The &opencores; &or1k; Simulator and
-	Tool Chain: Installation Guide.
+	Tool Chain: Installation Guide. Issue 3.
       </title>
       <publisher>
 	<publishername>
@@ -11773,11 +11936,29 @@ add_info ("spr", or1k_info_spr_command,
 	</publishername>
       </publisher>
       <pubdate>
-	June 2008.
+	November 2008.
       </pubdate>
       <indexterm>
 	<primary>&or1k;</primary>
 	<secondary>tool chain</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_4">
+      <title>
+	&embecosm; Application Note 4. Howto: GDB Remote Serial Protocol:
+	Writing a RSP Server.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	November 2008.
+      </pubdate>
+      <indexterm>
+	<primary>Remote Serial Protocol</primary>
       </indexterm>
     </bibliomixed>
 
