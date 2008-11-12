@@ -28,12 +28,12 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT          = embecosm-or1k-setup-ean2-i1
+DOCROOT          = embecosm-or1k-setup-ean2-issue-3
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
 
-include $(HOME)/svntrunk/Documentation/local_scripts/linux_article.mk
+include $(HOME)/svntrunk/Documentation/local_scripts/linux_book.mk
 
 .PHONY: spell
 spell:
