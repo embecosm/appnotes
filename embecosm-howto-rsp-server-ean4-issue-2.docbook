@@ -1039,10 +1039,10 @@ $Id$
 
       <para>
 	In general &gdb; assumes that when it connects to a target via &rsp;,
-	that target will be stopped. However there is a variant of remote
-	debugging, invoked by <command>target&nbsp;extended-async</command>
-	which allows the target to continue running. This is discussed in more
-	detail later (see <xref linkend="sec_extended_async"/>).
+	that target will be stopped. However there are new features in &gdb;
+	allowing it to work asynchronously while some or all threads in the
+	target continue executing. This is discussed in more detail later (see
+	<xref linkend="sec_extended_async"/>).
       </para>
       <indexterm>
 	<primary>&gdb; commands</primary>
@@ -1274,8 +1274,10 @@ $Id$
 	    Secondly, the initial reply is sent without a request packet from
 	    the client &gdb; session. As a result this reply will typically be
 	    queued and appear as the reply to the first request packet from
-	    &gdb; and thus client requests and server responses will be out of
-	    step.
+	    &gdb;. The client interface is quite robust and usually quietly
+	    rejects unexpected packets, but there is potential for client
+	    requests and server responses to get out of step. It certainly
+	    does not represent good program design.
 	  </para>
 	</caution>
 
@@ -2098,6 +2100,9 @@ $Id$
 	  existing value", which suits in this case&mdash;since it is never
 	  set explicitly, it will be the NULL thread ID, which is appropriate.
 	</para>
+	<indexterm>
+	  <primary>bare metal</primary>
+	</indexterm>
 	<indexterm>
 	  <primary>&gdb; commands</primary>
 	  <secondary><command>continue</command></secondary>
@@ -3420,49 +3425,6 @@ Remote debugging using :51000
       </para>
       <indexterm>
 	<primary>asynchronous remote debugging</primary>
-      </indexterm>
-
-      <para>
-	Thus the packet exchanges for <command>target&nbsp;async</command> are
-	identical to those for <command>target&nbsp;remote</command> and the
-	packet exchanges for <command>target&nbsp;extended-async</command> are
-	identical to those for <command>target&nbsp;extended-remote</command>.
-      </para>
-      <indexterm>
-	<primary>&gdb; commands</primary>
-	<secondary>
-	  <command>target&nbsp;remote</command>
-	</secondary>
-      </indexterm>
-      <indexterm>
-	<primary>&gdb; commands</primary>
-	<secondary>
-	  <command>target&nbsp;extended-remote</command>
-	</secondary>
-      </indexterm>
-      <indexterm>
-	<primary>&gdb; commands</primary>
-	<secondary>
-	  <command>target&nbsp;async</command>
-	</secondary>
-      </indexterm>
-      <indexterm>
-	<primary>
-	  <command>target&nbsp;async</command> command
-	</primary>
-	<see>&gdb; commands</see>
-      </indexterm>
-      <indexterm>
-	<primary>&gdb; commands</primary>
-	<secondary>
-	  <command>target&nbsp;extended-async</command>
-	</secondary>
-      </indexterm>
-      <indexterm>
-	<primary>
-	  <command>target&nbsp;extended-async</command> command
-	</primary>
-	<see>&gdb; commands</see>
       </indexterm>
 
     </sect1>
@@ -5393,10 +5355,13 @@ struct rsp_buf
 	  <listitem>
 	    <para>
 	      <command>A</command>. Specifying the arguments for a program is
-	      hard on bare metal. It requires determining whether the code has
+	      hard on "bare metal". It requires determining whether the code has
 	      yet entered its <function>main&nbsp;()</function> function and
 	      if not patching in pointers to the new arguments.
 	    </para>
+	    <indexterm>
+	      <primary>bare metal</primary>
+	    </indexterm>
 	    <indexterm>
 	      <primary>&rsp; packet types</primary>
 	      <secondary><command>A</command> packet</secondary>
@@ -6156,8 +6121,11 @@ struct rsp_buf
 
 	  <para>
 	    A number of query packets are not needed in an initial
-	    implementation, or make no sense for a bare metal target.
+	    implementation, or make no sense for a "bare metal" target.
 	  </para>
+	  <indexterm>
+	    <primary>bare metal</primary>
+	  </indexterm>
 	  <indexterm>
 	    <primary>&rsp; packet types</primary>
 	    <secondary><command>q</command> packets</secondary>
@@ -6194,7 +6162,7 @@ struct rsp_buf
 	      <para>
 		<command>qGetTLSAddr</command>. This is a highly operating
 		system dependent function to return the location of thread
-		local storage. It has no meaning in a simple bare metal
+		local storage. It has no meaning in a simple "bare metal"
 		target. An empty reply is used to indicate that the feature is
 		not supported.
 	      </para>
@@ -6207,15 +6175,16 @@ struct rsp_buf
 
 	    <listitem>
 	      <para>
-		<command>qRcmd</command>. This packet is used to run a
-		remote command. Although this does not have a direct meaning,
-		it is a useful way of passing arbitrary requests to the target
-		independent of &gdb; and &rsp;. It will likely be used in the
-		future to implement commands to display and set Special
-		Purpose Registers (<command>info&nbsp;spr</command> and
-		<command>spr</command>). These commands cannot be implemented
-		using the main packets, since &spr;s do not appear in either
-		the memory map or the register file.
+		<command>qRcmd</command>. This packet is used to run a remote
+		command. Although this does not have a direct meaning, it is a
+		useful way of passing arbitrary requests to the target. In the
+		current implementation two commands <command>readspr</command>
+		and <command>writespr</command> are provided to read and write
+		values from and to Special Purpose Registers (needed for the
+		&gdb; <command>info&nbsp;spr</command> and
+		<command>spr</command> commands). These commands cannot be
+		implemented using the main packets, since &spr;s do not appear
+		in either the memory map or the register file.
 	      </para>
 	      <indexterm>
 		<primary>&rsp; packet types</primary>
@@ -6234,6 +6203,45 @@ struct rsp_buf
 		<primary>&gdb; commands</primary>
 		<secondary><command>spr</command></secondary>
 	      </indexterm>
+	      <indexterm>
+		<primary><command>readspr</command></primary>
+	      </indexterm>
+	      <indexterm>
+		<primary><command>writespr</command></primary>
+	      </indexterm>
+
+	      <para>
+		A side effect of this mechanism is that the remote commands
+		are directly visible to the user through the &gdb;
+		<command>monitor</command> command. Thus there are two ways to
+		view a &spr;. The "official" way:
+	      </para>
+	      <indexterm>
+		<primary>&gdb; commands</primary>
+		<secondary><command>monitor</command></secondary>
+	      </indexterm>
+
+	      <programlisting>
+(gdb) info spr npc
+SYS.NPC = SPR0_16 = 256 (0x100)
+(gdb) 
+	      </programlisting>
+
+	      <para>
+		And the unofficial way:
+	      </para>
+
+	      <programlisting>
+(gdb) monitor readspr 10
+     100(gdb)
+	      </programlisting>
+
+	      <para>
+		For this reason, defining and using a new
+		<command>qXfer</command> packet type (see below) might be
+		preferred as a way of accessing custom information such as
+		&spr; values.
+	      </para>
 	    </listitem>
 
 	    <listitem>
@@ -6254,9 +6262,9 @@ struct rsp_buf
 	      </indexterm>
 
 	      <para>
-		This is the alternative way to provide &spr; access, but
+		This is the alternative way to provide &spr; access, by
 		providing a new variant <command>qXfer</command> specific to
-		the &or1k;. However and new <command>qXfer</command> does
+		the &or1k;. However any new <command>qXfer</command> does
 		demand integration within &gdb;.
 	      </para>
 
@@ -6283,10 +6291,13 @@ struct rsp_buf
 	  </title>
 
 	  <para>
-	    Although threads are not meaningful on the bare metal target,
+	    Although threads are not meaningful on the "bare metal" target,
 	    sensible replies can be given to most of the thread related
 	    queries by using -1 to mean "all threads".
 	  </para>
+	  <indexterm>
+	    <primary>bare metal</primary>
+	  </indexterm>
 
 	  <itemizedlist>
 	    <listitem>
@@ -6863,9 +6874,12 @@ struct rsp_buf
 	  <para>
 	    The <command>vFile</command> packet allows a file operation to be
 	    implemented on a target platform.  In the absence of any file
-	    system with the bare metal target, this packet is not
+	    system with the "bare metal" target, this packet is not
 	    supported. An empty response is sent and a warning printed.
 	  </para>
+	  <indexterm>
+	    <primary>bare metal</primary>
+	  </indexterm>
 	  <indexterm>
 	    <primary>&rsp; packet types</primary>
 	    <secondary><command>v</command> packets</secondary>
@@ -7078,12 +7092,12 @@ struct rsp_buf
 	<indexterm>
 	  <primary>&rsp; packet types</primary>
 	  <secondary><command>z</command> packets</secondary>
-	  <tertiary><command>z0</command> packet</tertiary>
+	  <tertiary><command>z0</command> packet (memory breakpoint)</tertiary>
 	</indexterm>
 	<indexterm>
 	  <primary>&rsp; packet types</primary>
 	  <secondary><command>Z</command> packets</secondary>
-	  <tertiary><command>Z0</command> packet</tertiary>
+	  <tertiary><command>Z0</command> packet (memory breakpoint)</tertiary>
 	</indexterm>
 
 	<para>

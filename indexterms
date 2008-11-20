@@ -113,6 +113,7 @@ GDB commands
   disconnect
   hbreak
   load
+  monitor
   rwatch
   step
   stepi
@@ -215,6 +216,7 @@ qXfer
 r packet - see RSP packet types
 R packet - see RSP packet types
 read watchpoint - see watchpoint
+readspr
 reg2hex function
 reply packet - see RSP packet
 RSP GDB command dialogs
@@ -421,6 +423,7 @@ WP_ACCESS constant
 WP_READ constant
 WP_WRITE constant
 write watchpoint - see watchpoint
+writespr
 X packet - see RSP packet types
 X stop packet - see RSP stop packet types
 z packets - see RSP packet types
