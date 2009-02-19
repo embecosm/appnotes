@@ -82,8 +82,8 @@
     </rdf:RDF>
   </metadata>
   <sodipodi:namedview
-     inkscape:window-height="721"
-     inkscape:window-width="1024"
+     inkscape:window-height="1151"
+     inkscape:window-width="1600"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      guidetolerance="10.0"
@@ -98,11 +98,11 @@
      inkscape:snap-guide="true"
      showguides="true"
      inkscape:showpageshadow="false"
-     inkscape:zoom="0.70444444"
+     inkscape:zoom="1.3011111"
      inkscape:cx="450"
-     inkscape:cy="350"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4"
+     inkscape:cy="285.5"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:current-layer="svg3702"
      inkscape:guide-bbox="true"
      inkscape:grid-points="true"
@@ -121,6 +121,13 @@
   </sodipodi:namedview>
   <defs
      id="defs3704">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 285.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="900 : 285.5 : 1"
+       inkscape:persp3d-origin="450 : 190.33333 : 1"
+       id="perspective2665" />
     <marker
        inkscape:stockid="TriangleInS"
        orient="auto"
@@ -236,7 +243,7 @@
        y="1688.2064">Debug</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:483.36251831px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     style="font-size:483.36252189px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
      x="7781.7139"
      y="643.88409"
      id="text2931"
