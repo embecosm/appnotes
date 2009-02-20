@@ -107,7 +107,7 @@ $Id$
     High Performance SoC Modeling with Verilator
   </title>
   <subtitle>
-    Cycle Accurate SystemC Model Creation and Optimization
+    A Tutorial for Cycle Accurate &systemc; Model Creation and Optimization
   </subtitle>
 
   <bookinfo>
@@ -766,7 +766,7 @@ $Id$
       <para>
 	Verilator <xref linkend="ref_verilator"/> is an open source tool which
 	generates cycle accurate C++ and SystemC models from synthesizable
-	Verilog &rtl;. The model follow 2-state, zero delay, synthesizable
+	Verilog &rtl;. The models follow 2-state, zero delay, synthesizable
 	semantics. Experimental versions are also able to process VHDL.
       </para>
 
@@ -2000,7 +2000,7 @@ sys 0.57
 	</itemizedlist>
 
 	<para>
-	  Cycle accurate models are typically use in scenarios, where the
+	  Cycle accurate models are typically used in scenarios, where the
 	  model is created once and used many times, so the run-time
 	  performance is the critical figure.
 	</para>
@@ -2110,11 +2110,11 @@ sys 0.57
 
 	<para>
 	  The functionality of this class is identical to that of its Verilog
-	  counterpart. On each positive clock edge, the wishbone freeze signal
-	  in the CPU control unit is checked. If the value is clear, the
-	  current instruction being executed is read. If the instruction is a
-	  special <literal>l.nop</literal> instruction, the appropriate
-	  behavior is implemented.
+	  counterpart. On each positive clock edge, the freeze signal for the
+	  write back pipeline stage in the CPU control unit is checked. If the
+	  value is clear, the current instruction being executed is read. If
+	  the instruction is a special <literal>l.nop</literal> instruction,
+	  the appropriate behavior is implemented.
 	</para>
 
 	<para>
@@ -2150,7 +2150,7 @@ sys 0.57
 	      <listitem>
 		<para>
 		  Gives the <type>bool</type> value of the CPU control unit
-		  freeze signal, <literal>wb_freeze</literal>.
+		  write back freeze signal, <literal>wb_freeze</literal>.
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -2162,7 +2162,7 @@ sys 0.57
 	      <listitem>
 		<para>
 		  Gives the <type>uint32_t</type> value of the CPU control
-		  unit instruction, <literal>wb_insn</literal>.
+		  unit write back instruction, <literal>wb_insn</literal>.
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -2339,9 +2339,9 @@ sc_core::sc_out&lt;bool&gt;  rstn;
 
 	<para>
 	  These classes implement respectively &vcd; tracing and signal access
-	  in the &verilator; model respectively. Because they are so
-	  intimately involved with the &verilator; model, their description is
-	  postponed to that chapter (<xref linkend="chap_verilator"/>).
+	  in the &verilator; model. Because they are so intimately involved
+	  with the &verilator; model, their description is postponed to that
+	  chapter (<xref linkend="chap_verilator"/>).
 	</para>
 
       </sect2>
@@ -2497,10 +2497,13 @@ sc_core::sc_out&lt;bool&gt;  rstn;
       <para>
 	As noted earlier, there are multiple instances of
 	<filename>timescale.v</filename>, with different values for time unit
-	and precision. However with all Verilog files will find the first
-	once, which is in <filename>$RTL_DIR</filename>
-	(<literal>1ps/1ps</literal>). This is a different value to that used
-	in simulation, but does not have any practical impact.
+	and precision. Now all the Verilog files form a single SoC design, and
+	all their header directories are specified using
+	<literal>+incdir+</literal>. So now all components will use the same
+	<literal>timescale.v</literal>, the copy in
+	<filename>$RTL_DIR</filename> (orp_soc/rtl/verilog).  This specifies
+	<literal>1ps/1ps</literal>, a different value to that used in
+	simulation, but does not have any practical impact.
       </para>
 	
       <para>
@@ -3482,7 +3485,7 @@ sys 0.02
 
       <sect2>
 	<title>
-	  Comparison with Event Drive Simulation
+	  Comparison with Event Driven Simulation
 	</title>
 
 	<para>
@@ -6096,7 +6099,7 @@ Overall summary by module:
 	</title>
 
 	<tgroup cols="4" align="left" colsep="1" rowsep="1">
-	  <colspec colwidth="2*" colname="Description"/>
+	  <colspec colwidth="4*" colname="Description"/>
 	  <colspec colwidth="2*" colname="BuildTime"/>
 	  <colspec colwidth="2*" colname="RunTime"/>
 	  <colspec colwidth="2*" colname="RunPerf"/>
@@ -6324,7 +6327,7 @@ Overall summary by module:
 	<para>
 	  Build a baseline &verilator; model starting from the same source
 	  hierarchy. Make &rtl; modifications where necessary to meet
-	  &verilator;s language requirements, and disable warnings at this
+	  &verilator;'s language requirements, and disable warnings at this
 	  stage.
 	</para>
       </listitem>
@@ -6369,7 +6372,7 @@ Overall summary by module:
       <listitem>
 	<para>
 	  Profile the finished model using <command>gprof</command> and
-	  &verilator;s post-analysis utility. Consider disabling or optimizing
+	  &verilator;'s post-analysis utility. Consider disabling or optimizing
 	  any modules that are a serious performance bottleneck.
 	</para>
       </listitem>
