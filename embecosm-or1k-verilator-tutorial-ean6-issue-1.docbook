@@ -767,8 +767,7 @@ $Id$
 	Verilator <xref linkend="ref_verilator"/> is an open source tool which
 	generates cycle accurate C++ and SystemC models from synthesizable
 	Verilog &rtl;. The models follow 2-state, zero delay, synthesizable
-	semantics. There have been discussions about a future extension to
-	handle VHDL, but no work yet started on this.
+	semantics. Experimental versions are also able to process VHDL.
       </para>
 
       <para>
@@ -2705,14 +2704,8 @@ n -Wno-lint -Mdir . -sc -f v-processed.scr
 
       <para>
 	The correct fix is to replace the occurrences with a different
-	variable name. This is worth doing, since more tools are moving to
-	support SystemVerilog, and it will save hitting this problem each time
-	a new tool is adopted.
-      </para>
-
-      <para>
-	However the short term fix is to restrict &verilator; to just a
-	particular language, in this case Verilog according to IEEE
+	variable name. However the short term fix is to restrict &verilator;
+	to just a particular language, in this case Verilog according to IEEE
 	1364-2001. This is achieved by using &verilator;'s
 	<option>-language</option> option:
       </para>

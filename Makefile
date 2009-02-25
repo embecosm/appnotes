@@ -28,7 +28,7 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT        = embecosm-or1k-verilator-tutorial-ean6-issue-1
+DOCROOT        = embecosm-or1k-verilator-tutorial-ean6-issue-2
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
