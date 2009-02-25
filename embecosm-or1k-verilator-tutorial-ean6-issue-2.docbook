@@ -1,0 +1,6812 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+
+<!-- =========================================================================
+Useful entities
+========================================================================== -->
+
+<!-- ========== Acronyms and abbreviations ========== -->
+
+<!ENTITY abi   "<acronym>ABI</acronym>">
+<!ENTITY api   "<acronym>API</acronym>">
+<!ENTITY bist  "<acronym>BIST</acronym>">
+<!ENTITY codec "<acronym>codec</acronym>">
+<!ENTITY cpld  "<acronym>CPLD</acronym>">
+<!ENTITY crc   "<acronym>CRC</acronym>">
+<!ENTITY dut   "<acronym>DUT</acronym>">
+<!ENTITY gnu   "<acronym>GNU</acronym>">
+<!ENTITY gpr   "<acronym>GPR</acronym>">
+<!ENTITY fpga  "<acronym>FPGA</acronym>">
+<!ENTITY ieee  "<acronym>IEEE</acronym>">
+<!ENTITY iss   "<acronym>ISS</acronym>">
+<!ENTITY jtag  "<acronym>JTAG</acronym>">
+<!ENTITY mmu   "<acronym>MMU</acronym>">
+<!ENTITY osci  "<acronym>OSCI</acronym>">
+<!ENTITY pdf   "<acronym>PDF</acronym>">
+<!ENTITY rtl   "<acronym>RTL</acronym>">
+<!ENTITY soc   "<acronym>SoC</acronym>">
+<!ENTITY sram  "<acronym>SRAM</acronym>">
+<!ENTITY tap   "<acronym>TAP</acronym>">
+<!ENTITY tdm   "<acronym>TDM</acronym>">
+<!ENTITY tlm   "<acronym>TLM</acronym>">
+<!ENTITY uart  "<acronym>UART</acronym>">
+<!ENTITY vcd   "<acronym>VCD</acronym>">
+
+<!-- ========== commonly used things ========== -->
+
+<!ENTITY systemc "SystemC">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
+
+<!ENTITY gcc       "<application class='software'><acronym>GCC</acronym></application>">
+<!ENTITY gdb       "<application class='software'><acronym>GDB</acronym></application>">
+<!ENTITY gtkwave   "<application class='software'>GTKWave</application>">
+<!ENTITY icarus    "<application class='software'>Icarus Verilog</application>">
+<!ENTITY linux     "<application class='software'>Linux</application>">
+<!ENTITY verilator "<application class='software'>Verilator</application>">
+
+<!-- = Hardware applications = -->
+
+<!ENTITY or1k      "<application class='hardware'>OpenRISC 1000</application>">
+<!ENTITY or1200    "<application class='hardware'>OpenRISC 1200</application>">
+<!ENTITY orpsoc    "<application class='hardware'>ORPSoC</application>">
+
+<!-- = Commands = -->
+
+<!-- = Libraries = -->
+
+<!-- ========== Cross references ========== -->
+
+<!-- = Organizations = -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY lgpl "GNU Lesser General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY gpl_www "GNU General Public License (<ulink url='http://www.gnu.org/licenses/gpl.html'>GNU General Public License</ulink>)">
+
+]>
+
+<!-- ==========================================================================
+
+Copyright (c) 2009 Embecosm Limited <info@embecosm.com>.
+
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
+
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
+
+===============================================================================
+
+Application note describing a SystemC cycle accurate interface to JTAG
+
+$Id$
+
+=========================================================================== -->
+
+<book lang="en_GB">
+  <title>
+    High Performance SoC Modeling with Verilator
+  </title>
+  <subtitle>
+    A Tutorial for Cycle Accurate &systemc; Model Creation and Optimization
+  </subtitle>
+
+  <bookinfo>
+
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>
+      February 2009
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 6. Issue 1
+    </releaseinfo>
+
+    <copyright>
+      <year>
+	2009
+      </year>
+      <holder>
+	&embecosm; Limited
+      </holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>
+	Legal Notice
+      </title>
+
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, Jeremy Bennett of &embecosm_www;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The software for the &systemc; cycle accurate model written by
+	&embecosm; and used in this document is licensed under the
+	&gpl_www;. For detailed licensing information see the file
+	<filename>COPYING</filename> in the source code.
+      </para>
+
+      <para>
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
+      </para>
+
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      This document describes how to use &verilator; <xref
+      linkend="ref_verilator"/> to create a fast cycle accurate &systemc;
+      model of a complete System-on-Chip from its Verilog &rtl;.
+    </para>
+
+    <para>
+      Cycle accurate models in C and &systemc; are becoming an increasingly
+      important part of the verification process, particularly for SoCs with
+      performance critical embedded software. They represent a software
+      friendly compromise, offering higher performance than traditional
+      event-driven simulation, but greater accuracy than hand-written
+      instruction set simulators (&iss;) and transaction level models (&tlm;).
+    </para>
+
+    <para>
+      Typically such models follow 2-state, zero-delay synthesis semantics,
+      offering an early insight into the behavior of the synthesized
+      design. Applications include:
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+          Detailed performance analysis of systems, based on the actual
+          hardware implementation running with its embedded software.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+          Implementation of low level firmware, such as board support packages
+	  &codec;s and specialist device drivers, which rely on exact behavior
+	  of SoC peripherals.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Software optimization. This can be particularly important for &codec;
+	  development, where the performance depends critically on interaction
+	  between processor, memory, cache and MMU. In such scenarios,
+	  estimates by &iss; and &tlm; can be out by a factor of 3, resulting
+	  either in wasted silicon, or chips that cannot meet their required
+	  performance.
+	</para>
+      </listitem>
+
+    </itemizedlist>
+
+<sect1>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+	If you are new to cycle accurate modeling tools, then this application
+	note provides a hands-on introduction.
+      </para>
+
+      <para>
+	If you are experienced modeler, then this application note will offer
+	suggestions for improving model performance, based on the author's
+	long experience in this area.
+      </para>
+
+      <para>
+	While based on the open source tool, &verilator;, the techniques
+	described are equally applicable to commercial tools such as ARC VTOC
+	or Carbon Design Systems Model Studio.
+      </para>
+
+    </sect1>
+
+        <sect1>
+      <title>
+	Open Source
+      </title>
+
+      <para>
+	Verilator is an open source tool. This entire application note uses an
+	open source SoC design (&orpsoc;) and open source tools. The cycle
+	accurate model is compared against simulation with &icarus;
+	<xref linkend="ref_icarus_verilog"/>. The
+	results are analyzed using &gtkwave; <xref linkend="ref_gtkwave"/>. The &orpsoc; application is built
+	using the &gnu; C compiler.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Further Sources of Information
+      </title>
+
+      <sect2>
+	<title>
+	  Written Documentation
+	</title>
+
+	<para>
+          &verilator; has its own website (<ulink
+          url="http://www.veripool.org">www.veripool.org</ulink>), providing
+          guidance for downloading, installing and using the tool. In
+          particular this application note should be read in conjunction with
+          the &verilator; user guide.
+        </para>
+
+	<para>
+	  &systemc; is defined by &ieee; standard 1666, and the
+	  standardization documents are the ultimate reference. The &systemc;
+	  standard <xref linkend="ref_ieee_systemc"/> is a free &pdf; download
+	  (a novelty for the &ieee;). The open source reference implementation
+	  from &osci; includes an introductory tutorial.
+	</para>
+
+	<para>
+	  The files making up the examples used in this application noted are
+	  comprehensively commented, and can be processed with Doxygen <xref
+	  linkend="ref_doxygen" />. Each class, member and method's behavior,
+	  parameters and return value is described.
+	</para>
+	<indexterm>
+	  <primary>Doxygen</primary>
+	</indexterm>
+    
+      </sect2>
+
+      <sect2>
+	<title>
+	  Other Information Channels
+	</title>
+
+	<para>
+	  There is a wealth of material to support &systemc; on the Internet.
+	</para>
+
+	<para>
+	  The Open &systemc; Initiative (&osci;) provides an open source
+	  reference implementation of the &systemc; library, which includes
+	  tutorial material in its documentation directory. These may be
+	  accessed from the &osci; website (<ulink
+	  url="http://www.systemc.org">www.systemc.org</ulink>).
+	</para>
+
+	<para>
+	  &osci; also provide a number of public mailing lists. The help forum
+	  and the community forum are of particular relevance. Subscription is
+	  through the &osci; website (see above).
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	About &embecosm;
+      </title>
+
+      <para>
+	&embecosm; is a consultancy specializing in open source tools, models
+	and training for the embedded software community. All &embecosm;
+	products are freely available under open source licenses.
+      </para>
+      <indexterm>
+	<primary>&embecosm;</primary>
+      </indexterm>
+
+      <para>
+	&embecosm; offers a range of commercial services:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Customization of open source tools and software, including porting
+	    to new architectures.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Support, tutorials and training for open source tools and software.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Custom software development for the embedded market, including
+	    bespoke software models of hardware.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Independent evaluation of software tools.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	For further information, visit the &embecosm; website at <ulink
+	url="http://www.embecosm.com/">www.embecosm.com</ulink>.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_overview">
+    <title>
+      Overview of Technologies and Tools
+    </title>
+<sect1>
+      <title>
+	Cycle Accurate Modeling
+      </title>
+
+      <para>
+	Cycle accurate models provide an accurate description of the state of
+	the model on each clock cycle. As such they represent a mid-point
+	between traditional event driven simulation (providing detail within
+	the clock cycle) and high level transaction models (providing details
+	of bus transactions, but usually only approximate estimates of the
+	cycle count).
+      </para>
+
+      <para>
+	Cycle accurate models are of particular value, because they
+	reflect the level of detail seen by a software engineer using a
+	chip. The software engineer generally cannot see what is happening
+	within clock cycles.
+      </para>
+
+      <sect2>
+	<title>
+	  Level of Modeling Detail
+	</title>
+
+	<para>
+	  There is some variation in the level of detail shown with specific
+	  modeling techniques. For example cycle accurate models generated by
+	  ARC VTOC from Verilog &rtl; will show the state of every state holding
+	  register in the model on each clock edge, and any asynchronous
+	  signal edge. Hand-written cycle accurate models within ARM SoC
+	  Designer will typically only show the state on the active edge of
+	  the clock cycle, and that state will be restricted to the external
+	  ports and defined internal registers.
+	</para>
+
+	<para>
+	  Most cycle accurate models follow 2-state, zero delay synthesis
+	  semantics. In this way they are closer to the behavior of the actual
+	  chip than traditional 4-state event-driven simulation. However there
+	  is no absolute reason why cycle-accurate models could not follow
+	  4-state simulation semantics.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Tool Support
+	</title>
+
+	<para>
+	  Some cycle accurate models are written by hand&mdash;for example the
+	  cycle accurate models supplied by ARM for their processor
+	  cores. However the great majority of cycle accurate models are
+	  generated automatically from Verilog or VHDL &rtl;. There are two
+	  commercial products (ARC VTOC and Carbon Design Systems <command>ModelStudio</command>)
+	  and one free open source product (Verilator).
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Modeling Language
+	</title>
+
+	<para>
+	  All these tools generate models in C/C++. However &systemc; is
+	  becoming increasingly popular, and is generated by all the tools as
+	  well. However the reference &osci; &systemc; simulator carries a
+	  serious performance penalty, and in all cases the model is a &systemc;
+	  wrapper for the top level ports around a plain C/C++ model.
+	</para>
+
+	<para>
+	  The performance penalty of &systemc; wrappers should be a
+	  consideration when generating cycle accurate models. Performance can
+	  be particularly adversely affected by any ports of wider than
+	  64-bits. The reference &systemc; simulator has a very
+	  low-performance implementation of such ports.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&osci; &systemc; IEEE 1666
+      </title>
+
+      <para>
+	The development of &systemc; as a standard for modeling hardware
+	started in 1996. Version 2.0 of the proposed standard was released by
+	the Open &systemc; Initiative (&osci;) in 2002. In 2006, &systemc;
+	became IEEE standard 1666-2005 <xref linkend="ref_ieee_systemc" />.
+      </para>
+
+      <para>
+	Most software languages are not particularly suited to modeling
+	hardware systems<footnote>
+	  <para>
+	    There are some exceptions, most notably Simula67, one of the
+	    languages which inspired C++. In some respects it is remarkably
+	    like &systemc;.
+	  </para>
+	</footnote>. <firstterm>&systemc;</firstterm> was developed to provide
+	features that facilitate hardware modeling, in particular to model the
+	parallelism of hardware, in a mainstream programming language.
+      </para>
+
+      <para>
+	An important objective was that software engineers should be
+	comfortable with using &systemc;, even though it is a hardware
+	modeling language. Rather than invent a new language, &systemc; is
+	based on the existing C++ language. &systemc; is a true super-set of
+	C++, so any C++ program is automatically a valid &systemc; program.
+      </para>
+
+      <para>
+	&systemc; uses the template, macro and library features of C++ to
+	extend the language. The key features it provides are:
+      </para>
+
+      <itemizedlist>
+
+	<listitem>
+	  <para>
+	    A C++ class, <classname>sc_module</classname>, suitable for
+	    defining hardware modules containing parallel
+	    processes.
+	  </para>
+
+	  <note>
+	    <para>
+	      <emphasis>Process</emphasis> is a general term in &systemc;
+	      to describe the various ways of representing parallel flows
+	      of control. It has nothing to do with processes in the &linux;
+	      or Microsoft Windows operating systems.
+	    </para>
+	  </note>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A mechanism to define functions modeling the parallel
+	    threads of control within <classname>sc_module</classname>
+	    classes;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Two classes, <classname>sc_port</classname> and
+	    <classname>sc_export</classname> to represent points of
+	    connection to and from a <classname>sc_module</classname>;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A class, <classname>sc_interface</classname> to describe the
+	    software services required by a <classname>sc_port</classname>
+	    or provided by a <classname>sc_export</classname>;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A class, <classname>sc_prim_channel</classname> to represent the
+	    channel connecting ports;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A set of derived classes, of
+	    <classname>sc_prim_channel</classname>,
+	    <classname>sc_interface</classname>,
+	    <classname>sc_port</classname> and
+	    <classname>sc_export</classname> to represent and connect common
+	    channel types used in hardware design such as signals, buffers and
+	    FIFOs; and
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A comprehensive set of types to represent data in both
+	    <firstterm>2-state</firstterm> and <firstterm>4-state</firstterm>
+	    logic.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	The full specification is 441 pages long <xref
+	linkend="ref_ieee_systemc" />. The &osci; reference distribution
+	includes a very useful introductory user guide and tutorial <xref
+	linkend="ref_osci_systemc_ug" />.
+      </para>
+	
+    </sect1>
+
+    <sect1>
+      <title>
+	OpenCores and the OpenRISC Project
+      </title>
+
+      <para>
+	The &or1k; project forms part of the OpenCores organization (<ulink
+	url="http://www.opencores.org">www.opencores.org</ulink>). Its aim is
+	to create a free open source computing platform, comprising:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    An open source 32/64 bit RISC/DSP architecture;
+	  </para>
+	</listitem>
+	
+	<listitem>
+	  <para>
+	    A set of open source implementations of the architecture; and
+	  </para>
+	</listitem>
+	
+	<listitem>
+	  <para>
+	    A complete open source tool chain and operating system.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>
+	The &or1k; project has resulted in Verilog for a 32-bit processor
+	core, the &or1200; (sometimes known as <abbrev>OR1200</abbrev>) and a
+	complete reference System on Chip (&soc;) design using that core,
+	&orpsoc;.
+      </para>
+
+      <para>
+	&or1k; is a traditional RISC load-store architecture. Optional operands
+	for multiplication and division may be added and there are optional
+	data and instruction caches and MMUs.
+      </para>
+
+      <para>
+	A particularly useful feature is the <literal>l.nop</literal>
+	opcode. This takes an optional 16-bit constant operand, which is
+	placed in the low 16-bits of the instruction word. This field has no
+	impact on the execution of the instruction, but may be analyzed as
+	required by external test benches.
+      </para>
+
+      <sect2>
+	<title>
+	  The OpenRISC Reference Platform System-on-Chip (&orpsoc;)
+	</title>
+
+	<para>
+	  &orpsoc; is a complete SoC based on the OpenRISC 1000. It combines
+	  the processor with &sram;, flash memory and a range of peripherals
+	  as shown in <xref linkend="fig_orpsoc"/>.
+	</para>
+
+	<figure id="fig_orpsoc">
+	  <title>
+	    The OpenRISC Reference Platform System-on-Chip (&orpsoc;).
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="orpsoc.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="orpsoc.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The full design is around 150k gates + memories. It runs on standard
+	  Altera and Xilinx &fpga; boards and is also available commercially
+	  from Flextronics.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+        &icarus;
+      </title>
+
+      <para>
+	&icarus; <xref linkend="ref_icarus_verilog"/> is an open source
+	event driven simulator, offering an interface and behavior similar to
+	commercial offerings such as Cadence NC, Synopsys VCS and Mentor
+	Graphics ModelSim.
+      </para>
+
+      <para>
+	When developing cycle accurate models, it is important to compare
+	behavior with event driven simulation, to understand any differences,
+	and ensure they are not significant.
+      </para>
+
+      <para>
+	&icarus; is capable of simulating &orpsoc; at 1-2kHz on a
+	standard PC running Linux.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+        Verilator
+      </title>
+
+      <para>
+	Verilator <xref linkend="ref_verilator"/> is an open source tool which
+	generates cycle accurate C++ and SystemC models from synthesizable
+	Verilog &rtl;. The models follow 2-state, zero delay, synthesizable
+	semantics. There have been discussions about a future extension to
+	handle VHDL, but no work yet started on this.
+      </para>
+
+      <para>
+	The functionality is similar to commercial offerings from ARC (VTOC)
+	and Carbon Design Systems (Model Studio).
+      </para>
+
+      <para>
+	A &verilator; SystemC model of ORPSoC simulates at up to 130kHz on a
+	standard Linux PC.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      The Example Design
+    </title>
+
+    <para>
+      The demonstration system is based on a fully configured &orpsoc; with
+      data and instruction caches, data and instruction &mmu;s, multiply and
+      divide instructions, 2MB Flash and 2MB &sram;. &sram; and all other memories
+      are implemented as generic flip-flop memory. Flash memory is modeled as
+      generic &sram; initialized from a file.
+    </para>
+
+    <sect1 id="sec_memory_map">
+      <title>
+	Memory Map
+      </title>
+
+      <para>
+	The memory map used is shown in <xref linkend="fig_memory_map"/>. This
+	is slightly different from the memory map described in the &orpsoc;
+	documentation. However these are the values used in the standard
+	distribution, which is a known working configuration.
+      </para>
+
+      <figure id="fig_memory_map">
+	<title>
+	  &orpsoc; memory map.
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="memory-map.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="memory-map.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	During reboot, instruction fetches have 0x0400000 added. This means
+	that the reboot sequence (which starts at 0x100) will fetch code from
+	the Flash memory (0x04000100). This allows initial boot up code to be
+	copied down into RAM.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Interrupt Assignment
+      </title>
+
+      <para>
+	The OpenRISC 1000 CPU incorporates a programmable interrupt
+	controller, capable of handling up to 20 interrupt lines. These are
+	assigned as shown in <xref linkend="tab_interrupts"/>.
+      </para>
+      
+      <table id="tab_interrupts" frame="all">
+	<title>
+	  &orpsoc; interrupt assignment
+	</title>
+
+	<tgroup cols="2" align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="2*" colname="number"/>
+	  <colspec colwidth="8*" colname="assignment"/>
+	  <thead>
+	    <row>
+	      <entry align="center">
+		<para>
+		  Number
+		</para>
+	      </entry>
+	      <entry align="left">
+		<para>
+		  Assignment
+		</para>
+	      </entry>
+	    </row>
+	  </thead>
+	  <tbody>
+
+	    <row>
+	      <entry morerows="0" align="center" valign="middle">
+		<para>
+		  0-1
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  Unused
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry morerows="0" align="center" valign="middle">
+		<para>
+		  2
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  UART
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry morerows="0" align="center" valign="middle">
+		<para>
+		  3
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  Unused
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry morerows="0" align="center" valign="middle">
+		<para>
+		  4
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  Ethernet
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry morerows="0" align="center" valign="middle">
+		<para>
+		  5
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  PS/2
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry morerows="0" align="center" valign="middle">
+		<para>
+		  6-19
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  Unused
+		</para>
+	      </entry>
+	    </row>
+
+	  </tbody>
+	</tgroup>
+      </table>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Test Bench Modeling of Peripherals
+      </title>
+
+      <para>
+	None of the peripherals are modeled&mdash;all external ports are tied
+	off to appropriate values.
+      </para>
+
+      <para>
+	The behavior of &orpsoc; is tracked through use of the &or1k;
+	<literal>l.nop</literal> instruction. These are incorporated in the
+	test applications as shown in <xref linkend="tab_nops"/>
+      </para>
+
+      <table id="tab_nops" frame="all">
+	<title>
+	  <literal>l.nop</literal> usage with the example &orpsoc; platform
+	</title>
+
+	<tgroup cols="2" align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="2*" colname="Opcode"/>
+	  <colspec colwidth="12*" colname="Action"/>
+	  <thead>
+	    <row>
+	      <entry align="left">
+		<para>
+		  Opcode
+		</para>
+	      </entry>
+	      <entry align="left">
+		<para>
+		  Action
+		</para>
+	      </entry>
+	    </row>
+	  </thead>
+	  <tbody>
+
+	    <row>
+	      <entry>
+		<para>
+		  <literal>l.nop&nbsp;1</literal>
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  End simulation, with the value in &gpr;&nbsp;3 as return code.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		<para>
+		  <literal>l.nop&nbsp;2</literal>
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  Report the value in &gpr;&nbsp;3.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		<para>
+		  <literal>l.nop&nbsp;4</literal>
+		</para>
+	      </entry>
+	      <entry>
+		<para>
+		  Print the value in &gpr;&nbsp;3 as a character
+		</para>
+	      </entry>
+	    </row>
+
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para>
+	All other <literal>l.nop</literal> argument values are ignored.
+      </para>
+
+      <para>
+	The test bench implements a monitor function to detect a new
+	<function>l.nop</function> instruction. It implements the appropriate
+	functionality.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Test Software Application
+      </title>
+
+      <para>
+	The test application is the the Dhrystone 2.1 benchmark <xref
+	linkend="ref_dhrystone"/>. A small support library based on the
+	<literal>l.nop</literal> instructions described in the previous
+	section is used to print out the results.
+      </para>
+
+    </sect1>
+
+    <sect1 id="sec_nop">
+      <title>
+	Use of the &or1k; <literal>l.nop</literal> Instruction
+      </title>
+
+      <para>
+	The &or1k; no-operation instruction, <literal>l.nop</literal>
+	(<literal>32'h1500_0000</literal>), can take an optional 16-bit
+	immediate parameter, which forms the least significant 16-bits of the
+	instruction word. This value is ignored by the CPU, but may be
+	monitored by test benches
+      </para>
+
+      <para>
+	In &orpsoc; this is used to provide I/O and control functions for the
+	C code running on the processor.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <literal>l.nop&nbsp;1</literal>
+	    (<literal>32'h1500_0001</literal>). Terminates execution, with the
+	    value in &gpr; 3 as return code. Thus the C library routine exit is
+	    implemented as:
+	  </para>
+
+	  <programlisting>
+void exit (int i)
+{
+  asm("l.add r3,r0,%0": : "r" (i));
+  asm("l.nop %0": :"K" (NOP_EXIT));
+  while (1);
+}
+	  </programlisting>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <literal>l.nop&nbsp;2</literal>
+	    (<literal>32'h1500_0002</literal>). Provides a reporting
+	    function. The value in &gpr; 3 is printed in hex.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <literal>l.nop&nbsp;3</literal>
+	    (<literal>32'h1500_0003</literal>). Provides
+	    <function>printf</function> functionality, with the arguments
+	    passed according to the &or1k; Application Binary Interface
+	    (&abi;). <emphasis>Not currently implemented</emphasis>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <literal>l.nop&nbsp;4</literal>
+	    (<literal>32'h1500_0004</literal>). An &embecosm; addition. The
+	    least significant byte of &gpr; 3 is printed as a character. Thus
+	    the C function <function>putc</function> can be implemented as:
+	  </para>
+
+	  <programlisting>
+void putc(int value)
+{
+  asm("l.addi\tr3,%0,0": :"r" (value));
+  asm("l.nop %0": :"K" (NOP_PUTC));
+}
+	  </programlisting>
+
+	  <para>
+	    More complex library routines (to print strings, numbers etc) can
+	    then be built up from this.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Module Hierarchy and File Organization
+      </title>
+
+      <para>
+	The Verilog hierarchy is shown in <xref
+	linkend="fig_verilog_hierarchy"/>.
+      </para>
+
+      <figure id="fig_verilog_hierarchy">
+	<title>
+	  &orpsoc; Verilog module hierarchy.
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="verilog-hierarchy.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="verilog-hierarchy.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	The main hierarchy is the &orpsoc;. The device under test (&dut;)
+	starts at <literal>orpsoc_fpga_top</literal>. This instantiates the
+	modules for the bus interconnect (<literal>tcop_top</literal>), the
+	CPU/debug subsystem, the flash &amp; &sram; memory subsystem and the
+	peripheral subsystem.
+      </para>
+
+      <para>
+	For event driven simulation with &icarus;, the &dut; is
+	instantiated by the top level test bench,
+	<literal>orpsoc</literal>. Alongside this sits the monitor module,
+	<literal>or1200_monitor</literal>, which implements the
+	<literal>l.nop</literal> functionality. For the &verilator; model,
+	these functions will be provided by &systemc; modules.
+      </para>
+
+      <para>
+	The files for this example are provided as a single compressed
+	<command>tar</command> file, and include a snapshot of the current
+	&orpsoc; source tree for convenience. However the &orpsoc; source may
+	be downloaded from <ulink
+	url="http://www.opencores.org/">www.opencores.org</ulink> and used
+	independently if preferred.
+      </para>
+
+      <para>
+	The code is set up, so the &orpsoc; code is not changed. Any files
+	that are changed are placed in mirror directories in the custom code,
+	and preferentially selected when building the model by specifying the
+	search path.
+      </para>
+
+      <caution>
+	<para>
+	  &orpsoc; is constructed from several different projects (the CPU,
+	  the debug unit, the peripherals etc). Each has source code in its
+	  own directory, and each directory has its own
+	  <filename>timescale.v</filename> file which is included.
+	</para>
+
+	<para>
+	  When the various components are brought together, the header search
+	  paths (i.e. <literal>+incdir+</literal> directories) are
+	  combined. However since the timescale file has the same name in each
+	  component (<filename>timescale.v</filename>) there is no guarantee
+	  that a component will actually include its intended timescale file.
+	</para>
+
+	<para>
+	  This is a potential source of confusion, but the current arrangement
+	  works, so has not been changed.
+	</para>
+      </caution>
+
+      <sect2>
+	<title>
+	  Distribution Code Organization
+	</title>
+
+	<para>
+	  The code is organized into a number of directories:
+	</para>
+
+	<variablelist termlength="3.5cm">
+
+	  <varlistentry>
+	    <term>
+	      Top level directory
+	    </term>
+	    <listitem>
+	      <para>
+		This contains the <filename>Makefile</filename> used to build
+		the system and the source files for the main Verilator test
+		bench in &systemc; (<filename>OrpsocMain.cpp</filename> and
+		<filename>OrpsocMain.h</filename>).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <filename>orp_soc</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		This directory is a snapshot of the current &orpsoc; source
+		tree from <ulink
+		url="http://www.opencores.org/">www.opencores.org</ulink>.
+		Described in more detail below.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <filename>local</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		This directory is a shadow of the <filename>orp_soc</filename>
+		directory. Changed versions of files are placed here (thus
+		preserving the original source), and preferentially selected
+		when building the model by setting the search path.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <filename>sim</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		This directory contains the command files used to build event
+		driven simulation models using &icarus;
+		(<filename>*.scr</filename>).
+	      </para>
+	    </listitem>
+	  </varlistentry>	    
+
+	  <varlistentry>
+	    <term>
+	      <filename>sysc-modules</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		This directory contains hand written &systemc; modules which
+		are part of the &systemc; test bench
+		(<literal>Or1200MonitorSC</literal> and
+		<literal>ResetSC</literal>).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <filename>verilator-model</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		This directory contains the command files to build the
+		various Verilator models (<filename>*.scr</filename>), a
+		class, <literal>OrpsocAccess</literal>, giving access to
+		signals inside the Verilator model, and a &systemc; module,
+		<literal>TraceSC</literal>, generating &vcd; trace information
+		if required.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+	<sect3 id="sec_orpsoc_files">
+	  <title>
+	    Original &orpsoc; Source Code Organization
+	  </title>
+
+	  <para>
+	    The original &orpsoc; source tree snapshot can be found in
+	    directory <filename>orp_soc</filename> of the distribution. The
+	    subdirectories are:
+	  </para>
+
+	  <variablelist termlength="2cm">
+	    <varlistentry>
+	      <term>
+		<filename>bench</filename>
+	      </term>
+	      <listitem>
+		<para>
+		  The test bench code. Subdirectory
+		  <filename>verilog</filename> contains &orpsoc; specific
+		  Verilog code. These include <filename>timescale.v</filename>
+		  specifying the <literal>`timescale</literal> for use across
+		  the system, and <filename>bench_defines.v</filename> setting
+		  system wide <literal>`define</literal> constants.
+		</para>
+	      </listitem>
+	    </varlistentry>
+	    
+	    <varlistentry>
+	      <term>
+		<filename>doc</filename>
+	      </term>
+	      
+	      <listitem>
+		<para>
+		  Documentation about &orpsoc;. The top level file
+		  <filename>ORP.txt</filename> specifies a memory map and
+		  interrupt assignment, but this does not match the actual
+		  memory map used in the Verilog &rtl; (see <xref
+		  linkend="sec_memory_map"/>).
+		</para>
+		
+		<para>
+		  Separate subdirectories, <filename>dbg_interface</filename>,
+		  <filename>ethernet</filename>, <filename>or1200</filename>
+		  and <filename>uart16550</filename> document their
+		  corresponding sub-systems and peripherals.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<filename>rtl</filename>
+	      </term>
+	      <listitem>
+		<para>
+		  This is the Verilog &rtl; code for &orpsoc;. The main
+		  <filename>verilog</filename> subdirectory contains the top
+		  level &fpga; header file,
+		  <filename>xsv_fpga_defines.v</filename>, and module
+		  definition, <filename>xsv_fpga_top.v</filename>, together
+		  with two "glue logic" modules, <filename>tc_top.v</filename>
+		  and <filename>tdm_slave_if.v</filename>.
+		</para>
+
+		<para>
+		  Separate subdirectories <filename>audio</filename>,
+		  <filename>dbg_interface</filename>,
+		  <filename>ethernet</filename>, <filename>mem_if</filename>,
+		  <filename>or1200</filename>, <filename>ps2</filename>,
+		  <filename>ssvga</filename> and
+		  <filename>uart16550</filename> contain the Verilog for the
+		  core CPU, debug unit, Flash and &sram; memory interfaces and
+		  peripherals. Directories with older versions of the &rtl;
+		  for some peripherals are also present.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<filename>sw</filename>
+	      </term>
+	      <listitem>
+		<para>
+		  This is the target software, which can be loaded into the
+		  &orpsoc; Flash memory for various tests. They are all
+		  designed to be compiled using the &or1k; tool chain (see
+		  <xref linkend="ref_app_note_2"/>).
+		</para>
+
+		<para>
+		  The utilities in the <filename>utils</filename> directory
+		  must be built first, followed by the support libraries in
+		  <filename>support</filename>. The other directories may be
+		  built in any order. In general versions of the software are
+		  provided for use with and without caches.
+		</para>
+
+		<caution>
+		  <para>
+		    There does seem to be an assumption in these code examples
+		    that &orpsoc; is built with multiply
+		    (<literal>l.mul</literal>, <literal>l.mulu</literal>) and
+		    divide (<literal>l.div</literal>,
+		    <literal>l.divu</literal>) instructions.
+		  </para>
+
+		  <para>
+		    Unfortunately this is not consistent with the default
+		    settings in the Verilog &rtl;.
+		  </para>
+		</caution>
+	      </listitem>
+	    </varlistentry>
+
+	  </variablelist>
+
+	</sect3>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Modifications to the &orpsoc; Code
+      </title>
+
+      <para>
+	Initially six files are modified from the original &orpsoc; source
+	code. These modified files are placed in the corresponding custom code
+	directory.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <filename>bench/verilog/bench_defines.v</filename>. The clock
+	    half-period is set to 50&nbsp;ns, corresponding to a clock rate of
+	    10MHz.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>bench/verilog/or1200_monitor.v</filename>. The standard
+	    &orpsoc; implementation includes a great deal of logging
+	    functionality. This is not of relevance to the typical
+	    applications of cycle accurate modeling in firmware
+	    development. The custom version is stripped down to provide just
+	    the custom <literal>l.nop</literal> functions (see <xref
+	    linkend="sec_nop"/>).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>bench/verilog/orpsoc_bench.v</filename>.  The original
+	    top level module was <filename>bench/verilog/xess_top.v</filename>
+	    and represented a top level wrapper for a Xilinx &fpga;, and
+	    incorporated Verilog models of some of the peripheral behavior.
+	  </para>
+
+	  <para>
+	    The intention for the Verilator &systemc; model is that any
+	    external functionality is provided by &systemc;
+	    modules. <filename>orpsoc_bench.v</filename> is a rewrite of
+	    <filename>xess_top.v</filename> to provide a thin test bench to
+	    allow the model also to be run under event-driven simulation.
+	  </para>
+
+	  <para>
+	    In this simple implementation, the external ports are tied off, but
+	    could be connected to Verilog behavioral models in the future.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>rtl/verilog/orpsoc_fpga_top.v</filename>. This is the
+	    top level of the &fpga; being modeled, and based closely on
+	    <filename>xsv_fpga_top.v</filename> in the &orpsoc;
+	    source. However some aspects have been simplified. There is no
+	    boot &cpld;, or &tdm; conversion. Since all memory is internal, there
+	    is no need for external memory ports for the Flash and &sram;.
+	  </para>
+
+	  <para>
+	    This top level module of the actual device is completely
+	    independent of any Verilog test bench (since with &verilator; it
+	    will use a &systemc; test bench), so does not include
+	    <filename>bench_defines.v</filename>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>rtl/verilog/orpsoc_fpga_defines.v</filename>. This is a
+	    close derivative of the original
+	    <filename>rtl/verilog/xsv_fpga_defines.v</filename>. However the
+	    <literal>`define&nbsp;TARGET_VIRTEX</literal> is removed, since no
+	    Xilinx (the manufacturer's of the Virtex &fpga; range) IP is used. A
+	    minor bug in the definition of <literal>APP_ADDR_PERIP</literal>
+	    is also corrected.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>rtl/verilog/or1200_defines.v</filename>. This customizes
+	    the CPU for this application. Even though it is notionally a
+	    &fpga; design, caches and MMUs are enabled (by defining
+	    <literal>OR1200_NO_DC</literal>, <literal>OR1200_NO_IC</literal>,
+	    <literal>OR1200_NO_DMMU</literal> and
+	    <literal>OR1200_NO_IMMU</literal>) and hardware division is
+	    enabled (by defining <literal>OR1200_IMPL_DIV</literal>)
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <filename>rtl/verilog/ssvga/ssvga_fifo.v</filename>,
+	    <filename>rtl/verilog/ssvga/ssvga_top.v</filename>,
+	    <filename>rtl/verilog/ssvga/ssvga_dpram_4x8x16.v</filename> and
+	    <filename>rtl/verilog/ssvga/ssvga_dpram_4x16x16.v</filename>. Almost
+	    the entire &orpsoc; design provides options to use different
+	    manufacturer's RAM block models, or a generic flip-flop
+	    model. This is managed through <literal>`ifdef</literal>
+	    directives, using <literal>`define</literal> values from the main
+	    header files.
+	  </para>
+
+	  <para>
+	    The exception is the VGA peripheral, which assumes availability of
+	    Xilinx <literal>RAMB4</literal> models. To fix this, modified
+	    versions of the two VGA source files
+	    (<filename>rtl/verilog/ssvga/ssvga_fifo.v</filename> and
+	    <filename>rtl/verilog/ssvga/ssvga_top.v</filename>), together with
+	    suitable generic dual ported RAM blocks
+	    (<filename>rtl/verilog/ssvga/ssvga_dpram_4x8x16.v</filename> and
+	    <filename>rtl/verilog/ssvga/ssvga_dpram_4x16x16.v</filename>).
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Building the Example
+      </title>
+
+      <para>
+	To facilitate building the models, a <filename>Makefile</filename> is
+	provided in the top level directory. Three targets are
+	provided.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <command>make&nbsp;simulate</command> will run an event driven
+	    simulation using &icarus; (in the <filename>sim</filename>
+	    sub-directory).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <command>make&nbsp;verilate</command> will build and then run a
+	    &systemc; cycle accurate model using &verilator;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <command>make&nbsp;clean</command> will clean out all generated
+	    files.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	For the <command>simulate</command> target, the time used by the
+	<command>iverilog</command> compilation and the <command>vvp</command>
+	execution are recorded (with <command>time&nbsp;-p</command>).
+      </para>
+
+      <para>
+	For the <command>verilate</command> target, the time used to create
+	the Verilated model and the execution time of the complete &systemc;
+	model are recorded (also with <command>time&nbsp;-p</command>).
+      </para>
+
+      <sect2>
+	<title>
+	  Command Files
+	</title>
+
+	<para>
+	  The Verilog source files and header directories to be used when
+	  modeling are specified in command files in the
+	  <filename>sim</filename> and <filename>verilator-model</filename>
+	  directories for event driven simulation and cycle accurate &systemc;
+	  modeling respectively. The default is
+	  <filename>cf-baseline.scr</filename>, but an alternative may be
+	  specified through the <envar>COMMAND_FILE</envar> macro. For
+	  example.
+	</para>
+	
+	<programlisting>
+make simulate COMMAND_FILE=cf-baseline-5.scr
+	</programlisting>
+
+	<para>
+	  When writing command files, a number of macros may be used for
+	  clarity.
+	</para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>
+	      <envar>$BENCH_DIR</envar>
+	    </term>
+	    <listitem>
+	      <para>
+		Replaced by the location of the original &orpsoc; test bench
+		Verilog directory. This depends on where the code has been
+		unpacked. For example if it is in
+		<filename>~/orp_soc</filename>, then this macro will be
+		replaced by <filename>~/orp_soc/bench/verilog</filename>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>
+	      <envar>$&rtl;_DIR</envar>
+	    </term>
+	    <listitem>
+	      <para>
+		Replaced by the location of the original &orpsoc; device
+		Verilog directory. This depends on where the code has been
+		unpacked. For example if it is in
+		<filename>~/orp_soc</filename>, then this macro will be
+		replaced by <filename>~/orp_soc/rtl/verilog</filename>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <envar>$BENCH_LOCAL</envar>
+	    </term>
+	    <listitem>
+	      <para>
+		Replaced by the location of the directory containing custom
+		test bench Verilog. This is always in a fixed place in the
+		hierarchy and the macro will be replaced by a reference to
+		<filename>bench/verilog</filename>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <envar>$&rtl;_LOCAL</envar>
+	    </term>
+	    <listitem>
+	      <para>
+		Replaced by the location of the directory containing custom
+		device Verilog. This is always in a fixed place in the
+		hierarchy and the macro will be replaced by a reference to
+		<filename>rtl/verilog</filename>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  
+	</variablelist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Additional Flags
+	</title>
+
+	<para>
+	  Additional flags may be passed to &icarus; and Verilator by
+	  use of the <envar>VFLAGS</envar> macro. Of particular use are the
+	  flags to generate a &vcd; trace:
+	</para>
+
+	<programlisting>
+make simulate VFLAGS=-DORPSOC_DUMP
+make verilate VFLAGS=-trace
+	</programlisting>
+
+	<para>
+	  The target application is a Dhrystone simulation. The number of
+	  loops through this simulation can be set using the
+	  <envar>NUM_RUNS</envar> macro, which defaults to 1.
+	</para>
+
+	<programlisting>
+make verilate NUM_RUNS=100
+	</programlisting>
+
+	<note>
+	  <para>
+	    The software build is not sensitive to changes in the value of
+	    <envar>NUM_RUNS</envar>. If the value is changed,
+	    <command>make&nbsp;clean</command> must be used to force a
+	    recompile.
+	  </para>
+	</note>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_simulation">
+    <title>
+      Building the Baseline Simulation
+    </title>
+
+    <para>
+      Verilator is not a complete alternative to traditional event driven
+      simulation. Its value is for modeling where the detail (and simulation
+      performance hit) of 4-state logic and intra-cycle behavior are not
+      needed, and where efficient interfacing to software environments are
+      essential.
+    </para>
+
+    <para>
+      It is thus important that the Verilator model is consistent throughout
+      with event driven simulation, and so the initial stage of any Verilator
+      modeling is to build the baseline simulation against which it will
+      match. There are three additional reasons why such a baseline simulation
+      is important
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Because Verilator follows 2-state, zero delay synthesis semantics,
+	  some changes will be needed to the source code. These most commonly
+	  will involve substituting non-synthesizable parts of the
+	  design. Checking the &verilator; model using the substituted code
+	  against the original event driven simulation is an essential step.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Verilator models are used typically in environments where
+	  performance is very important. In many cases it is possible to
+	  rewrite key parts of the Verilog to be far more efficient when
+	  modeled cycle accurately. This is commonly the case for memories,
+	  where for example, it is not necessary to individually buffer each
+	  input and output bit. Again it is essential to be able to compare
+	  rewritten code against the original simulation behavior.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Finally Verilator includes powerful linting tools, and will
+	  typically throw up huge numbers of diagnostic warnings. It makes a
+	  great deal of sense to address all these warnings. They address
+	  issues that may cause problems with synthesis and gate level
+	  verification. They also highlight areas that can badly impact on
+	  model performance.
+	</para>
+      </listitem>
+
+    </orderedlist>
+
+    <sect1>
+      <title>
+	The Command File
+      </title>
+
+      <para>
+	The command file for this baseline simulation is found in
+	<filename>sim/cf-baseline.scr</filename>.
+      </para>
+
+      <para>
+	The first part of this file sets up the header directories. The local
+	custom directories are specified in preference where appropriate.
+      </para>
+
+      <programlisting>
++incdir+$BENCH_LOCAL
++incdir+$BENCH_DIR
++incdir+$RTL_LOCAL
++incdir+$RTL_LOCAL/or1200
++incdir+$RTL_DIR/or1200
++incdir+$RTL_DIR/dbg_interface
++incdir+$RTL_DIR/audio
++incdir+$RTL_DIR/ethernet
++incdir+$RTL_DIR/ps2
++incdir+$RTL_DIR/uart16550
++incdir+$RTL_DIR/ssvga
+      </programlisting>
+
+      <para>
+	As noted earlier, there are multiple instances of
+	<filename>timescale.v</filename>, with different values for time unit
+	and precision. However with all Verilog files will find the first
+	once, which is in <filename>$BENCH_DIR</filename>
+	(<literal>1ns/10ps</literal>).
+      </para>
+	
+      <para>
+	There are three test bench files: the main &orpsoc; test bench and the
+	&orpsoc; monitor for <literal>l.nop</literal> opcodes.
+      </para>
+
+      <programlisting>
+$BENCH_LOCAL/orpsoc_bench.v
+$BENCH_LOCAL/or1200_monitor.v
+      </programlisting>
+
+      <para>
+	The top level module of the &dut;, <literal>orpsoc_fpga_top</literal>
+	is then specified. The bus interconnect instantiated by
+	<literal>orpsoc_fpga_top</literal>, <literal>tc_top</literal>, is also
+	specified.
+      </para>
+
+      <programlisting>
+$RTL_LOCAL/orpsoc_fpga_top.v
+$RTL_DIR/tc_top.v
+      </programlisting>
+
+      <para>
+	The sub-components of the &fpga; are then specified: the OR1200 CPU, the
+	debug interface, flash and &sram; and audio, Ethernet, keyboard, UART
+	and video peripherals.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Running the Baseline Simulation
+      </title>
+
+      <para>
+	The simulation is run with the command:
+      </para>
+
+      <programlisting>
+make simulate COMMAND_FILE=cf-baseline.scr NUM_RUNS=1000
+      </programlisting>
+
+      <para>
+	The <filename>Makefile</filename> compiles the target software using
+	the &or1k; tool chain, then compiles the simulation with
+	<command>iverilog</command> and runs it with
+	<command>vvp</command>. The compilation is error free:
+      </para>
+
+      <programlisting>
+cd sim/run &amp;&amp; time -p iverilog -c iv-processed.scr 
+real 1.75
+user 1.48
+sys 0.30
+      </programlisting>
+
+      <para>
+	The output from the execution is:
+      </para>
+
+      <programlisting>
+$readmemh(../src/flash.in): Not enough words in the read file for requested rang
+e.
+(orpsoc_bench.i_orpsoc_fpga.uart_top) UART INFO: Data bus width is 32. Debug Int
+erface present.
+
+(orpsoc_bench.i_orpsoc_fpga.uart_top) UART INFO: Doesn't have baudrate output
+
+Execution starts, 1000 runs through Dhrystone
+Begin Time = 5
+End Time   = 116421
+OR1K at 10 MHz  (+PROC_6)
+Microseconds for one run through Dhrystone: 116us / 1000 runs
+Dhrystones per Second:                      8589 
+117975052.00 ns: l.nop report (deaddead)
+117986152.00 ns: l.nop exit (00000000)
+real 839.00
+user 837.40
+sys 0.57
+      </programlisting>
+
+      <para>
+	The warning from <literal>$readmemh</literal> can be ignored&mdash;the
+	&or1k; utilities do not pack the program image up to the full size of
+	the actual memory to save file space. There are then a couple of
+	diagnostic messages from the &uart;
+      </para>
+
+      <para>
+	The remainder of the output is generated by the target &or1k; program
+	executing within the model. The output is generated by use of
+	<literal>l.nop&nbsp;4</literal>, with a report at the end
+	(<literal>deaddead</literal>) using <literal>l.nop&nbsp;2</literal>
+	and termination with return code 0 using
+	<literal>l.nop&nbsp;1</literal>.
+      </para>
+
+    </sect1>
+
+    <sect1 id="sec_iv_performance">
+      <title>
+	Baseline Simulation Performance
+      </title>
+
+      <para>
+	These data sets were all recorded on the author's workstation, a 2GHz
+	Core2 Duo E2180, with 1MB cache/processor and 2GB RAM, running Fedora
+	9 Linux. In all cases 1000 loops through the Dhrystone benchmark was
+	used. The figures presented are the average of at least 6 runs.
+      </para>
+
+      <para>
+	Total processor time for elaboration was 1.78&nbsp;s and for
+	simulation was 796.84&nbsp;s. Net simulation performance was 1.48kHz.
+      </para>
+
+      <note>
+	<para>
+	  Throughout this application note, results will be given showing:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      The time taken to elaborate the simulation (or build the model
+	      in the case of &verilator;).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The time taken to run the simulation or model.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The model performance in kHz, obtained by dividing the number of
+	      cycles models by the time taken to run the simulation or model.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Cycle accurate models are typically used in scenarios, where the
+	  model is created once and used many times, so the run-time
+	  performance is the critical figure.
+	</para>
+      </note>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      The &systemc; Test Bench
+    </title>
+
+    <para>
+      Before building the &verilator; model it is necessary to consider the
+      test bench, which will replace <filename>orpsoc.v</filename> and
+      <filename>or1200_monitor.v</filename>. This chapter looks at the overall
+      structure of the test bench, and the detailed implementation of the pure
+      &systemc; components.
+    </para>
+
+    <para>
+      There are also a number of components which tie in closely with the
+      actual &verilator; model (for example to access signals in the model, or
+      to generate &vcd; traces from the underlying model). These are covered
+      in the chapter on building the &verilator; model (<xref
+      linkend="chap_verilator"/>).
+    </para>
+
+    <para>
+      The structure of the &systemc; test bench is not that different to the
+      Verilog test bench used with event driven simulation (see <xref
+      linkend="chap_simulation"/>). The &dut; is provided by the &verilator;
+      model (class <classname>Vorpsoc_fpga_top</classname>) and the monitor for
+      <literal>l.nop</literal> is hand-written as a &systemc; class,
+      <classname>Or1200MonitorSC</classname>.
+    </para>
+
+    <para>
+      Two further &systemc; classes are needed, one to generate a reset
+      signal (<classname>ResetSC</classname>) and a second to provide &vcd;
+      trace functionality of the underlying &verilator; model
+      (<classname>TraceSC</classname>).
+    </para>
+
+    <para>
+      The top level of the test bench (the equivalent of
+      <literal>orpsoc_bench</literal>) is provided by the
+      <function>sc_main</function> function.
+    </para>
+
+    <sect1>
+      <title>
+	The &systemc; Modules of the Test Bench
+      </title>
+
+      <sect2>
+	<title>
+	  <classname>Vorpsoc_fpga_top</classname>
+	</title>
+
+	<para>
+	  This &systemc; module class is automatically generated by
+	  &verilator;. The class name is taken from the top level module
+	  (<literal>orpsoc_fpga_top</literal> preceded by <literal>V</literal>.
+	</para>
+
+	<para>
+	  The input and output ports of this module are mapped to &systemc;
+	  <literal>sc_in</literal> and <literal>sc_out</literal> ports. Single
+	  bit ports are of type <type>bool</type>. Larger ports are of
+	  type <type>uint32_t</type>.
+	</para>
+
+	<para>
+	  In this example there are no ports larger then 32 bits. If there
+	  were, then they would use either <type>uint64_t</type> or the
+	  &systemc; <type>sc_bv</type> types.
+	</para>
+
+	<note>
+	  <para>
+	    &systemc; offers its own set of types for ports of arbitrary
+	    width. However in the reference library, the implementation of
+	    these types can be very inefficient. Hence the preference for
+	    <filename>stdint.h</filename> types from C++.
+	  </para>
+	</note>
+
+	<caution>
+	  <para>
+	    &verilator; also supports <literal>inout</literal> ports, which
+	    are mapped to <literal>sc_inout</literal>. However
+	    <literal>inout</literal> ports are usually associated with
+	    tristate logic, for which &verilator; currently only has
+	    rudimentary support. Thus there are no such ports in this example.
+	  </para>
+	</caution>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>Or1200MonitorSC</classname>
+	</title>
+
+	<para>
+	  The functionality of this class is identical to that of its Verilog
+	  counterpart. On each positive clock edge, the freeze signal for the
+	  write back pipeline stage in the CPU control unit is checked. If the
+	  value is clear, the current instruction being executed is read. If
+	  the instruction is a special <literal>l.nop</literal> instruction,
+	  the appropriate behavior is implemented.
+	</para>
+
+	<para>
+	  The class has a single port, <literal>clk</literal> of type
+	  <literal>sc_in&lt;bool&gt;</literal>, which is connected to the
+	  system clock.
+	</para>
+
+	<sect3>
+	  <title>
+	    Constructor
+	  </title>
+
+	  <para>
+	    Access to signals within the &verilator; &orpsoc; model is
+	    provided by the <classname>OrpsocAccess</classname> class, an
+	    instance of which is passed to the constructor.
+	  </para>
+
+	  <para>
+	    The implementation of <classname>OrpsocAccess</classname> is
+	    covered in the chapter on &verilator; modeling <xref
+	    linkend="chap_verilator"/>. It provides a number of methods to
+	    access signals in the model. Those of particular interest here
+	    are:
+	  </para>
+
+	  <variablelist termlength="3cm">
+	    <varlistentry>
+	      <term>
+		<function>getWbFreeze</function>
+	      </term>
+	      <listitem>
+		<para>
+		  Gives the <type>bool</type> value of the CPU control unit
+		  write back freeze signal, <literal>wb_freeze</literal>.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<function>getWbInsn</function>
+	      </term>
+	      <listitem>
+		<para>
+		  Gives the <type>uint32_t</type> value of the CPU control
+		  unit write back instruction, <literal>wb_insn</literal>.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<function>getGpr&nbsp;(regNum)</function>
+	      </term>
+	      <listitem>
+		<para>
+		  Get the value of the &orpsoc; &gpr;
+		  <varname>regNum</varname> from the CPU register file in 
+		  <literal>rf_a</literal>.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	  </variablelist>
+
+	  <para>
+	    The constructor declares a &systemc; method,
+	    <function>checkInstruction</function>, which will check for
+	    a <literal>l.nop</literal> instruction on the positive edge of
+	    each clock.
+	  </para>
+
+	</sect3>		
+		
+	<sect3>
+	  <title>
+	    <function>checkInstruction</function>
+	  </title>
+
+	  <para>
+	    This function is called on the positive edge of each clock
+	    cycle. It uses the accessor class <function>getWbFreeze</function>
+	    and <function>getWbInsn</function> functions to check for special
+	    <literal>l.nop</literal> instructions. It implements behavior as
+	    follows:
+	  </para>
+
+	  <variablelist termlength="2cm">
+	    <varlistentry>
+	      <term>
+		<literal>l.nop&nbsp;1</literal>
+	      </term>
+	      <listitem>
+		<para>
+		  Gets the value in &gpr;&nbsp;3 using the accessor
+		  <function>getGpr</function> function, which is the return
+		  code from the function. Prints out a time stamp (using the
+		  &systemc; function, <function>sc_time_stamp</function>)
+		  followed by a message that the simulation is exiting with
+		  the return code obtained. Then calls the &systemc; function,
+		  <function>sc_stop</function> to terminate model execution.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<literal>l.nop&nbsp;2</literal>
+	      </term>
+	      <listitem>
+		<para>
+		  Gets the value in &gpr;&nbsp;3 using the accessor
+		  <function>getGpr</function> function. Prints out a time
+		  stamp (using the &systemc; function,
+		  <function>sc_time_stamp</function>) followed by a message
+		  reporting the value found in &gpr;&nbsp;3.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<literal>l.nop&nbsp;3</literal>
+	      </term>
+	      <listitem>
+		<para>
+		  This is the <function>printf</function> function, but is not
+		  implemented. Prints out a time stamp (using the
+		  &systemc; function, <function>sc_time_stamp</function>)
+		  followed by the text "<literal>printf</literal>".
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<literal>l.nop&nbsp;4</literal>
+	      </term>
+	      <listitem>
+		<para>
+		  Gets the value in &gpr;&nbsp;3 using the accessor
+		  <function>getGpr</function> function, the bottom 8 bits of
+		  which are the character to print. Prints the character to
+		  standard output, and then flushes it. This avoids any issues
+		  with C++ library buffering if redirecting the output during
+		  a slow run.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	  </variablelist>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>ResetSC</classname>
+	</title>
+
+	<para>
+	  This module is used to generate a reset signal at start up for a
+	  defined number of clock cycles.
+	</para>
+
+	<para>
+	  It takes as input port the system clock and for convenience
+	  generates both active high and active low reset signals. Only the
+	  active low reset signal is used in this application note.
+	</para>
+
+	<programlisting>
+sc_core::sc_in&lt;bool&gt;   clk;
+sc_core::sc_out&lt;bool&gt;  rst;
+sc_core::sc_out&lt;bool&gt;  rstn;
+	</programlisting>
+
+	<sect3>
+	  <title>
+	    Constructor
+	  </title>
+
+	  <para>
+	    The constructor takes an optional argument of the number of cycles
+	    of reset to provide at start up. If not given, this defaults to
+	    5. This is used to initialize the reset counter.
+	  </para>
+
+	  <para>
+	    A &systemc; method, <function>driveReset</function> is declared
+	    which is sensitive to the negative edge of the clock. Releasing
+	    the reset on the negative edge of the clock in a cycle-accurate
+	    environment means the model will see the released reset first on a
+	    positive clock edge.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    <function>driveReset</function>
+	  </title>
+
+	  <para>
+	    This function counts down the reset counter. While the value is
+	    positive, it drives the reset signals. Thereafter it releases the
+	    signals.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>TraceSC</classname> and
+	  <classname>OrpsocAccess</classname>
+	</title>
+
+	<para>
+	  These classes implement respectively &vcd; tracing and signal access
+	  in the &verilator; model. Because they are so intimately involved
+	  with the &verilator; model, their description is postponed to that
+	  chapter (<xref linkend="chap_verilator"/>).
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Putting the System Together
+      </title>
+
+      <para>
+	The top level of the &systemc; model, corresponding to
+	<literal>orpsoc_bench.v</literal> is found in
+	<filename>OrpsocMain.cpp</filename>. This defines the &systemc;
+	<function>sc_main</function> function.
+      </para>
+
+      <para>
+	This includes the header file <filename>OrpsocMain.h</filename>, which
+	has the system wide definitions, and corresponds to the Verilog
+	definitions in <filename>orpsoc_defines.h</filename>.
+      </para>
+
+      <para>
+	The headers for all the classes that will be used must also be
+	included:
+      </para>
+
+      <programlisting>
+#include "OrpsocMain.h"
+
+#include "Vorpsoc_fpga_top.h"
+#include "OrpsocAccess.h"
+#include "TraceSC.h"
+#include "ResetSC.h"
+#include "Or1200MonitorSC.h"
+      </programlisting>
+
+      <sect2 id="sec_sc_main">
+	<title>
+	  <function>sc_main</function>
+	</title>
+
+	<para>
+	  A &systemc; clock, <varname>clk</varname> is declared of type
+	  <type>sc_clock</type>, which will form the main system clock.
+	</para>
+
+	<para>
+	  This followed by declarations of signals to connect all the ports on
+	  the main &orpsoc; module. These include reset, &jtag; and all the
+	  external peripherals (audio, Ethernet, keyboard, UART and video).
+	</para>
+
+	<para>
+	  Variables are declared to reference the accessor class
+	  (<varname>accessor</varname>) and &systemc; modules
+	  (<varname>orpsoc</varname>, <varname>trace</varname>,
+	  <varname>reset</varname>, <varname>monitor</varname>). New instances
+	  of these are then instantiated.
+	</para>
+
+	<para>
+	  The modules are then connected to the signals. The vast majority of
+	  these are to the main <classname>Vorpsoc_fpga_top</classname>
+	  instance. The main clock signal is used for both the main system
+	  clock and &jtag; clock, thus ensuring they will be synchronous.
+	</para>
+
+	<para>
+	  There are no explicit peripheral models, or &jtag; interface, so
+	  peripheral input signals are tied off appropriately.
+	</para>
+
+	<para>
+	  With the modules connected, the model is set to run for an
+	  indefinite period by a call to the &systemc; function
+	  <function>sc_start</function>. Execution will only terminate if the
+	  program being executed includes a <literal>l.nop&nbsp;1</literal>
+	  opcode, which will cause the <varname>monitor</varname> module to
+	  call the &systemc; function <function>sc_stop</function>.
+	</para>
+
+	<para>
+	  If and when execution does terminate, the space allocated for
+	  modules is deleted before the <function>sc_main</function> function
+	  returns.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_verilator">
+    <title>
+      Building the Initial Verilator Model
+    </title>
+
+    <para>
+      Building a &verilator; model has a number of traps for the unwary
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  &verilator; is a synthesis technology, so will reject any
+	  non-synthesizable constructs. This can be a particular problem with
+	  third party models of memories.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  &verilator; by default handles Verilog 1995, 2001, 2005 and
+	  SystemVerilog. The last can be a particular nuisance, since
+	  SystemVerilog contains a number of new keywords, which can break
+	  older Verilog code (for example <literal>do</literal> is now a
+	  keyword, but has commonly been used as the name for the data out
+	  port of a memory).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  &verilator; has a very strict linting system, which flags issues
+	  which can affect model performance.
+	</para>
+      </listitem>
+
+    </itemizedlist>
+
+    <para>
+      So it is not uncommon for &verilator; to immediately throw errors on
+      &rtl; which is supposedly clean and synthesizable.
+    </para>
+
+    <sect1>
+      <title>
+	Fixing the Initial Errors
+      </title>
+
+      <para>
+	It is simple to take the baseline command file from the &icarus;
+	simulation (see <xref linkend="chap_simulation"/>) and modify
+	it for use with Verilator. All that is needed is to remove the
+	reference to <literal>orpsoc_bench.v</literal> and
+	<literal>or1200_monitor.v</literal>.
+      </para>
+
+      <para>
+	As noted earlier, there are multiple instances of
+	<filename>timescale.v</filename>, with different values for time unit
+	and precision. Now all the Verilog files form a single SoC design, and
+	all their header directories are specified using
+	<literal>+incdir+</literal>. So now all components will use the same
+	<literal>timescale.v</literal>, the copy in
+	<filename>$RTL_DIR</filename> (orp_soc/rtl/verilog).  This specifies
+	<literal>1ps/1ps</literal>, a different value to that used in
+	simulation, but does not have any practical impact.
+      </para>
+	
+      <para>
+	The model can be built with:
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline.scr
+      </programlisting>
+
+      <para>
+	This immediately produces a slew of warnings and errors
+      </para>
+
+      <programlisting>
+%Warning-CASEX: ../orp_soc/rtl/verilog/or1200/or1200_alu.v:207: Suggest casez (w
+ith ?'s) in place of casex (with X's)
+%Warning-CASEX: Use "/* verilator lint_off CASEX */" and lint_on around source t
+o disable this message.
+%Warning-CASEX: ../orp_soc/rtl/verilog/or1200/or1200_alu.v:278: Suggest casez (w
+ith ?'s) in place of casex (with X's)
+%Warning-CASEX: ../orp_soc/rtl/verilog/or1200/or1200_alu.v:280: Suggest casez (w
+ith ?'s) in place of casex (with X's)
+
+...
+
+%Warning-CASEX: ../orp_soc/rtl/verilog/or1200/or1200_mult_mac.v:196: Suggest cas
+ez (with ?'s) in place of casex (with X's)
+%Error: ../orp_soc/rtl/verilog/mem_if/flash_top.v:210: syntax error, unexpected 
+')'
+%Error: Cannot continue
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -Mdir . -sc -f v-processed.scr
+      </programlisting>
+
+      <para>
+	The first step is to turn off the warnings, to allow the errors to
+	stand out, using the <envar>VFLAGS</envar> macro.
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline.scr VFLAGS=-Wno-lint
+      </programlisting>
+
+      <para>
+	The result of this is:
+      </para>
+
+      <programlisting>
+%Error: ../orp_soc/rtl/verilog/mem_if/flash_top.v:210: syntax error, unexpected 
+')'
+%Error: Cannot continue
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -Mdir . -sc -f v-processed.scr
+      </programlisting>
+
+      <para>
+	Looking at the source file concerned
+	(<filename>flash_top.v</filename>) shows the problem at line 210:
+      </para>
+
+      <programlisting>
+// synopsys translate_off
+integer fflash;
+initial fflash = $fopen("flash.log");
+always @(posedge wb_clk_i)
+        if (wb_cyc_i)
+      </programlisting>
+
+      <para>
+	The problem is the use of the multi-channel descriptor form of
+	<function>$fopen</function>, which is not supported by &verilator;.
+	There are two solutions to this problem. A simple solution is to turn
+	this into a standard file descriptor open:
+      </para>
+
+      <programlisting>
+initial fflash = $fopen("flash.log", "w");
+      </programlisting>
+
+      <para>
+	The alternative is to recognize that logging flash accesses is not of
+	great interest to this model (it is something of greater concern to a
+	hardware verification engineer with event-driven simulation).
+      </para>
+
+      <para>
+	Furthermore, this model will not be using external flash memory, and
+	only loads its image from file at start up. This is the time to replace
+	<filename>flash_top.v</filename> by a much simpler model suitable for
+	cycle accurate use in our environment. This is provided in the local
+	directory, <filename>rtl/verilog/mem_if/flash_top.v</filename>.
+      </para>
+
+      <tip>
+	<para>
+	  There is always a balance between making the least possible change
+	  (minimizing the risk of introducing behavioral bugs) and complete
+	  replacement. In general making the least possible change is the
+	  right strategy.
+	</para>
+
+	<para>
+	  However memories are usually central to a model's performance, and
+	  can often be full of &rtl; structures, which are irrelevant to
+	  cycle-accurate modeling&mdash;for example buffering each input and
+	  output bit. In these cases (as here), it is worth replacing the
+	  original completely.
+	</para>
+
+	<para>
+	  The value of having a baseline event driven simulation model now
+	  becomes clear: &vcd; traces can be used to verify that the behavior
+	  of replacement models is consistent.
+	</para>
+      </tip>
+
+      <para>
+	The command file is modified to use the reference to this local
+	version instead of the standard <filename>flash_top.v</filename>:
+      </para>
+
+      <programlisting>
+$RTL_LOCAL/mem_if/flash_top.v
+      </programlisting>
+
+      <para>
+	Verilator is now re-run:
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline-2.scr VFLAGS=-Wno-lint
+      </programlisting>
+
+      <para>
+	Verilator immediately hits its next error.
+      </para>
+
+      <programlisting>
+%Error: ../orp_soc/rtl/verilog/mem_if/sram_top.v:236: syntax error, unexpected '
+)'
+%Error: Cannot continue
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -Wno-lint -Mdir . -sc -f v-processed.scr
+      </programlisting>
+
+      <para>
+	Exactly the same issue with logging in the &sram; model:
+      </para>
+
+      <programlisting>
+integer fsram;
+initial begin
+        fsram = $fopen("sram.log");
+        for (i = 0; i &lt; 2097152; i = i + 1)
+                mem[i] = 0;
+      </programlisting>
+
+      <para>
+	As before, the solution in this case is to replace
+	<filename>sram_top.v</filename> with a simplified version suitable for
+	cycle accurate modeling. We then run &verilator; again:
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline-3.scr VFLAGS=-Wno-lint
+      </programlisting>
+
+      <para>
+	The next problem materializes:
+      </para>
+
+      <programlisting>
+%Error: ../orp_soc/rtl/verilog/ethernet/eth_wishbone.v:564: syntax error, unexpe
+cted do, expecting IDENTIFIER
+%Error: Cannot continue
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -Wno-lint -Mdir . -sc -f v-processed.scr
+      </programlisting>
+
+      <note>
+	<para>
+	  It will be clear that getting rid of errors in &verilator; can be
+	  quite tedious, because most errors will cause compilation to
+	  stop. This is a common problem, even with commercial tools, because
+	  of the nature of Verilog. All files depend on each other (they are
+	  not modular in the software sense), so a failure in one affects all
+	  the others in unknown ways.
+	</para>
+      </note>
+
+      <para>
+	This error is a consequence of &verilator; being able to process all
+	flavors of Verilog and SystemVerilog. In SystemVerilog
+	<literal>do</literal> is a keyword, and may not be used as a
+	variable.
+      </para>
+
+      <para>
+	The correct fix is to replace the occurrences with a different
+	variable name. This is worth doing, since more tools are moving to
+	support SystemVerilog, and it will save hitting this problem each time
+	a new tool is adopted.
+      </para>
+
+      <para>
+	However the short term fix is to restrict &verilator; to just a
+	particular language, in this case Verilog according to IEEE
+	1364-2001. This is achieved by using &verilator;'s
+	<option>-language</option> option:
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline-3.scr \
+              VFLAGS="-Wno-lint -language 1364-2001"
+      </programlisting>
+
+      <para>
+	The next error is an example of &verilator; requiring synthesizable
+	&rtl; as its input:
+      </para>
+
+      <programlisting>
+%Error: ../orp_soc/rtl/verilog/ps2/ps2_translation_table.v:181: Unsupported: Ver
+ilog 1995 reserved word not implemented: repeat
+%Error: ../orp_soc/rtl/verilog/ps2/ps2_translation_table.v:181: syntax error, un
+expected '(', expecting case or casex or casez or if
+%Error: Cannot continue
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -Wno-lint -language 1364-2001 -Mdir . -sc -f v-processed.scr
+      </programlisting>
+
+      <para>
+	Here is the code in <filename>ps2_translation_table.v</filename> which
+	causes the problem.
+      </para>
+
+      <programlisting>
+always@(posedge clock_i or posedge reset_i)
+begin
+    if ( reset_i )
+        ram_out &lt;= #1 8'h0 ;
+    else if ( translation_table_enable )
+    begin:get_dat_out
+        reg [7:0] bit_num ;
+
+        bit_num = translation_table_address[4:0] &lt;&lt; 3 ;
+
+        repeat(8)
+        begin
+            ram_out[bit_num % 8] &lt;= #1 ps2_32byte_constant[bit_num] ;
+            bit_num = bit_num + 1'b1 ;
+        end
+    end
+end
+      </programlisting>
+
+      <para>
+	According the the IEEE standard, <literal>repeat</literal> is not
+	synthesizable, even if, as in this case, it has a constant argument
+	and a clear synthesizable meaning.
+      </para>
+
+      <para>
+	The issue is confused, because some commercial synthesis tools will
+	accept constructs like this, even though they are not permitted in the
+	standard.
+      </para>
+
+      <para>
+	In this case the fix is very simple. The contents of the always block
+	are just written out in full:
+      </para>
+
+      <programlisting>
+        ram_out[bit_num % 8] &lt;= #1 ps2_32byte_constant[bit_num] ;
+        bit_num = bit_num + 8'b1 ;
+        ram_out[bit_num % 8] &lt;= #1 ps2_32byte_constant[bit_num] ;
+        bit_num = bit_num + 8'b1 ;
+
+        &lt;5 more times&gt;
+
+        ram_out[bit_num % 8] &lt;= #1 ps2_32byte_constant[bit_num] ;
+        bit_num = bit_num + 8'b1 ;
+      </programlisting>
+
+      <para>
+	The modified version of <filename>ps2_translation_table.v</filename>
+	is placed in the local directory
+	(<filename>rtl/verilog/ps2</filename>), the command file altered and
+	&verilator; rerun.
+      </para>
+
+      <para>
+	This time &verilator; does not encounter any errors, but a whole load
+	of new warnings. The flag <option>-Wno-lint</option> turns off many
+	warnings, but not all. Two warnings in particular are common:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Warning <literal>COMBDLY</literal>. Use of non-blocking assignment
+	    (delayed assignment) in combinatorial <literal>always</literal>
+	    blocks. This issue is discussed in more detail in <xref
+	    linkend="chap_optimization"/>, but indicates a coding style that
+	    may cause unexpected behavior in a cycle accurate model.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Warning <literal>UNOPTFLAT</literal>. The presence of
+	    combinatorial loops, which can seriously damage model
+	    performance. This issue is discussed in more detail in <xref
+	    linkend="chap_optimization"/>, where it is a fruitful source of
+	    performance enhancements.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	For now both these warnings can be explicitly turned off using the
+	flags <option>-Wno-COMBDLY</option> and
+	<option>-Wno-UNOPTFLAT</option>.
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline-4.scr \
+   VFLAGS="-Wno-lint -Wno-COMBDLY -Wno-UNOPTFLAT -language 1364-2001"
+      </programlisting>
+
+      <para>
+	This is sufficient for &verilator; to successfully process the entire
+	source and generate a model. However the complete &systemc; model will
+	not built&mdash;some header files needed by the C++ code are missing.
+      </para>
+
+      <para>
+	These headers are part of the system for accessing signals within the
+	&verilator; model. These must now be added.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Accessing Signals in &verilator; Models
+      </title>
+
+      <para>
+	By default &verilator; does not provide access to internal signals
+	within the Verilog hierarchy. However it provides two mechanisms for
+	such access:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Mark the signal with a <literal>verilator&nbsp;public</literal>
+	    comment. It may then be accessed directly from the &systemc; test
+	    bench.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Define a function and/or task to access the signal, and mark it
+	    with a <literal>verilator&nbsp;public</literal> comment. This is
+	    the preferred approach.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	In either case, values of up to 64 bits are stored in the smallest
+	appropriate C++ unsigned type. (<type>uint8_t</type>,
+	<type>uint16_t</type>, <type>uint32_t</type>, <type>uint64_t</type>).
+      </para>
+
+      <para>
+	In practice &systemc; programs will just use <type>bool</type>,
+	<type>uint32_t</type> and <type>uint64_t</type> for the results,
+	relying on C++ to automatically cast the values. This is then
+	consistent with the set of types used for &systemc; module signals.
+      </para>
+
+      <para>
+	Signals wider than 64-bits are represented as arrays of
+	<type>uint32_t</type>, with the least significant bits in the lowest
+	numbered element. Where the number of bits is not a multiple of 32,
+	the odd bits are the least significant bits of the highest numbered
+	element.
+      </para>
+
+      <para>
+	For example <literal>reg&nbsp;[47:0]&nbsp;r</literal> would be
+	represented in a C++ array,
+	<literal>uint32_t&nbsp;r[2]</literal>. Bits [31:0] would be in C++
+	array <varname>r[0]</varname> and bits [47:32] would be in the 16
+	least significant bits of the C++ array <varname>r[1]</varname>.
+      </para>
+
+      <caution>
+	<para>
+	  &verilator; cannot handle results wider than 64 bits from
+	  functions. For such signals either tasks must be used (with result
+	  via an <literal>output</literal> parameter), or the signal must be
+	  directly accessed.
+	</para>
+      </caution>
+
+      <caution>
+	<para>
+	  With cycle accurate models, such as those created by &verilator; it
+	  is only meaningful to update signals which are state-holding, that
+	  is the registers in sequential logic. Updating wires, or registers
+	  used only in combinatorial logic, will have no effect.
+	</para>
+      </caution>
+
+      <sect2 id="sec_sig_ref_hierarchy">
+	<title>
+	  Module Hierarchy When Accessing Signals
+	</title>
+
+	<para>
+	  In general &verilator; flattens the Verilog module hierarchy when
+	  generating C++ or &systemc; models, and will generate just a small
+	  number of C++ classes (very often just one).
+	</para>
+
+	<para>
+	  However when direct access to a signal is needed, &verilator; must
+	  expose the hierarchy, and will define multiple C++ classes,
+	  corresponding to the modules in the hierarchy to the signal.
+	</para>
+
+	<para>
+	  For example with &orpsoc; the top level &systemc; module generated
+	  is <classname>Vorpsoc_fpga_top</classname>. As shown in <xref
+	  linkend="sec_sc_main"/>, this was used when instantiating the main
+	  &orpsoc; module:
+	</para>
+
+	<programlisting>
+orpsoc = new Vorpsoc_fpga_top ("orpsoc");
+	</programlisting>
+
+	<para>
+	  However if the <literal>wb_freeze</literal> signal in the CPU
+	  control unit were to be accessed additional C++ classes would be
+	  declared. The signal's hierarchical references is:
+	</para>
+
+	<programlisting>
+orpsoc_fpga_top.or1200_top.or1200_cpu.or1200_ctrl.wb_freeze
+	</programlisting>
+
+	<para>
+	  Verilator creates public classes for all the intermediate modules in
+	  this hierarchy (<literal>or1200_top</literal>,
+	  <literal>or1200_cpu</literal> and <literal>or1200_ctrl</literal>),
+	  each of which includes a pointer to the next level down in the
+	  hierarchy. Thus the <literal>wb_freeze</literal> can be accessed
+	  from C++ through the top level module (<varname>orpsoc</varname>,
+	  instantiated as above) as follows:
+	</para>
+
+	<programlisting>
+orpsoc->v->or1200_top->or1200_cpu->or1200_ctrl->wb_freeze
+	</programlisting>
+
+	<para>
+	  Notice that there is one intervening class, <literal>v</literal>,
+	  after the top level module. This is explained later.
+	</para>
+
+	<para>
+	  To access these, the header files for the intervening modules must
+	  be included. These take their name from the top level module, and
+	  the intermediate module, thus:
+	</para>
+
+	<programlisting>
+#include "Vorpsoc_fpga_top_or1200_top.h"
+#include "Vorpsoc_fpga_top_or1200_cpu.h"
+#include "Vorpsoc_fpga_top_or1200_ctrl.h"
+	</programlisting>
+
+	<para>
+	  All these intermediate modules are plain C++ classes, not &systemc;
+	  modules. This is the reason for the intervening class,
+	  <literal>v</literal>. The top level class,
+	  <classname>Vorpsoc_fpga_top</classname> <emphasis>is</emphasis> a
+	  &systemc; module. However it is only a wrapper for the plain C++
+	  &verilator; model of the top level module. Thus the
+	  <literal>v</literal> points to the plain C++ model of the top level
+	  module, and is inserted after the &systemc; module at the top
+	  level. It has its own header, which must be included:
+	</para>
+
+	<programlisting>
+#include "Vorpsoc_fpga_top_orpsoc_fpga_top.h"
+	</programlisting>
+
+	<note>
+	  <para>
+	    &verilator; does provide a mechanism for accessing signals without
+	    breaking up the C++ into separate modules. This is achieved by use
+	    of the <literal>verilator&nbsp;public_flat</literal>
+	    comment. However the actual name of the variable referencing the
+	    signal may then change with changes to the source Verilog, as
+	    &verilator; alters its optimization strategy.
+	  </para>
+
+	  <para>
+	    However if access to a diverse range of signals in many modules is
+	    required, this may be necessary to avoid the performance penalty
+	    of breaking the model into many small classes.
+	  </para>
+	</note>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Direct Access to &verilator; Model Signals
+	</title>
+
+	<para>
+	  The <literal>wb_freeze</literal> signal is used as an example of
+	  direct access. It is declared in
+	  <filename>rtl/verilog/or1200/or1200_ctrl.v</filename>, where it is
+	  an input to the module.
+	</para>
+
+	<programlisting>
+input  wb_freeze;
+	</programlisting>
+
+	<para>
+	  To declare the signal public, a
+	  <literal>verilator&nbsp;public</literal> comment must be inserted
+	  <emphasis>before the closing semi-colon</emphasis>.
+	</para>
+
+	<programlisting>
+input  wb_freeze /* verilator public */;
+	</programlisting>
+
+	<caution>
+	  <para>
+	    The comment must be <emphasis>before</emphasis> the closing
+	    semi-colon.
+	  </para>
+	</caution>
+
+	<para>
+	  &verilator; will generate all the intervening classes for the
+	  signal's full hierarchy (see <xref linkend="sec_sig_ref_hierarchy"/>):
+	</para>
+
+	<programlisting>
+orpsoc_fpga_top.or1200_top.or1200_cpu.or1200_ctrl.wb_freeze
+	</programlisting>
+
+	<para>
+	  The signal can then be accessed from C++, having included the
+	  headers for all the intermediate classes:
+	</para>
+
+	<programlisting>
+#include "Vorpsoc_fpga_top_orpsoc_fpga_top.h"
+#include "Vorpsoc_fpga_top_or1200_top.h"
+#include "Vorpsoc_fpga_top_or1200_cpu.h"
+#include "Vorpsoc_fpga_top_or1200_ctrl.h"
+
+...
+
+  Vorpsoc_fpga_top *orpsoc = new Vorpsoc_fpga_top ("orpsoc");
+
+...
+
+  bool  wb_freeze = orpsoc->v->or1200_top->or1200_cpu->or1200_ctrl->wb_freeze;
+	</programlisting>
+
+	<sect3>
+	  <title>
+	    Pitfalls with Direct Access to Signals
+	  </title>
+
+	  <para>
+	    &verilator; models assume all bits that are not significant to a
+	    signal's representation are zero. So if a signal is updated, it is
+	    essential that unused bits are masked out.
+	  </para>
+
+	</sect3>
+	  
+      </sect2>
+
+      <sect2>
+	<title>
+	  Access to &verilator; Model Signals via Tasks and Functions
+	</title>
+
+	<para>
+	  The recommended way to access signals is via a Verilog task or
+	  function. These are converted by &verilator; into C++ class
+	  functions. Inputs to tasks and functions become arguments passed by
+	  value to the C++ function, while outputs become arguments passed by
+	  reference (and so can be used for results).
+	</para>
+
+	<para>
+	  Verilog tasks become C++ <type>void</type> functions, while Verilog
+	  functions become C++ functions with a return type of a size
+	  appropriate to the result of the Verilog function
+	  (<type>uint8_t</type>, <type>uint16_t</type>, <type>uint32_t</type>
+	  or <type>uint64_t</type>).
+	</para>
+
+	<caution>
+	  <para>
+	    One limitation of &verilator; is that it cannot handle functions
+	    which return values of more than 64 bits. If this is required, an
+	    output argument of either a task or function should be used.
+	  </para>
+	</caution>
+
+	<para>
+	  For an example consider the 32-bit <literal>wb_insn</literal>
+	  register in the &orpsoc; control unit. It's full hierarchical
+	  reference is:
+	</para>
+
+	<programlisting>
+orpsoc_fpga_top.or1200_top.or1200_cpu.or1200_ctrl.wb_insn
+	</programlisting>
+
+	<para>
+	  It is declared as:
+	</para>
+
+	<programlisting>
+reg [31:0]  wb_insn;
+	</programlisting>
+
+	<para>
+	  A Verilog function is declared to give access to this register:
+	</para>
+
+	<programlisting>
+`ifdef verilator
+   function [31:0] get_wb_insn;
+      // verilator public
+      get_wb_insn = wb_insn;
+   endfunction // get_wb_insn
+`endif
+	</programlisting>
+
+	<para>
+	  There are two items of note. First the function must include a
+	  <literal>verilog&nbsp;public</literal> comment immediately after its
+	  declaration. Secondly functions without inputs are not permitted in
+	  IEEE 1364-2001, so this code must only be exposed to &verilator;
+	  processing.
+	</para>
+
+	<para>
+	  &verilator; defines <literal>verilator</literal>, so this can be
+	  achieved by surrounding the code with
+	  <literal>`ifdef&nbsp;verilator</literal> and
+	  <literal>endif</literal>.
+	</para>
+
+	<para>
+	  The signal can then be accessed from C++, having included the
+	  headers for all the intermediate classes:
+	</para>
+
+	<programlisting>
+#include "Vorpsoc_fpga_top_orpsoc_fpga_top.h"
+#include "Vorpsoc_fpga_top_or1200_top.h"
+#include "Vorpsoc_fpga_top_or1200_cpu.h"
+#include "Vorpsoc_fpga_top_or1200_ctrl.h"
+
+...
+
+  Vorpsoc_fpga_top *orpsoc = new Vorpsoc_fpga_top ("orpsoc");
+
+...
+
+  uint32_t  wb_insn =
+    orpsoc->v->or1200_top->or1200_cpu->or1200_ctrl->get_wb_insn ();
+	</programlisting>
+
+	<sect3>
+	  <title>
+	    Pitfalls with Accessing Signals using Tasks and Functions
+	  </title>
+
+	  <para>
+	    Accessor functions typically require no inputs. This is acceptable
+	    to &verilator;, but is not valid Verilog according to IEEE
+	    1364-2001. Thus (as in the example above), these functions must be
+	    surrounded by <literal>`ifdef&nbsp;verilator</literal> and
+	    <literal>endif</literal> so they are only seen by &verilator;
+	  </para>
+
+	  <para>
+	    &verilator; cannot make public functions with return values of
+	    greater than 64-bits. Such results should be returned via an
+	    <literal>output</literal> argument, where they will be an array of
+	    <type>uint32_t</type>.
+	  </para>
+
+	</sect3>
+	  
+      </sect2>
+	  
+      <sect2>
+	<title>
+	  Good Coding Practice when Accessing &verilator; Signals
+	</title>
+
+	<para>
+	  With the need to include many headers and use several depths of
+	  indirection, accessing &verilator; signals can make for very
+	  cluttered code.
+	</para>
+
+	<para>
+	  The solution is to define a separate C++ accessor class, which
+	  provides this access functionality, and makes the signals required
+	  available through concisely named accessor functions.
+	</para>
+
+	<para>
+	  This is the purpose of the <classname>OrpsocAccess</classname> in
+	  this application note. The &systemc; model needs access to two
+	  signals (<literal>wb_freeze</literal> and
+	  <literal>wb_insn</literal>) and the CPU register file, whose
+	  hierarchical references are:
+	</para>
+
+	<programlisting>
+orpsoc_fpga_top.or1200_top.or1200_cpu.or1200_ctrl.wb_freeze
+orpsoc_fpga_top.or1200_top.or1200_cpu.or1200_ctrl.wb_insn
+orpsoc_fpga_top.or1200_top.or1200_cpu.or1200_fr.rf_a
+	</programlisting>
+
+	<para>
+	  The <classname>OrpsocAccess</classname> provides accessors for each
+	  of these. Its constructor is passed a pointer to the top level
+	  &systemc; module and saves pointers to the C++ modules:
+	</para>
+	
+	<programlisting>
+OrpsocAccess::OrpsocAccess (Vorpsoc_fpga_top *orpsoc_fpga_top)
+{
+  or1200_ctrl = orpsoc_fpga_top->v->or1200_top->or1200_cpu->or1200_ctrl;
+  rf_a        = orpsoc_fpga_top->v->or1200_top->or1200_cpu->or1200_rf->rf_a;
+
+}
+        </programlisting>
+
+	<para>
+	  The accessor functions, <function>getWbFreeze</function>,
+	  <function>getWbInsn</function> and <function>getGpr</function> then
+	  use these. For example:
+	</para>
+
+	<programlisting>
+uint32_t
+OrpsocAccess::getWbInsn ()
+{
+  return  (or1200_ctrl->get_wb_insn) ();
+
+}
+        </programlisting>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&vcd; Tracing
+      </title>
+
+      <para>
+	&systemc; has its own tracing functions for generating &vcd;s
+	(<function>sc_create_vcd_trace_file</function>,
+	<function>sc_close_vcd_trace_file</function> and
+	<function>sc_trace</function>). However these only allow tracing of
+	&systemc; signals.
+      </para>
+
+      <para>
+	Tracing the signals in the underlying &verilator; model requires a
+	&systemc; module which can drive &verilator;'s trace functions. In
+	this example, that module is <classname>TraceSC</classname>.
+      </para>
+
+      <para>
+	Tracing must be enabled when the &verilator; model is created, by use
+	of the <option>-trace</option> flag. This can be conveniently passed
+	in using the <option>VFLAGS</option> macro with the
+	<filename>Makefile</filename>. When tracing has been turned on the
+	<literal>VM_TRACE</literal> macro is defined, so C++ code can be made
+	conditional by using <literal>#if&nbsp;VM_TRACE</literal>.
+      </para>
+
+      <para>
+	Tracing requires that the main model header is included and the
+	SystemPerl &vcd; tracing header. However the latter is only available if
+	the <option>-trace</option> flag has been used, so its inclusion must
+	be conditional:
+      </para>
+
+      <programlisting>
+#include "Vorpsoc_fpga_top.h"
+
+#if VM_TRACE
+#include &lt;SpTraceVcdC.h&gt;
+#endif
+      </programlisting>
+
+      <para>
+	Tracing requires a &systemc; method to be woken on each clock edge to
+	generate trace output, a pointer to the &verilator; model and a
+	pointer to a the SystemPerl trace file object of type
+	<type>SpTraceVcdFile</type>. This last is only available if the
+	<option>-trace</option> flag has been used, so its definition must be
+	conditional on <literal>VM_TRACE</literal>.
+      </para>
+
+      <sect2>
+	<title>
+	  Constructor for the &vcd; Trace Module
+	</title>
+
+	<para>
+	  The constructor only provides any functionality if tracing has been
+	  enabled using the <option>-trace</option> flag. The entire code is
+	  conditional on <literal>VM_TRACE</literal>.
+	</para>
+
+	<para>
+	  The constructor is passed a pointer to the &verilator; model to be
+	  traced and the name of the &vcd; file to use. A new instance of
+	  <classname>SpTraceVcdFile</classname> is allocated. Its time
+	  resolution is set to match that of the &systemc; model (obtained
+	  using <function>sc_get_time_resolution</function>). The &verilator;
+	  model is instructed to dump signals down to maximum depth (99) using
+	  its <function>trace</function> function. Finally the named dump file
+	  is opened using the <function>open</function> function of the
+	  SystemPerl trace file.
+	</para>
+
+	<para>
+	  In this example, a utility function,
+	  <function>setSpTimeResolution</function> is used to convert the time
+	  resolution from the format in &systemc; to the string used by
+	  SystemPerl.
+	</para>
+
+	<para>
+	  Finally the constructor declares <function>driveTrace</function> to
+	  be a method sensitive to the clock. It will be called on each clock
+	  edge and used to dump all traced signals.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Destructor for the &vcd; Trace Module
+	</title>
+
+	<para>
+	  The destructor is used to close the SystemPerl trace file. As with
+	  the constructor, this functionality is only provided if tracing is
+	  enabled.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The trace method, <function>driveTrace</function>
+	</title>
+
+	<para>
+	  The code for this function is also provided only if tracing is
+	  enabled. On each clock edge it calls the SystemPerl trace file's
+	  <function>dump</function> function to dump out the current state at
+	  the current time stamp (obtained from
+	  <function>sc_time_stamp</function>).
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Building the Complete Model
+      </title>
+
+      <para>
+	The command file is updated to use the locally modified versions of
+	<filename>or1200_ctrl.v</filename> and
+	<filename>or1200_rfram_generic.v</filename> which have had signals and
+	functions made public. The entire model can be built, using 100 runs
+	through Dhrystone to get a performance measure:
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-baseline-5.scr \
+     VFLAGS="-Wno-lint -Wno-COMBDLY -Wno-UNOPTFLAT -language 1364-2001" \
+     NUM_RUNS=100
+      </programlisting>
+
+      <para>
+	&verilator; successfully builds the model and links to all the other
+	&systemc; modules. The model then runs under &systemc;
+      </para>
+
+      <programlisting>
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Loading flash image from sim/src/flash.in
+(orpsoc.v.uart_top) UART INFO: Data bus width is 32. Debug Interface present.
+
+(orpsoc.v.uart_top) UART INFO: Doesn't have baudrate output
+
+Execution starts, 1000 runs through Dhrystone
+Begin Time = 5
+End Time   = 116421
+OR1K at 10 MHz  (+PROC_6)
+Microseconds for one run through Dhrystone: 116us / 1000 runs
+Dhrystones per Second:                      8589 
+117975200.00 ns: report (deaddead)
+117986200.00 ns: Exiting (0)
+SystemC: simulation stopped by user.
+real 27.53
+user 27.45
+sys 0.02
+      </programlisting>
+
+      <para>
+	Is is reassuring to note that the execution gave the same results
+	and took exactly the same number of clock cycles, 1,179,862 as the
+	event-driven simulation (the event-driven simulation showed a timing
+	48&nbsp;ns less, reflecting the triggering of the <literal>$finish</literal>
+	event mid-cycle).
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Baseline Verilator Performance
+      </title>
+
+      <para>
+	As with the &icarus; simulation, these data sets were all recorded on
+	the author's workstation, a 2GHz Core2 Duo E2180, with 1MB
+	cache/processor and 2GB RAM, running Fedora 9 Linux, averaging the
+	results from at least 6 runs.
+      </para>
+
+      <para>
+	Total processor time for model build (the equivalent of elaboration)
+	was 13.94&nbsp;s and for execution was 27.67&nbsp;s. The model build
+	time is significantly higher than for simulator elaboration, but the
+	trade off is a much smaller execution time, leading to an overall
+	reduction in time. Model execution corresponds to a performance of
+	42.66&nbsp;kHz.
+      </para>
+
+      <sect2>
+	<title>
+	  Comparison with Event Driven Simulation
+	</title>
+
+	<para>
+	  These figures cannot be compared immediately against the results for
+	  &icarus; in <xref linkend="sec_iv_performance"/>. The &verilator;
+	  results were obtained after several &rtl; code modifications. So a
+	  re-run of &icarus; is needed with the same file list used with
+	  &verilator; (but with the Verilog test bench files added back).
+	</para>
+
+	<programlisting>
+make simulate COMMAND_FILE=cf-baseline-5.scr NUM_RUNS=1000
+	</programlisting>
+
+	<para>
+	  Total processor time for elaboration was 1.77&nbsp;s and for
+	  simulation was 793.33&nbsp;s, corresponding to a simulation
+	  performance of 1.49&nbsp;kHz.
+	</para>
+
+	<para>
+	  The data for the three runs (baseline &icarus;, baseline
+	  &verilator;, revised &icarus;) are shown in <xref
+	  linkend="tab_baseline_perf"/>.
+	</para>
+
+	<table id="tab_baseline_perf" frame="all">
+	  <title>
+	    Comparison of model performance with &icarus;
+	    and &verilator;.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="2*" colname="Description"/>
+	    <colspec colwidth="2*" colname="BuildTime"/>
+	    <colspec colwidth="2*" colname="RunTime"/>
+	    <colspec colwidth="2*" colname="RunPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Build Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Run Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Baseline &icarus;
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    1.78&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    796.84&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    1.48&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Baseline &verilator;
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.94&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.67&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    42.66&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Revised &icarus;
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    1.77&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    793.33&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    1.49&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+
+	<para>
+	  Even on gross performance, &verilator; is much faster than
+	  &icarus;. This is expected, since &verilator; is only 2-state and
+	  gives no modeling inside clock cycles.
+	</para>
+
+	<para>
+	  &icarus; shows no significant performance gain from the
+	  changes made to get the design through &verilator;. This is perhaps
+	  surprising, given this involved substituting simpler models for
+	  flash and &sram;.
+	</para>
+
+	<para>
+	  On the critical measure of model performance, &verilator; (in this
+	  example) is nearly 30 times faster than event driven simulation with
+	  &icarus;.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_optimization">
+    <title>
+      Optimizing the Verilator Model
+    </title>
+
+    <para>
+      The &verilator; model in the previous chapter was generated at the
+      expense of turning off most of the warnings and restricting the language
+      to IEEE 1364-2001 Verilog.
+    </para>
+
+    <para>
+      For much existing &rtl;, this is a satisfactory endpoint. However fixing
+      the various warnings can allow &verilator; to generate better quality
+      code. This chapter takes each of those warnings in turn and shows how to
+      handle them.
+    </para>
+
+    <para>
+      There is a general approach, which applies to most warnings in
+      &verilator; An individual warning can be disabled by surrounding the
+      troublesome code by a <literal>verilator&nbsp;lint_off&nbsp;</literal>
+      and <literal>verilator&nbsp;lint_on&nbsp;</literal> comments specific to
+      the warning. For example to disable a <literal>CASEX</literal> warning use the following:
+    </para>
+
+    <programlisting>
+      // verilator lint_off CASEX
+
+      &lt;troublesome code&gt;
+
+      // verilator lint_on CASEX
+    </programlisting>
+
+    <sect1>
+      <title>
+	A Note on Statistics
+      </title>
+
+      <para>
+	The data in this chapter has been obtained from a minimum of 6 runs on
+	the author's workstation. All data points and a statistical analysis
+	can be found in the <filename>results</filename> directory. A
+	performance difference of less than 1kHz should not generally be
+	considered statistically significant.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&verilator; Warnings
+      </title>
+
+      <para>
+	This section addresses each of the &verilator; warnings that occur
+	with &orpsoc; and show by example how to deal with each of these. In
+	each case the problem is fixed, rather than the warning disabled. This
+	allows the performance benefit of fixing each problem to be measured.
+      </para>
+
+      <para>
+	These are only a subset of all the warnings which &verilator; may
+	generate. However the approach to handling these examples will serve
+	for any other warnings encountered in other designs.
+      </para>
+
+      <sect2>
+	<title>
+	  The <literal>CASEX</literal> Warning
+	</title>
+
+	<para>
+	  Rerun the &verilator; build without warnings disabled. For now
+	  leave the <option>-language</option> flag indicating IEEE 1364-2001.
+	</para>
+
+	<programlisting>
+make verilate COMMAND_FILE=cf-baseline-5.scr VFLAGS="-language 1364-2001"
+	</programlisting>
+
+	<para>
+	  156 warnings are given, as follows:
+	</para>
+
+	<programlisting>
+%Warning-CASEX: ../orp_soc/rtl/verilog/or1200/or1200_alu.v:207: Suggest casez (w
+ith ?'s) in place of casex (with X's)
+%Warning-CASEX: Use "/* verilator lint_off CASEX */" and lint_on around source t
+o disable this message.
+%Warning-CASEX: ../orp_soc/rtl/verilog/or1200/or1200_alu.v:278: Suggest casez (w
+ith ?'s) in place of casex (with X's)
+
+...
+
+%Warning-UNOPTFLAT:      Example path: ../orp_soc/rtl/verilog/or1200/or1200_sprs
+.v:384:  ALWAYS
+%Warning-UNOPTFLAT:      Example path: ../orp_soc/rtl/verilog/or1200/or1200_sprs
+.v:202:  v.or1200_top.or1200_cpu->or1200_sprs.write_spr
+%Error: Exiting due to 156 warning(s)
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -language 1364-2001 -Mdir . -sc -f v-processed.scr
+	</programlisting>
+
+	<para>
+	  The first 19 of these are about
+	  <literal>CASEX</literal>. &verilator; will warn if the design
+	  contains Verilog <literal>casex</literal> statements. This is
+	  considered a risky coding system in synthesizable code, because of
+	  the ease of matching a stray unknown signal. In 4-state logic,
+	  signals can be initialized to X, but in the 2-state logic of
+	  &verilator; only 0 and 1 are available.
+	</para>
+      
+	<para>
+	  There is less risk with <literal>casez</literal>. Only
+	  initialization to a high-impedance value causes a problem. Thus,
+	  used with caution, <literal>casez</literal> is suitable for
+	  synthesizable code.
+	</para>
+
+	<para>
+	  For more explanation see the SNUG 1999 papers by Clifford Cummings
+	  and Don Mills <xref linkend="ref_cummings_99"/> <xref
+	  linkend="ref_mills_cummings_99"/>.
+	</para>
+
+	<para>
+	  There are two possible approaches to this problem. The first is to
+	  ignore it, either globally by using the <option>-Wno-CASEX</option>
+	  flag, or individually by use of
+	  <literal>verilator&nbsp;lint_off&nbsp;CASEX</literal> and
+	  <literal>verilator&nbsp;lint_on&nbsp;CASEX</literal> each case
+	  statement.
+	</para>
+
+	<para>
+	  The second case is to replace each <literal>casex</literal> by
+	  <literal>casez</literal>. This is the approach we have taken here,
+	  allowing us to measure the effect on performance. More commonly in
+	  existing &rtl; this warning would just be ignored.
+	</para>
+      
+	<para>
+	  It is of course perfectly acceptable to mix both
+	  approaches&mdash;ignore some warnings and fix others.
+	</para>
+
+	<para>
+	  The files affected are mostly in the &or1200; CPU (
+	  <filename>or1200_alu.v</filename>,
+	  <filename>or1200_lsu.v</filename>,
+	  <filename>or1200_operandmuxes.v</filename>,
+	  <filename>or1200_genpc.v</filename>,
+	  <filename>or1200_sprs.v</filename>,
+	  <filename>or1200_except.v</filename>,
+	  <filename>or1200_reg2mem.v</filename>,
+	  <filename>or1200_du.v</filename>,
+	  <filename>or1200_mult_mac.v</filename>), along with one in the
+	  Ethernet (<filename>eth_wishbone.v</filename>) and one in the UART
+	  (<filename>uart_transmitter.v</filename>). Modified versions are
+	  placed in the local directory and the command file
+	  (<filename>cf-optimized-1.scr</filename>) altered to use them.
+	</para>
+
+	<para>
+	  To get a performance figure, the revised model is run with all
+	  warnings disabled (the other warnings have not yet been dealt with):
+	</para>
+
+	<programlisting>
+make verilate COMMAND_FILE=cf-optimized-1.scr \
+VFLAGS="-Wno-lint -Wno-COMBDLY -Wno-UNOPTFLAT -language 1364-2001" \
+NUM_RUNS=1000
+	</programlisting>
+
+	<para>
+	  The run gives the same result as before and takes the same number of
+	  cycles. Simulation performance was 42.76&nbsp;kHz, not significantly
+	  different to the previous run. The <literal>CASEX</literal> warning
+	  is primarily about coding style rather than performance benefits.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <literal>VARHIDDEN</literal> Warning
+	</title>
+
+	<para>
+	  Rerunning the &verilator; build without warnings disabled on the new
+	  command file now yields 137 warnings:
+	</para>
+
+	<programlisting>
+%Warning-VARHIDDEN: ../orp_soc/rtl/verilog/dbg_interface/dbg_crc8_d1.v:125: Decl
+aration of signal hides declaration in upper scope: Data
+%Warning-VARHIDDEN: Use "/* verilator lint_off VARHIDDEN */" and lint_on around 
+source to disable this message.
+%Warning-VARHIDDEN: ../orp_soc/rtl/verilog/dbg_interface/dbg_crc8_d1.v:111: ... 
+Location of original declaration
+
+...
+	</programlisting>
+
+	<para>
+	  &verilator; warns if a variable or signal declaration has a name
+	  which is identical to one in a surrounding block. There is only one
+	  instance of this here, in the &crc; module of the debug unit. The
+	  module declares a function, <varname>nextCRC8_D1</varname>, with an
+	  input parameter named <varname>Data</varname> at line 125:
+	</para>
+
+	<programlisting>
+function [7:0] nextCRC8_D1;
+
+  input Data;
+  input [7:0] Crc;
+
+  ...
+	</programlisting>
+
+	<para>
+	  This input parameter has the same name as that of one of inputs to
+	  this module declared at line 111:
+	</para>
+
+	<programlisting>
+module dbg_crc8_d1 (Data, EnableCrc, Reset, SyncResetCrc, CrcOut, Clk);
+
+parameter Tp = 1;
+
+input Data;
+input EnableCrc;
+
+...
+	</programlisting>
+
+	<para>
+	  This is purely a matter of good design practice. A user reading the
+	  function code, could be mistaken in thinking the variable
+	  <varname>Data</varname> referred to the original input signal. For
+	  completeness a performance run is done with the revised command
+	  file, where the problem has been fixed by renaming the function
+	  input parameter.
+	</para>
+
+	<programlisting>
+make verilate COMMAND_FILE=cf-optimized-2.scr \
+     VFLAGS="-Wno-lint -Wno-COMBDLY -Wno-UNOPTFLAT -language 1364-2001" \
+     NUM_RUNS=100
+	</programlisting>
+
+	<para>
+	  As expected, performance is not significantly changed, at
+	  42.66&nbsp;kHz.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <literal>IMPLICIT</literal> Warning
+	</title>
+
+	<para>
+	  Rerunning the &verilator; build without warnings disabled on the new
+	  command file now yields 135 warnings (the previous problem,
+	  <literal>VARHIDDEN</literal> counts as a pair of warnings, one for
+	  the variable being hidden and one for the variable doing the
+	  hiding):
+	</para>
+      
+	<programlisting>
+%Warning-IMPLICIT: ../orp_soc/rtl/verilog/dbg_interface/dbg_top.v:881: Signal de
+finition not found, creating implicitly: RegAccess
+%Warning-IMPLICIT: Use "/* verilator lint_off IMPLICIT */" and lint_on around so
+urce to disable this message.
+%Warning-IMPLICIT: ../orp_soc/rtl/verilog/dbg_interface/dbg_top.v:886: Signal de
+finition not found, creating implicitly: RISCAccess
+
+...
+	</programlisting>
+
+	<para>
+	  Verilog allows signals to be used if they have not been
+	  declared. This is generally considered bad practice, and &verilator;
+	  warns if it is found. There are five such occurrences in &orpsoc;
+	  two in <filename>dbg_top.v</filename>, two in
+	  <filename>uart_regs.v</filename> and one in
+	  <filename>ps2_top</filename>. These are corrected by inserting their
+	  correct definition.
+	</para>
+
+	<para>
+	  A performance run with the revised command file
+	  <filename>cf-optimized-3.scr</filename> gives no significant change
+	  in performance at 42.50&nbsp;kHz.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <literal>WIDTH</literal> Warning
+	</title>
+
+	<para>
+	  Rerunning the &verilator; build without warnings disabled on the new
+	  command file now yields 130 warnings:
+	</para>
+
+	<programlisting>
+%Warning-WIDTH: ../orp_soc/rtl/verilog/uart16550/uart_tfifo.v:186: Operator ADD 
+expects 4 bits on the RHS, but RHS's CONST generates 1 bits.
+%Warning-WIDTH: Use "/* verilator lint_off WIDTH */" and lint_on around source t
+o disable this message.
+%Warning-WIDTH: ../orp_soc/rtl/verilog/uart16550/uart_tfifo.v:203: Operator ASSI
+GNDLY expects 4 bits on the Assign RHS, but Assign RHS's CONST generates 1 bits.
+
+...
+	</programlisting>
+
+	<para>
+	  A total of 78 width warnings are given, affecting 23 Verilog &rtl;
+	  files in all components. These are occasions where the width of
+	  signals being compared or assigned do not match.
+	</para>
+
+	<para>
+	  Such mismatches  are a  potent source of  confusion and  bugs, since
+	  bits that are expected to be set or cleared may be left untouched.
+	</para>
+
+	<para>
+	  This is another warning that is about good design practice, rather
+	  than model performance, and normal practice would be to ignore these
+	  errors after review.
+	</para>
+
+	<para>
+	  However, for this example, all warnings are fixed, to allow a
+	  performance measurement to be made. Some of the warnings are in
+	  files already changed for earlier warnings. In these cases the files
+	  with the new changes add a numerical suffix: thus
+	  <filename>or1200_mult_mac-2.v</filename>.
+	</para>
+
+	<para>
+	  A run with a command file containing corrected &rtl;
+	  (<filename>cf-optimized-4.scr</filename>) gives performance of
+	  43.04&nbsp;kHz. Not a significant difference from the previous run,
+	  despite the extensive changes.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <literal>CASEINCOMPLETE</literal> Warning
+	</title>
+
+	<para>
+	  Rerunning the &verilator; build without warnings disabled on the new
+	  command file now yields 52 warnings:
+	</para>
+
+	<programlisting>
+%Warning-CASEINCOMPLETE: ../orp_soc/rtl/verilog/ethernet/eth_shiftreg.v:124: Cas
+e values incompletely covered (example pattern 0x0)
+%Warning-CASEINCOMPLETE: Use "/* verilator lint_off CASEINCOMPLETE */" and lint_
+on around source to disable this message.
+%Warning-CASEINCOMPLETE: ../local/rtl/verilog/ethernet/eth_wishbone-2.v:618: Cas
+e values incompletely covered (example pattern 0x1)
+
+...
+	</programlisting>
+
+	<para>
+	  In this case &verilator; is warning about a case statement with
+	  incomplete coverage of possible values. This is a source of
+	  potential error. The missing cases should be made explicit.
+	</para>
+
+	<para>
+	  There are three occurrences of this problem in &orpsoc;. These are
+	  corrected in a new command file
+	  (<filename>cf-optimized-5.scr</filename>). All the warnings covered
+	  by <option>-Wno-lint</option> have now been fixed, so a performance
+	  run need only turn off the <literal>COMBDLY</literal> and <literal>UNOPTFLAT</literal>
+	  warnings:
+	</para>
+
+	<programlisting>
+make clean verilate COMMAND_FILE=cf-optimized-5.scr \
+     VFLAGS="-Wno-COMBDLY -Wno-UNOPTFLAT -language 1364-2001" NUM_RUNS=1000
+	</programlisting>
+
+	<para>
+	  This gives a performance of 43.31&nbsp;kHz, still not significantly
+	  different to any of the previous performances.
+	</para>
+      
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <literal>COMBDLY</literal> Warning
+	</title>
+
+	<para>
+	  Rerunning the &verilator; build without warnings disabled on the new
+	  command file now yields 49 warnings:
+	</para>
+
+	<programlisting>
+%Warning-COMBDLY: ../local/rtl/verilog/dbg_interface/dbg_top-2.v:1162: Delayed a
+ssignments (&lt;=) in non-clocked (non flop or latch) blocks should be non-delay
+ed assignments (=).
+%Warning-COMBDLY: Use "/* verilator lint_off COMBDLY */" and lint_on around sour
+ce to disable this message.
+%Warning-COMBDLY: *** See the manual before disabling this,
+%Warning-COMBDLY: else you may end up with different sim results.
+%Warning-COMBDLY: ../orp_soc/rtl/verilog/ethernet/eth_registers.v:880: Delayed a
+ssignments (&lt;=) in non-clocked (non flop or latch) blocks should be non-delay
+ed assignments (=).
+
+...
+	</programlisting>
+
+	<para>
+	  This is one of the more complex warnings. Good design practice is to
+	  use non-blocking assignments in sequential logic and blocking
+	  assignments in combinatorial logic. Cliff Cummings 2000 SNUG paper
+	  gives a good explanation of why this is important <xref
+	  linkend="ref_cummings_00"/>.
+	</para>
+
+	<para>
+	  This can cause errors when moving to cycle accurate simulation, but
+	  it is not necessarily trivial to fix with existing code. However by
+	  following this guideline, the potential for &verilator; optimization
+	  is maximized.
+	</para>
+
+	<para>
+	  The warning occurs 46 times in &orpsoc;, but 41 of those are in a
+	  single file, <filename>ps2_keyboard.v</filename>, in a combinatorial
+	  state machine.
+	</para>
+
+	<para>
+	  The command file <filename>cf-optimized-6.scr</filename> has all
+	  these problems fixed. A performance run need not now turn off
+	  warnings about <literal>COMBDLY</literal>.
+	</para>
+
+	<programlisting>
+make clean verilate COMMAND_FILE=cf-optimized-6.scr \
+     VFLAGS="-Wno-UNOPTFLAT -language 1364-2001" NUM_RUNS=1000
+	</programlisting>
+
+	<para>
+	  This run gives a performance of 43.20&nbsp;kHz, once again not
+	  significantly different to earlier figures.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  The <literal>UNOPTFLAT</literal> Warning
+	</title>
+
+	<para>
+	  Rerunning the &verilator; build without warnings disabled on the new
+	  command file now yields just 3 warnings, albeit with quite
+	  complex warning messages.
+	</para>
+
+	<programlisting>
+%Warning-UNOPTFLAT: ../local/rtl/verilog/ps2/ps2_top.v:154: Signal unoptimizable
+: Feedback to clock or circular logic: v->ps2_top.rx_kbd_data_ready
+%Warning-UNOPTFLAT: Use "/* verilator lint_off UNOPTFLAT */" and lint_on around 
+source to disable this message.
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_top.v:154:  
+v->ps2_top.rx_kbd_data_ready
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_translation_
+table.v:310:  ASSIGNW
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_top.v:155:  
+v->ps2_top.rx_translated_data_ready
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_wb_if-2.v:68
+4:  ASSIGNW
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_top.v:156:  
+v->ps2_top.rx_kbd_read_wb
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_keyboard-2.v
+:429:  ALWAYS
+%Warning-UNOPTFLAT:      Example path: ../local/rtl/verilog/ps2/ps2_top.v:154:  
+v->ps2_top.rx_kbd_data_ready
+%Warning-UNOPTFLAT: ../local/rtl/verilog/or1200/or1200_sprs.v:212: Signal unopti
+mizable: Feedback to clock or circular logic: v.or1200_top.or1200_cpu->or1200_sp
+rs.read_spr
+
+...
+	</programlisting>
+
+	<para>
+	  This is an important warning to address. It is identifying a set of
+	  signals which appear to have cyclic dependency&mdash;a combinatorial
+	  loop. Rather than evaluating the expression in a single step,
+	  &verilator; will need to iterate until it settles.
+	</para>
+
+	<para>
+	  &verilator; identifies the problem signal, and at least one loop
+	  through which it is being driven. In the first warning in the
+	  example, the problem signal is <literal>rx_kbd_data_ready</literal>
+	  at line 154 of <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+wire rx_released,
+     rx_kbd_data_ready,
+     rx_translated_data_ready,
+...
+	</programlisting>
+
+	<para>
+	  The next line of the warning identifies that
+	  <literal>rx_kbd_data_ready</literal> is driving
+	  <literal>rx_translated_data_read_o</literal> at line 310 of
+	  <filename>ps2_translation_table.v</filename>:
+	</para>
+
+	<programlisting>
+assign code_o = translate_i ? {(rx_released_i | ram_out[7]), ram_out[6:0]} : cod
+e_i ;
+assign rx_translated_data_ready_o = translate_i ? rx_translated_data_ready : rx_
+data_ready_i ;
+assign rx_read_o = rx_read_i ;
+	</programlisting>
+
+	<para>
+	  The connection is not immediately
+	  obvious. <literal>rx_translated_data_ready_o</literal> is not
+	  directly dependent on <literal>rx_kbd_data_ready</literal>. However
+	  this is a different module, and &verilator; has flattened the
+	  code. The signal <literal>rx_data_ready_i</literal> is an input. In
+	  the instantiation of <literal>ps2_translation_table</literal> in
+	  <filename>ps2_top.v</filename>, the driving signal,
+	  <literal>rx_kbd_data_ready</literal> is the argument used for the
+	  <literal>rx_data_ready_i</literal> input:
+	</para>
+
+	<programlisting>
+ps2_translation_table i_ps2_translation_table
+(
+    ...
+
+    .data_o                     (),
+    .rx_data_ready_i            (rx_kbd_data_ready),
+    .rx_translated_data_ready_o (rx_translated_data_ready),
+
+    ...
+) ;
+	</programlisting>
+
+	<para>
+	  The next line of warning identifies that
+	  <literal>rx_translated_data_ready_o</literal> is driving
+	  <literal>rx_translated_data_ready</literal> at line 155 of
+	  <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+wire rx_released,
+     rx_kbd_data_ready,
+     rx_translated_data_ready,
+     rx_kbd_read_wb,
+     rx_kbd_read_tt,
+	</programlisting>
+
+	<para>
+	  Again the connection is not immediately clear, but the driving
+	  signal (<literal>rx_translated_data_ready_o</literal>) is an output
+	  of module <literal>ps2_translation_table</literal>. This is
+	  connected to <literal>rx_translated_data_ready_o</literal> via its
+	  instantiation in <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+ps2_translation_table i_ps2_translation_table
+(
+    ...
+
+    .rx_data_ready_i            (rx_kbd_data_ready),
+    .rx_translated_data_ready_o (rx_translated_data_ready),
+    .rx_read_i                  (rx_kbd_read_wb),
+
+    ...
+) ;
+	</programlisting>
+
+	<para>
+	  The next line of warning identifies that
+	  <literal>rx_translated_data_ready</literal> is driving
+	  <literal>rx_kbd_read_o</literal> at line 684 of
+	  <filename>ps2_wb_if-2.v</filename> (the previously modified version
+	  of <filename>ps2_wb_if.v</filename>):
+	</para>
+
+	<programlisting>
+assign rx_kbd_read_o = rx_kbd_data_ready_i &amp;&amp;
+                       ( enable1
+                         ||
+                         ( read_input_buffer_reg
+                           &amp;&amp;
+                           input_buffer_full
+                           &amp;&amp;
+                           !input_buffer_filled_from_command
+                           `ifdef PS2_AUX
+                           &amp;&amp;
+                           !aux_input_buffer_full
+                           `endif
+                          )
+                        );
+	</programlisting>
+
+	<para>
+	  Once again this is a different module, and the connection is through
+	  an input to the module. In this case
+	  <literal>rx_translated_data_ready</literal> is passed as input
+	  <literal>rx_kbd_data_ready_i</literal> in the instantiation of
+	  <literal>ps2_wb_if</literal> in <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+ps2_wb_if i_ps2_wb_if
+(
+    .wb_clk_i                      (wb_clk_i),
+    .wb_rst_i                      (wb_rst_i),
+
+    ...
+
+    .rx_scancode_i                 (rx_translated_scan_code),
+    .rx_kbd_data_ready_i           (rx_translated_data_ready),
+    .rx_kbd_read_o                 (rx_kbd_read_wb),
+
+    ...
+
+) ;
+	</programlisting>
+
+	<para>
+	  The next line of warning identifies that
+	  <literal>rx_kbd_read_o</literal> is driving
+	  <literal>rx_kbd_read_wb</literal> at line 156 of
+	  <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+wire rx_released,
+     rx_kbd_data_ready,
+     rx_translated_data_ready,
+     rx_kbd_read_wb,
+     rx_kbd_read_tt,
+     tx_kbd_write,
+     ...
+	</programlisting>
+
+	<para>
+	  Once again this is a different module, and the connection is through
+	  an output of the module. In this case
+	  <literal>rx_kbd_read_o</literal> is passed as output in the
+	  instantiation of <literal>ps2_wb_if</literal> in
+	  <filename>ps2_top.v</filename>, where it is connected to
+	  <literal>rx_kbd_read_wb</literal>:
+	</para>
+
+	<programlisting>
+ps2_wb_if i_ps2_wb_if
+(
+    ...
+
+    .rx_kbd_data_ready_i           (rx_translated_data_ready),
+    .rx_kbd_read_o                 (rx_kbd_read_wb),
+    .tx_kbd_data_o                 (tx_kbd_data),
+
+    ...
+) ;
+	</programlisting>
+
+	<para>
+	  The next line of warning identifies that
+	  <literal>rx_kbd_read_wb</literal> in turn drives
+	  <literal>rx_read</literal> at line 429 of
+	  <filename>ps2_keyboard-2.v</filename> (an already modified version
+	  of <filename>ps2_keyboard.v</filename>):
+	</para>
+
+	<programlisting>
+always @(m2_state or rx_output_strobe or rx_read)
+begin : m2_state_logic
+  case (m2_state)
+
+    ...
+	</programlisting>
+
+	<para>
+	  The trail through the flattened modules is a little harder this
+	  time. The driving signal, <literal>rx_kbd_read_wb</literal> is an
+	  input (<literal>rx_read_i</literal>) to module
+	  <literal>ps2_translation_table</literal>. Within that module it
+	  directly drives (via a continuous assignment), the output
+	  <literal>rx_read_o</literal>, which is connected to
+	  <literal>rx_kbd_read_tt</literal> in <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+ps2_translation_table i_ps2_translation_table
+(
+    ...
+
+    .rx_translated_data_ready_o (rx_translated_data_ready),
+    .rx_read_i                  (rx_kbd_read_wb),
+    .rx_read_o                  (rx_kbd_read_tt),
+    .rx_released_i              (rx_released)
+) ;
+	</programlisting>
+
+	<para>
+	  <literal>rx_kbd_read_tt</literal> is in turn the
+	  <literal>rx_read</literal> input in the instantiation of
+	  <literal>ps2_keyboard</literal>:
+	</para>
+
+	<programlisting>
+ps2_keyboard #(`PS2_TIMER_60USEC_VALUE_PP, `PS2_TIMER_60USEC_BITS_PP, `PS2_TIMER
+_5USEC_VALUE_PP, `PS2_TIMER_5USEC_BITS_PP)
+i_ps2_keyboard
+(
+    ...
+
+    .rx_data_ready               (rx_kbd_data_ready),
+    .rx_read                     (rx_kbd_read_tt),
+    .tx_data                     (tx_kbd_data),
+
+    ...
+);
+	</programlisting>
+
+	<para>
+	  The final line of warning, identifies that
+	  <literal>rx_read</literal> is in turn a driver of the original
+	  signal, <literal>rx_kbd_data_ready</literal> at line 154 of
+	  <filename>ps2_top.v</filename>, thus completing the loop.
+	</para>
+
+	<para>
+	  The connection is through the <literal>rx_data_ready</literal>
+	  output of <literal>ps2_keyboard</literal> instantiated in
+	  <filename>ps2_top.v</filename>:
+	</para>
+
+	<programlisting>
+ps2_keyboard #(`PS2_TIMER_60USEC_VALUE_PP, `PS2_TIMER_60USEC_BITS_PP, `PS2_TIMER
+_5USEC_VALUE_PP, `PS2_TIMER_5USEC_BITS_PP)
+i_ps2_keyboard
+(
+    ...
+
+    .rx_scan_code                (rx_scan_code),
+    .rx_data_ready               (rx_kbd_data_ready),
+    .rx_read                     (rx_kbd_read_tt),
+
+    ...
+);
+	</programlisting>
+
+	<para>
+	  The <literal>rx_data_ready</literal> output is driven from within
+	  the <literal>always</literal> block dependent on
+	  <literal>rx_read</literal>:
+	</para>
+
+	<programlisting>
+always @(m2_state or rx_output_strobe or rx_read)
+begin : m2_state_logic
+  case (m2_state)
+    m2_rx_data_ready_ack:
+          begin
+            rx_data_ready = #1 1'b0;
+            if (rx_output_strobe) m2_next_state = #1 m2_rx_data_ready;
+            else m2_next_state = #1 m2_rx_data_ready_ack;
+          end
+    m2_rx_data_ready:
+          begin
+            rx_data_ready = #1 1'b1;
+            if (rx_read) m2_next_state = #1 m2_rx_data_ready_ack;
+            else m2_next_state = #1 m2_rx_data_ready;
+          end
+    default : m2_next_state = #1 m2_rx_data_ready_ack;
+  endcase
+end
+	</programlisting>
+
+	<para>
+	  The loop is summarized in <xref linkend="fig_comb_loop"/>.
+	</para>
+      
+	<figure id="fig_comb_loop">
+	  <title>
+	    Example of a combinatorial loop in &orpsoc;
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="comb-loop.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="comb-loop.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<sect3>
+	  <title>
+	    Breaking Combinatorial Loops
+	  </title>
+
+	  <para>
+	    Combinatorial loops can be down to a number of causes. In many
+	    cases there is no loop at the bit level. The dependencies are on
+	    different bits in a multi-bit signal, none of which form a
+	    loop. Verilator looks for loops on the full register or wire, not
+	    the individual bits, so flags a warning. The solution in this case
+	    is easy - break the signal apart to its individual components.
+	  </para>
+
+	  <para>
+	    But this is not the problem with this &orpsoc; example. This is a
+	    single bit signal, and a genuine combinatorial loop (which will
+	    settle, so simulates correctly). The clue to fixing it is in the
+	    combinatorial <literal>always</literal> block in
+	    <literal>ps2_keyboard-2.v</literal>:
+	  </para>
+
+	  <programlisting>
+always @(m2_state or rx_output_strobe or rx_read)
+begin : m2_state_logic
+  case (m2_state)
+    m2_rx_data_ready_ack:
+          begin
+            rx_data_ready = #1 1'b0;
+            if (rx_output_strobe) m2_next_state = #1 m2_rx_data_ready;
+            else m2_next_state = #1 m2_rx_data_ready_ack;
+          end
+    m2_rx_data_ready:
+          begin
+            rx_data_ready = #1 1'b1;
+            if (rx_read) m2_next_state = #1 m2_rx_data_ready_ack;
+            else m2_next_state = #1 m2_rx_data_ready;
+          end
+    default : m2_next_state = #1 m2_rx_data_ready_ack;
+  endcase
+end
+	  </programlisting>
+
+	  <para>
+	    There is no reason in a cycle accurate simulation (where
+	    <literal>#</literal> delays are ignored) for
+	    <literal>rx_data_ready</literal> to be set inside the
+	    <literal>always</literal> block. Ignoring the delay, it is low
+	    when <literal>m2_state == m2_rs_data_ready_ack</literal> and high
+	    otherwise. The <literal>default</literal> entry is meaningless in
+	    a 2-state simulation, since <literal>m2_state</literal> is a 1-bit
+	    register.
+	  </para>
+
+	  <para>
+	    The <literal>always</literal> block can be written with
+	    <literal>rx_data_ready</literal> assigned outside the block, and
+	    the loop is broken:
+	  </para>
+
+	  <programlisting>
+`ifdef verilator
+assign rx_data_ready = ~(m2_state == m2_rx_data_ready_ack); // Breaks comb loop
+`endif
+   
+always @(m2_state or rx_output_strobe or rx_read)
+begin : m2_state_logic
+  case (m2_state)
+    m2_rx_data_ready_ack:
+          begin
+`ifndef verilator
+            rx_data_ready = #1 1'b0;
+`endif
+            if (rx_output_strobe) m2_next_state = #1 m2_rx_data_ready;
+            else m2_next_state = #1 m2_rx_data_ready_ack;
+          end
+    m2_rx_data_ready:
+          begin
+`ifndef verilator
+            rx_data_ready = #1 1'b1;
+`endif
+            if (rx_read) m2_next_state = #1 m2_rx_data_ready_ack;
+            else m2_next_state = #1 m2_rx_data_ready;
+          end
+    default : m2_next_state = #1 m2_rx_data_ready_ack;
+  endcase
+end
+	  </programlisting>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Performance Impact of Fixing <literal>UNOPTFLAT</literal>
+	  </title>
+
+	  <para>
+	    The remaining two loops both concern signals in
+	    <filename>or1200_sprs.v</filename>. The command file
+	    <filename>cf-optimized-7.scr</filename> has all these problems
+	    fixed. A performance run need not now turn off any warnings.
+	  </para>
+
+	  <programlisting>
+make clean verilate COMMAND_FILE=cf-optimized-7.scr \
+     VFLAGS="-language 1364-2001" NUM_RUNS=1000
+	  </programlisting>
+
+	  <para>
+	    This run gives a significant performance improvement over previous
+	    runs of 47.06&nbsp;kHz.
+	  </para>
+
+	  <para>
+	    This is one of two warnings that is really important to fix. The
+	    other is <literal>UNOPT</literal> which occurs when modules have
+	    input and output signals crossing between them, and which does not
+	    occur in &orpsoc;.
+	  </para>
+
+	  <para>
+	    Even though there were only 3 loops, one of which was in a
+	    peripheral with tied-off inputs, fixing this problem gave an 8%
+	    performance improvement.
+	  </para>
+
+	</sect3>
+	  
+      </sect2>
+
+      <sect2>
+	<title>
+	  Fixing Language Conflicts
+	</title>
+
+	<para>
+	  The final fix is to remove the constructs which conflict with
+	  SystemVerilog. This gives greatest flexibility in future
+	  development. These are errors, so will stop the compilation at the
+	  first error. The model build is run without restricting the
+	  language:
+	</para>
+
+	<programlisting>
+make verilate COMMAND_FILE=cf-optimized-7.scr
+	</programlisting>
+
+	<para>
+	  The first error is in <filename>eth_wishbone-3.v</filename>:
+	</para>
+
+	<programlisting>
+%Error: ../local/rtl/verilog/ethernet/eth_wishbone-3.v:579: syntax error, unexpe
+cted do, expecting IDENTIFIER
+%Error: Cannot continue
+%Error: Command Failed /home/jeremy/tools/verilator/verilator-3.700/verilator_bi
+n -Mdir . -sc -f v-processed.scr
+	</programlisting>
+
+	<para>
+	  This is the commonest trap set by SystemVerilog's new
+	  keywords. <literal>do</literal> is often used in designs to
+	  designate the data output. The problem is fixed by simple
+	  substitution.
+	</para>
+
+	<para>
+	  In this case the problem is the instantiation of
+	  <literal>eth_spram_256x32.v</literal> in
+	  <filename>eth_wishbone-3.v</filename>, which uses
+	  <literal>do</literal> for its data output port. The solution is to
+	  replace <literal>do</literal> with <literal>data_o</literal>. For
+	  consistency, <literal>di</literal> is changed to
+	  <literal>data_i</literal> at the same time.
+	</para>
+
+	<para>
+	  This is the only such conflict in the &orpsoc; source. A performance
+	  run with the update command file
+	  (<filename>cf-optimized-8.scr</filename>) yields no significant
+	  change in performance at 47.5&nbsp;kHz excluding Verilator model
+	  build time.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Summary of Performance Gains from &verilator; Warnings
+	</title>
+
+	<para>
+	  <xref linkend="tab_warning_perf"/> shows the performance gains which
+	  can be achieved by fixing the various &verilator; warnings and
+	  language inconsistencies.
+	</para>
+
+	<table id="tab_warning_perf" frame="all">
+	  <title>
+	    Comparison of model performance when fixing
+	    &verilator; warnings.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="4*" colname="Description"/>
+	    <colspec colwidth="2*" colname="BuildTime"/>
+	    <colspec colwidth="2*" colname="RunTime"/>
+	    <colspec colwidth="2*" colname="RunPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Build Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Run Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Baseline
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.94&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.67&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    42.66&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>CASEX</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.91&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.59&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    42.76&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>VARHIDDEN</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.91&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.66&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    42.66&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>IMPLICIT</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.89&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.77&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    42.50&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>WIDTH</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.92&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.41&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    43.04&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>CASEINCOMPLETE</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.93&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.24&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    43.31&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>COMBDLY</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.92&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    27.32&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    43.20&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>UNOPTFLAT</literal> fixed
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.95&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    25.07&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    47.06&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    SystemVerilog compliant
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.91&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    24.85&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    47.49&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+
+	<para>
+	  The table confirms that the majority of warnings do not greatly
+	  affect performance. They are primarily about writing good quality
+	  &rtl;. However fixing <literal>UNOPTFLAT</literal> gave a significant
+	  performance improvement.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	C++ Compiler Optimizations
+      </title>
+
+      <para>
+	All the optimizations up to this stage have concerned getting the best
+	possible model out of Verilator. There are now the optimizations to
+	get from the C++ compiler.
+      </para>
+
+      <para>
+	All the performance figures in this section make use of the final
+	command file, <filename>cf-optimized-8.scr</filename>.
+      </para>
+
+      <sect2>
+	<title>
+	  Use of <literal>OPT_FAST</literal>, <literal>OPT_SLOW</literal> and
+	  <literal>OPT</literal>
+	</title>
+
+	<para>
+	  &verilator; divides its code into two categories. That which is
+	  executed every cycle ("fast" code) and that which is executed less
+	  frequently ("slow" code). The <literal>OPT_FAST</literal> macro of
+	  the &verilator; generated <filename>Makefile</filename> specifies
+	  optimizations to be applied to the "fast" code. Conversely the
+	  <literal>OPT_SLOW</literal>  macro specifies optimizations to be
+	  applied to the "slow" code. For convenience the macro
+	  <literal>OPT</literal> can be used to specify optimizations that
+	  will be applied to both categories of code.
+	</para>
+
+	<para>
+	  The separation allows focusing of optimization effort for large
+	  designs, where compile times are significant. Just specifying
+	  <literal>OPT_FAST</literal> gains most of the model performance
+	  benefit, without the overhead of optimizing the "slow" code.
+	</para>
+
+	<para>
+	  <xref linkend="tab_opt_flags"/> shows the effect of using the &gnu;
+	  C++ compiler's highest level of optimization
+	  (<literal>-O3</literal>) with <literal>OPT_FAST</literal>,
+	  <literal>OPT_SLOW</literal> and <literal>OPT</literal>. These can be
+	  passed as macros to the <filename>Makefile</filename> in the example
+	  for this application note:
+	</para>
+
+	<programlisting>
+make verilate COMMAND_FILE=cf-optimized-8.scr NUM_RUNS=1000 OPT_FAST="-O3"
+	</programlisting>
+	
+	<table id="tab_opt_flags" frame="all">
+	  <title>
+	    Comparison of model performance with different
+	    &verilator; <literal>OPT</literal> flag settings.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="2*" colname="Description"/>
+	    <colspec colwidth="2*" colname="BuildTime"/>
+	    <colspec colwidth="2*" colname="RunTime"/>
+	    <colspec colwidth="2*" colname="RunPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Build Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Run Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    No optimization
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.91&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    24.85&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    47.49&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>OPT_FAST=-O3</literal>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    33.78&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.35&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    95.51&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>OPT_SLOW=-O3</literal>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    14.20&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    25.35&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    46.58&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <literal>OPT=-O3</literal>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    35.35&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.39&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    95.25&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+	
+	<para>
+	  In the example used in this application note (which is not huge),
+	  none of the model build times are unreasonable. As can be seen
+	  <literal>OPT_SLOW</literal> profiling has no significant effect in
+	  this example.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Choice of optimization level
+	</title>
+
+	<para>
+	  The &gnu; C++ compiler (like other Linux C++ compilers) offers various
+	  levels of optimization from none (<option>-O0</option>) through to
+	  (<option>-O3</option>). There is a trade off to be made&mdash;more
+	  optimization means longer compile times, but faster run times.
+	</para>
+
+	<para>
+	  &gnu; C++ also offers <option>-Os</option>, to optimize for
+	  space. This is equivalent to <option>-O2</option>, but omitting any
+	  optimizations that tend to increase the size of the program.
+	</para>
+
+	<para>
+	  <xref linkend="tab_gcc_opt"/> shows the impact of the different
+	  optimization levels on the example design.
+	</para>
+
+	<table id="tab_gcc_opt" frame="all">
+	  <title>
+	    Comparison of model performance with different
+	    compiler optimization settings.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="2*" colname="Description"/>
+	    <colspec colwidth="2*" colname="BuildTime"/>
+	    <colspec colwidth="2*" colname="RunTime"/>
+	    <colspec colwidth="2*" colname="RunPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Build Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Run Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <option>-O0</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.98&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    25.05&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    47.10&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <option>-O1</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    21.51&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    13.13&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    89.90&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <option>-O2</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    32.77&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.76&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    92.46&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <option>-O3</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    35.35&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.39&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    95.25&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    <option>-Os</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    26.23&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.24&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    96.41&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+	
+	<para>
+	  Almost all the benefit is gained from <option>-O1</option>, but
+	  there are incremental benefits, at the expense of greater compile
+	  times for higher levels of optimization.
+	</para>
+
+	<para>
+	  Note however that the highest performance is with
+	  <option>-Os</option>. Code generated by &verilator; (and its
+	  commercial rivals) has a classic "cache-busting" structure. On each
+	  code cycle execution starts at the top and proceeds linearly to the
+	  bottom. Anything that reduces the code size, increases the
+	  likelihood of code remaining in the cache, and so can have a very
+	  large performance benefit.
+	</para>
+
+	<para>
+	  The recommendation is to use <option>-Os</option> as the preferred
+	  C++ compiler option.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Compiler Profiling
+	</title>
+
+	<para>
+	  Modern compilers, such as the &gnu; C++ compiler can optimize based on
+	  statistics from earlier runs of the compiled program. The program is
+	  compiled with options to gather statistics, run to create the
+	  statistics, then recompiled using the data from those statistics.
+	</para>
+
+	<para>
+	  The latest versions of the &gnu; C++ compiler can use this for:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Reorganize branches to favor the most commonly taken branch
+	      (option <option>-fbranch-probabilities</option>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Optimize expressions based on knowledge of how they are used
+	      (option <option>-fvpt</option>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Unroll loops where this would be favorable in most cases
+	      (option <option>-funroll-loops</option>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Peel loops (i.e completely unroll and remove them), where they
+	      would always be done a fixed number of times (option
+	      <option>-fpeel-loops</option>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Perform tail duplication where the resulting enlarged superblock
+	      would improve other transformations (option
+	      <option>-ftracer</option>).
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  Some care is needed in using branch-profiling. It can interact badly
+	  with other systems (for example <command>ccache</command>). Although
+	  it has been part of the &gnu; C++ Compiler for some years, it
+	  must still be regarded as somewhat experimental in nature.
+	</para>
+
+	<para>
+	  Profiling is enabled with the example <filename>Makefile</filename>
+	  by using the <literal>verilator-fast</literal> target. Statistics
+	  are gathered by compiling the model with
+	  <option>-ftest-coverage</option> and
+	  <option>-fprofile-generate</option> options and then running it. The
+	  options to be used in the subsequent optimizing recompile are passed
+	  as a macro, <literal>PROF_OPTS</literal>, for example:
+	</para>
+
+	<programlisting>
+make verilate-fast COMMAND_FILE=cf-optimized-8.scr NUM_RUNS=1000 \
+     OPT="-O3" PROF_OPTS="-fbranch-probabilities"
+	</programlisting>
+
+	<para>
+	  <xref linkend="tab_prof_os"/> shows the impact of the different
+	  profiling options on the example design when compiled with
+	  the <option>-Os</option> option, the fastest option without
+	  profiling. The options are applied incrementally, in the order
+	  <option>-fbranch-probabilities</option>, <option>-fvpt</option>,
+	  <option>-funroll-loops</option>, <option>-fpeel-loops</option> and
+	  <option>-ftracer</option>.
+	</para>
+
+	<table id="tab_prof_os" frame="all">
+	  <title>
+	    Comparison of model performance using
+	    <option>-Os</option> and profiling.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="4*" colname="Description"/>
+	    <colspec colwidth="2*" colname="BuildTime"/>
+	    <colspec colwidth="2*" colname="RunTime"/>
+	    <colspec colwidth="2*" colname="RunPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Build Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Run Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    No profile optimization
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    26.23&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.24&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    96.41&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-fbranch-probabilities</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    72.44&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    11.94&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    98.79&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-fvpt</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    73.88&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    11.93&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    98.93&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-funroll-loops</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    72.63&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.00&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    98.30&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-fpeel-loops</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    72.65&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.02&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    98.17&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-ftracer</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    72.65&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    11.99&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    98.42&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+
+	<para>
+	  Model build times are all substantially bigger because of the need
+	  to do a statistics gathering build and run. The results improve
+	  slightly for the first two optimizations
+	  (<option>-fbranch-probabilities</option> and
+	  <option>-fvpt</option>), but then fall off. This is not
+	  surprising. The benefit of <option>-Os</option> is compactness of
+	  code size. However <option>-funroll-loops</option>,
+	  <option>-fpeel-loops</option> and <option>-ftracer</option> all
+	  tend to increase code size&mdash;reducing the caching benefit with
+	  using <option>-Os</option>.
+	</para>
+
+	<para>
+	  The added effort of profile directed compilation cannot be justified
+	  when using <option>-Os</option>.
+	</para>
+
+	<para>
+	  The same exercise is repeated, but this time to see the effect on a
+	  compile using option <option>-O3</option>. The results are in <xref
+	  linkend="tab_prof_o3"/>.
+	</para>
+
+	<table id="tab_prof_o3" frame="all">
+	  <title>
+	    Comparison of model performance using
+	    <option>-O3</option> and profiling.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="4*" colname="Description"/>
+	    <colspec colwidth="2*" colname="BuildTime"/>
+	    <colspec colwidth="2*" colname="RunTime"/>
+	    <colspec colwidth="2*" colname="RunPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Build Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Run Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    No profile optimization
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    35.35&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12.39&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    95.25&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-fbranch-probabilities</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    83.51&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    9.36&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    126.10&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-fvpt</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    83.28&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    9.34&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    126.39&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-funroll-loops</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    83.78&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    9.34&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    126.39&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-fpeel-loops</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    84.61&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    9.27&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    127.32&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    Add <option>-ftracer</option>
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    85.87&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    9.13&nbsp;s
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    129.28&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+
+	<para>
+	  The results are dramatic. The
+	  <option>-fbranch-probabilities</option> optimization gives the
+	  majority of the benefit, but cumulatively the other four options
+	  further increase performance. The results are significantly better
+	  than using <option>-Os</option>.
+	</para>
+
+	<para>
+	  The guideline advice is to use <option>-O3</option> rather than
+	  <option>-Os</option> if you have the opportunity to profile your
+	  design.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Profiling the Completed Model
+      </title>
+
+      <para>
+	The final stage is to look at the finished model for any modules which
+	are dominating the compute time. These are candidates for replacement
+	with equivalent modules optimized for cycle accurate modeling.
+      </para>
+
+      <para>
+	Common causes of performance bottlenecks are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Built-in Self Test (&bist;) code. Such code can be pervasive and
+	    bit-oriented, making it hard to model efficiently in a
+	    word-oriented environment like C++. &bist; is not usually relevant
+	    to cycle accurate modeling. Substituting an equivalent model
+	    without &bist; code can make a substantial performance
+	    improvement.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Behavioral memory models. Many memory models supplied by third
+	    parties are designed for behavioral accuracy during hardware
+	    verification. They will offer detailed and accurate intra-cycle
+	    performance modeling. Ports may well be buffered at the individual
+	    bit level.
+	  </para>
+
+	  <para>
+	    Because memories are often so central to a design this can be a
+	    serious performance bottleneck. The solution is to replace them by
+	    a simple Verilog model which is concerned only with cycle accuracy
+	    and omits any buffering.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Associative (content-addressable) memories. These are efficient to
+	    implement in hardware, but a nightmare in software. In this case
+	    substitution in C/C++ using a hash-table is usually the best
+	    approach.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Bit-oriented code. Hardware handles bits as efficiently as words,
+	    but the same is not true of word-oriented C/C++. Such code can
+	    occur in many scenarios, but a common one is legacy designs for
+	    operations such as multiplication. Early synthesis tools did not
+	    make a good job of such operations, and so designs would be
+	    written out explicitly to make the functionality explicit.
+	  </para>
+
+	  <para>
+	    Such designs can be huge, but are easily replaced by a single line
+	    of Verilog using the high level operation.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>
+	&verilator; provides the <option>-profile-cfuncs</option> flag, which
+	adds additional information to the compiled code, identifying the
+	module to which it belongs. Compiling the model using the &gnu; C++
+	compiler's <option>-g</option> and <option>-pg</option> flags will
+	instrument the compiled code for profiling. A subsequent run will
+	generate a <filename>gmon.out</filename> file, which can be analyzed
+	using the standard <command>gprof</command> command.
+      </para>
+
+      <para>
+	&verilator; provides a utility,
+	<command>verilator_profcfunc</command>, for post-processing the
+	results of the <command>gprof</command>. This breaks out the
+	processing time by Verilog module name, rather than the underlying C++
+	function.
+      </para>
+
+      <para>
+	When profiling, no optimization should be used. Although the &gnu; C++
+	compiler allows optimized profiling, it can be a source of confusion,
+	when parts of the code are optimized away. Unoptimized models are just
+	as effective in highlighting any performance bottlenecks. With the
+	example design, the following sequence of commands is appropriate:
+      </para>
+
+      <programlisting>
+make verilate COMMAND_FILE=cf-optimized-8.scr \
+     VFLAGS="-profile-cfuncs" NUM_RUNS=1000 OPT="-g -pg"
+gprof Vorpsoc_fpga_top > gprof.out
+verilator_profcfunc gprof.out vprof.out
+      </programlisting>
+
+      <para>
+	The first part of the output file, <filename>vprof.out</filename>
+	identifies where the execution time went:
+      </para>
+
+      <programlisting>
+Overall summary by type:
+  % time  type
+    4.62  C++
+   17.45  Common code under Vorpsoc_fpga_top
+   72.74  Verilog Blocks under Vorpsoc_fpga_top
+    5.19  Unaccounted for/rounding error
+      </programlisting>
+
+      <para>
+	The C++ code is code outside the &verilator; model. In the example
+	used here, that is the &systemc; test bench. The common code under
+	<literal>Vorpsoc_fpga_top</literal> is the common infrastructure
+	code. The Verilog blocks are the C++ code of directly derived from the
+	Verilog. Finally, there is time that was spent outside profiled
+	code. In this example, that will be largely due to the &systemc;
+	kernel, but since <command>gprof</command> is based on statistical
+	sampling it also includes a small amount of time which cannot be
+	accounted for.
+      </para>
+
+      <para>
+	There is nothing significant in this example A warning sign to watch
+	for is if the either the C++ or unaccounted figure is very high. That
+	could be a problem with a &systemc; test bench&mdash;perhaps with very
+	wide ports.
+      </para>
+
+      <para>
+	The next section is a summary of the same information, grouping the
+	common code and Verilog blocks:
+      </para>
+
+      <programlisting>
+Overall summary by design:
+  % time  design
+    4.62  C++
+   90.19  Vorpsoc_fpga_top
+    5.19  Unaccounted for/rounding error
+      </programlisting>
+
+      <para>
+	In both these cases, instantiation of multiple models would make for
+	more entries.
+      </para>
+
+      <para>
+	The third section is the most important. It shows how the execution
+	time was broken down by originating Verilog module:
+      </para>
+
+      <programlisting>
+Overall summary by module:
+  % time  module
+    4.62  C++
+   17.45  Vorpsoc_fpga_top common code
+    0.11  dbg_crc8_d1
+    0.00  dbg_register
+    0.17  dbg_registers
+    0.76  dbg_sync_clk1_clk2
+    ...
+      </programlisting>
+
+      <para>
+	This is provided in alphabetical order, but it is useful to cut out
+	this section and sort it (using the command
+	<command>sort&nbsp;-n&nbsp;-r</command>):
+      </para>
+
+      <programlisting>
+   17.45  Vorpsoc_fpga_top common code
+    7.69  eth_wishbone_4
+    5.17  or1200_du
+    5.05  uart_regs_2
+    4.62  C++
+    3.77  tc_top
+    3.41  eth_registers
+    3.38  eth_crc
+    3.07  dbg_top_3
+      </programlisting>
+
+      <para>
+	The common code can be ignored&mdash;that is beyond control. Look for
+	any small modules that are using a lot of processing.
+      </para>
+
+      <note>
+	<para>
+	  The names used are that of the originating file, not the module
+	  name, with any hyphen ("-") mapped to underscore ("_"). Thus the
+	  first example here is the module <literal>eth_wishbone</literal>,
+	  but in the file <filename>eth_wishbone-4.v</filename>
+	</para>
+      </note>
+
+      <para>
+	There are no real bit CPU hogs in this example. The largest user,
+	<filename>eth_wishbone-4.v</filename> uses over 7% of the execution
+	time, but it is a large block (more than 2,500 lines of Verilog), so
+	this is not unreasonable. The other modules at the top of the list are
+	also all big blocks of code.
+      </para>
+
+      <para>
+	It is worth observing that in the current model, the Ethernet is tied
+	off and unused. If there is no intention to develop the model to use
+	the Ethernet the instantiation could be removed altogether, perhaps
+	improving performance by 20% or so. The same observation applies to a
+	lesser extent with the other peripherals, currently unused.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Summary of Performance Gains Through Optimization
+      </title>
+
+      <para>
+	The examples in this chapter can be distilled to some simple
+	guidelines for obtaining the fastest possible models
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    Build new code so it does not generate &verilator; warnings.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Most warnings can be ignored in known good legacy code. However
+	    <literal>UNOPTFLAT</literal> (and <literal>UNOPT</literal>, which was not encountered here) should be
+	    addressed, since they will lead to performance gains.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Use <option>-O1</option> or <option>-Os</option> for simple C++
+	    optimization, or where build time is onerous. For maximum speed
+	    using <option>-O3</option> with profiling.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Profile the generated model using <command>gprof</command> to
+	    identify any performance bottlenecks in the Verilog.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+      <para>
+	There is a trade off between increased time taken to create the model
+	and reduced execution times of the resulting model. Key data points
+	from the various optimization steps are summarized in <xref
+	linkend="tab_perf_summary"/>.
+      </para>
+
+      <table id="tab_perf_summary" frame="all">
+	<title>
+	  Summary of &orpsoc; model performance with various optimizations.
+	</title>
+
+	<tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="4*" colname="Description"/>
+	  <colspec colwidth="2*" colname="BuildTime"/>
+	  <colspec colwidth="2*" colname="RunTime"/>
+	  <colspec colwidth="2*" colname="RunPerf"/>
+	  <thead>
+	    <row>
+	      <entry align="left">
+		<para>
+		  Run Description
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Build Time
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Run Time
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Performance
+		</para>
+	      </entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Baseline event driven simulation
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  1.78&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  796.84&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  1.48&nbsp;kHz
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Optimized event driven simulation
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  1.78&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  803.39&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  1.47&nbsp;kHz
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Baseline Verilator model
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  13.94&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  27.67&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  42.66&nbsp;kHz
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Verilator with all language fixes
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  13.91&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  24.85&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  47.49&nbsp;kHz
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Verilator <literal>g++ -Os</literal>
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  26.23&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  12.24&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  96.41&nbsp;kHz
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Verilator <literal>g++ -O3</literal> and profiling
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  85.87&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  9.13&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  129.28&nbsp;kHz
+		</para>
+	      </entry>
+	    </row>
+	    
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para>
+	These results are shown graphically in <xref
+	linkend="fig_time_graph"/>.
+      </para>
+
+      <figure id="fig_time_graph">
+	<title>
+	  Summary of model build and run times for &orpsoc;
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="time-graph.png"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="time-graph.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+   </sect1>
+
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Summary
+    </title>
+
+    <para>
+      This application note has shown how to build and optimize a cycle
+      accurate model of a complete &soc; in &systemc; using &verilator;. The
+      steps can be summarized as:
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Establish a baseline model using event driven simulation, against
+	  which subsequent &verilator; models can be compared.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Build a baseline &verilator; model starting from the same source
+	  hierarchy. Make &rtl; modifications where necessary to meet
+	  &verilator;'s language requirements, and disable warnings at this
+	  stage.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Show that any &rtl; changes still work correctly under event driven
+	  simulation.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Rerun &verilator; with warnings enabled. In general fix all warnings
+	  in new code, but only fix <literal>UNOPTFLAT</literal> and
+	  <literal>UNOPT</literal> in working legacy code.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Show that any &rtl; changes still work correctly under event driven
+	  simulation.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Optimize the C++ compilation. Start using either
+	  <option>-O1</option> or <option>-Os</option> with the &gnu; C++
+	  compiler.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  If time permits use profile directed compilation of the C++ and
+	  <option>-O3</option>.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Profile the finished model using <command>gprof</command> and
+	  &verilator;'s post-analysis utility. Consider disabling or optimizing
+	  any modules that are a serious performance bottleneck.
+	</para>
+      </listitem>
+
+    </orderedlist>
+
+    <para>
+      The starting point in this example was an event driven simulation of the
+      &soc; running at 1.4kHz. An initial &verilator; model required a small
+      number of changes to the &rtl; and achieved over 40kHz.
+    </para>
+
+    <para>
+      However, after following the steps in this tutorial, the final optimized
+      model was capable of running at nearly 130kHz. These results are shown
+      graphically in <xref linkend="fig_performance_graph"/>.
+    </para>
+
+    <figure id="fig_performance_graph">
+      <title>
+	Summary of model performance for &orpsoc;
+      </title>
+      
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="performance-graph.png"
+		     format="SVG"
+		     width="14cm"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+	<imageobject>
+	  <imagedata fileref="performance-graph.png"
+		     format="PNG"
+		     width="80%"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      The result is a cycle accurate &systemc; model of a complete &soc;, with
+      a performance which makes low-level firmware development a quite
+      feasible activity.
+    </para>
+
+    <para>
+      Suggestions for corrections or improvements are welcomed. Please contact
+      the author at <ulink
+      url="mailto:jeremy.bennett@embecosm.com"><literal>jeremy.bennett@embecosm.com</literal></ulink>.
+    </para>
+
+  </chapter>
+
+  <glossary id="sec_glossary">
+    <title>
+      Glossary
+    </title>
+
+    <glossentry>
+      <glossterm>2-state</glossterm>
+      <glossdef>
+	<para>
+	  Hardware logic model which is based only on logic high and logic low
+	  (binary 0 and binary 1) values.
+	</para>
+
+	<glossseealso>4-state</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>4-state</glossterm>
+      <glossdef>
+	<para>
+	  Hardware logic model which considers unknown (<literal>X</literal>)
+	  and unproven (<literal>Z</literal>) values as well as logic high and
+	  logic low (binary 0 and binary 1).
+	</para>
+
+	<glossseealso>2-state</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>big&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a big endian architecture, the
+	  least significant byte in a data word resides at the highest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
+
+	<para>
+	  The alternative is little endian addressing.
+	</para>
+
+	<glossseealso>little&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>elaboration</glossterm>
+      <glossdef>
+	<para>
+	  In an event driven simulator, the analysis of source Verilog to
+	  create an executable which will subsequently perform the simulation.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Joint Test Action Group</glossterm>
+      <acronym>JTAG</acronym>
+      <glossdef>
+	<para>
+	  &jtag; is the usual name used for the IEEE 1149.1 standard entitled
+	  <emphasis>Standard Test Access Port and Boundary-Scan
+	  Architecture</emphasis> for test access ports used for testing
+	  printed circuit boards and chips using boundary scan.
+	</para>
+
+	<para>
+	  This standard allows external reading of state within the board or
+	  chip. It is thus a natural mechanism for debuggers to connect to
+	  embedded systems.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>linting</glossterm>
+      <glossdef>
+	<para>
+	  A <emphasis>linting</emphasis> compiler (or feature of a compiler)
+	  provides extra analysis of the source language to identify
+	  potentially dangerous constructs. The problems identified by such
+	  tools typically go beyond what the source language standard
+	  requires, to identify good practice in the use of the source
+	  language.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a little endian architecture, the
+	  least significant byte in a data word resides at the lowest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
+
+	<para>
+	  The alternative is big endian addressing.
+	</para>
+
+	<glossseealso>big&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Open &systemc; Initiative</glossterm>
+      <acronym>OSCI</acronym>
+      <glossdef>
+	<para>
+	  The industry standardization body for &systemc;
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>System on Chip</glossterm>
+      <acronym>SoC</acronym>
+      <glossdef>
+	<para>
+	  A silicon chip which includes one or more processor cores.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>&systemc;</glossterm>
+      <glossdef>
+	<para>
+	  A set of libraries and macros, which extend the C++ programming
+	  language to facilitate modeling of hardware.
+	</para>
+
+	<para>
+	  Standardized by the <glossterm>Open &systemc; Initiative</glossterm>,
+	  who provide an open source reference implementation.
+	</para>
+
+	<glossseealso>Open&#32;&systemc;&#32;Initiative</glossseealso>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_mills_cummings_99">
+      <firstname>Don</firstname> <surname>Mills</surname> and
+      <firstname>Clifford</firstname> E <surname>Cummings</surname>
+      <title>
+	&rtl; Coding Styles That Yield Simulation and Synthesis Mismatches
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  SNUG 1999
+	</title>
+	<pubdate>1999</pubdate>.
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://www.sunburst-design.com/papers/">www.sunburst-design.com/papers</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_cummings_99">
+      <firstname>Clifford</firstname> E <surname>Cummings</surname>
+      <title>
+	"full_case parallel_case", the Evil Twins of Verilog Synthesis.
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  SNUG 1999
+	</title>
+	<pubdate>1999</pubdate>.
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://www.sunburst-design.com/papers/">www.sunburst-design.com/papers</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_cummings_00">
+      <firstname>Clifford</firstname> E <surname>Cummings</surname>
+      <title>
+	Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  SNUG 2000
+	</title>
+	<pubdate>2000</pubdate>.
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://www.sunburst-design.com/papers/">www.sunburst-design.com/papers</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_dhrystone">
+      <surname>Weicker</surname>, <firstname>Reinhold</firstname>.
+      <title>
+	Dhrystone: A Synthetic Systems Programming Benchmark.
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  Communications of the ACM,
+	</title>
+	<volumenum>27</volumenum>, <issuenum>10</issuenum>,
+	<pubdate>October 1984</pubdate>, <pagenums>1013-1030</pagenums>.
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_doxygen">
+      <title>
+	Doxygen: Source code documentation generator tool,
+      </title>
+      <firstname>Dimitri</firstname> <surname>van Heesch</surname>,
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink url="http://www.doxygen.org">www.doxygen.org</ulink>
+      </bibliosource>
+      <indexterm>
+	<primary>Doxygen</primary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_2">
+      <title>
+	&embecosm; Application Note 2. The &opencores; &or1k; Simulator and
+	Tool Chain: Installation Guide. Issue 3.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	November 2008.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>tool chain</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_esp4">
+      <title>
+	&embecosm; Software Package 4. Cycle Accurate &systemc; &jtag;
+	Interface: Reference Implementation.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	January 2009.
+      </pubdate>
+      Available for free download from the &embecosm; website at
+      <bibliosource class="uri">
+	<ulink url="http://www.embecosm.com">www.embecosm.com</ulink>
+      </bibliosource>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_gtkwave">
+      <title>
+	&gtkwave; 3.1 Wave Analyzer User's Guide.
+      </title>
+      <pubdate>
+	February 2008.
+      </pubdate>
+      <bibliosource class="uri">
+	<ulink url="http://gtkwave.sourceforge.net/">gtkwave.sourceforge.net/</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_icarus_verilog">
+      <title>
+	&icarus; 0.9
+      </title>
+      <firstname>Steve</firstname> <surname>Williams</surname>,
+      <pubdate>
+	January 2009.
+      </pubdate>
+      <bibliosource class="uri">
+	<ulink
+	url="http://www.icarus.com/eda/verilog/">www.icarus.com/eda/verilog</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_ieee_systemc">
+      <title>
+	IEEE Standard &systemc;&reg; Language:
+      </title>
+      <subtitle>
+	Reference Manual.
+      </subtitle>
+      <publisher>
+	<publishername>
+	  IEEE Computer Society
+	</publishername>
+      </publisher>
+      <pubdate>
+	2005
+      </pubdate>.
+      <biblioid class="pubnumber">
+	IEEE Std 1666&trade;-2005.
+      </biblioid>
+      Available for free download from
+      <bibliosource class="uri">
+	<ulink
+	    url="http://standards.ieee.org/getieee/1666/index.html">standards.ieee.org/getieee/1666/index.html</ulink>
+      </bibliosource>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_orpsoc">
+      <title>
+	The OpenRISC Reference Platform System-on-Chip
+      </title>
+      <bibliosource class="uri">
+	Available for download from <ulink
+	url="http://www.opencores.org">www.opencores.org</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_osci_systemc_ug">
+      <title>
+	&systemc; Version 2.0 User Guide.
+      </title>
+      <publisher>
+	<publishername>
+	  Open &systemc; Initiative,
+	</publishername>
+      </publisher>
+      <pubdate>
+	2002.
+      </pubdate>
+      <bibliosource class="uri">
+	Available for download from <ulink
+	url="http://www.systemc.org">www.systemc.org</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_verilator">
+      <title>
+	&verilator; 3.700.
+      </title>
+      <firstname>Wilson</firstname> <surname>Snyder</surname>,
+      <pubdate>
+	January 2009.
+      </pubdate>
+      <bibliosource class="uri">
+	<ulink
+	url="http://www.veripool.org/wiki/verilator">www.veripool.org/wiki/verilator</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+  </bibliography>
+
+</book>
