@@ -962,13 +962,24 @@ $Id$
 	The distribution includes a top level &make; file, which will build
 	the target model and link it to the &gdb; &rsp; server
 	interface. Plain <command>make</command> will build an unoptimized
-	server and model. Using <command>make&nbsp;optimized</command> will
+	server and model. Using <command>make&nbsp;run-fast</command> will
 	build a model with profile-based optimization (which can increase
 	performance by a factor of 3). Using
 	<command>make&nbsp;VFLAGS=-trace</command> will build an unoptimized
 	version of the server and model which also generates a &vcd; dump of
 	the model in <filename>v-dump.vcd</filename> (and consequently runs
 	many times slower).
+      </para>
+
+      <para>
+	The build process assumes the availability of packages from other
+	Embecosm packages. In particular the Embecosm Cycle Accurate SystemC
+	interface <xref linkend="ref_app_note_5"/> is assumed to be installed
+	in <filename>/opt/ca-sysc-jtag</filename> and the Cycle Accurate
+	SystemC Model generated using Verilator <xref
+	linkend="ref_app_note_6"/> is assumed to be in a peer directory named
+	<filename>or1k-verilator</filename>. Alternative locations may be used
+	by editing the top level <filename>Makefile</filename>.
       </para>
 
       <para>
