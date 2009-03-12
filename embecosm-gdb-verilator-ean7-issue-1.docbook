@@ -2507,11 +2507,11 @@ $Id$
 
       <sect2 id="sec_mp_entry">
 	<title>
-	  <structname>MpEntry</structname> Struct
+	  <classname>MpEntry</classname> Struct
 	</title>
 
 	<para>
-	  <structname>MpEntry</structname> is declared as a struct, rather
+	  <classname>MpEntry</classname> is declared as a struct, rather
 	  than a class, to emphasize it is purely a data structure, with no
 	  explicit member functions. It represents a single matchpoint in the
 	  hash table.
@@ -2547,7 +2547,7 @@ $Id$
 
 	<para>
 	  There is one private variable, <varname>next</varname>, a pointer to
-	  <structname>MpEntry</structname>, used to form lists of entries in
+	  <classname>MpEntry</classname>, used to form lists of entries in
 	  the hash table. <classname>MpHash</classname> is declared a friend
 	  class, giving it access to this variable to construct the lists.
 	</para>
