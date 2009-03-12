@@ -3840,14 +3840,22 @@ or32-uclinux-gdb -batch -batch-silent --command gdb-script
       </para>
 
       <para>
-	The effect of compiler optimizations can be
-	seen in <xref linkend="tab_debug_compiler_opt"/>. This compares the
-	performance using no optimization, optimization using
-	<literal>-Os</literal> (the best for single pass optimization) and
-	profile directed optimization using <literal>-O3</literal> and profile
-	statistics from a debugging run using the Ackermann's Function test
-	program.
+	The effect of compiler optimizations can be seen in <xref
+	linkend="tab_debug_compiler_opt"/>. This compares the performance
+	using no optimization, optimization using <literal>-Os</literal> (the
+	best for single pass optimization) and profile directed optimization
+	using <literal>-O3</literal> and profile statistics from a debugging
+	run using the Ackermann's Function test program. To build a model
+	using profile directed optimization with optimization level
+	<literal>-O3</literal> use the <literal>run-fast</literal> target of
+	the <filename>Makefile</filename> in the distribution.
       </para>
+
+      <informalfigure>
+	<programlisting>
+make run-fast OPT=-O3
+	</programlisting>
+      </informalfigure>
 
       <table id="tab_debug_compiler_opt" frame="all">
 	<title>
