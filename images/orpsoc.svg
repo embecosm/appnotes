@@ -17,7 +17,7 @@
    height="571"
    sodipodi:docname="orpsoc.svg"
    style="fill-rule:evenodd"
-   inkscape:export-filename="C:\Documents and Settings\jeremy\My Documents\orpsoc.png"
+   inkscape:export-filename="/home/jeremy/svntrunk/Documentation/appnotes/ean7-gdb-verilator/images/orpsoc.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    sodipodi:docbase="/home/jeremy/svntrunk/Documentation/appnotes/ean6-or1k-verilator-tutorial/images"
@@ -524,17 +524,6 @@
        id="tspan3504"
        x="5250.311"
        y="11187.588">UART</tspan></text>
-  <text
-     xml:space="preserve"
-     style="font-size:420.31521606px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:tb-rl;text-anchor:middle;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
-     x="8202.5742"
-     y="6396.6509"
-     id="text3619"
-     sodipodi:linespacing="100%"><tspan
-       sodipodi:role="line"
-       id="tspan3623"
-       x="7132.2031"
-       y="7467.022">TCOP</tspan></text>
   <path
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:84.06304169;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#TriangleInS);marker-end:url(#TriangleOutS);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="M 7048.8359,7784.6258 L 7674.4373,7784.6258"

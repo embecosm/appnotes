@@ -1,5 +1,7 @@
 accessor
 accessors
+Ackermann
+Ackermann's
 ACM
 Altera
 AMD
@@ -32,6 +34,8 @@ disassembly
 Disassembly
 DMMU
 Doxygen
+Endianness
+endianness
 executables
 extest
 FIFOs
@@ -67,6 +71,7 @@ opcode
 opcodes
 ORSoC
 passthrough
+pipelined
 preprocessor
 recurses
 redirections
@@ -74,6 +79,8 @@ Rohit
 Rx
 SPARC
 steppable
+Struct
+struct
 structs
 subclassing
 Subdirectory
@@ -97,6 +104,7 @@ UDP
 UI
 Unescaping
 unescaping
+unescape
 unescapes
 unhandled
 unpushed
@@ -118,6 +126,7 @@ watchpointing
 watchpoints
 Wiki
 wiki
+Wikipedia
 www
 Xilinx
 XORed
