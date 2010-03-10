@@ -9,21 +9,25 @@ Useful entities
 <!-- ========== Acronyms and abbreviations ========== -->
 
 <!ENTITY hdl "<acronym>HDL</acronym>">
+<!ENTITY ieee "<acronym>IEEE</acronym>">
 <!ENTITY iss "<acronym>ISS</acronym>">
+<!ENTITY jtag "<acronym>JTAG</acronym>">
 <!ENTITY osci "<acronym>OSCI</acronym>">
 <!ENTITY posix "<acronym>POSIX</acronym>">
 <!ENTITY soc "<acronym>SoC</acronym>">
 <!ENTITY tlm "<acronym>TLM</acronym>">
 <!ENTITY tlm2 "<acronym>TLM</acronym>&nbsp;2.0">
 <!ENTITY uart "<acronym>UART</acronym>">
+<!ENTITY uml "<acronym>UML</acronym>">
 
 <!-- ========== applications ========== -->
 
 <!-- = software applications = -->
 
+<!ENTITY gdb "<application class='software'>GDB</application>">
 <!ENTITY linux "<application class='software'>Linux</application>">
-<!ENTITY systemc "<application class='software'>SystemC</application>" >
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
+<!ENTITY systemc "<application class='software'>SystemC</application>" >
 
 <!-- = Hardware applications = -->
 
@@ -54,7 +58,7 @@ Useful entities
 
 <!-- ==========================================================================
 
-Copyright (c) 2008 Embecosm Limited <info@embecosm.com>.
+Copyright (c) 2008, 2010 Embecosm Limited <info@embecosm.com>.
 
 This work is licensed under the Creative Commons Attribution 2.0 UK:
 England & Wales License. To view a copy of this license, visit
@@ -77,12 +81,9 @@ under the following conditions:
 
 Application note describing the first stage in the conversion of an ISS to use
 OSCI TLM 2.0, convenience sockets.
-
-$Id$
-
 =========================================================================== -->
 
-<article class="whitepaper" lang="en_GB">
+<book lang="en_GB">
   <title>
     Building a Loosely Timed &soc; Model with &osci; TLM 2.0
   </title>
@@ -90,7 +91,7 @@ $Id$
     A Case Study Using an Open Source &iss; and &linux; 2.6 Kernel
   </subtitle>
 
-  <articleinfo>
+  <bookinfo>
 
     <author>
       <firstname>Jeremy</firstname>
@@ -102,16 +103,16 @@ $Id$
     </corpauthor>
 
     <pubdate>
-      June 2008
+      March 2010
     </pubdate>
 
     <releaseinfo>
-      Application Note 1. Issue 1
+      Application Note 1. Issue 2
     </releaseinfo>
 
     <copyright>
       <year>
-	2008
+	2008, 2010
       </year>
       <holder>
 	&embecosm; Limited
@@ -190,20 +191,20 @@ $Id$
       </para>
 
     </legalnotice>
-  </articleinfo>
+  </bookinfo>
 
-  <sect1>
+  <chapter>
     <title>
       Introduction
     </title>
 
     <para>
       The Open <firstterm>&systemc;</firstterm> Initiative
-      (<firstterm>&osci;</firstterm>) has recently issued the second version
-      of its standard for
-      <firstterm>Transaction&#32;Level&#32;Modeling</firstterm> (&tlm;) <xref
-      linkend="ref_osci_tlm" />. This defines an interface for writing high
-      level software models of hardware.
+      (<firstterm>&osci;</firstterm>) has issued the second version of its
+      standard for <firstterm>Transaction&#32;Level&#32;Modeling</firstterm>
+      (&tlm;) in June 2008 <xref linkend="ref_osci_tlm" />. This defines an
+      interface for writing high level software models of hardware. An updated
+      version (TLM 2.0.1) was released in July 2009.
     </para>
 
     <para>
@@ -236,7 +237,33 @@ $Id$
       reusable under the &lgpl;.
     </para>
 
-    <sect2>
+    <sect1>
+      <title>
+	New in Issue 2
+      </title>
+
+      <para>
+	Issue 2 of the application note is based on TLM 2.0.1. The wrapping of
+	the &iss; is extended to cover modeling of the &jtag; interface and its
+	connection to the GNU debugger, &gdb;.
+      </para>
+
+      <para>
+	To aid in understanding how the components fit together, this issue
+	includes &uml; class and sequence diagrams, showing the relationships
+	and interaction between classes.
+      </para>
+
+      <para>
+	Finally, Robert G&uuml;nzel (see <xref linkend="sec_ack" />), as well
+	as making a number of well informed suggestions for improvements which
+	I have adopted, has contributed an appendix on using this application
+	note under MacOS (<xref linkend="app_macos" />).
+      </para>
+
+    </sect1>
+
+    <sect1>
       <title>
 	Target Audience
       </title>
@@ -275,9 +302,9 @@ $Id$
 	linkend="ref_osci_systemc_ug" />.
       </para>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	About the &embecosm; TLM 2.0 Application Notes
       </title>
@@ -301,11 +328,26 @@ $Id$
 	will be published in the future.
       </para>
 
-    </sect2>
+    </sect1>
 
-  </sect1>
+    <sect1 id="sec_ack">
+      <title>
+	Acknowledgement
+      </title>
 
-  <sect1>
+      <para>
+	I am indebted to Dipl Ing Robert G&uml;nzel of the Department of
+	Integrated Circuit Design at the Technische Universit&auml;t
+	Braunschweig, Germany, who made a number of suggesions for
+	improvements (which I have adopted) and provided the instructions for
+	Mac OS in the appendix (<xref linkend="app_macos" />).
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
     <title>
       Background to &systemc; and the &tlm2; Standard
     </title>
@@ -321,11 +363,12 @@ $Id$
       &osci; has several groups working on supplementary standards. One of
       these is the &tlm; Working Group. It proposed its first standard for
       transaction level modeling in 2005. Two drafts for version 2.0 were
-      released in 2006 and 2007, with the version 2.0 standard issued in June
-      2008 <xref linkend="ref_osci_tlm" />.
+      released in 2006 and 2007. The version 2.0 standard issued in June
+      2008, with a minor update (2.0.1) issued in June 2009 <xref
+      linkend="ref_osci_tlm" />.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	What is &systemc;
       </title>
@@ -433,14 +476,14 @@ $Id$
 	linkend="ref_osci_systemc_ug" />.
       </para>
 	
-    </sect2>
+    </sect1>
 
-    <sect2 id="sec_what_is_tlm">
+    <sect1 id="sec_what_is_tlm">
       <title>
 	What is a &tlm;
       </title>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Hardware and Software Views of Parallelism
 	</title>
@@ -485,9 +528,9 @@ $Id$
 	  for the software engineer, because the number or threads or
 	  processes will often exceed the number of processor cores available.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Modeling Hardware Parallelism in Software
 	</title>
@@ -536,10 +579,10 @@ $Id$
 	  functional blocks communicate by reading and writing across buses.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Overview of OSCI TLM 2.0
       </title>
@@ -587,7 +630,7 @@ $Id$
 	</mediaobject>
       </figure>
 
-      <sect3 id="sec_payload">
+      <sect2 id="sec_payload">
 	<title>
 	  Transaction Payload
 	</title>
@@ -666,9 +709,9 @@ $Id$
 	  pass the payload to another &systemc; thread and obtain a
 	  response&mdash;i.e. a transaction.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Initiators and Targets
 	</title>
@@ -691,10 +734,10 @@ $Id$
 	  and initiator sockets, allowing its threads to both generate and
 	  receive traffic.
 	</para>
-      </sect3>
+      </sect2>
 
 
-      <sect3 id="sec_block_non_block">
+      <sect2 id="sec_block_non_block">
 	<title>
 	  Blocking, Non-Blocking, Debug and Direct Memory Interfaces
 	</title>
@@ -764,9 +807,9 @@ $Id$
 	  </listitem>
 	</orderedlist>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Loosely Timed, Approximately Timed and Untimed &tlm;
 	</title>
@@ -831,16 +874,16 @@ $Id$
 	<para>
 	  However, untimed models are easily implemented as loosely timed
 	  models which always set the timing parameter in transport calls to
-	  zero. The example in <xref linkend="sec_iss_wrapper" /> <xref
+	  zero. The example in <xref linkend="sec_iss_wrapper" />, <xref
 	  linkend="sec_uart" /> and <xref linkend="sec_terminal" /> uses this
 	  approach to create an untimed model. This is then refined in <xref
 	  linkend="sec_sync" /> to add synchronous timing information and in
 	  <xref linkend="sec_temporal_decoupling" /> to add temporal
 	  decoupling.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &tlm2; Convenience Sockets
 	</title>
@@ -867,11 +910,11 @@ $Id$
 	  application note.
 	</para>
 
-      </sect3>
-    </sect2>
-  </sect1>
+      </sect2>
+    </sect1>
+  </chapter>
 
-  <sect1 id="sec_case_study">
+  <chapter id="sec_case_study">
     <title>
       Case Study: A Loosely Timed &soc; Using &tlm2;
     </title>
@@ -947,8 +990,19 @@ $Id$
       <listitem>
 	<para>
 	  Interrupt modeling is added to the &uart; and the &or1ksim; &iss;,
-	  allowing the model to run &linux;.
+	  allowing the model to run &linux;. See
 	  <xref linkend="sec_linux" />
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  A second thread, modeling the &jtag; interface to the processor is
+	  added to the wrapper. This demonstrates how the &iss; wrapper can be
+	  multi-threaded, while the underlying &or1k; &iss; remains single
+	  threaded. This interface allows the model to be driven from a
+	  debugger such as &gdb;. See
+	  <xref linkend="chap_jtag" />
 	</para>
       </listitem>
 
@@ -960,7 +1014,7 @@ $Id$
       is demonstrated booting a &linux; 2.6 kernel.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	The Example Designs
       </title>
@@ -972,6 +1026,13 @@ $Id$
 	<acronym>MMU</acronym>. &or1ksim; is an interpreting &iss; written in
 	C, which in its standard configuration models main memory and a number
 	of peripherals as well as the CPU itself.
+      </para>
+
+      <para>
+	A key feature of &or1ksim; is that it is single threaded and the code
+	is generally not re-entrant. Much of the challenge in wrapping such an
+	&iss; is ensuring consistency within a multi-threaded &systemc;
+	environment.
       </para>
 
       <para>
@@ -993,7 +1054,13 @@ $Id$
 	driven peripherals and hence &linux;
       </para>
 
-      <sect3>
+      <para>
+	In <xref linkend="chap_jtag" /> a second thread is introduced to the
+	wrapper to model the &jtag; debugging interface. This allows the model
+	to be run under the control of a debugger such as &gdb;
+      </para>
+
+      <sect2>
 	<title>
 	  &or1ksim; &iss; &tlm2; Wrapper with Logger
 	</title>
@@ -1009,7 +1076,7 @@ $Id$
 
 	<figure id="fig_iss_test">
 	  <title>
-	    Testing the &tlm2; wrapper for the &or1k; &or1ksim;.
+	    Testing the &tlm2; wrapper for &or1ksim;.
 	  </title>
 	  <mediaobject>
 	    <imageobject>
@@ -1029,9 +1096,9 @@ $Id$
 	  </mediaobject>
 	</figure>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Simple &soc; Design
 	</title>
@@ -1073,9 +1140,9 @@ $Id$
 	  </mediaobject>
 	</figure>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="soc_example_soc_intr">
+      <sect2 id="soc_example_soc_intr">
 	<title>
 	  &soc; with Interrupt Support
 	</title>
@@ -1112,15 +1179,54 @@ $Id$
 	  </mediaobject>
 	</figure>
 
-      </sect3>
-    </sect2>
+      </sect2>
 
-    <sect2>
+      <sect2 id="soc_example_soc_jtag">
+	<title>
+	  &soc; with Debugger Support
+	</title>
+
+	<para>
+	  A software debugger typically interacts with a processor via an
+	  independent debugging interface. For the &or1k; the debug interface
+	  uses &ieee; 1149.1 &jtag;. To allow the debugger to connect to the
+	  model we must model this interface. This design is shown in <xref
+	  linkend="fig_simple_soc_jtag" />.
+	</para>
+
+	<figure id="fig_simple_soc_jtag">
+	  <title>
+	    Simple &soc; based on the &or1k; &or1ksim; with separate &jtag;
+	    interface.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="simple-soc-jtag.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="simple-soc-jtag.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
+    </sect1>
+
+    <sect1>
       <title>
 	Example Code
       </title>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Source Code for Example Models and Programs
 	</title>
@@ -1142,9 +1248,9 @@ $Id$
 	  &or1k; tool chain.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Code Documentation
 	</title>
@@ -1158,9 +1264,9 @@ $Id$
 	  <filename>doc/html</filename> sub-directory of both the &systemc;
 	  model directory and the &or1k; program directory.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_coding_conv">
+      <sect2 id="sec_coding_conv">
 	<title>
 	  &systemc; Model Coding Conventions
 	</title>
@@ -1177,16 +1283,17 @@ $Id$
 
 	<para>
 	  The examples use the convention that classes and other type names
-	  start with an Upper Case letter (e.g. <classname>Or1ksimSC</classname>),
-	  variables and functions start with a lower case letter
-	  (e.g. <literal>dataBus</literal>) and defined or enumerated
-	  constants are all in UPPER CASE (e.g. <literal>#define BAUD_RATE
-	  9600</literal>).
+	  start with an Upper Case letter
+	  (e.g. <classname>Or1ksimSC</classname>), variables and functions
+	  start with a lower case letter (e.g. <literal>dataBus</literal>) and
+	  defined or enumerated constants are all in UPPER CASE
+	  (e.g. <literal>#define BAUD_RATE 9600</literal>). All &systemc;
+	  module classes end with the characters 'SC'.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Modifying the Standard &or1ksim; &iss;
 	</title>
@@ -1199,9 +1306,9 @@ $Id$
 	  information is provided in <xref linkend="app_download" />.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Derived classes
 	</title>
@@ -1266,9 +1373,9 @@ $Id$
 	  functions may be <emphasis>reimplemented</emphasis> in derived
 	  classes.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <application>Make</application> Files
 	</title>
@@ -1298,12 +1405,12 @@ $Id$
 	  unset it will default to <filename>/opt/or1ksim</filename>.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-  </sect1>
+  </chapter>
 
-  <sect1 id="sec_iss_wrapper">
+  <chapter id="sec_iss_wrapper">
     <title>
       Wrapping the &iss;
     </title>
@@ -1339,7 +1446,7 @@ $Id$
       </listitem>
     </itemizedlist>
 
-    <sect2 id="sec_iss_mods">
+    <sect1 id="sec_iss_mods">
       <title>
 	Modifying the &or1ksim; &iss; for &tlm2;
       </title>
@@ -1379,7 +1486,7 @@ $Id$
 	linkend="app_download" /> for details.
       </para>
 
-      <sect3 id="sec_or1ksim_libcals">
+      <sect2 id="sec_or1ksim_libcals">
 	<title>
 	  Converting &or1ksim; to a Library
 	</title>
@@ -1447,8 +1554,8 @@ $Id$
 
 	</itemizedlist>
 
-      </sect3>
-      <sect3 id="sec_or1ksim_generic_sec">
+      </sect2>
+      <sect2 id="sec_or1ksim_generic_sec">
 	<title>
 	  Additional Functionality for &or1ksim;
 	</title>
@@ -1486,11 +1593,11 @@ $Id$
 	  <function>or1ksim_init</function> (see <xref
 	  linkend="sec_or1ksim_libcals" /> and <xref linkend="sec_upcall" />).
 	</para>
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
 
-    <sect2 id="sec_iss_wrapper_def">
+    <sect1 id="sec_iss_wrapper_def">
       <title>
 	&or1ksim; Wrapper Module Class Definition
       </title>
@@ -1500,7 +1607,7 @@ $Id$
 	the file <filename>Or1ksimSC.h</filename>.
       </para>
 
-      <sect3 id="sec_Or1ksimSC_def_inc">
+      <sect2 id="sec_Or1ksimSC_def_inc">
 	<title>
 	  Included Headers
 	</title>
@@ -1540,9 +1647,9 @@ $Id$
 	  </para>
 	</note>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSC_def_module">
+      <sect2 id="sec_Or1ksimSC_def_module">
 	<title>
 	  Module Declaration
 	</title>
@@ -1589,9 +1696,9 @@ $Id$
 	  </para>
 	</note>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSC_def_constructor">
+      <sect2 id="sec_Or1ksimSC_def_constructor">
 	<title>
 	  Constructor and Destructor
 	</title>
@@ -1613,9 +1720,9 @@ $Id$
 	  up to do on termination.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSC_def_pub_if">
+      <sect2 id="sec_Or1ksimSC_def_pub_if">
 	<title>
 	  Public Interface
 	</title>
@@ -1656,9 +1763,9 @@ $Id$
 
 	<programlisting>  tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataBus;</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSC_def_threads">
+      <sect2 id="sec_Or1ksimSC_def_threads">
 	<title>
 	  Threads
 	</title>
@@ -1676,9 +1783,9 @@ $Id$
 	  note, so it is declared <literal>protected</literal> and
 	  <literal>virtual</literal>.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_upcall">
+      <sect2 id="sec_upcall">
 	<title>
 	  Upcalls
 	</title>
@@ -1747,10 +1854,10 @@ $Id$
 	  <literal>protected</literal> and <literal>virtual</literal>.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_iss_wrapper_impl">
+    <sect1 id="sec_iss_wrapper_impl">
       <title>
 	&or1ksim; Wrapper Module Class Implementation
       </title>
@@ -1760,7 +1867,7 @@ $Id$
 	in the file <filename>Or1ksimSC.cpp</filename>.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Headers and Macros
 	</title>
@@ -1812,9 +1919,9 @@ $Id$
 	  </para>
 	</caution>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Constructor
 	</title>
@@ -1848,9 +1955,9 @@ $Id$
 }       /* Or1ksimSC() */</programlisting>
 
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSC_impl_thread">
+      <sect2 id="sec_Or1ksimSC_impl_thread">
 	<title>
 	  Thread
 	</title>
@@ -1877,9 +1984,9 @@ Or1ksimSC::run()
 
 }       // Or1ksimSC()</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Upcalls
 	</title>
@@ -1985,9 +2092,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	  </para>
 	</caution>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSC_impl_btrans">
+      <sect2 id="sec_Or1ksimSC_impl_btrans">
 	<title>
 	  Blocking Transport
 	</title>
@@ -2019,11 +2126,11 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	  peripherals.
 	</para>
 
-      </sect3>
-    </sect2>
-  </sect1>
+      </sect2>
+    </sect1>
+  </chapter>
 
-  <sect1 id="sec_iss_wrapper_test">
+  <chapter id="sec_iss_wrapper_test">
     <title>
       Testing the &or1ksim; &iss; &tlm2; Wrapper
     </title>
@@ -2047,12 +2154,12 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
       never yields (see <xref linkend="sec_Or1ksimSC_impl_btrans" />).
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	Definition of the &tlm2; Logger Module
       </title>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Include Files
 	</title>
@@ -2066,9 +2173,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	<programlisting>#include "tlm.h"
 #include "tlm_utils/simple_target_socket.h"</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Module Declaration and Constructor
 	</title>
@@ -2088,9 +2195,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 
 	<programlisting>  LoggerSC( sc_core::sc_module_name  name );</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Public Interface
 	</title>
@@ -2102,9 +2209,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 
 	<programlisting>  tlm_utils::simple_target_socket&lt;LoggerSC&gt;  loggerPort;</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Blocking Transport
 	</title>
@@ -2121,15 +2228,15 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	  function. There are no &systemc; threads required.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Implementation of the &tlm2; Logger Module
       </title>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Included Headers
 	</title>
@@ -2146,9 +2253,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 
 #include "LoggerSC.h"</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Constructor
 	</title>
@@ -2171,9 +2278,9 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 
 }       // Or1ksimSC()</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Blocking Transport Callback
 	</title>
@@ -2235,10 +2342,10 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 
 }       // loggerReadWrite()</programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_logger_main_prog">
+    <sect1 id="sec_logger_main_prog">
       <title>
 	The Model Main Program
       </title>
@@ -2249,7 +2356,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	&systemc;), and the simulation invoked.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Included Headers
 	</title>
@@ -2263,9 +2370,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 #include "Or1ksimSC.h"
 #include "LoggerSC.h"</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Argument Processing
 	</title>
@@ -2285,9 +2392,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
     exit( 1 );
   }</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Module Instantiation
 	</title>
@@ -2300,9 +2407,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	<programlisting>  Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
   LoggerSC   logger( "logger" );</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Connecting the Modules
 	</title>
@@ -2317,9 +2424,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 
 	<programlisting>  iss.dataBus( logger.loggerPort );</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Model Execution
 	</title>
@@ -2330,10 +2437,10 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	  
 	<programlisting>  sc_core::sc_start();</programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_iss_or32_prog">
+    <sect1 id="sec_iss_or32_prog">
       <title>
 	Test Program to Run on the &or1ksim;
       </title>
@@ -2347,7 +2454,7 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	details of installing this).
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  The Utility Functions
 	</title>
@@ -2366,9 +2473,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	  <filename>utils.c</filename>.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Memory Mapped Data Structure
 	</title>
@@ -2411,9 +2518,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   unsigned short int  halfwordRes;
   unsigned long int   fullwordRes;</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Checking Write Access
 	</title>
@@ -2439,9 +2546,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   simputs( "\n" );
   dev->fullword = 0xdeadbeef;</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Checking Read Access
 	</title>
@@ -2479,9 +2586,9 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	  program, but will also exit the simulation.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Program Compilation
 	</title>
@@ -2497,14 +2604,14 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	  (0x100).
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_iss_run_test">
+    <sect1 id="sec_iss_run_test">
       <title>
 	Running the Test
       </title>
-      <sect3>
+      <sect2>
 	<title>
 	  Compiling the &systemc; Model
 	</title>
@@ -2534,8 +2641,8 @@ g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
     -Wl,--rpath,$OR1KSIM_HOME/lib -L$OR1KSIM_HOME/lib \
     -L$SYSTEMC_HOME/lib-linux -lsim -lsystemc -o TestSC</programlisting>
 
-      </sect3>
-      <sect3>
+      </sect2>
+      <sect2>
 	<title>
 	  Configuring the &or1k; &or1ksim; &iss;
 	</title>
@@ -2570,8 +2677,8 @@ g++ -ggdb -DSC_INCLUDE_DYNAMIC_PROCESSES -I$OR1KSIM_HOME/include \
   word_enabled =          1
 end</programlisting>
 
-      </sect3>
-      <sect3>
+      </sect2>
+      <sect2>
 	<title>
 	  Running the Compiled Model
 	</title>
@@ -2649,11 +2756,11 @@ $ </screen>
 	  </para>
 	</note>
 
-      </sect3>
-    </sect2>
-  </sect1>
+      </sect2>
+    </sect1>
+  </chapter>
 
-<sect1 id="sec_uart">
+<chapter id="sec_uart">
     <title>
       Modeling Peripherals
     </title>
@@ -2663,7 +2770,7 @@ $ </screen>
       based on National Semiconductor 16450 design.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	Details of the 16450 &uart;
       </title>
@@ -2945,9 +3052,9 @@ $ </screen>
       <para>
       </para>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	&uart; Module Design
       </title>
@@ -2966,7 +3073,7 @@ $ </screen>
 	behavior.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Model Interfaces
 	</title>
@@ -2998,9 +3105,9 @@ $ </screen>
 	  is added in <xref linkend="sec_linux" />.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Model Registers
 	</title>
@@ -3041,9 +3148,9 @@ $ </screen>
 	  last two of these will move in step in the model.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_uart_interrupts">
+      <sect2 id="sec_uart_interrupts">
 	<title>
 	  &uart; Model Interrupts
 	</title>
@@ -3054,10 +3161,10 @@ $ </screen>
 	  be generated when modem loopback is in operation.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_uart_or1ksim_libext">
+    <sect1 id="sec_uart_or1ksim_libext">
       <title>
 	 Extending the <classname>Or1ksimSC</classname> Wrapper Module
       </title>
@@ -3090,7 +3197,7 @@ $ </screen>
 	function, <function>doTrans</function> and adds an additional public
 	interface function, <function>isLittleEndian</function>.
       </para>
-      <sect3 id="sec_or1ksim_extlib">
+      <sect2 id="sec_or1ksim_extlib">
 	<title>
 	  Adding an Endianism Test Function to the &or1ksim; Library
 	</title>
@@ -3116,8 +3223,8 @@ $ </screen>
 
 	</itemizedlist>
 
-      </sect3>
-      <sect3>
+      </sect2>
+      <sect2>
 	<title>
 	  Extended &or1ksim; Wrapper Module Class Definition
 	</title>
@@ -3159,8 +3266,8 @@ class Or1ksimExtSC
 
 	<programlisting>virtual void  doTrans( tlm::tlm_generic_payload &amp;trans );</programlisting>
 
-      </sect3>
-      <sect3>
+      </sect2>
+      <sect2>
 	<title>
 	  Extended &or1ksim; Wrapper Module Class Implementation
 	</title>
@@ -3233,10 +3340,10 @@ Or1ksimExtSC::isLittleEndian()
 	  </para>
 	</caution>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	&uart;: Module Class Definition
       </title>
@@ -3248,7 +3355,7 @@ Or1ksimExtSC::isLittleEndian()
 	linkend="sec_iss_wrapper_test" />).
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Headers and Constant Definitions
 	</title>
@@ -3301,9 +3408,9 @@ Or1ksimExtSC::isLittleEndian()
 #define UART_IIR_THRE   0x02    // Transmitter holding reg empty
 #define UART_IIR_MOD    0x00    // Modem status</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Class Declaration and Constructor
 	</title>
@@ -3327,9 +3434,9 @@ Or1ksimExtSC::isLittleEndian()
           unsigned long int        _clockRate,
           bool                     _isLittleEndian );</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Public Interface
 	</title>
@@ -3369,9 +3476,9 @@ Or1ksimExtSC::isLittleEndian()
 	  will be added in <xref linkend="sec_linux" />
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &systemc; Processes
 	</title>
@@ -3399,9 +3506,9 @@ Or1ksimExtSC::isLittleEndian()
 	  </para>
 	</note>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Blocking Transport Callback
 	</title>
@@ -3414,9 +3521,9 @@ Or1ksimExtSC::isLittleEndian()
 	  (<function>busWrite</function>) behavior.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Utility Functions
 	</title>
@@ -3448,9 +3555,9 @@ Or1ksimExtSC::isLittleEndian()
 	  <function>isClear</function>).
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; State
 	</title>
@@ -3483,9 +3590,9 @@ Or1ksimExtSC::isLittleEndian()
 	  records the model endianism, <literal>isLittleEndian</literal>.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Notifying the Bus Thread of Transaction Activity
 	</title>
@@ -3505,15 +3612,15 @@ Or1ksimExtSC::isLittleEndian()
 	  the <function>busThread</function>.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_uart_impl">
+    <sect1 id="sec_uart_impl">
       <title>
 	&uart; Module Class Implementation
       </title>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Constructor
 	</title>
@@ -3556,9 +3663,9 @@ Or1ksimExtSC::isLittleEndian()
 	<para>
 	  Finally the registers (<literal>regs</literal>) are cleared.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Threads
 	</title>
@@ -3610,9 +3717,9 @@ Or1ksimExtSC::isLittleEndian()
 	  to indicate data availability.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Blocking Transport Callback
 	</title>
@@ -3658,9 +3765,9 @@ Or1ksimExtSC::isLittleEndian()
 	  to <literal>tlm::TLM_OK_RESPONSE</literal> in all cases.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Read Behavior
 	</title>
@@ -3725,9 +3832,9 @@ Or1ksimExtSC::isLittleEndian()
 
 	</itemizedlist>
 	
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Write Behavior
 	</title>
@@ -3773,9 +3880,9 @@ Or1ksimExtSC::isLittleEndian()
 
 	</itemizedlist>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &uart; Utility Functions
 	</title>
@@ -3823,12 +3930,12 @@ Or1ksimExtSC::isLittleEndian()
 	  </footnote>.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-  </sect1>
+  </chapter>
 
-  <sect1 id="sec_terminal">
+  <chapter id="sec_terminal">
     <title>
       Adding a Terminal as a Test Bench
     </title>
@@ -3869,7 +3976,7 @@ Or1ksimExtSC::isLittleEndian()
       <function>wait</function>, so allowing the thread to yield.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	&systemc; Terminal Module Design
       </title>
@@ -3929,14 +4036,14 @@ Or1ksimExtSC::isLittleEndian()
 	can safely wait.
       </para>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Terminal Module Class Definition
       </title>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Mapping Signals to Class Instances
 	</title>
@@ -3958,9 +4065,9 @@ Or1ksimExtSC::isLittleEndian()
 	  file descriptor, instance and a pointer to the next in the list.
 	</para>
 
-      </sect3>
+      </sect2>
       
-      <sect3>
+      <sect2>
 	<title>
 	  The &systemc; Class
 	</title>
@@ -3974,9 +4081,9 @@ Or1ksimExtSC::isLittleEndian()
 	  deleted.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Setting up the &xterm;
 	</title>
@@ -3998,9 +4105,9 @@ Or1ksimExtSC::isLittleEndian()
 	  destructor). It is the slave file descriptor that is used for both
 	  input and output.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Signal and event handling
 	</title>
@@ -4031,11 +4138,11 @@ Or1ksimExtSC::isLittleEndian()
 	    freed from the destructor on termination.
 	  </para>
 	</caution>
-      </sect3>
+      </sect2>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Terminal Module Class Implementation
       </title>
@@ -4056,7 +4163,7 @@ Or1ksimExtSC::isLittleEndian()
 	the <function>ioHandler()</function> function.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  &systemc; Processes
 	</title>
@@ -4085,10 +4192,10 @@ Or1ksimExtSC::isLittleEndian()
 	  operating system read to get the character, knowing that data is
 	  definitely available.
 	</para>
-      </sect3>
+      </sect2>
       
 
-      <sect3 id="sec_xterm_sig_hand">
+      <sect2 id="sec_xterm_sig_hand">
 	<title>
 	  Signal and event handling
 	</title>
@@ -4120,15 +4227,15 @@ Or1ksimExtSC::isLittleEndian()
 	  This event then allows the <function>xtermThread</function> to run
 	  and read a character.
 	</para>
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	The Complete &soc;
       </title>
 
-      <sect3 id="sec_simple_soc_main">
+      <sect2 id="sec_simple_soc_main">
 	<title>
 	  The Model Main Program
 	</title>
@@ -4177,9 +4284,9 @@ Or1ksimExtSC::isLittleEndian()
 	  The simulation can then be started with a call to
 	  <function>sc_start</function>.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Test Program to Run on the &or1ksim; &iss;
 	</title>
@@ -4301,9 +4408,9 @@ struct uart16450
     uart->buf = ch;
   }</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_simple_soc_run">
+      <sect2 id="sec_simple_soc_run">
 	<title>
 	  Compiling and Running the Model
 	</title>
@@ -4409,9 +4516,9 @@ Read: '!'</screen>
 	  &uart;. This can never occur, since neither &uart; nor terminal are
 	  given the chance to execute the threads that would set this flag.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Model Timing
 	</title>
@@ -4526,11 +4633,11 @@ Read: 'r'
 	  As can be seen all the reads and writes occur at time zero.
 	</para>
 
-      </sect3>
-    </sect2>
-  </sect1>
+      </sect2>
+    </sect1>
+  </chapter>
 
-  <sect1 id="sec_sync">
+  <chapter id="sec_sync">
     <title>
       Adding Synchronous Timing to the Model
     </title>
@@ -4556,7 +4663,7 @@ Read: 'r'
       with &systemc; time.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	Summary of Changes Required for Synchronous Timing
       </title>
@@ -4625,14 +4732,14 @@ Read: 'r'
 	</listitem>
       </itemizedlist>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Extending the <classname>Or1ksimExtSC</classname> Wrapper Module
       </title>
 
-      <sect3 id="sec_or1ksim_libsync">
+      <sect2 id="sec_or1ksim_libsync">
 	<title>
 	  Adding Clock Rate and Timing Functions to the &or1ksim; Library
 	</title>
@@ -4704,9 +4811,9 @@ Read: 'r'
 	  </listitem>
 	</itemizedlist>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>Or1ksimSyncSC</classname> Module Class Definition
 	</title>
@@ -4750,9 +4857,9 @@ class Or1ksimSyncSC
 	  synchronization.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3 id="sec_Or1ksimSyncSC_impl">
+      <sect2 id="sec_Or1ksimSyncSC_impl">
 	<title>
 	  <classname>Or1ksimSyncSC</classname> Module Class Implementation
 	</title>
@@ -4837,10 +4944,10 @@ Or1ksimSyncSC::getClockRate()
 
 }       // getClockRate()</programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_uart_sync">
+    <sect1 id="sec_uart_sync">
       <title>
 	Extending the <classname>UartSC</classname> Module Class
       </title>
@@ -4872,7 +4979,7 @@ Or1ksimSyncSC::getClockRate()
 	for reads to and writes from the bus.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>UartSyncSC</classname> Module Class Definition
 	</title>
@@ -4929,9 +5036,9 @@ Or1ksimSyncSC::getClockRate()
 	  the calculated delay to put a character on the Tx port.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>UartSyncSC</classname> Module Class Implementation
 	</title>
@@ -5054,10 +5161,10 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	  delay.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Extending the <classname>TermSC</classname> Module Class
       </title>
@@ -5075,7 +5182,7 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	two are connected, delays in both directions are correctly modeled.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>TermSyncSC</classname> Module Class Definition
 	</title>
@@ -5114,9 +5221,9 @@ class TermSyncSC
 	</para>
 
 	<programlisting>  sc_core::sc_time  charDelay;</programlisting>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>TermSyncSC</classname> Module Class Implementation
 	</title>
@@ -5150,11 +5257,11 @@ class TermSyncSC
     tx.write( (unsigned char)ch );      // Send it
 </programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
 
-    <sect2 id="sec_sync_main_prog">
+    <sect1 id="sec_sync_main_prog">
       <title>
 	Main Program for the Synchronous Model
       </title>
@@ -5197,11 +5304,11 @@ class TermSyncSC
 	simulation is identical to the untimed version.
       </para>
 	
-    </sect2>
+    </sect1>
 
 
 
-    <sect2>
+    <sect1>
       <title>
 	Compiling and Running the Synchronous Model
       </title>
@@ -5295,10 +5402,10 @@ Char written at  0.078325190 sec
 	reasonable, allowing approximately 1500 cycles (15&mu;s at 100MHz) for
 	the &or1ksim; &iss; to process the read and write code.
       </para>
-    </sect2>
-  </sect1>
+    </sect1>
+  </chapter>
 
-<sect1 id="sec_temporal_decoupling">
+<chapter id="sec_temporal_decoupling">
     <title>
       Adding Temporal Decoupling to the Model
     </title>
@@ -5308,7 +5415,7 @@ Char written at  0.078325190 sec
       an &soc;. The &soc; model with arbiter from the previous example is reused.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	What is Temporal Decoupling
       </title>
@@ -5358,7 +5465,7 @@ Char written at  0.078325190 sec
 	threads driving <emphasis>initiator</emphasis> sockets.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Timing Concepts
 	</title>
@@ -5499,9 +5606,9 @@ Char written at  0.078325190 sec
 
 	</variablelist>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  The Global Quantum Class,
 	  <classname>tlm_global_quantum</classname>
@@ -5587,10 +5694,10 @@ Char written at  0.078325190 sec
 	  <classname>tlm_global_quantum</classname> object.
 	</para>
 
-      </sect3>
+      </sect2>
 
 
-      <sect3>
+      <sect2>
 	<title>
 	  &tlm2; Quantum Keepers
 	</title>
@@ -5677,9 +5784,9 @@ Char written at  0.078325190 sec
 	  other time if required.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Other Styles of Temporal Decoupling
 	</title>
@@ -5698,13 +5805,13 @@ Char written at  0.078325190 sec
 	  and synchronization functions, to allow different approaches to be
 	  tried.
 	</para>
-      </sect3>
+      </sect2>
 
 
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Guidelines for Using &tlm2; Temporal Decoupling
       </title>
@@ -5766,9 +5873,9 @@ Char written at  0.078325190 sec
 	</listitem>
       </orderedlist>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Temporal Decoupling the &or1ksim; Wrapper Class
       </title>
@@ -5824,7 +5931,7 @@ Char written at  0.078325190 sec
 	functionality.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Adding a Function to the &or1ksim; Library to Support Temporal
 	  Decoupling
@@ -5864,10 +5971,10 @@ Char written at  0.078325190 sec
 	<para>
 	</para>
 
-      </sect3>
+      </sect2>
 
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>Or1ksimDecoupSC</classname> Module Class Definition
 	</title>
@@ -5892,9 +5999,9 @@ Char written at  0.078325190 sec
 
 	<programlisting>  tlm_utils::tlm_quantumkeeper  issQk;</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>Or1ksimDecoupSC</classname> Module Class Implementation
 	</title>
@@ -6021,12 +6128,12 @@ Char written at  0.078325190 sec
 
   or1ksim_reset_duration ( timeLeft.to_seconds() );</programlisting>
 
-      </sect3>
+      </sect2>
 
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Modifying the &uart; to Support Temporal Decoupling
       </title>
@@ -6044,7 +6151,7 @@ Char written at  0.078325190 sec
 	&tlm2; convenience target socket blocking callback function.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>uartDecoupSC</classname> Module Class Definition
 	</title>
@@ -6060,9 +6167,9 @@ Char written at  0.078325190 sec
 	  <function>busReadWrite</function> is defined with the same
 	  parameters as the base class function.
 	</para>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>uartDecoupSC</classname> Module Class Implementation
 	</title>
@@ -6102,10 +6209,10 @@ Char written at  0.078325190 sec
     delay += sc_core::sc_time( UART_READ_NS, sc_core::SC_NS );
     break;</programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2 id="sec_temp_decoup_main">
+    <sect1 id="sec_temp_decoup_main">
       <title>
 	Main Program for Temporal Decoupling
       </title>
@@ -6141,9 +6248,9 @@ Char written at  0.078325190 sec
 	decoupling).
       </para>
 
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Compiling and Running the Synchronous Model
       </title>
@@ -6291,10 +6398,10 @@ Char written at  0.121041600 sec
 	further performance improvement.
       </para>
 
-    </sect2>
-  </sect1>
+    </sect1>
+  </chapter>
 
-  <sect1 id="sec_linux">
+  <chapter id="sec_linux">
     <title>
       Modeling Interrupts and Running &linux; on the Example &soc;
     </title>
@@ -6364,7 +6471,7 @@ Char written at  0.121041600 sec
       through which the interrupt signal is driven.
     </para>
 
-    <sect2>
+    <sect1>
       <title>
 	Extending the <classname>Or1ksimDecoupSC</classname> Module Class
       </title>
@@ -6385,7 +6492,7 @@ Char written at  0.121041600 sec
 	which wish to generate interrupts.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Adding an Interrupt Generation Function to the &or1ksim; Library
 	</title>
@@ -6412,9 +6519,9 @@ Char written at  0.121041600 sec
 	    </para>
 	  </listitem>
 	</itemizedlist>
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>Or1ksimIntrSC</classname> Module Class Definition
 	</title>
@@ -6459,9 +6566,9 @@ Char written at  0.121041600 sec
 
 	<programlisting>  void  intrMethod();</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>Or1ksimIntrSC</classname> Module Class Implementation
 	</title>
@@ -6493,11 +6600,11 @@ Char written at  0.121041600 sec
     }
   }</programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
 
-    <sect2>
+    <sect1>
       <title>
 	Extending the <classname>UartDecoupSC</classname> Module Class
       </title>
@@ -6526,7 +6633,7 @@ Char written at  0.121041600 sec
 	generated.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  <classname>UartIntrSC</classname> Module Class Definition
 	</title>
@@ -6559,9 +6666,9 @@ Char written at  0.121041600 sec
 
 	<programlisting>  sc_core::sc_fifo&lt;bool&gt;  intrQueue;</programlisting>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 
 	<title>
 	  <classname>UartIntrSC</classname> Module Class Implementation
@@ -6642,10 +6749,10 @@ Char written at  0.121041600 sec
 	 <programlisting>  if( isSet( regs.iir, UART_IIR_IPEND )) {     // 1 = not pending
     intrQueue.write( false );                   // Deassert if none left</programlisting>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Main Program for the Interrupt Driven Model
       </title>
@@ -6678,9 +6785,9 @@ Char written at  0.121041600 sec
       </para>
 
       <programlisting>  uart.intr( iss.intr[INTR_UART] );</programlisting>
-    </sect2>
+    </sect1>
 
-    <sect2>
+    <sect1>
       <title>
 	Running the Interrupt Driven Model
       </title>
@@ -6696,7 +6803,7 @@ Char written at  0.121041600 sec
 	test is booting a &linux; kernel.
       </para>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Simple Test for the Interrupt Driven &soc; Model
 	</title>
@@ -6721,9 +6828,9 @@ Char written at  0.121041600 sec
 	  clear.
 	</para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
 	<title>
 	  Running &linux;
 	</title>
@@ -6866,13 +6973,23 @@ Please press Ent</screen>
 	  and will eventually crash with an unhandled interrupt exception.
 	</para>
 
-      </sect3>
-    </sect2>
+      </sect2>
+    </sect1>
 
 
 
-  </sect1>
+  </chapter>
 
+  <chapter id="chap_jtag">
+    <title>
+      Adding a JTAG Interface to the Model
+    </title>
+
+    <para>
+      Holding para.
+    </para>
+
+  </chapter>
 
   <appendix id="app_download">
     <title>
@@ -6982,6 +7099,17 @@ Please press Ent</screen>
     </sect1>
   </appendix>
 
+  <appendix id="app_macos">
+    <title>
+      Running with Mac OS
+    </title>
+    
+    <para>
+      Robert G&uuml;nzel of the Department of Integrated Circuit Design at the
+      Technische Universit&auml;t Braunschweig, Germany has kindly contributed
+      this appendix on using this application note under Max OS.
+    </para>
+  </appendix>
 
   <glossary>
     <title>
@@ -7664,5 +7792,5 @@ Please press Ent</screen>
     </bibliomixed>
 
   </bibliography>
-</article>
+</book>
  
