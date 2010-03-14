@@ -26,6 +26,7 @@ Useful entities
 
 <!ENTITY gdb "<application class='software'>GDB</application>">
 <!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY make "<application class='software'>make</application>">
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
 <!ENTITY systemc "<application class='software'>SystemC</application>" >
 
@@ -2350,7 +2351,7 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
     <para>
       The code for the logger module (<filename>LoggerSC.cpp</filename> and
       <filename>LoggerSC.h</filename>) and the main program
-      (<filename>loggerMainSC.cpp</filename> are found with the &or1ksim;
+      (<filename>loggerMainSC.cpp</filename> may be found with the &or1ksim;
       wrapper code in the <filename>sysc-models/logger</filename> directory of
       the distribution.
     </para>
@@ -2717,14 +2718,27 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	</title>
 
 	<para>
-	  The program includes the main &tlm2; header and the header of the
-	  two modules which will be used:
+	  The program includes the C++ <classname>iostream</classname> header
+	  main &tlm2; header and the header of the two modules which will be
+	  used:
 	</para>
 
 	<programlisting>
+#include &lt;iostream&gt;
+
 #include "tlm.h"
 #include "Or1ksimSC.h"
 #include "LoggerSC.h"
+	</programlisting>
+
+	<para>
+	  The two <classname>iostream</classname> entities used are brought
+	  into the local namespace.
+	</para>
+
+	<programlisting>
+using std::cerr;
+using std::endl;
 	</programlisting>
 
       </sect2>
@@ -2746,7 +2760,7 @@ int  sc_main( int   argc,
               char *argv[] )
 {
   if( argc != 3 ) {
-    fprintf( stderr, "Usage: TestSC &lt;config_file&gt; &lt;image_file&gt;\n" );
+    cerr &lt;&lt; "Usage: TestSC &lt;config_file&gt; &lt;image_file&gt;" &lt;&lt; endl;
     exit( 1 );
   }
 	</programlisting>
@@ -3005,7 +3019,7 @@ main()
 	</title>
 
 	<para>
-	  The complete program is compiled from the top level program. Both a
+	  The complete program is compiled from the top level &make; file. Both a
 	  standalone program (<filename>logger</filename>) and a
 	  <command>libtool</command> compliant library
 	  (<filename>liblogger.la</filename>) are created. The library
@@ -3149,7 +3163,17 @@ $ </screen>
 
     <para>
       This example uses a single peripheral, a &uart;. The &uart; model is
-      based on National Semiconductor 16450 design.
+      based on National Semiconductor 16450 design. The &or1ksim; &iss;
+      wrapper must be extended to work with this &uart;.
+    </para>
+
+    <para>
+      The code for the &uart; module (<filename>UartSC.cpp</filename> and
+      <filename>UartSC.h</filename>) may be found with the extended &or1ksim;
+      wrapper code (<filename>Or1ksimExtSC.cpp</filename> and
+      <filename>Or1ksimExtSC.h</filename>) in the
+      <filename>sysc-models/simple-soc</filename> directory of the
+      distribution.
     </para>
 
     <sect1>
@@ -4120,11 +4144,18 @@ SC_HAS_PROCESS( UartSC );
 
       <sect2>
 	<title>
-	  &uart; Threads
+	  &uart; Processes
 	</title>
 	
 	<para>
-	  <function>busThread</function> sits in a perpetual loop. It first
+	  We use the term <emphasis>processes</emphasis> in the &systemc;
+	  sense to cover both <literal>SC_THREAD</literal> and
+	  <literal>SC_METHOD</literal>.
+	</para>
+
+	<para>
+	  The <function>busThread</function> is a
+	  <literal>SC_THREAD</literal>. It sits in a perpetual loop. It first
 	  marks the transmit buffer as empty (on reset the flags are cleared,
 	  so the buffer will appear full).
 	</para>
@@ -4158,11 +4189,10 @@ SC_HAS_PROCESS( UartSC );
 	</para>
 
 	<para>
-	  The second thread, <function>rxThread</function> sits in a
-	  perpetual loop, waiting for
-	  characters to be received on the Rx buffer. The character is read into
-	  the read buffer register and the line status data ready flag is set
-	  to indicate availability.
+	  The second process, <function>rxMethod</function> is a &systemc;
+	  <literal>SC_METHOD</literal>, sensitive to characters appearing in
+	  the Rx buffer. The character is read into the read buffer register
+	  and the line status data ready flag is set to indicate availability.
 	</para>
 
 	<para>
@@ -4432,24 +4462,33 @@ SC_HAS_PROCESS( UartSC );
       <function>wait</function>, so allowing the thread to yield.
     </para>
 
+    <para>
+      The code for the terminal module (<filename>TermSC.cpp</filename> and
+      <filename>TermSC.h</filename>) and the main program
+      (<filename>simpleSocMainSC.cpp</filename> may be found with the &uart;
+      module and extended &or1ksim; &iss; wrapper code in the
+      <filename>sysc-models/simple-soc</filename> directory of the
+      distribution.
+    </para>
+
     <sect1>
       <title>
-	Overall Design of the Simple SoC Model
+	Overall Design of the Simple &soc; Model
       </title>
 
       <para>
-	The key aspects of the overall simple SoC model are captured in a
+	The key aspects of the overall simple &soc; model are captured in a
 	&uml; class diagram and a &uml; sequence diagram, showing how a write
 	transaction transfers a character to the modelled terminal.
       </para>
 
-      <sect2>
+      <sect2 id="sec_simple_classes">
 	<title>
 	  Class Structure
 	</title>
 
 	<para>
-	  The overall class diagram for the simple SoC design incorporating a
+	  The overall class diagram for the simple &soc; design incorporating a
 	  &uart; and terminal is shown in <xref
 	  linkend="fig_simple_soc_class_diagram" />. Elements from the earlier
 	  logger example (see <xref linkend="chap_iss_wrapper_test" />) are
@@ -4464,7 +4503,7 @@ SC_HAS_PROCESS( UartSC );
 
 	<figure id="fig_simple_soc_class_diagram">
 	  <title>
-	    Class diagram for the simple &or1ksim; SoC.
+	    Class diagram for the simple &or1ksim; &soc;.
 	  </title>
 
 	  <mediaobject>
@@ -4475,13 +4514,13 @@ SC_HAS_PROCESS( UartSC );
 	    <imageobject>
 	      <imagedata fileref="simple-soc-classes.png"
 			 format="PNG" width="80%" scalefit="1" align="center" />
-	    </imageobject>
+	      </imageobject>
 	  </mediaobject>
 	</figure>
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_simple_sequence_diagram">
 	<title>
 	  Behavioral Diagrams
 	</title>
@@ -4511,7 +4550,7 @@ SC_HAS_PROCESS( UartSC );
 	<figure id="fig_simple_soc_sequence_diagram">
 	  <title>
 	    Sequence diagram for a write transaction with the &or1ksim; simple
-	    SoC.
+	    &soc;.
 	  </title>
 
 	  <mediaobject>
@@ -4620,6 +4659,12 @@ SC_HAS_PROCESS( UartSC );
       <title>
 	Terminal Module Class Definition
       </title>
+
+      <para>
+	The terminal module class, <classname>TermSC</classname> definition
+	may be found in <filename>sys-models/simple-soc/TermSC.h</filename> in
+	the distribution.
+      </para>      
 
       <sect2>
 	<title>
@@ -4741,6 +4786,13 @@ SC_HAS_PROCESS( UartSC );
 	the <function>ioHandler()</function> function.
       </para>
 
+      <para>
+	The terminal module class, <classname>TermSC</classname>
+	implementation may be found in
+	<filename>sys-models/simple-soc/TermSC.cpp</filename> in the
+	distribution.
+      </para>
+
       <sect2>
 	<title>
 	  &systemc; Processes
@@ -4824,8 +4876,8 @@ SC_HAS_PROCESS( UartSC );
 
 	<para>
 	  The structure of the main program
-	  (<filename>SimpleSoC.cpp</filename>) is similar to that for the
-	  logger test program (see <xref linkend="sec_logger_main_prog"
+	  (<filename>simpleSocMainSC.cpp</filename>) is similar to that for
+	  the logger test program (see <xref linkend="sec_logger_main_prog"
 	  />). The &tlm2; header and the headers for each module (&or1ksim;
 	  &iss;, &uart; and terminal) are included.
 	</para>
@@ -4874,6 +4926,7 @@ SC_HAS_PROCESS( UartSC );
 	  The simulation can then be started with a call to
 	  <function>sc_start</function>.
 	</para>
+
       </sect2>
 
       <sect2>
@@ -5007,6 +5060,16 @@ struct uart16450
   }
 	</programlisting>
 
+	<para>
+	  The source code for the &uart; loopback program may be found in
+	  <filename>progs-or32/uart-loop.c</filename> in the distribution. It
+	  must be compiled with the utility functions
+	  (<filename>progs-or32/utils.c</filename> and
+	  <filename>progs-or32/utils.h</filename>) and the bootloader
+	  (<filename>progs-or32/start.s</filename>). A pre-compiled version
+	  may be found in <filename>progs-or32/uart-loop</filename>.
+	</para>
+
       </sect2>
 
       <sect2 id="sec_simple_soc_run">
@@ -5015,34 +5078,32 @@ struct uart16450
 	</title>
 
 	<para>
-	  Compilation uses the same command lines as the
-	  standalone test of the &or1ksim; wrapper with the logger (see <xref
-	  linkend="sec_iss_run_test" />), but this time links in the &uart;
-	  and terminal; rather than the logger.
+	  The complete program is compiled from the top level &make;
+	  file. Both a standalone program (<filename>simple-soc</filename>)
+	  and a <command>libtool</command> compliant library
+	  (<filename>libsimple-soc.la</filename>) are created, and both
+	  incorporate the library created when building the logger test (see
+	  <xref linkend="sec_iss_run_test" />). The library provides a
+	  convenient mechanism for reusing the code from this model, when
+	  creating subsequent models which used derived classes.
 	</para>
-
-	<important>
-	  <para>
-	    Since <classname>Or1ksimExt</classname> is a derived class of
-	    <classname>Or1ksim</classname>, linking should include the
-	    compiled base class, <filename>Or1ksimSC.o</filename> as well as
-	    the derived class, <filename>Or1ksimExtSC.o</filename>.
-	  </para>
-	</important>
 
 	<para>
 	  The &or1ksim; configuration is also unchanged. Like the logger, the
-	  &uart; registers start at address 0x90000000 and are 8 bytes long.
+	  &uart; registers start at address 0x90000000 and are a total of 8
+	  bytes in length.
 	</para>
 
 	<para>
 	  Running the model requires specifying the configuration file
 	  (unchanged) and the binary executable (this time the &uart; loop
-	  back program).
+	  back program). Assuming the programs have been built in a directory
+	  named <filename>build</filename>, the following command line is
+	  suitable.
 	</para>
 
 	<programlisting>
-./SimpleSocSC ../simple.cfg progs_or32/uart-loop
+./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
 	</programlisting>
 
 	<para>
@@ -5057,12 +5118,13 @@ struct uart16450
 	    &uart; loop back program log output.
 	  </title>
 
-          <screen>$ ./SimpleSocSC ../simple.cfg progs_or32/uart-loop
+          <screen>
+$ ./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Reading script file from '../simple.cfg'...
+Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -5074,7 +5136,8 @@ Read: 'r'
 
 Read: '!'
 Read: '!'
-Read: '!'</screen>
+Read: '!'
+	  </screen>
 	</figure>
 
 	<para>
@@ -5137,75 +5200,72 @@ Read: '!'</screen>
 	</para>
 
 	<para>
-	  Edit the <function>rxThread</function> in
+	  Edit the <function>rxMethod</function> in
 	  <classname>UartSC</classname>, to print out the time when a
-	  character is received from the terminal<footnote>
-	    <para>
-	      The use of <function>printf</function> and C
-	      &stdio; is unfortunate. It would be better to
-	      use C++ stream IO. However there seems to be an interaction with
-	      either &systemc; or the asynchronous IO of the &xterm;, which
-	      makes stream IO to standard output unreliable
-	    </para>
-	  </footnote>.
+	  character is received from the terminal.
 	</para>
 
 	<programlisting>
 void
-UartSC::rxThread()
+UartSC::rxMethod()
 {
-  // Loop woken up when a character is written into the buffer from the terminal.
+  regs.rbr  = rx.read();
 
-  while( true ) {
-    regs.rbr  = rx.read();                      // Blocking read of the data
+  sc_core::sc_time  now = sc_core::sc_time_stamp();
+  cout &lt;&lt; "Char " &lt;&lt; (char)(regs.rbr) &lt;&lt; " read at  " &lt;&lt; sc_time_stamp ()
+       &lt;&lt; endl;
 
-    sc_core::sc_time  now = sc_core::sc_time_stamp();
-    printf( "Char read at    %12.9f sec\n", now.to_seconds());
+  set( regs.lsr, UART_LSR_DR );         // Mark data ready
+  genIntr( UART_IER_RBFI );             // Interrupt if enabled
 
-    set( regs.lsr, UART_LSR_DR );               // Mark data ready
-
-    if( isSet( regs.ier, UART_IER_ERBFI ) ) {   // Send interrupt if enabled
-      genIntr( UART_IIR_RDI );
-    }
-  }
-}       // rxThread()
+}       // rxMethod()
 	</programlisting>
 
 	<para>
-	  Similarly edit the <function>rxThread</function> in
+	  Similarly edit the <function>rxMethod</function> function in
 	  <classname>TermSC</classname>, to print out the time when a
 	  character is received from the UART.
 	</para>
 
 	<programlisting>
 void
-TermSC::rxThread()
+TermSC::rxMethod()
 {
-  while( true ) {
-    unsigned char  ch = rx.read();      // Blocking read from the buffer
+  xtermWrite( rx.read() );		// Write it to the screen
 
-    xtermWrite( ch );                   // Write it to the screen
+  cout &lt;&lt; "Char written at " &lt;&lt; sc_time_stamp() &lt;&lt; endl;
 
-    sc_core::sc_time  now = sc_core::sc_time_stamp();
-    printf( "Char written at %12.9f sec\n", now.to_seconds());
-  }
-}       // rxThread()
+}	// rxMethod()
 	</programlisting>
 
 	<para>
-	  In both cases the C standard IO header will be needed at the top of
-	  the file (<filename>UartSC.cpp</filename> and
-	  <filename>TermSC.cpp</filename>):
+	  In both cases the C++ <classname>iostream</classname> header will be
+	  needed at the top of the file (<filename>UartSC.cpp</filename> and
+	  <filename>TermSC.cpp</filename>), and the entities used will need to
+	  be brought into the local namespace.
 	</para>
 
 	<programlisting>
-#include &lt;stdio.h&gt;
+#include &lt;iostream&gt;
+
+
+using sc_core::sc_time_stamp;
+
+using std::cout;
+using std::endl;
 	</programlisting>
+
+	<note>
+	  <para>
+	    For convenience these changes are already made in the files in the
+	    distribution, but the two <classname>cout</classname> invocations
+	    are commented out. All that is needed is to remove the commenting.
+	  </para>
+	</note>
 
 	<para>
 	  The model can now be rerun as before, and will print out precise
-	  timing (use of 9 decimal places ensures that granularity at least as
-	  fine as the 100MHz CPU clock will be seen). The output is shown in
+	  timing. The output is shown in
 	  <xref linkend="fig_uart-loopback_log_timed" />.
 	</para>
 
@@ -5214,26 +5274,27 @@ TermSC::rxThread()
 	    &uart; loop back program log output with timing annotation.
 	  </title>
 
-          <screen>$ ./SimpleSocSC ../simple.cfg progs_or32/uart-loop
+          <screen>
+	    $ ./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Reading script file from '../simple.cfg'...
+Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
-Char read at    0.000000000 sec
+Char read at    0 s
 Read: 'F'
-Char written at 0.000000000 sec
-Char read at    0.000000000 sec
+Char written at 0 s
+Char read at    0 s
 Read: 'a'
-Char written at 0.000000000 sec
-Char read at    0.000000000 sec
+Char written at 0 s
+Char read at    0 s
 Read: 'r'
 
    ... &lt;Lots more output&gt;
-</screen>
+	  </screen>
 	</figure>
 
 	<para>
@@ -5270,6 +5331,18 @@ Read: 'r'
       with &systemc; time.
     </para>
 
+    <para>
+      The code for the timed &uart; module
+      (<filename>UartSyncSC.cpp</filename> and
+      <filename>UartSyncSC.h</filename>), The code for the timed terminal
+      module (<filename>TermSyncSC.cpp</filename> and
+      <filename>TermSyncSC.h</filename>), the code for the timed &or1ksim;
+      &iss; wrapper (<filename>Or1ksimSyncSC.cpp</filename> and
+      <filename>Or1ksimSyncSC.h</filename>) and the main program for the
+      complete model (syncSocMainSC.cpp) may be founded in the
+      <filename>sysc-models/sync-soc</filename> directory of the distribution.
+    </para>
+    
     <sect1>
       <title>
 	Summary of Changes Required for Synchronous Timing
@@ -5329,16 +5402,114 @@ Read: 'r'
 
 	<listitem>
 	  <para>
-	    A new main program <filename>SyncSocSC.cpp</filename> to build the
-	    new classes into a synchronized &soc;. Information functions are
-	    added to return the model clock rate (used as input clock rate for
-	    the UART) and the time spent executing instructions (so
+	    A new main program <filename>syncSocMainSC.cpp</filename> to build
+	    the new classes into a synchronized &soc;. Information functions
+	    are added to return the model clock rate (used as input clock rate
+	    for the UART) and the time spent executing instructions (so
 	    <classname>Or1ksimSyncSC</classname> can determine the
 	    synchronization time with &systemc;.
 	  </para>
 	</listitem>
       </itemizedlist>
 
+    </sect1>
+
+    <sect1>
+      <title>
+	Overall Design of the Synchronized &soc; Model
+      </title>
+
+      <para>
+	The key aspects of the overall synchronized &soc; model are captured
+	in a &uml; class diagram and a &uml; sequence diagram, showing how the
+	timing information is added when processing a transaction.
+      </para>
+
+      <sect2 id="sec_sync_classes">
+	<title>
+	  Class Structure
+	</title>
+
+	<para>
+	  The overall class diagram for the synchronized &soc; design
+	  incorporating a &uart; and terminal is shown in <xref
+	  linkend="fig_sync_soc_class_diagram" />. The design is almost
+	  identical to that for the simple &soc; (see <xref
+	  linkend="sec_simple_classes" />). The only difference is that the
+	  &or1ksim; &iss; wrapper, &uart; and terminal modules are all
+	  subclassed to add the behavior needed for synchronized timing.
+	</para>
+
+	<figure id="fig_sync_soc_class_diagram">
+	  <title>
+	    Class diagram for the &or1ksim; &soc; with synchronized timing.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="sync-soc-classes.svg" format="SVG"
+			 width="14cm" scalefit="1" align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="sync-soc-classes.png"
+			 format="PNG" width="80%" scalefit="1" align="center" />
+	      </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Behavioral Diagrams
+	</title>
+
+	<para>
+	  A sequence diagram, illustrating the handling of a transaction
+	  for the design is shown in <xref
+	  linkend="fig_sync_soc_sequence_diagram" />. Only the handling of the
+	  transaction by the wrapper is shown, since there is no significant
+	  change in the interactions of the &uart; and terminal (see <xref
+	  linkend="sec_simple_sequence_diagram" />).
+	</para>
+
+	<para>
+	  Before each upcall transaction, the &or1ksim; wrapper class waits
+	  for the period of time used by the underlying &or1ksim; &iss;. This
+	  brings all other threads into syncrhonization, giving them the
+	  opportunity to catch up.
+	</para>
+
+	<para>
+	  After each upcall transaction is complete, the timing point of the
+	  underlying &or1ksim; &iss; is reset to zero.
+	</para>
+
+	<figure id="fig_sync_soc_sequence_diagram">
+	  <title>
+	    Sequence diagram for the &or1ksim; &soc; with synchronized timing,
+	    showing the timing calls.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="sync-soc-sequence-diagram.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="sync-soc-sequence-diagram.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
     </sect1>
 
     <sect1>
@@ -5419,10 +5590,16 @@ double  or1ksim_get_time_period();
 	      in seconds since the last time point was set. This function is
 	      needed to keep the &systemc; model of time due to instruction set
 	      processing accurate, both in the synchronous &soc; and when
-	      temporal decoupling is added.
+	      temporal decoupling is added later (see <xref
+	      linkend="chap_temporal_decoupling" />.
 	    </para>
 	  </listitem>
 	</itemizedlist>
+
+	<para>
+	  All these functions are a standard part of the &or1ksim; 0.3.0
+	  library.
+	</para>
 
       </sect2>
 
@@ -5473,6 +5650,13 @@ class Or1ksimSyncSC
 	  <function>doTrans</function> in the base class to add timing
 	  synchronization.
 	</para>
+
+	<para>
+	  The definition of the &or1ksim; &iss; wrapper module class with
+	  synchronized timing, <classname>Or1ksimSyncSC</classname> may be
+	  found in <filename>sys-models/sync-soc/Or1ksimSyncSC.h</filename> in
+	  the distribution.
+	</para>          
 
       </sect2>
 
@@ -5534,19 +5718,26 @@ class Or1ksimSyncSC
 	  On return, the <literal>delay</literal> parameter will have been
 	  updated with any additional delay due to the transaction&mdash;in
 	  this case an estimate of the number of cycles to read or write the
-	  relevant &uart; register.
+	  relevant &uart; register. This delay represents the additional time
+	  modelled since this thread last called
+	  <function>wait</function>. The thread should
+	  <function>wait</function> for this time, to allow other thread to
+	  catch up.
 	</para>
 
 	<para>
-	  However, since this is a synchronized model, the target will have
-	  called <function>wait</function> to model the time taken to read
-	  or write, so <literal>delay</literal> will still be zero on return.
+	  However, since this is a synchronized model, the target (which is
+	  still part of this thread of control, just in a different object)
+	  will have already called <function>wait</function> to model the time
+	  taken to read or write. So in this case, <literal>delay</literal>
+	  will still be zero on return.
 	</para>
 
 	<para>
 	  The read or write is now complete. A new time point is set with
 	  <function>set_time_point</function> before control is returned to
-	  the &iss;
+	  the &iss;. The &iss; will start measuring time from this start
+	  point, ready for use in the next upcall.
 	</para>
 
 	<programlisting>
@@ -5568,6 +5759,13 @@ Or1ksimSyncSC::getClockRate()
 
 }       // getClockRate()
 	</programlisting>
+
+	<para>
+	  The definition of the &or1ksim; &iss; wrapper module class with
+	  synchronized timing, <classname>Or1ksimSyncSC</classname> may be
+	  found in <filename>sys-models/sync-soc/Or1ksimSyncSC.cpp</filename>
+	  in the distribution.
+	</para>
 
       </sect2>
     </sect1>
@@ -5663,6 +5861,13 @@ Or1ksimSyncSC::getClockRate()
 	<para>
 	  Two new member variables are declared, to hold the clock rate and
 	  the calculated delay to put a character on the Tx port.
+	</para>
+
+	<para>
+	  The implementation of the &uart; module class with synchronized
+	  timing, <classname>UartSyncSC</classname> may be found in
+	  <filename>sys-models/sync-soc/UartSyncSC.h</filename> in the
+	  distribution.
 	</para>
 
       </sect2>
@@ -5800,6 +6005,13 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	  delay.
 	</para>
 
+	<para>
+	  The implementation of the &uart; module class with synchronized
+	  timing, <classname>UartSyncSC</classname> may be found in
+	  <filename>sys-models/sync-soc/UartSyncSC.cpp</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
     </sect1>
 
@@ -5866,6 +6078,14 @@ class TermSyncSC
 	<programlisting>
   sc_core::sc_time  charDelay;
 	</programlisting>
+
+	<para>
+	  The definition of the terminal module class with synchronized
+	  timing, <classname>TermSyncSC</classname> may be found in
+	  <filename>sys-models/sync-soc/TermSyncSC.h</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -5905,6 +6125,13 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
     tx.write( (unsigned char)ch );      // Send it
 
 	</programlisting>
+
+	<para>
+	  The implementation of the terminal module class with synchronized
+	  timing, <classname>TermSyncSC</classname> may be found in
+	  <filename>sys-models/sync-soc/TermSyncSC.cpp</filename> in the
+	  distribution.
+	</para>
 
       </sect2>
     </sect1>
@@ -5959,9 +6186,14 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	simulation is identical to the untimed version.
       </para>
 	
+      <para>
+	The implementation of the main program for the &soc; model with
+	synchronized timing may be found in
+	<filename>sys-models/sync-soc/syncSocMainSC.cpp</filename> in the
+	distribution.
+      </para>
+
     </sect1>
-
-
 
     <sect1>
       <title>
@@ -5969,37 +6201,36 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
       </title>
 
       <para>
-	Compilation uses the same command lines as the untimed model (see
-	<xref linkend="sec_simple_soc_run" />), but with the synchronized
-	versions of the modules and main program.
+	The complete program is compiled from the top level &make;
+	file. Both a standalone program (<filename>simple-soc</filename>)
+	and a <command>libtool</command> compliant library
+	(<filename>libsimple-soc.la</filename>) are created, and both
+	incorporate the library created when building the logger test (see
+	<xref linkend="sec_iss_run_test" />). The library provides a
+	convenient mechanism for reusing the code from this model, when
+	creating subsequent models which used derived classes.
       </para>
-
-      <important>
-	<para>
-	  Since <classname>Or1ksimSync</classname> is a derived class of
-	  <classname>Or1ksimExt</classname>,
-	  <classname>Or1ksimExt</classname>, linking should include the
-	  compiled base classes, <filename>Or1ksimSC.o</filename> and
-	  <filename>Or1ksimExtSC.o</filename> as well as the derived class,
-	  <filename>Or1ksimSyncSC.o</filename>. Similarly the compiled base
-	  classes of <classname>UartSyncSC</classname> and
-	  <classname>TermSyncSC</classname> should also be included.
-	</para>
-      </important>
 
       <para>
-	The &or1ksim; configuration is completely unchanged, and the embedded
-	code running on the &or1ksim; &iss; is the same
-	(<filename>uart-loop</filename>).
+	The &or1ksim; configuration is also unchanged. Like the logger, the
+	&uart; registers start at address 0x90000000 and are a total of 8
+	bytes in length.
       </para>
 
+      <para>
+	Running the model requires specifying the configuration file
+	(unchanged) and the binary executable (this time the &uart; loop
+	back program). Assuming the programs have been built in a directory
+	named <filename>build</filename>, the following command line is
+	suitable.
+      </para>
       <para>
 	The command line to run the model is unchanged, but uses the
 	synchronized version of the model
       </para>
 
       <programlisting>
-./SyncSocSC ../simple.cfg progs_or32/uart-loop
+.build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
       </programlisting>
 
       <para>
@@ -6016,24 +6247,24 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	  &uart; loop back program log output.
 	</title>
 
-	<screen>$ ./SyncSocSC ../simple.cfg progs_or32/uart-loop
+	<screen>$ .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Reading script file from '../simple.cfg'...
+Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
-Char read at     0.060059107 sec
+Char F read at  415740466667 ps
 Read: 'F'
-Char written at  0.061114010 sec
-Char read at     0.070717297 sec
+Char written at 416796660 ns
+Char a read at  451075036667 ps
 Read: 'a'
-Char written at  0.071772200 sec
-Char read at     0.077270287 sec
+Char written at 452131230 ns
+Char r read at  516688386667 ps
 Read: 'r'
-Char written at  0.078325190 sec
+Char written at 517744580 ns
 
    ... &lt;Lots more output&gt;
 </screen>
@@ -6053,10 +6284,10 @@ Char written at  0.078325190 sec
 
       <para>
 	The &uart; was initialized to use 1 start bit, 8 data bits and 1 stop
-	bit, which at 9600 baud takes around 1040&mu;s. The time shown
-	in <xref linkend="fig_uart-loopback_sync_log" /> for the first
-	character to be read and written back is 1055&mu;s. This seems
-	reasonable, allowing approximately 1500 cycles (15&mu;s at 100MHz) for
+	bit, which at 9600 baud takes around 1040&mu;s. The time shown in
+	<xref linkend="fig_uart-loopback_sync_log" /> for the first character
+	to be read and written back is approximately 1056&mu;s. This seems
+	reasonable, allowing approximately 1600 cycles (16&mu;s at 100MHz) for
 	the &or1ksim; &iss; to process the read and write code.
       </para>
     </sect1>
