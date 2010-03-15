@@ -366,7 +366,7 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.2611111"
+     inkscape:zoom="1.2366667"
      inkscape:cx="450"
      inkscape:cy="213"
      inkscape:document-units="px"
@@ -426,7 +426,7 @@
             <rdf:li>timing</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <dc:description>Sequence diagram for the Or1ksim TLM 2.0 wrapper simple SoC showing time management</dc:description>
+        <dc:description>Sequence diagram for the Or1ksim TLM 2.0 wrapper synchronized SoC showing time management</dc:description>
         <dc:contributor>
           <cc:Agent>
             <dc:title>Jeremy Bennett</dc:title>
@@ -454,7 +454,7 @@
      id="layer1"
      transform="translate(0,-626.36218)">
     <g
-       id="g10053">
+       id="g5047">
       <g
          transform="translate(326.62655,158.82913)"
          id="g10614">
@@ -1107,18 +1107,14 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2-7-0"
-         y="1009.907"
+         y="1021.4072"
          x="34.880405"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
-           y="1009.907"
+           y="1021.4072"
            x="34.880405"
-           id="tspan11957"
-           sodipodi:role="line">Add time due</tspan><tspan
-           y="1032.9071"
-           x="34.880405"
-           id="tspan11959"
-           sodipodi:role="line">to upcall</tspan></text>
+           id="tspan3763"
+           sodipodi:role="line">Restart ISS timer</tspan></text>
       <path
          sodipodi:nodetypes="cccc"
          id="path7374-1"

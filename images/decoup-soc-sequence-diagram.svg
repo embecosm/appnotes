@@ -386,6 +386,20 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 0.5 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective6526"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective6554"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -394,9 +408,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.74583333"
+     inkscape:zoom="0.76430401"
      inkscape:cx="450"
-     inkscape:cy="600"
+     inkscape:cy="585.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -443,7 +457,7 @@
             <dc:title>Embecosm Limited</dc:title>
           </cc:Agent>
         </dc:publisher>
-        <dc:source></dc:source>
+        <dc:source />
         <dc:language>en-GB</dc:language>
         <dc:identifier>www.embecosm.com</dc:identifier>
         <dc:subject>
@@ -484,62 +498,57 @@
      id="layer1"
      transform="translate(0,118.63782)">
     <g
-       id="g13447"
-       transform="translate(0,29.500019)">
+       id="g8254">
       <g
-         transform="translate(186.62656,-615.67089)"
-         id="g10614">
+         id="g8243">
+        <rect
+           style="fill:#ffffc0;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="rect4213-8"
+           width="140"
+           height="40"
+           x="750"
+           y="-118.13782" />
         <g
-           id="g10259">
-          <rect
-             y="468.03305"
-             x="383.37344"
-             height="40"
-             width="140"
-             id="rect4213-8"
-             style="fill:#ffffc0;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
-          <g
-             id="g10234"
-             transform="translate(0.0239236,0)">
-            <text
-               xml:space="preserve"
-               style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-               x="453.35635"
+           transform="translate(366.65048,-586.17087)"
+           id="g10234">
+          <text
+             sodipodi:linespacing="100%"
+             id="text4209"
+             y="498.55942"
+             x="453.35635"
+             style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+             xml:space="preserve"><tspan
                y="498.55942"
-               id="text4209"
-               sodipodi:linespacing="100%"><tspan
-                 sodipodi:role="line"
-                 id="tspan6537"
-                 x="453.35635"
-                 y="498.55942">tlm_global_quantum</tspan></text>
-            <path
-               style="fill:none;stroke:#000000;stroke-width:0.99999988px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
-               d="m 384.86101,501.86215 136.97702,0 0,0"
-               id="path6585" />
-          </g>
-          <g
-             id="g10229"
-             transform="translate(-0.35546875,0)">
-            <text
-               xml:space="preserve"
-               style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
-               x="454.4296"
-               y="483.36313"
-               id="text4209-38"
-               sodipodi:linespacing="100%"><tspan
-                 sodipodi:role="line"
-                 id="tspan6581"
-                 x="454.4296"
-                 y="483.36313">refTgk:</tspan></text>
-            <path
-               style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
-               d="m 429.1719,486.12015 49.11402,0 0,0"
-               id="path6585-2" />
-          </g>
+               x="453.35635"
+               id="tspan6537"
+               sodipodi:role="line">tlm_global_quantum</tspan></text>
+          <path
+             id="path6585"
+             d="m 384.86101,501.86215 136.97702,0 0,0"
+             style="fill:none;stroke:#000000;stroke-width:0.99999988px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1" />
+        </g>
+        <g
+           id="g8238"
+           transform="translate(0.41357,0)">
+          <text
+             sodipodi:linespacing="100%"
+             id="text4209-38"
+             y="-102.80774"
+             x="820.70068"
+             style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+             xml:space="preserve"><tspan
+               id="tspan8236"
+               sodipodi:role="line"
+               x="820.70068"
+               y="-102.80774">tgk:</tspan></text>
+          <path
+             id="path6585-2"
+             d="m 806.18192,-100.05072 26.80902,0 0,0"
+             style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1" />
         </g>
       </g>
       <g
-         transform="translate(179.99983,-600.00002)"
+         transform="translate(179.99983,-570.5)"
          id="g10208">
         <rect
            style="fill:#ffffc0;fill-opacity:1;stroke:#000000;stroke-width:0.99999982;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
@@ -570,18 +579,18 @@
       </g>
       <path
          id="path7141-9"
-         d="m 640,-97.637831 0,1119.999931 0,0"
+         d="m 640,-68.137812 0,1119.999912 0,0"
          style="fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:12.00000061, 12.00000061;stroke-dashoffset:0" />
       <path
          id="path7141-6"
-         d="m 460,-97.63781 0,1119.99991 0,0"
+         d="m 460,-68.137791 0,1119.999891 0,0"
          style="fill:none;stroke:#000000;stroke-width:0.99999982;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:11.99999977, 11.99999977;stroke-dashoffset:0" />
       <path
          id="path7141-0"
-         d="m 280.00018,-97.637859 0,1119.999959 0,0"
+         d="m 280.00018,-68.13784 0,1119.99994 0,0"
          style="fill:none;stroke:#000000;stroke-width:0.9999997;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:11.9999992, 11.9999992;stroke-dashoffset:0" />
       <rect
-         y="127.36216"
+         y="156.86218"
          x="275.00018"
          height="80"
          width="10.000001"
@@ -590,16 +599,16 @@
       <text
          sodipodi:linespacing="100%"
          id="text7209"
-         y="123.991"
+         y="153.49101"
          x="370.30771"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="123.991"
+           y="153.49101"
            x="370.30771"
            id="tspan7213"
            sodipodi:role="line">run()</tspan></text>
       <rect
-         y="197.36192"
+         y="226.86194"
          x="455"
          height="40"
          width="10.000001"
@@ -608,42 +617,42 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5"
-         d="m 455,202.362 -169.99983,0"
+         d="m 455,231.86202 -169.99983,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2"
-         y="193.99083"
+         y="223.49084"
          x="370.38974"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="193.99083"
+           y="223.49084"
            x="370.38974"
            id="tspan7328"
            sodipodi:role="line">staticWriteUpcall()</tspan></text>
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5"
-         d="m 455,132.36216 -169.99982,0"
+         d="m 455,161.86218 -169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9"
-         d="m 895,377.36206 -429.99999,0"
+         d="m 895,406.86208 -429.99999,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-5-0-5"
-         y="368.99084"
+         y="398.49088"
          x="687.94775"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="368.99084"
+           y="398.49088"
            x="687.94775"
            id="tspan7828"
            sodipodi:role="line">b_transport()</tspan></text>
       <g
-         transform="translate(250.00018,-600.00002)"
+         transform="translate(250.00018,-570.5)"
          id="g10677">
         <g
            id="g7047"
@@ -695,7 +704,7 @@
         </g>
       </g>
       <g
-         transform="translate(179.99999,-600.00002)"
+         transform="translate(179.99999,-570.5)"
          id="g10692">
         <path
            style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -708,7 +717,7 @@
            id="path7201" />
       </g>
       <g
-         transform="matrix(-1,0,0,1,610.00018,-485.00002)"
+         transform="matrix(-1,0,0,1,610.00018,-455.5)"
          id="g17696-7-9">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -717,7 +726,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <g
-         transform="translate(130,-415.00014)"
+         transform="translate(130,-385.50012)"
          id="g17696-7-9-1">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -728,28 +737,28 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9"
-         d="m 455,232.362 -169.99983,0"
+         d="m 455,261.86202 -169.99983,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7"
-         y="223.99083"
+         y="253.49084"
          x="370.66318"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="223.99083"
+           y="253.49084"
            x="370.66318"
            id="tspan7328-0"
            sodipodi:role="line">get_time_period()</tspan></text>
       <rect
-         y="227.36192"
+         y="256.86194"
          x="275.00018"
          height="30"
          width="10.000001"
          id="rect7203-2-0"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <g
-         transform="matrix(-1,0,0,1,610.00018,-385.00018)"
+         transform="matrix(-1,0,0,1,610.00018,-355.50016)"
          id="g17696-7-9-0">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -758,7 +767,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <rect
-         y="247.36186"
+         y="276.86188"
          x="455"
          height="20.000319"
          width="10.000001"
@@ -767,14 +776,14 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6"
-         d="M 285.00017,252.362 455,252.362"
+         d="m 285.00017,281.86202 169.99983,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6, 6;stroke-dashoffset:0" />
       <path
          id="path17699-6-6"
-         d="m 450,247.36204 5,5 -5,5"
+         d="m 450,276.86206 5,5 -5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <g
-         transform="translate(570,-239.99998)"
+         transform="translate(570,-210.49996)"
          id="g17696-7-9-1-8">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -784,15 +793,10 @@
       </g>
       <path
          id="path18368"
-         d="m 625,692.36186 10,-5 10,5 10,-5 0,10 -10,5 -10,-5 -10,5 0,-10 z"
+         d="m 625,721.86188 10,-5 10,5 10,-5 0,10 -10,5 -10,-5 -10,5 0,-10 z"
          style="fill:#ffffff;fill-opacity:1;stroke:none" />
-      <path
-         sodipodi:nodetypes="cccccccc"
-         id="path18368-7"
-         d="m 655,412.36218 -10,5 -10,-5 -10,5 m 0,-10 10,-5 10,5 10,-5"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <g
-         transform="translate(35,-185)"
+         transform="translate(35,-155.49998)"
          id="g18392-9">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -805,7 +809,7 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <g
-         transform="translate(-144.99982,-185)"
+         transform="translate(-144.99982,-155.49998)"
          id="g18392-8">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -818,7 +822,7 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <g
-         transform="translate(-144.99982,-430.00014)"
+         transform="translate(-144.99982,-400.50012)"
          id="g18392-9-5">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -831,7 +835,7 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <g
-         transform="translate(35,-430.00014)"
+         transform="translate(35,-400.50012)"
          id="g18392-9-5-1">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -843,26 +847,13 @@
            id="path18368-7-0-5-1"
            sodipodi:nodetypes="cccccccc" />
       </g>
-      <g
-         transform="translate(215,-430.00014)"
-         id="g18392-9-5-5">
-        <path
-           style="fill:#ffffff;fill-opacity:1;stroke:none"
-           d="m 410,592.36218 10,-5 10,5 10,-5 0,10 -10,5 -10,-5 -10,5 0,-10 z"
-           id="path18368-9-4-6" />
-        <path
-           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 440,597.36218 -10,5 -10,-5 -10,5 m 0,-10 10,-5 10,5 10,-5"
-           id="path18368-7-0-5-2"
-           sodipodi:nodetypes="cccccccc" />
-      </g>
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-2-2"
-         d="m 455,-82.63784 -169.99982,0"
+         d="m 455,-53.137821 -169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <g
-         transform="matrix(-1,0,0,1,610.00019,-700.00001)"
+         transform="matrix(-1,0,0,1,610.00019,-670.49999)"
          id="g17696-7-9-0-5-6">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -871,7 +862,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <rect
-         y="-87.63784"
+         y="-58.137821"
          x="275.00018"
          height="30"
          width="10.000001"
@@ -880,32 +871,32 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6-8-1"
-         d="m 285.00018,-62.63784 169.99982,0"
+         d="m 285.00018,-33.137821 169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6.00000001, 6.00000001;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-7-1"
-         d="m 450,-67.63784 5,5 -5,5"
+         d="m 450,-38.137821 5,5 -5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3"
-         y="-91.008965"
+         y="-61.508945"
          x="370.38974"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="-91.008965"
+           y="-61.508945"
            x="370.38974"
            id="tspan7328-0-8-4"
            sodipodi:role="line">set_time_point()</tspan></text>
       <rect
-         y="12.362163"
+         y="41.862183"
          x="455"
          height="44.999996"
          width="10.000001"
          id="rect7203-2-03"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <g
-         transform="translate(250,-600.00002)"
+         transform="translate(70,-570.5)"
          id="g10481">
         <rect
            style="fill:#ffffc0;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
@@ -955,10 +946,10 @@
       </g>
       <path
          id="path7141-9-1"
-         d="m 820,-97.63781 0,1119.99991 0,0"
+         d="m 820,-68.137791 0,1119.999891 0,0"
          style="fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:11.9999997, 11.9999997;stroke-dashoffset:0" />
       <g
-         transform="translate(310,-670.00002)"
+         transform="translate(310,-640.5)"
          id="g17696-7-9-1-8-5">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -967,7 +958,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <g
-         transform="translate(395,-185)"
+         transform="translate(395,-155.49998)"
          id="g18392-2">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -980,7 +971,7 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <g
-         transform="translate(395,-430.00014)"
+         transform="translate(395,-400.50012)"
          id="g18392-9-5-5-4">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -993,7 +984,7 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <rect
-         y="-67.63784"
+         y="-38.137821"
          x="455"
          height="19.999998"
          width="10.000001"
@@ -1002,17 +993,17 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516"
-         d="m 465,-52.63782 170,-2e-5"
+         d="m 465,-23.137801 170,-2e-5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="-57.637836"
+         y="-28.137817"
          x="635"
          height="29.999998"
          width="10.000001"
          id="rect7203-2-03-1-1"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="-37.637836"
+         y="-8.1378174"
          x="455"
          height="40"
          width="10.000001"
@@ -1021,25 +1012,25 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1"
-         d="m 635,-32.63784 -170,0"
+         d="m 635,-3.137821 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0"
-         d="m 470.00001,-37.638 -5,5 5,5"
+         d="m 470.00001,-8.137981 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7"
-         y="-61.00893"
+         y="-31.508911"
          x="550.38965"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="-61.00893"
+           y="-31.508911"
            x="550.38965"
            id="tspan7328-0-8-4-2"
            sodipodi:role="line">set_global_quantum()</tspan></text>
       <g
-         transform="translate(310,-620.00002)"
+         transform="translate(310,-590.5)"
          id="g17696-7-9-1-8-5-8">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1050,10 +1041,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6"
-         d="m 465,-2.63782 170,-2e-5"
+         d="m 465,26.862199 170,-2e-5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="-7.6378374"
+         y="21.862181"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1062,25 +1053,25 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9"
-         d="m 635,17.36216 -170,0"
+         d="m 635,46.862179 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4"
-         d="m 470.00001,12.362 -5,5 5,5"
+         d="m 470.00001,41.862019 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5"
-         y="-11.008748"
+         y="18.49127"
          x="550.30762"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="-11.008748"
+           y="18.49127"
            x="550.30762"
            id="tspan7328-0-8-4-2-0"
            sodipodi:role="line">reset()</tspan></text>
       <rect
-         y="47.362164"
+         y="76.862183"
          x="815"
          height="29.999998"
          width="10.000001"
@@ -1089,21 +1080,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10696"
-         d="m 465,52.36216 350,0"
+         d="m 465,81.862179 350,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-6"
-         y="43.99107"
+         y="73.491089"
          x="640.46826"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="43.99107"
+           y="73.491089"
            x="640.46826"
            id="tspan7328-0-8-4-2-2"
            sodipodi:role="line">compute_local_quantum()</tspan></text>
       <rect
-         y="67.36216"
+         y="96.862175"
          x="455"
          height="39.999996"
          width="10.000001"
@@ -1111,14 +1102,14 @@
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <path
          id="path10745"
-         d="m 815,72.36216 -350,0"
+         d="m 815,101.86218 -350,0"
          style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6, 6;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-5"
-         d="m 470,67.36216 -5,5 5,5"
+         d="m 470,96.862179 -5,5.000001 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <g
-         transform="translate(310,-515.00002)"
+         transform="translate(310,-485.5)"
          id="g17696-7-9-1-8-5-8-6">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1129,10 +1120,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6"
-         d="m 465,102.36218 170,-2e-5"
+         d="m 465,131.8622 170,-2e-5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="97.36216"
+         y="126.86217"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1141,32 +1132,32 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5"
-         d="m 635,122.36216 -170,0"
+         d="m 635,151.86218 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2"
-         d="m 470.00001,117.362 -5,5 5,5"
+         d="m 470.00001,146.86202 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3"
-         y="93.991249"
+         y="123.49126"
          x="550.66309"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="93.991249"
+           y="123.49126"
            x="550.66309"
            id="tspan7328-0-8-4-2-0-9"
            sodipodi:role="line">get_local_time()</tspan></text>
       <rect
-         y="117.36216"
+         y="146.86218"
          x="455"
          height="19.999998"
          width="10.000001"
          id="rect7203-2-03-1-16"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="257.36218"
+         y="286.86221"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1175,10 +1166,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-9"
-         d="m 465,262.36218 170,0"
+         d="m 465,291.8622 170,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="277.36218"
+         y="306.86221"
          x="455"
          height="20.000319"
          width="10.000001"
@@ -1187,16 +1178,16 @@
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-0"
-         y="253.99109"
+         y="283.49112"
          x="550.42725"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="253.99109"
+           y="283.49112"
            x="550.42725"
            id="tspan7328-0-8-4-2-0-9-7"
            sodipodi:role="line">inc()</tspan></text>
       <g
-         transform="translate(310,-355.00002)"
+         transform="translate(310,-325.5)"
          id="g17696-7-9-1-8-5-8-6-1">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1207,19 +1198,19 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-5"
-         d="m 635,282.36216 -170,0"
+         d="m 635,311.86218 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-4"
-         d="m 470.00001,277.362 -5,5 5,5"
+         d="m 470.00001,306.86202 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-2-2-6"
-         d="m 454.99982,292.36218 -169.99982,0"
+         d="M 454.99982,321.8622 285,321.8622"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <g
-         transform="matrix(-1,0,0,1,610.00001,-324.99999)"
+         transform="matrix(-1,0,0,1,610.00001,-295.49997)"
          id="g17696-7-9-0-5-6-0">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1228,7 +1219,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <rect
-         y="287.36215"
+         y="316.86218"
          x="275"
          height="30"
          width="10.000001"
@@ -1237,32 +1228,32 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6-8-1-0"
-         d="m 285,312.36218 169.99982,0"
+         d="m 285,341.8622 169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6.00000001, 6.00000001;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-7-1-1"
-         d="m 449.99982,307.36218 5,5 -5,5"
+         d="m 449.99982,336.8622 5,5 -5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-3"
-         y="283.99103"
+         y="313.49106"
          x="370.38956"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="283.99103"
+           y="313.49106"
            x="370.38956"
            id="tspan7328-0-8-4-1"
            sodipodi:role="line">set_time_point()</tspan></text>
       <rect
-         y="307.36185"
+         y="336.86188"
          x="455"
          height="20.000319"
          width="10.000001"
          id="rect7203-2-1-3-2"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <g
-         transform="translate(310,-294.99999)"
+         transform="translate(310,-265.49997)"
          id="g17696-7-9-1-8-5-8-6-2">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1273,10 +1264,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-3"
-         d="m 465,322.36221 170,-2e-5"
+         d="m 465,351.86223 170,-2e-5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="317.36218"
+         y="346.86221"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1285,32 +1276,32 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-6"
-         d="m 635,342.36219 -170,0"
+         d="m 635,371.86221 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-7"
-         d="m 470.00001,337.36203 -5,5 5,5"
+         d="m 470.00001,366.86205 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-2"
-         y="313.99127"
+         y="343.4913"
          x="550.66309"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="313.99127"
+           y="343.4913"
            x="550.66309"
            id="tspan7328-0-8-4-2-0-9-3"
            sodipodi:role="line">get_local_time()</tspan></text>
       <rect
-         y="337.36218"
+         y="366.86221"
          x="455"
          height="44.999996"
          width="10.000001"
          id="rect7203-2-03-0"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="437.36209"
+         y="466.86212"
          x="455"
          height="39.999996"
          width="10.000001"
@@ -1318,14 +1309,14 @@
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <path
          id="path10745-5"
-         d="m 895,442.36206 -429.99999,0"
+         d="m 895,471.86208 -429.99999,0"
          style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6.00000007, 6.00000007;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-5-4"
-         d="m 470,437.36206 -5,5 5,5"
+         d="m 470,466.86208 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="467.36209"
+         y="496.86212"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1334,21 +1325,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-9-0"
-         d="m 465,472.36206 170,0"
+         d="m 465,501.86208 170,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-0-5"
-         y="463.991"
+         y="493.49103"
          x="550.38965"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="463.991"
+           y="493.49103"
            x="550.38965"
            id="tspan7328-0-8-4-2-0-9-7-4"
            sodipodi:role="line">set()</tspan></text>
       <g
-         transform="translate(310,-145.00014)"
+         transform="translate(310,-115.50012)"
          id="g17696-7-9-1-8-5-8-6-1-1">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1359,21 +1350,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-5-6"
-         d="m 635,492.36204 -170,0"
+         d="m 635,521.86206 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-4-2"
-         d="m 470.00001,487.36188 -5,5 5,5"
+         d="m 470.00001,516.8619 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="487.36209"
+         y="516.86212"
          x="455"
          height="39.999996"
          width="10.000001"
          id="rect7203-2-03-1-8-5-5-0"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="517.36206"
+         y="546.86206"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1382,21 +1373,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-9-0-0"
-         d="m 465,522.36206 170,0"
+         d="m 465,551.86208 170,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-0-5-0"
-         y="513.99097"
+         y="543.49097"
          x="550.44775"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="513.99097"
+           y="543.49097"
            x="550.44775"
            id="tspan7328-0-8-4-2-0-9-7-4-3"
            sodipodi:role="line">need_sync()</tspan></text>
       <g
-         transform="translate(310,-95.00014)"
+         transform="translate(310,-65.500121)"
          id="g17696-7-9-1-8-5-8-6-1-1-7">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1407,21 +1398,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-5-6-4"
-         d="m 635,542.36204 -170,0"
+         d="m 635,571.86206 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-4-2-2"
-         d="m 470.00001,537.36188 -5,5 5,5"
+         d="m 470.00001,566.8619 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="537.362"
+         y="566.862"
          x="455"
          height="39.999996"
          width="10.000001"
          id="rect7203-2-03-1-8-5-5-0-3"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="567.36218"
+         y="596.86218"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1430,21 +1421,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-9-0-9"
-         d="m 464.99999,572.36224 170,0"
+         d="m 464.99999,601.86226 170,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-0-5-2"
-         y="563.99109"
+         y="593.49109"
          x="550.38965"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="563.99109"
+           y="593.49109"
            x="550.38965"
            id="tspan7328-0-8-4-2-0-9-7-4-1"
            sodipodi:role="line">sync()</tspan></text>
       <g
-         transform="translate(309.99999,-44.999963)"
+         transform="translate(309.99999,-15.499944)"
          id="g17696-7-9-1-8-5-8-6-1-1-5">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1455,21 +1446,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-5-6-5"
-         d="m 634.99999,592.36222 -170,0"
+         d="m 634.99999,621.86224 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-4-2-0"
-         d="m 470,587.36206 -5,5 5,5"
+         d="m 470,616.86208 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="587.36218"
+         y="616.86218"
          x="455"
          height="44.999817"
          width="10.000001"
          id="rect7203-2-03-1-8-5-5-0-1"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="622.362"
+         y="651.862"
          x="815"
          height="29.999998"
          width="10.000001"
@@ -1478,36 +1469,36 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10696-6"
-         d="m 465,627.36203 350,0"
+         d="m 465,656.86205 350,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-6-7"
-         y="618.99091"
+         y="648.49091"
          x="640.46826"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="618.99091"
+           y="648.49091"
            x="640.46826"
            id="tspan7328-0-8-4-2-2-1"
            sodipodi:role="line">compute_local_quantum()</tspan></text>
       <path
          id="path10745-6"
-         d="m 815,647.36203 -350,0"
+         d="m 815,676.86205 -350,0"
          style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6, 6;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-5-3"
-         d="m 470,642.36203 -5,5 5,5"
+         d="m 470,671.86205 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="642.36218"
+         y="671.86218"
          x="455"
          height="39.999996"
          width="10.000001"
          id="rect7203-2-03-1-8-5-5-0-1-8"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <g
-         transform="translate(310,60.000006)"
+         transform="translate(310,89.500025)"
          id="g17696-7-9-1-8-5-8-6-2-9">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1518,10 +1509,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-3-6"
-         d="m 465,677.36221 170,-2e-5"
+         d="m 465,706.86223 170,-2e-5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="672.36218"
+         y="701.86218"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1530,25 +1521,25 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-6-9"
-         d="m 635,697.36219 -170,0"
+         d="m 635,726.86221 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-7-8"
-         d="m 470.00001,692.36203 -5,5 5,5"
+         d="m 470.00001,721.86205 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-2-1"
-         y="668.99127"
+         y="698.49127"
          x="550.66309"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="668.99127"
+           y="698.49127"
            x="550.66309"
            id="tspan7328-0-8-4-2-0-9-3-9"
            sodipodi:role="line">get_local_time()</tspan></text>
       <rect
-         y="692.36224"
+         y="721.86224"
          x="455"
          height="20.000319"
          width="10.000001"
@@ -1557,10 +1548,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-2-2-6-0"
-         d="m 454.99982,707.36224 -169.99982,0"
+         d="m 454.99982,736.86226 -169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <g
-         transform="matrix(-1,0,0,1,610.00001,90.000055)"
+         transform="matrix(-1,0,0,1,610.00001,119.50007)"
          id="g17696-7-9-0-5-6-0-1">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1569,7 +1560,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <rect
-         y="702.36224"
+         y="731.86224"
          x="275"
          height="30"
          width="10.000001"
@@ -1578,39 +1569,39 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6-8-1-0-4"
-         d="m 285,727.36224 169.99982,0"
+         d="m 285,756.86226 169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6.00000001, 6.00000001;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-7-1-1-9"
-         d="m 449.99982,722.36224 5,5 -5,5"
+         d="m 449.99982,751.86226 5,5 -5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-3-8"
-         y="698.99109"
+         y="728.49109"
          x="370.30753"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="698.99109"
+           y="728.49109"
            x="370.30753"
            id="tspan7328-0-8-4-1-6"
            sodipodi:role="line">reset_duration()</tspan></text>
       <rect
-         y="722.36188"
+         y="751.86188"
          x="455"
          height="30.000301"
          width="10.000001"
          id="rect7203-2-1-3-2-3"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="742.36218"
+         y="771.86218"
          x="275"
          height="80"
          width="10.000001"
          id="rect7203-9"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <g
-         transform="translate(-145,184.99986)"
+         transform="translate(-145,214.49988)"
          id="g18392-9-5-14">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -1625,14 +1616,14 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6-5-9"
-         d="m 455,747.36218 -169.99983,0"
+         d="m 455,776.8622 -169.99983,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999995, 5.99999995;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-7-0"
-         d="m 290,742.36218 -5,5 5,5"
+         d="m 290,771.8622 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="812.36188"
+         y="841.86188"
          x="455"
          height="20.000319"
          width="10.000001"
@@ -1641,14 +1632,14 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6-88"
-         d="M 285.00017,817.362 455,817.362"
+         d="m 285.00017,846.86202 169.99983,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6, 6;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-0"
-         d="m 450,812.36204 5,5 -5,5"
+         d="m 450,841.86206 5,5 -5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="822.36218"
+         y="851.86218"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1657,10 +1648,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-9-7"
-         d="m 465,827.36218 170,0"
+         d="m 465,856.8622 170,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="842.36218"
+         y="871.86218"
          x="455"
          height="20.000319"
          width="10.000001"
@@ -1669,16 +1660,16 @@
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-0-1"
-         y="818.99109"
+         y="848.49109"
          x="550.42725"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="818.99109"
+           y="848.49109"
            x="550.42725"
            id="tspan7328-0-8-4-2-0-9-7-7"
            sodipodi:role="line">inc()</tspan></text>
       <g
-         transform="translate(310,209.99998)"
+         transform="translate(310,239.5)"
          id="g17696-7-9-1-8-5-8-6-1-6">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1689,19 +1680,19 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-5-8"
-         d="m 635,847.36216 -170,0"
+         d="m 635,876.86218 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-4-0"
-         d="m 470.00001,842.362 -5,5 5,5"
+         d="m 470.00001,871.86202 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-2-2-6-3"
-         d="m 454.99982,857.36218 -169.99982,0"
+         d="M 454.99982,886.8622 285,886.8622"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <g
-         transform="matrix(-1,0,0,1,610.00001,240.00001)"
+         transform="matrix(-1,0,0,1,610.00001,269.50003)"
          id="g17696-7-9-0-5-6-0-0">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1710,7 +1701,7 @@
            sodipodi:nodetypes="cccc" />
       </g>
       <rect
-         y="852.36218"
+         y="881.86218"
          x="275"
          height="30"
          width="10.000001"
@@ -1719,32 +1710,32 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-5-9-6-8-1-0-1"
-         d="m 285,877.36218 169.99982,0"
+         d="m 285,906.8622 169.99982,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6.00000001, 6.00000001;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-7-1-1-6"
-         d="m 449.99982,872.36218 5,5 -5,5"
+         d="m 449.99982,901.8622 5,5 -5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-3-2"
-         y="848.99103"
+         y="878.49103"
          x="370.38956"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="848.99103"
+           y="878.49103"
            x="370.38956"
            id="tspan7328-0-8-4-1-4"
            sodipodi:role="line">set_time_point()</tspan></text>
       <rect
-         y="872.36188"
+         y="901.86188"
          x="455"
          height="20.000319"
          width="10.000001"
          id="rect7203-2-1-3-2-8"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <g
-         transform="translate(310,270.00001)"
+         transform="translate(310,299.50003)"
          id="g17696-7-9-1-8-5-8-6-2-6">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1755,10 +1746,10 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-3-4"
-         d="m 465,887.36221 170,-2e-5"
+         d="m 465,916.86223 170,-2e-5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="882.36218"
+         y="911.86218"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1767,30 +1758,25 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-6-5"
-         d="m 635,907.36219 -170,0"
+         d="m 635,936.86221 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-7-5"
-         d="m 470.00001,902.36203 -5,5 5,5"
+         d="m 470.00001,931.86205 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-2-2"
-         y="878.99127"
+         y="908.49127"
          x="550.66309"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="878.99127"
+           y="908.49127"
            x="550.66309"
            id="tspan7328-0-8-4-2-0-9-3-8"
            sodipodi:role="line">need_sync()</tspan></text>
-      <path
-         sodipodi:nodetypes="cccccccc"
-         id="path18368-7-01"
-         d="m 655,782.36204 -10,5 -10,-5 -10,5 m 0,-10 10,-5 10,5 10,-5"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <g
-         transform="translate(35,184.99986)"
+         transform="translate(35,214.49988)"
          id="g18392-9-58">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -1803,7 +1789,7 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <g
-         transform="translate(395,184.99986)"
+         transform="translate(395,214.49988)"
          id="g18392-2-7">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -1816,14 +1802,14 @@
            sodipodi:nodetypes="cccccccc" />
       </g>
       <rect
-         y="902.36218"
+         y="931.86218"
          x="455"
          height="39.999996"
          width="10.000001"
          id="rect7203-2-03-1-8-5-5-0-3-7"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
-         y="932.3623"
+         y="961.8623"
          x="635"
          height="29.999998"
          width="10.000001"
@@ -1832,21 +1818,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10516-6-6-9-0-9-2"
-         d="m 464.99998,937.36239 170.00001,0"
+         d="m 464.99998,966.86241 170.00001,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-5-3-0-5-2-3"
-         y="928.99121"
+         y="958.49121"
          x="550.38965"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="928.99121"
+           y="958.49121"
            x="550.38965"
            id="tspan7328-0-8-4-2-0-9-7-4-1-2"
            sodipodi:role="line">sync()</tspan></text>
       <g
-         transform="translate(309.99999,320.00019)"
+         transform="translate(309.99999,349.50021)"
          id="g17696-7-9-1-8-5-8-6-1-1-5-8">
         <path
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
@@ -1857,14 +1843,14 @@
       <path
          sodipodi:nodetypes="cc"
          id="path7205-5-9-4-1-9-5-5-6-5-4"
-         d="m 634.99999,957.36237 -170,0"
+         d="m 634.99999,986.86239 -170,0"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.99999988;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:5.99999965, 5.99999965;stroke-dashoffset:0" />
       <path
          id="path17699-6-6-8-3-0-4-2-4-2-0-6"
-         d="m 470,952.36221 -5,5 5,5"
+         d="m 470,981.86223 -5,5 5,5"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
       <rect
-         y="952.3623"
+         y="981.8623"
          x="454.99997"
          height="44.999817"
          width="10.000001"
@@ -1873,21 +1859,21 @@
       <path
          sodipodi:nodetypes="cc"
          id="path10696-6-5"
-         d="m 465,992.36218 350,0"
+         d="m 465,1021.8622 350,0"
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <text
          sodipodi:linespacing="100%"
          id="text7209-2-7-0-3-7-6-7-5"
-         y="983.99103"
+         y="1013.491"
          x="640.46826"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
          xml:space="preserve"><tspan
-           y="983.99103"
+           y="1013.491"
            x="640.46826"
            id="tspan7328-0-8-4-2-2-1-5"
            sodipodi:role="line">compute_local_quantum()</tspan></text>
       <g
-         transform="matrix(1,0,0,-1.499998,540,1770.9044)"
+         transform="matrix(1,0,0,-1.499998,540,1800.4044)"
          id="g10692-5">
         <path
            style="fill:none;stroke:#ffffff;stroke-width:0.81649715px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1900,6 +1886,7 @@
            id="path7201-2" />
       </g>
       <g
+         transform="translate(0,29.500019)"
          id="g12633">
         <path
            style="fill:#e0ffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
@@ -1916,21 +1903,21 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2"
-         y="-68.194855"
+         y="-38.793652"
          x="9.796567"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
-           y="-68.194855"
+           y="-38.793652"
            x="9.796567"
            id="tspan11873"
            sodipodi:role="line">Start of loop running</tspan><tspan
            id="tspan12639"
-           y="-45.194855"
+           y="-15.793652"
            x="9.796567"
            sodipodi:role="line">quanta of execution</tspan></text>
       <g
          id="g12633-7"
-         transform="translate(0,120)">
+         transform="translate(0,149.50002)">
         <path
            style="fill:#e0ffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
            d="m 5,-37.63782 0,-50 250.00001,0 -1e-5,40 -10,10 -240,0 z"
@@ -1946,21 +1933,21 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2-2"
-         y="53.77282"
+         y="83.174026"
          x="9.7965689"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
-           y="53.77282"
+           y="83.174026"
            x="9.7965689"
            id="tspan11873-5"
            sodipodi:role="line">Start quantum of</tspan><tspan
            id="tspan12639-9"
-           y="76.77282"
+           y="106.17403"
            x="9.7965689"
            sodipodi:role="line">ISS execution</tspan></text>
       <g
          id="g12633-7-5"
-         transform="translate(0,270)">
+         transform="translate(0,299.50002)">
         <path
            style="fill:#e0ffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
            d="m 5,-37.63782 0,-50 250.00001,0 -1e-5,40 -10,10 -240,0 z"
@@ -1976,17 +1963,17 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2-2-5"
-         y="212.40074"
+         y="241.80194"
          x="9.7965651"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
            id="tspan12639-9-3"
-           y="212.40074"
+           y="241.80194"
            x="9.7965651"
            sodipodi:role="line">Start of upcall</tspan></text>
       <g
          id="g12633-7-5-2"
-         transform="translate(0,790)">
+         transform="translate(0,819.50002)">
         <path
            style="fill:#e0ffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
            d="m 5,-37.63782 0,-50 250.00001,0 -1e-5,40 -10,10 -240,0 z"
@@ -2002,17 +1989,17 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2-2-5-9"
-         y="730.65894"
+         y="760.06012"
          x="9.7965651"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
            id="tspan12639-9-3-6"
-           y="730.65894"
+           y="760.06012"
            x="9.7965651"
            sodipodi:role="line">End of upcall</tspan></text>
       <g
          id="g12633-7-8"
-         transform="translate(0,900)">
+         transform="translate(0,929.50002)">
         <path
            style="fill:#e0ffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
            d="m 5,-37.63782 0,-50 250.00001,0 -1e-5,40 -10,10 -240,0 z"
@@ -2028,21 +2015,21 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2-2-8"
-         y="831.1601"
+         y="860.56128"
          x="9.7965679"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
-           y="831.1601"
+           y="860.56128"
            x="9.7965679"
            id="tspan11873-5-4"
            sodipodi:role="line">End of one quantum</tspan><tspan
            id="tspan12639-9-37"
-           y="854.1601"
+           y="883.56128"
            x="9.7965679"
            sodipodi:role="line">of ISS execution</tspan></text>
       <g
          id="g12633-7-8-1"
-         transform="translate(0,1060)">
+         transform="translate(0,1089.5)">
         <path
            style="fill:#e0ffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
            d="m 5,-37.63782 0,-50 250.00001,0 -1e-5,40 -10,10 -240,0 z"
@@ -2058,18 +2045,57 @@
          transform="scale(0.99665036,1.0033609)"
          sodipodi:linespacing="100%"
          id="text9466-2-2-8-8"
-         y="990.62415"
+         y="1020.0253"
          x="9.7965679"
          style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
          xml:space="preserve"><tspan
-           y="990.62415"
+           y="1020.0253"
            x="9.7965679"
            id="tspan11873-5-4-7"
            sodipodi:role="line">New quantum of ISS</tspan><tspan
            id="tspan12639-9-37-3"
-           y="1013.6241"
+           y="1043.0254"
            x="9.7965679"
            sodipodi:role="line">execution starts</tspan></text>
+      <g
+         transform="translate(215,-400.50012)"
+         id="g18392-9-5-5">
+        <path
+           style="fill:#ffffff;fill-opacity:1;stroke:none"
+           d="m 410,592.36218 10,-5 10,5 10,-5 0,10 -10,5 -10,-5 -10,5 0,-10 z"
+           id="path18368-9-4-6" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 440,597.36218 -10,5 -10,-5 -10,5 m 0,-10 10,-5 10,5 10,-5"
+           id="path18368-7-0-5-2"
+           sodipodi:nodetypes="cccccccc" />
+      </g>
+      <g
+         transform="translate(215,-155.49998)"
+         id="g18392-9-0">
+        <path
+           style="fill:#ffffff;fill-opacity:1;stroke:none"
+           d="m 410,592.36218 10,-5 10,5 10,-5 0,10 -10,5 -10,-5 -10,5 0,-10 z"
+           id="path18368-9-08" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 440,597.36218 -10,5 -10,-5 -10,5 m 0,-10 10,-5 10,5 10,-5"
+           id="path18368-7-0-8"
+           sodipodi:nodetypes="cccccccc" />
+      </g>
+      <g
+         transform="translate(215,214.49988)"
+         id="g18392-9-0-1">
+        <path
+           style="fill:#ffffff;fill-opacity:1;stroke:none"
+           d="m 410,592.36218 10,-5 10,5 10,-5 0,10 -10,5 -10,-5 -10,5 0,-10 z"
+           id="path18368-9-08-6" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 440,597.36218 -10,5 -10,-5 -10,5 m 0,-10 10,-5 10,5 10,-5"
+           id="path18368-7-0-8-7"
+           sodipodi:nodetypes="cccccccc" />
+      </g>
     </g>
   </g>
 </svg>

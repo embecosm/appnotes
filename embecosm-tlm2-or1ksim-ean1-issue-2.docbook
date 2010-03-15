@@ -9,6 +9,7 @@ Useful entities
 <!-- ========== Acronyms and abbreviations ========== -->
 
 <!ENTITY hdl "<acronym>HDL</acronym>">
+<!ENTITY fifo "<acronym>FIFO</acronym>">
 <!ENTITY ieee "<acronym>IEEE</acronym>">
 <!ENTITY iss "<acronym>ISS</acronym>">
 <!ENTITY jtag "<acronym>JTAG</acronym>">
@@ -257,7 +258,7 @@ OSCI TLM 2.0, convenience sockets.
       <para>
 	Finally, Robert G&uuml;nzel (see <xref linkend="sec_ack" />), as well
 	as making a number of well informed suggestions for improvements which
-	I have adopted, has contributed an appendix on using this application
+	I have adopted, has written a paper on using this application
 	note under MacOS (<xref linkend="app_macos" />).
       </para>
 
@@ -340,7 +341,7 @@ OSCI TLM 2.0, convenience sockets.
 	Integrated Circuit Design at the Technische Universit&auml;t
 	Braunschweig, Germany, who made a number of suggesions for
 	improvements (which I have adopted) and provided the instructions for
-	Mac OS in the appendix (<xref linkend="app_macos" />).
+	Mac OS (see <xref linkend="app_macos" />).
       </para>
 
     </sect1>
@@ -3090,7 +3091,8 @@ end
 	    Output from the logger test of the &or1ksim; wrapper module.
 	  </title>
 
-	  <screen>$ ./TestSC ../simple.cfg progs_or32/logger-test
+	  <screen>
+$ ./TestSC ../simple.cfg progs_or32/logger-test
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
@@ -3128,7 +3130,8 @@ exit(0)
 @reset : cycles 0, insn #0
 @exit  : cycles 26921, insn #13854
  diff  : cycles 26921, insn #13854
-$ </screen>
+$ 
+</screen>
 	</figure>
 
 	<para>
@@ -4187,6 +4190,21 @@ SC_HAS_PROCESS( UartSC );
 	  <function>busWrite</function> callback when a value is written into
 	  the transmit holding register.
 	</para>
+
+	<note>
+	  <para>
+	    It might be thought that a &systemc; <literal>SC_METHOD</literal>
+	    sensitive to <varname>txReceived</varname> would be more
+	    efficient.
+	  </para>
+
+	  <para>
+	    That would certainly be suitable in this implementation. However
+	    this is a virtual function, and when we reimplement later to add
+	    timing, we will wish to call <function>wait</function>, which
+	    requires a &systemc; <literal>SC_THREAD</literal>.
+	  </para>
+	</note>
 
 	<para>
 	  The second process, <function>rxMethod</function> is a &systemc;
@@ -5261,6 +5279,11 @@ using std::endl;
 	    distribution, but the two <classname>cout</classname> invocations
 	    are commented out. All that is needed is to remove the commenting.
 	  </para>
+
+	  <para>
+	    Once removed, the commenting should stay removed for all the
+	    future examples, since they all need to show timing details.
+	  </para>
 	</note>
 
 	<para>
@@ -5600,8 +5623,8 @@ double  or1ksim_get_time_period();
 	  All these functions are a standard part of the &or1ksim; 0.3.0
 	  library.
 	</para>
-
-      </sect2>
+ 
+     </sect2>
 
       <sect2>
 	<title>
@@ -6224,10 +6247,6 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	named <filename>build</filename>, the following command line is
 	suitable.
       </para>
-      <para>
-	The command line to run the model is unchanged, but uses the
-	synchronized version of the model
-      </para>
 
       <programlisting>
 .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
@@ -6247,7 +6266,8 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	  &uart; loop back program log output.
 	</title>
 
-	<screen>$ .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
+	<screen>
+$ .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
@@ -6267,7 +6287,7 @@ Read: 'r'
 Char written at 517744580 ns
 
    ... &lt;Lots more output&gt;
-</screen>
+	</screen>
       </figure>
 
       <para>
@@ -6300,12 +6320,22 @@ Char written at 517744580 ns
 
     <para>
       In this case study temporal decoupling is added to the &tlm2; model of
-      an &soc;. The &soc; model with arbiter from the previous example is reused.
+      an &soc;. The &soc; model with arbiter from the previous example is
+      reused.
     </para>
 
-    <sect1>
-      <title>
-	What is Temporal Decoupling
+    <para>
+      The code for the decoupleded &or1ksim; &iss; wrapper
+      (<filename>Or1ksimDecoupSC.cpp</filename> and
+      <filename>Or1ksimDecoupSC.h</filename>), the code for the decoupled
+      &uart; module (<filename>UartDecoupSC.cpp</filename> and
+      <filename>UartDecoupSC.h</filename>) and the main program for the
+      complete model (decoupSocMainSC.cpp) may be founded in the
+      <filename>sysc-models/decoup-soc</filename> directory of the
+      distribution.
+    </para>
+
+    <sect1> <title> What is Temporal Decoupling
       </title>
 
       <para>
@@ -6313,7 +6343,19 @@ Char written at 517744580 ns
 	a long time (see for example <xref linkend="ref_fitch_88"
 	endterm="ref_fitch_88_xr" />). In a parallel system, the various
 	threads keep their own local time, and only synchronize when they need
-	to communicate with each other.
+	to communicate with each other. It is particularly suited to
+	timed-based modeling, since it ensures that no one thread hogs the
+	execution.
+      </para>
+
+      <para>
+	It is worth noting that temporal decoupling does not improve overall
+	model performance <abbrev>per se</abbrev>. All the same elements will
+	need to be modelled. However it does ensure that the various threads
+	in the model stay <emphasis>approximately</emphasis> in step over the
+	duration of the run, making for a more realistic model. In our example
+	it ensures that the &or1ksim; model yields control regularly to allow
+	the &uart; and terminal models to keep up.
       </para>
 
       <para>
@@ -6346,11 +6388,11 @@ Char written at 517744580 ns
 
       <para>
 	Not all threads need use temporal decoupling, although the more that
-	do, the greater the potential model efficiency. In general temporal
-	decoupling is only appropriate for threads using &tlm2; blocking
-	interfaces for their communication&mdash;typically loosely timed
-	models. Where temporal decoupling is implemented it is managed by the
-	threads driving <emphasis>initiator</emphasis> sockets.
+	do, the greater the potential benefit. In general temporal decoupling
+	is only appropriate for threads using &tlm2; blocking interfaces for
+	their communication&mdash;typically loosely timed models. Where
+	temporal decoupling is implemented it is managed by the threads
+	driving <emphasis>initiator</emphasis> sockets.
       </para>
 
       <sect2>
@@ -6765,12 +6807,116 @@ Char written at 517744580 ns
 
     <sect1>
       <title>
+	Overall Design of the Temporally Decoupled &soc; Model
+      </title>
+
+      <para>
+	The key aspects of the overall decoupled &soc; model are captured
+	in a &uml; class diagram and a &uml; sequence diagram, showing
+	interaction with the quantum keeper during processing.
+      </para>
+
+      <sect2 id="sec_decoup_classes">
+	<title>
+	  Class Structure
+	</title>
+
+	<para>
+	  The overall class diagram for the decoupled &soc; design
+	  incorporating a &uart; and terminal is shown in <xref
+	  linkend="fig_decoup_soc_class_diagram" />. The design is similar
+	  to that for the synchronized &soc; (see <xref
+	  linkend="sec_sync_classes" />). The
+	  &or1ksim; &iss; wrapper and &uart; are both
+	  subclassed to add the behavior needed for decoupled timing. There is
+	  no need to subclass the terminal module, since it has no &tlm;
+	  interface, and so therefore cannot use decoupling.
+	</para>
+
+	<para>
+	  The new <classname>Or1ksimDecoupSC</classname> class is associated
+	  with both the system global quantum keeper (<varname>tgq</varname>)
+	  and the quantum keeper for the &iss; thread
+	  (<varname>issQk</varname>).
+	</para>
+
+	<figure id="fig_decoup_soc_class_diagram">
+	  <title>
+	    Class diagram for the &or1ksim; &soc; with decoupled timing.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="decoup-soc-classes.svg" format="SVG"
+			 width="14cm" scalefit="1" align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="decoup-soc-classes.png"
+			 format="PNG" width="80%" scalefit="1" align="center" />
+	      </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
+
+      <sect2 id="sec_decoup_sequence_diagrams">
+	<title>
+	  Behavioral Diagrams
+	</title>
+
+	<para>
+	  A sequence diagram, illustrating the behavior of the &or1ksim;
+	  wrapper and its interaction with the quantum keepers for the design
+	  is shown in <xref linkend="fig_decoup_soc_sequence_diagram" />. Only
+	  the operations of the wrapper and quantum keepers are sown, since
+	  there is no significant change in the interactions of the &uart; and
+	  terminal (see <xref linkend="sec_simple_sequence_diagram" />).
+	</para>
+
+	<para>
+	  Where before, calls to <function>wait</function> were used to
+	  enforce synchronized timing, this time the <function>sync</function>
+	  function of the &iss; gatekeeper is used to ensure a consistent view
+	  of time. Rather than being held in strict synchronization, the
+	  threads are allowed to catch up at least at each system global
+	  quantum boundary.
+	</para>
+
+	<figure id="fig_decoup_soc_sequence_diagram">
+	  <title>
+	    Sequence diagram for the &or1ksim; &soc; with decoupled timing,
+	    showing interaction with the quantum keepers.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="decoup-soc-sequence-diagram.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="decoup-soc-sequence-diagram.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>
 	Temporal Decoupling the &or1ksim; Wrapper Class
       </title>
 
       <para>
 	The only thread that can be decoupled in the current model is the
-	&or1ksim; wrapper class, <classname>Or1ksimSyncSC</classname>, since
+	&or1ksim; wrapper class, <classname>Or1ksimDecoupSC</classname>, since
 	it is the only thread with a &tlm2; initiator socket.
       </para>
 
@@ -6801,7 +6947,7 @@ Char written at 517744580 ns
 	    Change the upcall transport function,
 	    <function>doTrans</function>, so that it increments the local
 	    time offset, rather than synchronizing via
-	    <function>wait</function>/
+	    <function>wait</function>.
 	  </para>
 	</listitem>
 
@@ -6858,7 +7004,9 @@ void  or1ksim_reset_duration( double duration );
 	  </listitem>
 
 	</itemizedlist>
+
 	<para>
+	  This function is a standard part of the &or1ksim; 0.3.0 library.
 	</para>
 
       </sect2>
@@ -6883,13 +7031,23 @@ void  or1ksim_reset_duration( double duration );
 	</para>
 
 	<para>
-	  A quantum keeper for the &iss; thread, <literal>issQk</literal> is
+	  A pointer to the system global quantum, <varname>tgq</varname>, and
+	  a quantum keeper for the &iss; thread, <varname>issQk</varname> are
 	  defined.
 	</para>
 
 	<programlisting>
+  tlm::tlm_global_quantum      *tgq;
   tlm_utils::tlm_quantumkeeper  issQk;
 	</programlisting>
+
+	<para>
+	  The definition of the &or1ksim; &iss; wrapper module class with
+	  decoupled timing, <classname>Or1ksimDecoupSC</classname> may be
+	  found in
+	  <filename>sys-models/decoup-soc/Or1ksimDecoupSC.h</filename> in the
+	  distribution.
+	</para>
 
       </sect2>
 
@@ -6907,7 +7065,8 @@ void  or1ksim_reset_duration( double duration );
 	</para>
 
 	<programlisting>
-  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
+  tgq = &amp;(tlm::tlm_global_quantum::instance());
+
   issQk.set_global_quantum( refTgq.get() );
   issQk.reset();
 	</programlisting>
@@ -6916,37 +7075,20 @@ void  or1ksim_reset_duration( double duration );
 	  <para>
 	    The global quantum accessor function,
 	    <function>instance</function> returns a reference to the global
-	    quantum. Ensure that it is assigned to a reference variable
-	    (declared as <literal>&amp;refTgq</literal> here) of type
-	    <classname>tlm::tlm_global_quantum</classname>. Use of a plain
-	    variable would be valid code, but make a <emphasis>copy</emphasis>
-	    of the quantum keeper, so subsequent calls to
-	    <function>set</function> would not actually set the singleton
-	    instance. An example of the dangers of reference variables in C++
-	    and why singleton accessors should return pointers, not
-	    references.
+	    quantum. We convert it to a pointer, since C++ does not allow
+	    initialization of a reference instance variable in the constructor.
 	  </para>
 	</note>
 
 	<para>
 	  The main thread function, <function>run</function> is reimplemented
-	  to ensure that &iss; simulation does not run past the end of the
+	  to ensure that the &iss; simulation does not run past the end of the
 	  current quantum. Instead of running for ever
 	  (<function>or1ksim_run(&nbsp;-1.0&nbsp;);</function>), the &iss; is
 	  run for the local time quantum, less the local time offset. This
 	  means the &iss; will return exactly at the point when it should need
 	  to synchronize again.
 	</para>
-
-	<para>
-	  Since the local quantum is only available through the singleton
-	  <classname>tlm::tlm_global_quantum</classname> a reference to that
-	  instance is obtained for use throughout this function:
-	</para>
-
-	<programlisting>
-  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
-	</programlisting>
 
 	<para>
 	  The body of the program is a perpetual loop, which calculates the
@@ -6957,7 +7099,7 @@ void  or1ksim_reset_duration( double duration );
 	<programlisting>
   while( true ) {
     sc_core::sc_time  timeLeft =
-      refTgq.compute_local_quantum() - issQk.get_local_time();
+      tgq->compute_local_quantum() - issQk.get_local_time();
 	</programlisting>
 
 	<para>
@@ -6978,7 +7120,9 @@ void  or1ksim_reset_duration( double duration );
 
 	<para>
 	  If the local time offset has reached the end of the global quantum,
-	  the thread synchronizes.
+	  the thread synchronizes. This replaces the call to
+	  <function>wait</function> in the synchronized version of the model
+	  (<xref linkend="chap_sync" />).
 	</para>
 
 	<programlisting>
@@ -7031,12 +7175,19 @@ void  or1ksim_reset_duration( double duration );
 	</para>
 
 	<programlisting>
-  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
   sc_core::sc_time  timeLeft      =
-    refTgq.compute_local_quantum() - issQk.get_local_time();
+    tgq->compute_local_quantum() - issQk.get_local_time();
 
   or1ksim_reset_duration ( timeLeft.to_seconds() );
 	</programlisting>
+
+	<para>
+	  The implementation of the &or1ksim; &iss; wrapper module class with
+	  decoupled timing, <classname>Or1ksimDecoupSC</classname> may be
+	  found in
+	  <filename>sys-models/decoup-soc/Or1ksimDecoupSC.cpp</filename> in
+	  the distribution.
+	</para>
 
       </sect2>
 
@@ -7077,6 +7228,14 @@ void  or1ksim_reset_duration( double duration );
 	  <function>busReadWrite</function> is defined with the same
 	  parameters as the base class function.
 	</para>
+
+	<para>
+	  The definition of the &uart; module class with decoupled timing,
+	  <classname>UartDecoupSC</classname> may be found in
+	  <filename>sys-models/decoup-soc/UartDecoupSC.h</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -7121,6 +7280,13 @@ void  or1ksim_reset_duration( double duration );
     break;
 	</programlisting>
 
+	<para>
+	  The implementation of the &uart; module class with decoupled timing,
+	  <classname>UartDecoupSC</classname> may be found in
+	  <filename>sys-models/decoup-soc/UartDecoupSC.cpp</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
     </sect1>
 
@@ -7130,7 +7296,7 @@ void  or1ksim_reset_duration( double duration );
       </title>
 
       <para>
-	The main program, <filename>DecoupSocSC.cpp</filename> is similar in
+	The main program, <filename>decoupSocMainSC.cpp</filename> is similar in
 	structure to the main program used for the synchronous version (see
 	<xref linkend="sec_sync_main_prog" />). This time the headers for the
 	versions of the &or1ksim; wrapper and &uart; implementing temporal
@@ -7154,8 +7320,7 @@ void  or1ksim_reset_duration( double duration );
       </para>
 
       <programlisting>
-  tlm::tlm_global_quantum &amp;refTgq = tlm::tlm_global_quantum::instance();
-  refTgq.set( sc_core::sc_time( QUANTUM_US, sc_core::SC_US ));
+  tgq->set( sc_core::sc_time( QUANTUM_US, sc_core::SC_US ));
       </programlisting>
 
       <para>
@@ -7164,26 +7329,47 @@ void  or1ksim_reset_duration( double duration );
 	decoupling).
       </para>
 
+      <para>
+	The implementation of the &systemc; main program for the decoupled
+	&soc; may be found in
+	<filename>sys-models/decoup-soc/decoupSocMainSC.cpp</filename> in the
+	distribution.
+      </para>
+
     </sect1>
 
     <sect1>
       <title>
-	Compiling and Running the Synchronous Model
+	Compiling and Running the Decoupled Model
       </title>
 
       <para>
-	Compilation is very similar to that of the synchronous model. The
-	binaries of <emphasis>all</emphasis> the base classes are included
-	when linking.
+	The complete program is compiled from the top level &make;
+	file. Both a standalone program (<filename>simple-soc</filename>)
+	and a <command>libtool</command> compliant library
+	(<filename>libsimple-soc.la</filename>) are created, and both
+	incorporate the library created when building the logger test (see
+	<xref linkend="sec_iss_run_test" />). The library provides a
+	convenient mechanism for reusing the code from this model, when
+	creating subsequent models which used derived classes.
       </para>
 
       <para>
-	The same configuration file and &or1k; compiled image is used to run
-	the model with temporal decoupling.
+	The &or1ksim; configuration is also unchanged. Like the logger, the
+	&uart; registers start at address 0x90000000 and are a total of 8
+	bytes in length.
+      </para>
+
+      <para>
+	Running the model requires specifying the configuration file
+	(unchanged) and the binary executable (this time the &uart; loop
+	back program). Assuming the programs have been built in a directory
+	named <filename>build</filename>, the following command line is
+	suitable.
       </para>
 
       <programlisting>
-$ ./DecoupSocSC ../simple.cfg progs_or32/uart-loop
+.build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
       </programlisting>
 
       <para>
@@ -7197,32 +7383,33 @@ $ ./DecoupSocSC ../simple.cfg progs_or32/uart-loop
 	  &uart; loop back program log output with temporal decoupling.
 	</title>
 
-	<screen>$ ./SyncSocSC ../simple.cfg progs_or32/uart-loop
+	<screen>
+$ .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Reading script file from '../simple.cfg'...
+Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
-Char read at     0.381741687 sec
+Char F read at  554441676667 ps
 Read: 'F'
-Char written at  0.382841620 sec
-Char read at     0.494341667 sec
+Char written at 555541610 ns
+Char a read at  604641666667 ps
 Read: 'a'
-Char written at  0.495441600 sec
-Char read at     0.597841677 sec
+Char written at 605741610 ns
+Char r read at  666641666667 ps
 Read: 'r'
-Char written at  0.598941610 sec
+Char written at 667741600 ns
 
    ... &lt;Lots more output&gt;
-</screen>
+	</screen>
       </figure>
 
       <para>
 	The timing reported for the first character, 'F', is
-	1100&mu;s&mdash;in the synchronized version it was 1055&mu;s. The
+	1100&mu;s&mdash;in the synchronized version it was 1056&mu;s. The
 	global quantum was set to 100&mu;s, which means that other threads may
 	have a delay of up to 100&mu;s before they can run, affecting the time
 	they will report for their actions.
@@ -7240,33 +7427,32 @@ Char written at  0.598941610 sec
 	  10ms global quantum.
 	</title>
 
-	<screen>$ ./SyncSocSC ../simple.cfg progs_or32/uart-loop
+	<screen>
+$ .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Reading script file from '../simple.cfg'...
+Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
-Char read at     0.091041667 sec
+Char F read at  541041666667 ps
 Read: 'F'
-Char written at  0.101041600 sec
-Char read at     0.101041667 sec
+Char written at 551041600 ns
+Char a read at  641041686667 ps
 Read: 'a'
-Char written at  0.111041620 sec
-Char read at     0.111041687 sec
+Char written at 651041620 ns
+Char r read at  1471041676667 ps
 Read: 'r'
-Char written at  0.121041600 sec
-
-   ... &lt;Lots more output&gt;
-</screen>
+Char written at 1481041600 ns
+	</screen>
       </figure>
 
       <para>
-	The time taken to write the first character is now 9,999&mu;s,
-	completely dominated by the quantum. The typing of characters at the
-	xterm is notably sluggish.
+	The time taken to write the first character is now 10ms, completely
+	dominated by the quantum. The typing of characters at the xterm is
+	notably sluggish.
       </para>
 
       <para>
@@ -7309,11 +7495,11 @@ Char written at  0.121041600 sec
       </para>
 
       <para>
-	The other step to take to improve performance would be to move to an
+	The other step to take to improve the system would be to move to an
 	exclusively &tlm2; model. The &systemc; buffer is a good way to model
 	the &uart; to terminal connection. However by using a &tlm2; socket in
 	each direction, the &uart; could adopt temporal decoupling, giving
-	further performance improvement.
+	further improvement in the overall model.
       </para>
 
     </sect1>
@@ -7389,6 +7575,128 @@ Char written at  0.121041600 sec
       through which the interrupt signal is driven.
     </para>
 
+    <para>
+      The code for the &or1ksim; &iss; wrapper with interrupts enabled
+      (<filename>Or1ksimIntrSC.cpp</filename> and
+      <filename>Or1ksimIntrSC.h</filename>), the code for the intrled
+      &uart; module (<filename>UartIntrSC.cpp</filename> and
+      <filename>UartIntrSC.h</filename>) and the main program for the
+      complete model (intrSocMainSC.cpp) may be founded in the
+      <filename>sysc-models/intr-soc</filename> directory of the
+      distribution.
+    </para>
+
+    <sect1>
+      <title>
+	Overall Design of the &soc; Model with Interrupts
+      </title>
+
+      <para>
+	The key aspects of the overall decoupled &soc; model are captured
+	in a &uml; class diagram and a &uml; sequence diagram, showing how an
+	nterrupt is processed during a write transaction to the &uart;.
+	
+      </para>
+
+      <sect2 id="sec_intr_classes">
+	<title>
+	  Class Structure
+	</title>
+
+	<para>
+	  The overall class diagram for the  &soc; with interrupts
+	  incorporating a &uart; and terminal is shown in <xref
+	  linkend="fig_intr_soc_class_diagram" />. The design is similar
+	  to that for the temporally decoupled &soc; (see <xref
+	  linkend="sec_decoup_classes" />). The
+	  &or1ksim; &iss; wrapper and &uart; are both
+	  subclassed to add the behavior needed for interrupt handling. There is
+	  no need to subclass the terminal module, since it has not interrupts
+	  to be modelled.
+	</para>
+
+	<para>
+	  The new <classname>Or1ksimIntrSC</classname> class is associated
+	  with an array of 32 signals, which may be connected to peripherals
+	  wishing to raise an interrupt.
+	</para>
+
+	<para>
+	  The new <classname>UartIntrSC</classname> class is associated with a
+	  &systemc; &fifo; used to collect interrupts raised from both Rx and
+	  Tx ports. It also has a &systemc; output port,
+	  <varname>intr</varname> on which it drives any interrupt it raises.
+	</para>
+
+	<figure id="fig_intr_soc_class_diagram">
+	  <title>
+	    Class diagram for the &or1ksim; &soc; with interrupts.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="intr-soc-classes.svg" format="SVG"
+			 width="14cm" scalefit="1" align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="intr-soc-classes.png"
+			 format="PNG" width="80%" scalefit="1" align="center" />
+	      </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
+
+      <sect2 id="sec_intr_sequence_diagrams">
+	<title>
+	  Behavioral Diagrams
+	</title>
+
+	<para>
+	  A sequence diagram, illustrating how the &or1ksim; wrapper handles
+	  an interrupt when a character is written to the &uart; is shown in
+	  <xref linkend="fig_intr_soc_sequence_diagram" />. Only 
+	  the interaction between the wrapper and the &uart; are shown, since
+	  the other components largely retain their existing
+	  functionality. The model is fully decoupled, but for compactness the
+	  actions to handle decoupled timing are omitted.
+	</para>
+
+	<para>
+	  The &or1ksim; wrapper maintains a separate process (a &systemc;
+	  <literal>SC_METHOD</literal>) to handle interrupts. Similarly the
+	  &uart; adds a new thread to handle interrupts. Although not standard
+	  &uml; separate threads of control are shown for each of these
+	  objects in the sequence diagram.
+	</para>
+
+	<figure id="fig_intr_soc_sequence_diagram">
+	  <title>
+	    Sequence diagram for a write transaction on the &or1ksim; &soc;
+	    with interrupts.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="intr-soc-sequence-diagram.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="intr-soc-sequence-diagram.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </sect2>
+    </sect1>
+
     <sect1>
       <title>
 	Extending the <classname>Or1ksimDecoupSC</classname> Module Class
@@ -7412,7 +7720,7 @@ Char written at  0.121041600 sec
 
       <sect2>
 	<title>
-	  Adding an Interrupt Generation Function to the &or1ksim; Library
+	  Adding Interrupt Generation Functions to the &or1ksim; Library
 	</title>
 
 	<para>
@@ -7422,6 +7730,13 @@ Char written at  0.121041600 sec
 	  peripheral memory access upcall is in progress), so a flag is set
 	  internally, allowing the &iss; to trigger the interrupt at the start
 	  of the next instruction.
+	</para>
+
+	<para>
+	  The standard version of &or1ksim; uses edge triggered interrupts,
+	  and they are used in this example. However &or1ksim; can support
+	  level triggered interrupts. For this additional interface functions
+	  are provided, although they are not used in this example.
 	</para>
 
 	<itemizedlist>
@@ -7435,10 +7750,53 @@ void or1ksim_interrupt( int  i );
 	    <para>
 	      <function>void or1ksim_interrupt</function> requests the the
 	      interrupt given by its argument be taken at the start of the
+	      next instruction cycle. This is edge-triggered interrupt
+	      functionality, and there is no need to clear the interrupt.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <programlisting>
+void or1ksim_interrupt_set( int  i );
+	      </programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>void or1ksim_interrupt_set</function> asserts
+	      the interrupt given by its argument for consideration by
+	      &or1ksim; at the start of the next instruction cycle. This is
+	      for level triggered interrupt handling, and must be explicitly
+	      cleared when the interrupt handling is complete.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <programlisting>
+void or1ksim_interrupt_clear( int  i );
+	      </programlisting>
+	    </para>
+	    
+	    <para>
+	      <function>void or1ksim_interrupt_clear</function> deasserts the
+	      interrupt given by its argument for consideration by &or1ksim;
+	      at the start of the next instruction cycle. This is to clear an
+	      interrupt previously asserted with <function>void
+	      or1ksim_interrupt_set</function> when using level triggered
+	      interrupt handling.
+
+	      <function>void or1ksim_interrupt</function> requests the the
+	      interrupt given by its argument be taken at the start of the
 	      next instruction cycle.
 	    </para>
 	  </listitem>
 	</itemizedlist>
+
+	<para>
+	  These functions are a standard part of the &or1ksim; 0.3.0 library.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -7492,6 +7850,14 @@ void or1ksim_interrupt( int  i );
   void  intrMethod();
 	</programlisting>
 
+	<para>
+	  The definition of the &or1ksim; &iss; wrapper module class with
+	  interrupts, <classname>Or1ksimIntrSC</classname> may be
+	  found in
+	  <filename>sys-models/intr-soc/Or1ksimIntrSC.h</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -7530,6 +7896,13 @@ void or1ksim_interrupt( int  i );
   }
 	</programlisting>
 
+	<para>
+	  The implementation of the &or1ksim; &iss; wrapper module class with
+	  interrupts, <classname>Or1ksimIntrSC</classname> may be found in
+	  <filename>sys-models/intr-soc/Or1ksimIntrSC.cpp</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
     </sect1>
 
@@ -7541,7 +7914,7 @@ void or1ksim_interrupt( int  i );
 
       <para>
 	The existing &uart; module processes interrupts, but does not generate
-	an external interrupt signal. To generated an interrupt signal,
+	an external interrupt signal. To generate an interrupt signal,
 	<classname>UartDecoupSC</classname> is further extended by a new
 	derived class, <classname>UartIntrSC</classname>, which provides a
 	signal port and a new thread to drive that signal port
@@ -7597,6 +7970,13 @@ void or1ksim_interrupt( int  i );
 	<programlisting>
   sc_core::sc_fifo&lt;bool&gt;  intrQueue;
 	</programlisting>
+
+	<para>
+	  The definition of the &uart; module class with interrupts,
+	  <classname>UartIntrSC</classname> may be found in
+	  <filename>sys-models/intr-soc/UartIntrSC.h</filename> in the
+	  distribution.
+	</para>
 
       </sect2>
 
@@ -7689,6 +8069,13 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
     intrQueue.write( false );                   // Deassert if none left
 	 </programlisting>
 
+	<para>
+	  The implementation of the &uart; module class with interrupts,
+	  <classname>UartIntrSC</classname> may be found in
+	  <filename>sys-models/intr-soc/UartIntrSC.cpp</filename> in the
+	  distribution.
+	</para>
+
       </sect2>
     </sect1>
 
@@ -7729,6 +8116,14 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
       <programlisting>
   uart.intr( iss.intr[INTR_UART] );
       </programlisting>
+
+      <para>
+	The code for the SystemC main program for the &soc; with interrupts
+	may be found in
+	<filename>sys-models/intr-soc/intrSocMainSC.h</filename> in the
+	distribution.
+      </para>
+
     </sect1>
 
     <sect1>
@@ -7774,6 +8169,16 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	  clear.
 	</para>
 
+	<para>
+	  The source code for the interrupt driven &uart; program may be found
+	  in <filename>progs-or32/uart-loop-intr.c</filename> in the
+	  distribution. It must be compiled with the utility functions
+	  (<filename>progs-or32/utils.c</filename> and
+	  <filename>progs-or32/utils.h</filename>) and the bootloader
+	  (<filename>progs-or32/start.s</filename>). A pre-compiled version
+	  may be found in <filename>progs-or32/uart-loop</filename>.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -7808,7 +8213,9 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	  <acronym>RAM</acronym>.
 	</para>
 
-	<screen>Copying Linux... Ok, booting the kernel.</screen>
+	<screen>
+Copying Linux... Ok, booting the kernel.
+	</screen>
 
 	<para>
 	  After a pause while initial booting is taking place the serial
@@ -7816,7 +8223,8 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	  appear:
 	</para>
 
-	<screen>Linux version 2.6.19-or32 (jeremy@thomas) (gcc version 3.4.4) #59 Wed Jun 25 18:
+	<screen>
+Linux version 2.6.19-or32 (jeremy@thomas) (gcc version 3.4.4) #59 Wed Jun 25 18:
 48:06 BST 2008
 Detecting Processor units:
   Signed 0x391
@@ -7848,7 +8256,8 @@ init started:  BusyBox v1.4.1 (2007-03-22 18:53:56 EST) multi-call binary
 init started:  BusyBox v1.4.1 (2007-03-22 18:53:56 EST) multi-call binary
 Starting pid 22, console /dev/ttyS0: '/etc/init.d/rcS'
 
-Please press Enter to activate this console. </screen>
+Please press Enter to activate this console.
+	</screen>
 
 	<para>
 	  This takes a simulated time of about 37 seconds, and on a modern PC
@@ -7872,7 +8281,8 @@ Please press Enter to activate this console. </screen>
 	  url="http://www.busybox.com">website</ulink> for more details).
 	</para>
 
-	<screen>Please press Enter to activate this console. 
+	<screen>
+Please press Enter to activate this console. 
 Startingpid 25, console /dev/ttyS0: '/bin/sh'
 
 
@@ -7895,7 +8305,8 @@ Enter 'help' for a list of built-in commands.
 rootfs on / type rootfs (rw)
 /dev/root on / type ext2 (ro)
 proc on /proc type proc (rw)
-# </screen>
+# 
+	</screen>
 
 	<para>
 	  The importance of choosing a suitable value for the global quantum
@@ -7913,10 +8324,12 @@ proc on /proc type proc (rw)
 	  terminal cannot cope with the erratic interrupt behavior.
 	</para>
 
-	<screen>VFS: Mounted root (ext2 filesystem) readonly.
+	<screen>
+VFS: Mounted root (ext2 filesystem) readonly.
 Freeing unused kernel memory: 104k freed
 init started:  BusyBox v1.4.
-Please press Ent</screen>
+Please press Ent
+	</screen>
 
 	<para>
 	  The &linux; serial driver loses interrupts and the system locks up
@@ -8057,9 +8470,53 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
     
     <para>
       Robert G&uuml;nzel of the Department of Integrated Circuit Design at the
-      Technische Universit&auml;t Braunschweig, Germany has kindly contributed
-      this appendix on using this application note under Max OS.
+      Technische Universit&auml;t Braunschweig, Germany has managed to get
+      both the OpenRISC tool chain and the examples in this application note
+      running under Mac OS 10.4.
     </para>
+
+    <para>
+      There are three main issues that affect the Mac OS version
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  X11 is not running by default.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  There is no pseudo-terminal multiplexor
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Mac OS does not allow use of the <literal>F_SETOWN</literal> command
+	  on the file descriptor of a pseudo terminal slave. Thus
+	  <literal>SIGIO</literal> cannot be received, and there is thus no
+	  way of knowing when the user is typing inside the &xterm;.
+	</para>
+      </listitem>
+    </orderedlist>
+
+    <para>
+      Robert has written a detailed application note explaining how to resolve
+      these issues. At the time of writing it is available from <ulink
+      url="http://chschroeder.gamiro.de/rg/or1ksim_macOS10.4.pdf">chschroeder.gamiro.de/rg/or1ksim_macOS10.4.pdf</ulink>. Check
+      on the &opencores; website (under &or1k; tool chain) for more recent
+      updates.
+    </para>
+
+    <para>
+      Resolving the third of the problems highlighted above required a
+      substantial rewrite of the &uart; and terminal modules. In making this
+      rewrite, Robert highlights various areas where efficiency of the model
+      can be improved.
+    </para>
+
   </appendix>
 
   <glossary>
