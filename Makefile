@@ -20,15 +20,12 @@
 
 # ----------------------------------------------------------------------------
 
-# Linux makefile for the System TLM 2.0 simple transactions for OR1K
-# application note.
-
-# $Id$
+# Linux makefile for the DejaGNU HOWTO application note.
 
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT        = embecosm-tlm2-or1ksim-ean1-issue-2
+DOCROOT        = ean8-howto-dejagnu-1.0
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
@@ -40,4 +37,4 @@ include $(HOME)/svntrunk/Documentation/local_scripts/linux_book.mk
 spell:
 	aspell --lang=en create master ./custom.dict < ./custom.wordlist
 	aspell --master=en_US --mode=sgml --add-extra-dicts=./custom.dict \
-		-c sysc_tlm2_simple_or1k.docbook
+		-c $(DOCROOT).docbook
