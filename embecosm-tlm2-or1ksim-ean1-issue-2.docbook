@@ -13,9 +13,11 @@ Useful entities
 <!ENTITY ieee "<acronym>IEEE</acronym>">
 <!ENTITY iss "<acronym>ISS</acronym>">
 <!ENTITY jtag "<acronym>JTAG</acronym>">
+<!ENTITY mmu "<acronym>MMU</acronym>">
 <!ENTITY osci "<acronym>OSCI</acronym>">
 <!ENTITY posix "<acronym>POSIX</acronym>">
 <!ENTITY soc "<acronym>SoC</acronym>">
+<!ENTITY spr "<acronym>SPR</acronym>">
 <!ENTITY tlm "<acronym>TLM</acronym>">
 <!ENTITY tlm2 "<acronym>TLM</acronym>&nbsp;2.0">
 <!ENTITY uart "<acronym>UART</acronym>">
@@ -34,6 +36,7 @@ Useful entities
 <!-- = Hardware applications = -->
 
 <!ENTITY or1k "<application class='hardware'>OpenRISC 1000</application>">
+<!ENTITY wishbone "<application class='hardware'>WishBone</application>">
 
 <!-- = Commands = -->
 
@@ -1023,7 +1026,7 @@ OSCI TLM 2.0, convenience sockets.
 	The example, a simple &soc;, is based on the &or1ksim; &iss; for the
 	&or1k; architecture. The &or1k; architecture is a conventional 32-bit
 	DSP/RISC design, with optional caches and
-	<acronym>MMU</acronym>. &or1ksim; is an interpreting &iss; written in
+	&mmu;. &or1ksim; is an interpreting &iss; written in
 	C, which in its standard configuration models main memory and a number
 	of peripherals as well as the CPU itself.
       </para>
@@ -1048,7 +1051,7 @@ OSCI TLM 2.0, convenience sockets.
 	to model only the CPU and main memory, with example peripherals
 	modeled as separate &systemc; modules. For <xref linkend="chap_linux"
 	/>, the &iss; is configured to model the data and instruction
-	<acronym>MMU</acronym>s and a
+	&mmu;s and a
 	<firstterm>programmable&#32;interrupt&#32;controller</firstterm>
 	(<acronym>PIC</acronym>). This allows the &iss; to support interrupt
 	driven peripherals and hence &linux;
@@ -1142,7 +1145,7 @@ OSCI TLM 2.0, convenience sockets.
 
       </sect2>
 
-      <sect2 id="soc_example_soc_intr">
+      <sect2 id="sec_example_soc_intr">
 	<title>
 	  &soc; with Interrupt Support
 	</title>
@@ -1158,7 +1161,7 @@ OSCI TLM 2.0, convenience sockets.
 	<figure id="fig_simple_soc_intr">
 	  <title>
 	    Simple &soc; based on the &or1k; &or1ksim; with interrupts and
-	    <acronym>MMU</acronym> enabled.
+	    &mmu; enabled.
 	  </title>
 
 	  <mediaobject>
@@ -1181,7 +1184,7 @@ OSCI TLM 2.0, convenience sockets.
 
       </sect2>
 
-      <sect2 id="soc_example_soc_jtag">
+      <sect2 id="sec_example_soc_jtag">
 	<title>
 	  &soc; with Debugger Support
 	</title>
@@ -7519,7 +7522,7 @@ Char written at 1481041600 ns
       <listitem>
 	<para>
 	  Memory management must be added to support &linux; virtual
-	  memory. This is provided by enabling the internal MMUs (instruction
+	  memory. This is provided by enabling the internal &mmu;s (instruction
 	  and data) of the &or1ksim; &iss;.
 	</para>
       </listitem>
@@ -7533,14 +7536,14 @@ Char written at 1481041600 ns
     </itemizedlist>
 
     <para>
-      The example design was shown in <xref linkend="soc_example_soc_intr"/>,
+      The example design was shown in <xref linkend="sec_example_soc_intr"/>,
       but for convenience the diagram is repeated here in <xref
       linkend="fig_simple_soc_intr2" />.
     </para>
 
     <figure id="fig_simple_soc_intr2">
       <title>
-	Simple &soc; based on the &or1k; &or1ksim; with interrupts and MMU
+	Simple &soc; based on the &or1k; &or1ksim; with interrupts and &mmu;
 	enabled.
       </title>
       <mediaobject>
@@ -7578,12 +7581,11 @@ Char written at 1481041600 ns
     <para>
       The code for the &or1ksim; &iss; wrapper with interrupts enabled
       (<filename>Or1ksimIntrSC.cpp</filename> and
-      <filename>Or1ksimIntrSC.h</filename>), the code for the intrled
-      &uart; module (<filename>UartIntrSC.cpp</filename> and
-      <filename>UartIntrSC.h</filename>) and the main program for the
-      complete model (intrSocMainSC.cpp) may be founded in the
-      <filename>sysc-models/intr-soc</filename> directory of the
-      distribution.
+      <filename>Or1ksimIntrSC.h</filename>), the code for the interrupt
+      enabled &uart; module (<filename>UartIntrSC.cpp</filename> and
+      <filename>UartIntrSC.h</filename>) and the main program for the complete
+      model (<filename>intrSocMainSC.cpp</filename>) may be found in the
+      <filename>sysc-models/intr-soc</filename> directory of the distribution.
     </para>
 
     <sect1>
@@ -8192,7 +8194,7 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	  linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
 	  linkend="ref_app_note_2" />. A configuration file, which enables the
 	  internal <firstterm>memory management unit</firstterm>s
-	  (<acronym>MMU</acronym>s) and Programmable Interrupt Controller
+	  (&mmu;s) and Programmable Interrupt Controller
 	  (<acronym>PIC</acronym>) of the &or1ksim; is provided,
 	  <filename>linux.cfg</filename>. This also declares additional
 	  internal memory space in &or1ksim; for flash and
@@ -8345,12 +8347,261 @@ Please press Ent
 
   <chapter id="chap_jtag">
     <title>
-      Adding a JTAG Interface to the Model
+      Adding a &jtag; Interface to the Model
     </title>
 
     <para>
-      Holding para.
+      All the models in previous chapters have considered only the main
+      &wishbone; bus interface to the &or1k;. However the processor also
+      provides a debug interface, which at the hardware level is implemented
+      via a &ieee; 1149.1 &jtag;.
     </para>
+
+    <para>
+      At the simplest level, it is easy to have a transactional view of &jtag;.
+      Registers are shifted in and registers are shifted out. A simple
+      read-modify-write transaction.
+    </para>
+
+    <para>
+      The difficulty is that &jtag; is a bit serial interface, whereas &tlm2;
+      really models simple reads and writes over bus interfaces (such as
+      &wishbone;). The solution is to represent the &jtag; register in a byte
+      vector, and use a &tlm2; generic payload extension to describe the
+      &jtag; specific characteristics of bit length and target action (reset,
+      shift through the instruction register or shift throuhg the data
+      register). This is described in <xref linkend="sec_payload_extension"/>.
+    </para>
+
+    <para>
+      The example design extended to support &jtag; was shown in <xref
+      linkend="sec_example_soc_jtag"/>, but for convenience the diagram is
+      repeated here in <xref linkend="fig_simple_soc_jtag2" />.
+    </para>
+
+    <figure id="fig_simple_soc_jtag2">
+      <title>
+	Simple &soc; based on the &or1k; &or1ksim; with interrupts, &mmu; and
+	&jtag; debug interface.
+      </title>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="simple-soc-jtag.svg"
+		     format="SVG"
+		     width="14cm"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+	<imageobject>
+	  <imagedata fileref="simple-soc-jtag.png"
+		     format="PNG"
+		     width="80%"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      The <classname>Or1ksimIntrSC</classname> is extended with a new &tlm2;
+      target port and handler for &jtag;. This in turn requires a new &tlm2;
+      generic payload extension class, <classname>JtagExtensionSC</classname>.
+    </para>
+
+    <para>
+      For this example, a full debugger is not used to drive the &jtag;
+      interface. Instead a simple &jtag; logger,
+      <classname>JtagLoggerSC</classname>, is used. This initializes the
+      &jtag; interface, then reads the <firstterm>Next Program
+      Counter</firstterm> (<acronym>NPC</acronym>) &spr; once per second. This
+      is achieved by shifting a &jtag; register for a debug unit
+      <literal>WRITE_COMMAND</literal> to specify the &spr; to read, followed
+      by shifting a &jtag; register for a debug unit
+      <literal>GO_COMMAND</literal> to read the actual register.
+    </para>
+
+    <para>
+      The code for the Or1ksim wrapper with &jtag; interface
+      (<filename>Or1ksimJtagSC.cpp</filename>,
+      <filename>Or1ksimJtagSC.h</filename>), the code for the generic payload
+      extension (<filename>JtagExtensionSC.cpp</filename>,
+      <filename>JtagExtensionSC.h</filename>), the code for the &jtag; logger
+      (<filename>JtagLoggerSC.cpp</filename>,
+      <filename>JtagLoggerSC.h</filename>) and the main program for the
+      complete model (<filename>jtagSocMain.cpp</filename>) may be found in
+      the <filename>sysc-models/jtoc-soc</filename> directory of the
+      distribution.
+    </para>
+
+    <sect1>
+      <title>
+	Overall Design of the SoC Model with &jtag; Interface
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  Class Structure
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Behavioral Diagrams
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="sec_payload_extension">
+      <title>
+	A &tlm2; Interface for &jtag; Using a Payload Extension
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  <classname>JtagExtensionSC</classname> Extension Class Definition
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>JtagExtensionSC</classname> Extension Class Implementation
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Extending the <classname>Or1ksimIntrSC</classname> Module Class
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  Adding &jtag; Interface Functions to the Or1ksim library
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>Or1ksimJtagSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>Or1ksimJtagSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	A &jtag; Traffic Generating Class
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  Adding JTAG Interface Functions to the Or1ksim library
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>JtagLoggerSC</classname> Module Class Definition
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>JtagLoggerSC</classname> Module Class Implementation
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Main Program for the Model with &jtag; Debug Interface
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Running the Model with &jtag; Debug Interface
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  Simple Test for the Model with &jtag; Debug Interface
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
 
   </chapter>
 
