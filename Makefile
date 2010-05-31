@@ -40,4 +40,4 @@ include $(HOME)/svntrunk/Documentation/local_scripts/linux_book.mk
 spell:
 	aspell --lang=en create master ./custom.dict < ./custom.wordlist
 	aspell --master=en_US --mode=sgml --add-extra-dicts=./custom.dict \
-		-c sysc_tlm2_simple_or1k.docbook
+		-c $(DOCROOT).docbook

@@ -8,8 +8,9 @@ Useful entities
 
 <!-- ========== Acronyms and abbreviations ========== -->
 
-<!ENTITY hdl "<acronym>HDL</acronym>">
+<!ENTITY api "<acronym>API</acronym>">
 <!ENTITY fifo "<acronym>FIFO</acronym>">
+<!ENTITY hdl "<acronym>HDL</acronym>">
 <!ENTITY ieee "<acronym>IEEE</acronym>">
 <!ENTITY iss "<acronym>ISS</acronym>">
 <!ENTITY jtag "<acronym>JTAG</acronym>">
@@ -18,6 +19,7 @@ Useful entities
 <!ENTITY posix "<acronym>POSIX</acronym>">
 <!ENTITY soc "<acronym>SoC</acronym>">
 <!ENTITY spr "<acronym>SPR</acronym>">
+<!ENTITY tap "<acronym>TAP</acronym>">
 <!ENTITY tlm "<acronym>TLM</acronym>">
 <!ENTITY tlm2 "<acronym>TLM</acronym>&nbsp;2.0">
 <!ENTITY uart "<acronym>UART</acronym>">
@@ -30,6 +32,7 @@ Useful entities
 <!ENTITY gdb "<application class='software'>GDB</application>">
 <!ENTITY linux "<application class='software'>Linux</application>">
 <!ENTITY make "<application class='software'>make</application>">
+<!ENTITY macos "<application class='software'>Mac OS</application>">
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
 <!ENTITY systemc "<application class='software'>SystemC</application>" >
 
@@ -108,7 +111,7 @@ OSCI TLM 2.0, convenience sockets.
     </corpauthor>
 
     <pubdate>
-      March 2010
+      May 2010
     </pubdate>
 
     <releaseinfo>
@@ -259,10 +262,17 @@ OSCI TLM 2.0, convenience sockets.
       </para>
 
       <para>
-	Finally, Robert G&uuml;nzel (see <xref linkend="sec_ack" />), as well
-	as making a number of well informed suggestions for improvements which
-	I have adopted, has written a paper on using this application
-	note under MacOS (<xref linkend="app_macos" />).
+	The examples have been reworked to make them easier to build. In
+	particular the example OpenRISC programs are now also built
+	automatically.
+      </para>
+
+      <para>
+	Finally, Robert <foreignphrase>G&uuml;nzel</foreignphrase> (see <xref
+	linkend="sec_ack" />), as well as making a number of well informed
+	suggestions for improvements which I have adopted, has written a paper
+	on using this application note under &macos; (<xref linkend="app_macos"
+	/>).
       </para>
 
     </sect1>
@@ -329,22 +339,25 @@ OSCI TLM 2.0, convenience sockets.
 	requesting assistance in porting an existing &iss; to the &tlm2;
 	standard. This is the first application note in the series. Further
 	&embecosm; Application Notes, addressing different aspects of &tlm2;
-	will be published in the future.
+	are available from the &embecosm; website at <ulink
+	url="http://www.embecosm.com">www.embecosm.com</ulink>.
       </para>
 
     </sect1>
 
     <sect1 id="sec_ack">
       <title>
-	Acknowledgement
+	Acknowledgment
       </title>
 
       <para>
-	I am indebted to Dipl Ing Robert G&uml;nzel of the Department of
-	Integrated Circuit Design at the Technische Universit&auml;t
-	Braunschweig, Germany, who made a number of suggesions for
-	improvements (which I have adopted) and provided the instructions for
-	Mac OS (see <xref linkend="app_macos" />).
+	I am indebted to <foreignphrase>Dipl Ing</foreignphrase> Robert
+	<foreignphrase>G&uuml;nzel</foreignphrase> of the Department of
+	Integrated Circuit Design at the <foreignphrase>Technische
+	Universit&auml;t Braunschweig</foreignphrase>, Germany, who made a
+	number of suggestions for improvements (which I have adopted) and
+	provided the instructions for &macos; (see <xref linkend="app_macos"
+	/>).
       </para>
 
     </sect1>
@@ -410,15 +423,17 @@ OSCI TLM 2.0, convenience sockets.
 	  <para>
 	    A C++ class, <classname>sc_module</classname>, suitable for
 	    defining hardware modules containing parallel
-	    processes<footnote>
+	    processes
+	  </para>
+
+	  <note>
 	    <para>
 	      <emphasis>Process</emphasis> is a general term in &systemc;
 	      to describe the various ways of representing parallel flows
 	      of control. It has nothing to do with processes in the &linux;
 	      or Microsoft Windows operating systems.
 	    </para>
-	    </footnote>;
-	  </para>
+	  </note>
 	</listitem>
 
 	<listitem>
@@ -433,7 +448,7 @@ OSCI TLM 2.0, convenience sockets.
 	  <para>
 	    Two classes, <classname>sc_port</classname> and
 	    <classname>sc_export</classname> to represent points of
-	    connection a <classname>sc_module</classname>;
+	    connection to and from a <classname>sc_module</classname>;
 	  </para>
 	</listitem>
 
@@ -641,14 +656,14 @@ OSCI TLM 2.0, convenience sockets.
 
 	<para>
 	  The data passed in a transaction may take any form. However the
-	  &tlm2; standard defines a <firstterm>Generic Payload</firstterm>
+	  &tlm2; standard defines a <firstterm>generic payload</firstterm>
 	  which is suitable for many uses, and which can be extended if
-	  required. By using the Generic Payload, a &tlm2; model will maximize
+	  required. By using the generic payload, a &tlm2; model will maximize
 	  interoperability.
 	</para>
 
 	<para>
-	  The main features of the Generic Payload are:
+	  The main features of the generic payload are:
 	</para>
 
 	<variablelist>
@@ -713,6 +728,16 @@ OSCI TLM 2.0, convenience sockets.
 	  pass the payload to another &systemc; thread and obtain a
 	  response&mdash;i.e. a transaction.
 	</para>
+
+	<para>
+	  The generic payload is suitable for modeling a wide range of bus
+	  interfaces and protocols. However where additional features are
+	  required, &tlm2; provides an extension mechanism. The chapter on
+	  implementing a transactional &jtag; debugger interface (see <xref
+	  linkend="chap_jtag"/>) describes the use of this extension mechanism
+	  to model the data for a bit-serial interface.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -727,7 +752,7 @@ OSCI TLM 2.0, convenience sockets.
 	  creating a payload (see <xref linkend="sec_payload" />) and calling
 	  the transport function to send it. A target receives payloads from
 	  the transport function for processing and response. In the case of
-	  non-blocking interfaces (see <xref linkend="sec_block_non_block" />,
+	  non-blocking interfaces (see <xref linkend="sec_block_non_block" />),
 	  the target may create new transactions backwards in response to a
 	  transaction from an initiator.
 	</para>
@@ -805,7 +830,7 @@ OSCI TLM 2.0, convenience sockets.
 	      accessing memory using transactions would destroy
 	      performance. &tlm2; provides the concept of a
 	      <firstterm>direct&#32;memory&#32;interface</firstterm>, allowing
-	      threads direct access to blocks of memory in another thread for
+	      threads direct access to blocks of memory in other threads for
 	      high performance.
 	    </para>
 	  </listitem>
@@ -902,11 +927,11 @@ OSCI TLM 2.0, convenience sockets.
 
 	<para>
 	  This is a very flexible approach, but the need to define new derived
-	  classes classes for sockets is an unnecessary layer of complexity
-	  for simple modeling. For such uses, the &tlm2; standard defines a
-	  number of <firstterm>convenience&#32;socket</firstterm>s which can
-	  be instantiated directly by modules, and which specify their
-	  interface functions as callbacks.
+	  classes for sockets is an unnecessary layer of complexity for simple
+	  modeling. For such uses, the &tlm2; standard defines a number of
+	  <firstterm>convenience&#32;socket</firstterm>s which can be
+	  instantiated directly by modules, and which specify their interface
+	  functions as callbacks.
 	</para>
 
 	<para>
@@ -930,7 +955,7 @@ OSCI TLM 2.0, convenience sockets.
     </para>
 
     <para>
-      Modeling uses the &tlm2; <glossterm>Generic Payload</glossterm> with no
+      Modeling uses the &tlm2; <glossterm>generic payload</glossterm> with no
       extensions. It is independent of the specific bus architecture that will
       be used in the implementation.
     </para>
@@ -1112,13 +1137,12 @@ OSCI TLM 2.0, convenience sockets.
 	  bench for the system is a terminal, also modeled in &systemc; using
 	  &tlm2; as shown in <xref linkend="fig_simple_soc" />. The model is
 	  built up in stages starting with the &iss; wrapper module developed
-	  in <xref linkend="chap_iss_wrapper" />. In sections <xref
-	  linkend="chap_uart" /> and <xref linkend="chap_terminal" /> models of
-	  the &uart; and terminal are added to create an untimed
-	  model. Synchronous timing to create a loosely timed model is added
-	  in <xref linkend="chap_sync" /> and temporal decoupling to improve
-	  performance is added in <xref linkend="chap_temporal_decoupling"
-	  />. .
+	  in <xref linkend="chap_iss_wrapper" />. In <xref linkend="chap_uart"
+	  /> and <xref linkend="chap_terminal" /> models of the &uart; and
+	  terminal are added to create an untimed model. Synchronous timing to
+	  create a loosely timed model is added in <xref linkend="chap_sync"
+	  /> and temporal decoupling to improve performance is added in <xref
+	  linkend="chap_temporal_decoupling" />. .
 	</para>
 
 	<figure id="fig_simple_soc">
@@ -1238,7 +1262,29 @@ OSCI TLM 2.0, convenience sockets.
 	  The code of the distribution is organized as follows.
 	</para>
 
-	<variablelist>
+	<variablelist termlength="9">
+	  <varlistentry>
+	    <term>
+	      <filename>configure</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		The main configuration script.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
+	      <filename>linux.cfg</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		An &or1ksim; configuration file for use when running &linux;.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
 	  <varlistentry>
 	    <term>
 	      <filename>progs-or32</filename>
@@ -1257,6 +1303,18 @@ OSCI TLM 2.0, convenience sockets.
 
 	  <varlistentry>
 	    <term>
+	      <filename>simple.cfg</filename>
+	    </term>
+	    <listitem>
+	      <para>
+		An &or1ksim; configuration file for use when running simple
+		examples.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>
 	      <filename>sysc-models</filename>
 	    </term>
 	    <listitem>
@@ -1266,7 +1324,7 @@ OSCI TLM 2.0, convenience sockets.
 		previous models using the C++ class inheritance mechanism.
 	      </para>
 
-	      <variablelist>
+	      <variablelist termlength="9">
 		<varlistentry>
 		  <term>
 		    <filename>logger</filename>
@@ -1375,6 +1433,12 @@ OSCI TLM 2.0, convenience sockets.
 	  </varlistentry>
 	</variablelist>
 
+	<para>
+	  Various other files and directories are included. These form part of
+	  the standard <acronym>GNU</acronym> <command>autotools</command>
+	  infrastructure.
+	</para>
+
       </sect2>
 
       <sect2>
@@ -1427,10 +1491,20 @@ OSCI TLM 2.0, convenience sockets.
 
 	<para>
 	  It is not intended that the reader should have to understand the
-	  internal workings of &or1ksim;. The changes described in this
-	  application note are provided as a patch file, which can be applied
-	  to generate a fully working, modified version of the &iss;. More
-	  information is provided in <xref linkend="app_download" />.
+	  internal workings of &or1ksim;. With the exception of the examples
+	  in <xref linkend="chap_jtag"/>, the changes described in this
+	  application note form part of &or1ksim; 0.3.0.
+	</para>
+
+	<para>
+	  The changes required to support &jtag; described in <xref
+	  linkend="chap_jtag"/> will form part of &or1ksim; 0.4.0. In the
+	  meantime they are available by building &or1ksim; from the
+	  &opencores; <command>Subversion</command> tree.
+	</para>
+
+	<para>
+	  More information is provided in <xref linkend="app_download" />.
 	</para>
 
       </sect2>
@@ -1469,7 +1543,7 @@ OSCI TLM 2.0, convenience sockets.
 	      implementation from external view. There is considerable merit
 	      in this, but the common &systemc; convention is to expose actual
 	      ports or sockets, rather than accessor functions for those
-	      objects. This application note sticks with this practice.
+	      objects. This application note follows this practice.
 	    </para>
 	    </footnote>.
 	</para>
@@ -1504,32 +1578,24 @@ OSCI TLM 2.0, convenience sockets.
 
       <sect2>
 	<title>
-	  <application>Make</application> Files
+	  Configuration
 	</title>
 
 	<para>
-	  Both the <filename>sysc_models</filename> and
-	  <filename>progs_or32</filename> directory contain make files which
-	  will build the programs and <application>Doxygen</application>
-	  documentation, if the appropriate tools are available.
+	  The entire example system is now built using the
+	  <acronym>GNU</acronym>; <command>autotools</command>. This provides
+	  for flexibility in configuration and building of the system.
 	</para>
 
-	<para>
-	  These files will need editing. In general the main
-	  <command>make</command> file, <filename>Makefile</filename> includes
-	  an operating system specific make file
-	  (<filename>linux.mk</filename> for Linux,
-	  <filename>win32.mk</filename> for Microsoft Windows), because of the
-	  very substantial differences in behavior between GNU
-	  <command>make</command> and Microsoft
-	  <command>nmake</command>.
-	</para>
+	<note>
+	  <para>
+	    This is a major change since issue 1 of this application note.
+	  </para>
+	</note>
 
 	<para>
-	  In particular the SystemC model builds need to know the location of
-	  the &or1ksim; binaries, libraries and include files, which should be
-	  set in the environment variable <literal>OR1KSIM</literal>. If left
-	  unset it will default to <filename>/opt/or1ksim</filename>.
+	  Full details of how to configure and build the models are in <xref
+	  linkend="app_download"/>.
 	</para>
 
       </sect2>
@@ -1614,16 +1680,14 @@ OSCI TLM 2.0, convenience sockets.
       </para>
 
       <para>
-	Many of the modifications required to the standard &or1ksim; in issue
-	1 of this application note have now been incorporated in &or1ksim;
-	0.3.0. However some additional modifications are required to support
-	the &jtag; interface described in <xref linkend="chap_jtag" />.
-      </para>
-
-      <para>
-	All the modifications required to the standard &or1ksim; 0.3.0;
-	described in this application note are provided as a
-	<command>patch</command> file in the distribution. See <xref
+	Almost all the modifications required for this application note have
+	now been incorporated in &or1ksim; 0.3.0. However some additional
+	modifications are required to support the &jtag; interface described
+	in <xref linkend="chap_jtag" />. Those additional modifications will
+	form part of &or1ksim;&nbsp;0.4.0, but in the meantime are available
+	from the &or1ksim; <command>Subversion</command> tree on the
+	&opencores; website (<ulink
+	url="http://www.opencores.org/">www.opencores.org</ulink>). See <xref
 	linkend="app_download" /> for details.
       </para>
 
@@ -1643,18 +1707,23 @@ OSCI TLM 2.0, convenience sockets.
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <programlisting>
-int  or1ksim_init( const char         *config_file,
-                   const char         *image_file,
-                   void               *class_ptr,
-                   unsigned long int (*upr)( void              *class_ptr,
-                                             unsigned long int  addr,
-                                             unsigned long int  mask),
-                   void              (*upw)( void              *class_ptr,
-                                             unsigned long int  addr,
-                                             unsigned long int  mask,
-                                             unsigned long int  wdata ) );
-	      </programlisting>
+	      <informalfigure>
+		<programlisting>
+int  or1ksim_init (const char *config_file,
+                   const char *image_file,
+                   void       *class_ptr,
+                   int       (*upr) (void              *class_ptr,
+                                     unsigned long int  addr,
+                                     unsigned char      mask[],
+                                     unsigned char      rdata[],
+                                     int                data_len),
+                   int       (*upw) (void              *class_ptr,
+                                     unsigned long int  addr,
+                                     unsigned char      mask[],
+                                     unsigned char      wdata[],
+                                     int                data_len));
+		</programlisting>
+	      </informalfigure>
 	    </para>
 
 	    <para>
@@ -1687,9 +1756,11 @@ int  or1ksim_init( const char         *config_file,
 
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 int  or1ksim_run( double  duration );
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    <para>
 	      <function>or1ksim_run</function> runs the simulator for the
@@ -1783,13 +1854,15 @@ int  or1ksim_run( double  duration );
 	  types defined there.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include &lt;stdint.h&gt;
 
 #include "tlm.h"
 #include "tlm_utils/simple_initiator_socket.h"
 #include "or1ksim.h"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <note>
 	  <para>
@@ -1811,32 +1884,38 @@ int  or1ksim_run( double  duration );
 	  derived class of <classname>sc_core::sc_module</classname>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 class Or1ksimSC
   : public sc_core::sc_module
 {
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <note>
 	  <para>
 	    &systemc; provides a macro, so that a module can be defined by:
 	  </para>
 
-	  <programlisting>
+	  <informalfigure>
+	    <programlisting>
 SC_MODULE( Or1ksimSC )
-	  </programlisting>
+	    </programlisting>
+	  </informalfigure>
 
 	  <para>
 	    However this is equivalent (IEEE 1666-2005 section 5.2.5) to the
 	    C++ derived class declaration
 	  </para>
 
-	  <programlisting>
+	  <informalfigure>
+	    <programlisting>
 class Or1ksimSC
   : public sc_core::sc_module
 {
  public:
-	  </programlisting>
+	    </programlisting>
+	  </informalfigure>
 
           <para>
 	    By using <literal>SC_MODULE</literal> all functions and variables
@@ -1869,11 +1948,13 @@ class Or1ksimSC
 	  initialize the &iss;.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 Or1ksimSC( sc_core::sc_module_name  name,
            const char              *configFile,
            const char              *imageFile );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The default destructor is sufficient here. The module has no tidying
@@ -1921,9 +2002,11 @@ Or1ksimSC( sc_core::sc_module_name  name,
 	  initiator) no callbacks are actually required.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   tlm_utils::simple_initiator_socket&lt;Or1ksimSC&gt;  dataBus;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -1937,9 +2020,11 @@ Or1ksimSC( sc_core::sc_module_name  name,
 	  the &iss;. The <function>run</function> function implements this:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   void  run();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The thread is not part of the public interface, but will but will be
@@ -1986,23 +2071,31 @@ Or1ksimSC( sc_core::sc_module_name  name,
 	  note, so are declared private.
 	</para>
 
-	<programlisting>
-  static unsigned long int  staticReadUpcall( void              *instancePtr,
-                                              unsigned long int  addr,
-                                              unsigned long int  mask );
+	<informalfigure>
+	  <programlisting>
+static int  staticReadUpcall (void              *instancePtr,
+                              unsigned long int  addr,
+                              unsigned char      mask[],
+                              unsigned char      rdata[],
+                              int                dataLen);
 
-  static void               staticWriteUpcall( void              *instancePtr,
-                                               unsigned long int  addr,
-                                               unsigned long int  mask,
-                                               unsigned long int  wdata );
+static int  staticWriteUpcall (void              *instancePtr,
+                               unsigned long int  addr,
+                               unsigned char      mask[],
+                               unsigned char      wdata[],
+                               int                dataLen);
 
-  uint32_t                  readUpcall( sc_dt::uint64  addr,
-                                        uint32_t       mask );
+int         readUpcall (unsigned long int  addr,
+                        unsigned char      mask[],
+                        unsigned char      rdata[],
+                        int                dataLen);
 
-  void                      writeUpcall( sc_dt::uint64  addr,
-                                         uint32_t       mask,
-                                         uint32_t       wdata );
-	</programlisting>
+int         writeUpcall (unsigned long int  addr,
+                         unsigned char      mask[],
+                         unsigned char      wdata[],
+                         int                dataLen);
+	  </programlisting>
+	</informalfigure>
 
         <caution>
 	  <para>
@@ -2040,15 +2133,18 @@ Or1ksimSC( sc_core::sc_module_name  name,
 	  the upcalls, it can be private to this class.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   tlm::tlm_generic_payload  trans;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<note>
 	  <para>
 	    The performance overhead in instantiating a generic payload is not
-	    mentioned in the &tlm2; LRM. I am indepted to Robert G&uuml;nzel
-	    for bringing the issue to my attention.
+	    mentioned in the &tlm2; <acronym>LRM</acronym>. I am indebted to Robert
+	    <foreignphrase>G&uuml;nzel</foreignphrase> for bringing the issue
+	    to my attention.
 	  </para>
 	</note>
 
@@ -2075,9 +2171,11 @@ Or1ksimSC( sc_core::sc_module_name  name,
 	  All the definitions required are obtained from the definition file:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "Or1ksimSC.h"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The implementation of a C++ class that is a &systemc; module with
@@ -2088,9 +2186,11 @@ Or1ksimSC( sc_core::sc_module_name  name,
 	  macro.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 SC_HAS_PROCESS( Or1ksimSC );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<caution>
 	  <para>
@@ -2107,7 +2207,7 @@ SC_HAS_PROCESS( Or1ksimSC );
 	    constructor's implementation is given within the class
 	    definition. As explained in <xref linkend="sec_coding_conv" />,
 	    this application note follows the standard C++ practice of
-	    separating theclass definition from its implementation, with the
+	    separating the class definition from its implementation, with the
 	    constructor implemented separately from the class definition.
 	  </para>
 
@@ -2144,7 +2244,8 @@ SC_HAS_PROCESS( Or1ksimSC );
 	  elaboration (i.e &systemc; initialization).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
                        const char              *configFile,
                        const char              *imageFile ) :
@@ -2157,7 +2258,8 @@ Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
   SC_THREAD( run );               // Thread to run the ISS
 
 }       /* Or1ksimSC() */
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 
       </sect2>
@@ -2179,7 +2281,8 @@ Or1ksimSC::Or1ksimSC ( sc_core::sc_module_name  name,
 	completed elaboration (i.e. is initialized).
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 void
 Or1ksimSC::run()
 {
@@ -2189,7 +2292,8 @@ Or1ksimSC::run()
   (void)or1ksim_run( -1.0 );
 
 }       // Or1ksimSC()
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       </sect2>
 
@@ -2218,30 +2322,28 @@ Or1ksimSC::run()
 	<function>staticReadUpcall</function>:
       </para>
 
-      <programlisting>
-unsigned long int
-Or1ksimSC::staticReadUpcall( void              *instancePtr,
+      <informalfigure>
+	<programlisting>
+int
+Or1ksimSC::staticReadUpcall (void              *instancePtr,
                              unsigned long int  addr,
-                             unsigned long int  mask )
+                             unsigned char      mask[],
+                             unsigned char      rdata[],
+                             int                dataLen)
 {
-  Or1ksimSC *classPtr = (Or1ksimSC *)instancePtr;
+  Or1ksimSC *classPtr = (Or1ksimSC *) instancePtr;
+  return  classPtr->readUpcall (addr, mask, rdata, dataLen);
 
-  return (unsigned long int)classPtr->readUpcall( (sc_dt::uint64)addr,
-                                                  (uint32_t)mask );
 }       // staticReadUpcall()
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
         <para>
-	  The address is cast to the &systemc; native 64-bit type, which is
-	  always used in &tlm2; for addresses. The mask and result (and write
-	  data for <function>staticWriteUpcall</function> are cast to the
-	  &posix; <literal>uint32_t</literal> fixed length type to avoid any
-	  ambiguity over size<footnote>
-	    <para>
-	      While <literal>unsigned&nbsp;long&nbsp;int</literal> is almost
-	      always 32 bits long, it is not guaranteed to be so.
-	    </para>
-	  </footnote>.
+	  The <varname>instancePtr</varname> argument allows identification of
+	  the particular instance of the class which called
+	  <function>or1ksim_run</function> and hence to which the upcall is
+	  directed. The remaining arguments are passed to the instance method
+	  unchanged.
 	</para>
 
 	<caution>
@@ -2310,10 +2412,12 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	  transport function of the socket with the payload.
 	</para>
 
-        <programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_time  dummyDelay = sc_core::SC_ZERO_TIME;
   dataBus->b_transport( trans, dummyDelay );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  This implementation is sufficient for modeling just the &or1ksim;
@@ -2502,10 +2606,12 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	  header:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "tlm.h"
 #include "tlm_utils/simple_target_socket.h"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2518,10 +2624,12 @@ Or1ksimSC::staticReadUpcall( void              *instancePtr,
 	  The class is a standard &systemc; module:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 class LoggerSC
 : public sc_core::sc_module
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  A custom constructor is needed, which will be used to register the
@@ -2529,9 +2637,11 @@ class LoggerSC
 	  transport.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   LoggerSC( sc_core::sc_module_name  name );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2545,9 +2655,11 @@ class LoggerSC
 	  socket.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   tlm_utils::simple_target_socket&lt;LoggerSC&gt;  loggerPort;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2560,10 +2672,12 @@ class LoggerSC
 	  Blocking transport is via a callback function:
 	</para>
 
-        <programlisting>
+	<informalfigure>
+	  <programlisting>
   void  loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
                          sc_core::sc_time         &amp;delay );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  All the behavior of the module is captured in this callback
@@ -2579,7 +2693,7 @@ class LoggerSC
       </title>
 
       <para>
-	The code for the logger module implementationtion may be found in
+	The code for the logger module implementation may be found in
 	<filename>sysc-models/logger/LoggerSC.cpp</filename> in the
 	distribution.
       </para>
@@ -2595,13 +2709,15 @@ class LoggerSC
 	  standard integer types are also included.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #include &lt;iostream&gt;
 #include &lt;iomanip&gt;
 #include &lt;stdint.h&gt;
 
 #include "LoggerSC.h"
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       </sect2>
 
@@ -2621,14 +2737,16 @@ class LoggerSC
 	  function in the target.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 LoggerSC::LoggerSC( sc_core::sc_module_name  name ) :
   sc_module( name )
 {
   loggerPort.register_b_transport( this, &amp;LoggerSC::loggerReadWrite );
 
 }       // Or1ksimSC()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2640,7 +2758,7 @@ LoggerSC::LoggerSC( sc_core::sc_module_name  name ) :
 	<para>
 	  The callback function, <function>loggerReadWrite</function> records
 	  the key information regarding any transaction it receives. The
-	  payload is a &tlm2; Generic Payload, with appropriate access
+	  payload is a &tlm2; generic payload, with appropriate access
 	  functions. In this simple implementation, a length of 4 bytes is
 	  assumed for the data in the payload.
 	</para>
@@ -2655,7 +2773,8 @@ LoggerSC::LoggerSC( sc_core::sc_module_name  name ) :
 	  <literal>uint32_t</literal>.
 	</para>
 
-        <programlisting>
+	<informalfigure>
+	  <programlisting>
 void
 LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
                            sc_core::sc_time         &amp;delay )
@@ -2694,7 +2813,8 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
   payload.set_response_status( tlm::TLM_OK_RESPONSE );  // Always OK
 
 }       // loggerReadWrite()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
     </sect1>
@@ -2722,28 +2842,32 @@ LoggerSC::loggerReadWrite( tlm::tlm_generic_payload &amp;payload,
 	</title>
 
 	<para>
-	  The program includes the C++ <classname>iostream</classname> header
+	  The program includes the C++ <classname>iostream</classname> header,
 	  main &tlm2; header and the header of the two modules which will be
 	  used:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include &lt;iostream&gt;
 
 #include "tlm.h"
 #include "Or1ksimSC.h"
 #include "LoggerSC.h"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The two <classname>iostream</classname> entities used are brought
 	  into the local namespace.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 using std::cerr;
 using std::endl;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2759,7 +2883,8 @@ using std::endl;
 	  linkend="sec_iss_or32_prog" />).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 int  sc_main( int   argc,
               char *argv[] )
 {
@@ -2767,7 +2892,8 @@ int  sc_main( int   argc,
     cerr &lt;&lt; "Usage: TestSC &lt;config_file&gt; &lt;image_file&gt;" &lt;&lt; endl;
     exit( 1 );
   }
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2781,10 +2907,12 @@ int  sc_main( int   argc,
 	  &iss; being passed the two program arguments for its initialization.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   Or1ksimSC  iss( "or1ksim", argv[1], argv[2] );
   LoggerSC   logger( "logger" );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2801,9 +2929,11 @@ int  sc_main( int   argc,
 	  to provide this binding function.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   iss.dataBus( logger.loggerPort );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2816,9 +2946,11 @@ int  sc_main( int   argc,
 	  Once the model is instantiated, simulation is invoked to run forever.
 	</para>
 	  
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_start();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
     </sect1>
@@ -2829,23 +2961,17 @@ int  sc_main( int   argc,
       </title>
 
       <para>
-	The test program in <filename>logger-test.c</filename> defines a
-	memory mapped volatile data structure and then writes to and reads
-	from each element of that structure. Compilation of this program
-	requires the &or1k; GNU tool chain (see <xref linkend="ref_app_note_2"
-	endterm="ref_app_note_2_xr" /> <xref linkend="ref_app_note_2" /> for
-	details of installing this). A pre-compiled version is included with
-	the distribution.
+	The test program in <filename>progs-or32/logger-test.c</filename>
+	defines a memory mapped volatile data structure and then writes to and
+	reads from each element of that structure.
       </para>
 
       <para>
 	The source code for the logger test program may be found in
 	<filename>progs-or32/logger-test.c</filename> in the distribution. It
-	must be compiled with the utility functions
-	(<filename>progs-or32/utils.c</filename> and
-	<filename>progs-or32/utils.h</filename>) and the bootloader
-	(<filename>progs-or32/start.s</filename>). A pre-compiled version may
-	be found in <filename>progs-or32/logger-test</filename>.
+	uses the utility functions (<filename>progs-or32/utils.c</filename>
+	and <filename>progs-or32/utils.h</filename>) and the bootloader
+	(<filename>progs-or32/start.s</filename>).
       </para>
 
       <sect2>
@@ -2860,9 +2986,11 @@ int  sc_main( int   argc,
 	  (<function>simputh</function>). Its header is included:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "utils.h"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The utilities' implementation can be found in
@@ -2882,9 +3010,11 @@ int  sc_main( int   argc,
 	  0x90000000. This is set as a defined constant in the test program.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #define BASEADDR  0x90000000
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The memory mapped structure consists of a byte, half word (16 bits)
@@ -2894,14 +3024,16 @@ int  sc_main( int   argc,
 	  to these sizes.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 struct  testdev
 {
   volatile unsigned char       byte;
   volatile unsigned short int  halfword;
   volatile unsigned long  int  fullword;
 };
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  The main program declares a pointer to this
@@ -2910,7 +3042,8 @@ struct  testdev
 	  when reading.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 main()
 {
   struct testdev *dev = (struct testdev *)BASEADDR;
@@ -2918,7 +3051,8 @@ main()
   unsigned char       byteRes;
   unsigned short int  halfwordRes;
   unsigned long int   fullwordRes;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2933,7 +3067,8 @@ main()
 	  necessarily cumbersome).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   simputs( "Writing byte 0xa5 to address 0x" );
   simputh( (unsigned long int)(&amp;(dev->byte)) );
   simputs( "\n" );
@@ -2948,7 +3083,8 @@ main()
   simputh( (unsigned long int)(&amp;(dev->fullword)) );
   simputs( "\n" );
   dev->fullword = 0xdeadbeef;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -2963,7 +3099,8 @@ main()
 	  as expected.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   byteRes = dev->byte;
   simputs( "Read 0x" );
   simputh(  byteRes );
@@ -2984,7 +3121,8 @@ main()
   simputs( " from address 0x" );
   simputh( (unsigned long int)(&amp;(dev->fullword)) );
   simputs( "\n" );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  At the end of the program, the utility
@@ -3000,14 +3138,11 @@ main()
 	</title>
 
 	<para>
-	  The program is compiled with the utility functions (in
-	  <filename>utils.c</filename>) and a small boot loader (in
-	  <filename>start.s</filename>) which defines a
-	  <function>_start</function> function which invokes
-	  <function>main</function>. The linker arguments are chosen to make
-	  the program load from start of memory, with the
-	  <function>_start</function> function sitting at the &or1k; reset vector
-	  (0x100).
+	  The program is compiled as part of the overall &make; and will be
+	  found in the <filename>progs-or32</filename> sub-directory of the
+	  main build directory. A custom linker script ensures the program is
+	  loaded with its bootloader at the correct address, with its entry
+	  point at the &or1k; reset vector (<constant>0x100</constant>).
 	</para>
 
       </sect2>
@@ -3028,7 +3163,7 @@ main()
 	  <command>libtool</command> compliant library
 	  (<filename>liblogger.la</filename>) are created. The library
 	  provides a convenient mechanism for reusing the code from this
-	  model, when creating subsequent models which used derived classes.
+	  model, when creating subsequent models which use derived classes.
 	</para>
 
 	<para>
@@ -3065,7 +3200,8 @@ main()
 	  0x90000007, with the following configuration file entry
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 section generic
   enabled      =          1
   baseaddr     = 0x90000000
@@ -3075,7 +3211,8 @@ section generic
   hw_enabled   =          1
   word_enabled =          1
 end
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
       <sect2>
@@ -3094,13 +3231,13 @@ end
 	    Output from the logger test of the &or1ksim; wrapper module.
 	  </title>
 
-	  <screen>
-$ ./TestSC ../simple.cfg progs_or32/logger-test
+	  <informalfigure>
+	    <screen>
+$ ./sysc-models/logger/logger ../simple.cfg progs-or32/logger-test
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Reading script file from '../simple.cfg'...
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -3109,49 +3246,52 @@ Logging
   Command:      Write
   Address:      0x90000000
   Byte enables: 0x000000ff
-  Data:         0x000000a5
-  Delay:        0.000000000s
+  Data:         0x003f54a5
 
 Writing half word 0xbeef to address 0x090000002
 Logging
   Command:      Write
   Address:      0x90000000
   Byte enables: 0xffff0000
-  Data:         0xbeef0000
-  Delay:        0.000000000s
+  Data:         0xefbe8fc4
 
    ... &lt;More test program output&gt;
 
+Read half word 0x0FFFF from address 0x090000002
 Logging
   Command:      Read
   Address:      0x90000004
   Byte enables: 0xffffffff
-  Delay:        0.000000000s
 
-Read full word 0x0 from address 0x090000004
+Read full word 0x028372F09 from address 0x090000004
 exit(0)
 @reset : cycles 0, insn #0
-@exit  : cycles 26921, insn #13854
- diff  : cycles 26921, insn #13854
+@exit  : cycles 33297, insn #16581
+ diff  : cycles 33297, insn #16581
 $ 
-</screen>
+	    </screen>
+	  </informalfigure>
+
 	</figure>
 
 	<para>
 	  Each access from the application program generates the expected
 	  transactional access. All accesses are 32 bits wide, but for byte
-	  and half-word access the relevant bytes are masked off.
+	  and half-word access the relevant bytes are masked off. The reads
+	  return meaningless values (the logger was not designed to package a
+	  return value), but in each case the value returned fits in the size
+	  requested as expected.
 	</para>
 
 	<note>
 	  <para>
-	    The &or1ksim; &iss; can be configured to model big-endian
+	    The &or1ksim; &iss; can be configured to model little-endian
 	    architectures. The &tlm2; payloads are always packed with data
 	    using the endianness of the model.
 	  </para>
 
 	  <para>
-	    If the exercise were repeated with a big-endian version of
+	    If the exercise were repeated with a little-endian version of
 	    &or1ksim; the addresses of the access would be unchanged (they are
 	    word aligned), but the byte enable masks for the byte and half
 	    word accesses would be inverted.
@@ -3478,7 +3618,7 @@ $
 
       <para>
 	The &tlm; should allow the CPU to read and write registers and
-	communicated with a model terminal/keyboard which will send and
+	communicate with a model terminal/keyboard which will send and
 	receive characters and generate interrupts as appropriate. While all
 	writable registers can be written and all readable registers read,
 	only those registers and bits of registers which are relevant to this
@@ -3624,9 +3764,11 @@ $
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 int  or1ksim_is_le();
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 
 	    <para>
@@ -3655,13 +3797,15 @@ int  or1ksim_is_le();
 	  its header. The module class can then inherit from that class.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "Or1ksimSC.h"
 
 class Or1ksimExtSC
 : public Or1ksimSC
 {
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  A custom constructor must be defined. Custom constructors do not
@@ -3669,20 +3813,24 @@ class Or1ksimExtSC
 	  arguments on to the base class.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   Or1ksimExtSC( sc_core::sc_module_name  name,
                 const char              *configFile,
                 const char              *imageFile );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  A new public function to report the endianness of the underlying CPU
 	  model is defined
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 bool  isLittleEndian();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The <function>doTrans</function> function is reimplemented here, to
@@ -3691,9 +3839,11 @@ bool  isLittleEndian();
 	  note.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 virtual void  doTrans( tlm::tlm_generic_payload &amp;trans );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The extended &or1ksim; wrapper module class,
@@ -3713,14 +3863,16 @@ virtual void  doTrans( tlm::tlm_generic_payload &amp;trans );
 	  The constructor just passes its arguments to its base class
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 Or1ksimExtSC::Or1ksimExtSC ( sc_core::sc_module_name  name,
                              const char              *configFile,
                              const char              *imageFile ) :
   Or1ksimSC( name, configFile, imageFile )
 {
  }      // Or1ksimExtSC()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  <function>isLittleEndian</function> is a simple wrapper for the
@@ -3737,14 +3889,16 @@ Or1ksimExtSC::Or1ksimExtSC ( sc_core::sc_module_name  name,
 	  </footnote>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 bool
 Or1ksimExtSC::isLittleEndian()
 {
   return (1 == or1ksim_is_le());
 
 }	// or1ksimIsLe()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The majority of the code for <function>doTrans</function> is
@@ -3755,9 +3909,11 @@ Or1ksimExtSC::isLittleEndian()
 	  yield, so that any other threads that are ready can take a turn.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   wait( sc_core::SC_ZERO_TIME );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<caution>
 	  <para>
@@ -3818,10 +3974,12 @@ Or1ksimExtSC::isLittleEndian()
 	  socket are included.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #include "tlm.h"
 #include "tlm_utils/simple_target_socket.h"
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	Convenience constants for the address mask, named register offsets and
@@ -3831,16 +3989,19 @@ Or1ksimExtSC::isLittleEndian()
 	&uart;.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #define UART_ADDR_MASK      7     // Mask for addresses (3 bit bus)
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	Named constants are defined giving the address offset of each register
 	of the &uart;
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #define UART_BUF  0               // R/W: Rx/Tx buffer, DLAB=0
 #define UART_IER  1             // R/W: Interrupt Enable Register, DLAB=0
 #define UART_IIR  2             // R: Interrupt ID Register
@@ -3849,7 +4010,8 @@ Or1ksimExtSC::isLittleEndian()
 #define UART_LSR  5             // R: Line Status Register
 #define UART_MSR  6             // R: Modem Status Register
 #define UART_SCR  7             // R/W: Scratch Register
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
         <para>
 	  Bit masks are declared for each of the bits and bit fields of
@@ -3859,7 +4021,8 @@ Or1ksimExtSC::isLittleEndian()
 	  possible interrupt.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #define UART_IIR_IPEND  0x01    // Interrupt pending (active low)
 
 #define UART_IIR_MASK   0x06    // the IIR status bits
@@ -3867,7 +4030,8 @@ Or1ksimExtSC::isLittleEndian()
 #define UART_IIR_RDA    0x04    // Receiver data available
 #define UART_IIR_THRE   0x02    // Transmitter holding reg empty
 #define UART_IIR_MOD    0x00    // Modem status
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -3881,11 +4045,13 @@ Or1ksimExtSC::isLittleEndian()
 	  <classname>sc_core::sc_module</classname>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 class UartSC
 : public sc_core::sc_module
 {
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The module has a customized constructor, specifying an input clock
@@ -3893,11 +4059,13 @@ class UartSC
 	  to indicate the endianness of the model.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   UartSC( sc_core::sc_module_name  name,
           unsigned long int        _clockRate,
           bool                     _isLittleEndian );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
       </sect2>
 
@@ -4035,7 +4203,8 @@ class UartSC
 	  divisor latch is really an extra 16 bit register.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   struct {
     unsigned char       rbr;            // R: Rx buffer,
     unsigned char       thr;            // R: Tx hold reg,
@@ -4048,7 +4217,8 @@ class UartSC
     unsigned char       scr;            // R/W: Scratch Register            
     unsigned short int  dl;             // R/W: Divisor Latch
   } regs;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  An additional register, <literal>intrPending</literal>, holds flags
@@ -4072,9 +4242,11 @@ class UartSC
 	  &systemc; event:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_event  txReceived;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The callback function notifies on this event, to trigger behavior in
@@ -4090,7 +4262,7 @@ class UartSC
       </title>
 
             <para>
-	The &uart; module class, <classname>UartSC</classname> implemenation
+	The &uart; module class, <classname>UartSC</classname> implementation
 	may be found in <filename>sys-models/simple-soc/UartSC.cpp</filename>
 	in the distribution.
       </para>
@@ -4105,9 +4277,11 @@ class UartSC
 	  <classname>Or1ksimSC</classname>, by the &systemc; macro
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 SC_HAS_PROCESS( UartSC );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The constructor calls the base class
@@ -4117,9 +4291,11 @@ SC_HAS_PROCESS( UartSC );
 	  associated with this module.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   SC_THREAD( busThread );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The method handling data on the Rx buffer is associated with this
@@ -4127,11 +4303,13 @@ SC_HAS_PROCESS( UartSC );
 	  initialized.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   SC_METHOD( rxMethod );
   sensitive &lt;&lt; rx;
   dont_initialize();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  The blocking transport callback is registered for the
@@ -4139,9 +4317,11 @@ SC_HAS_PROCESS( UartSC );
 	  the logger, <classname>LoggerSC</classname>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   bus.register_b_transport( this, &amp;UartSC::busReadWrite );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  Finally the registers (<literal>regs</literal>) are cleared.
@@ -4237,7 +4417,8 @@ SC_HAS_PROCESS( UartSC );
 	  also provides a check that only a single byte is being requested.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   switch( *((uint32_t *)maskPtr) ) {
   case 0x000000ff: offset = isLittleEndian ? 0 : 3; break;
   case 0x0000ff00: offset = isLittleEndian ? 1 : 2; break;
@@ -4249,7 +4430,8 @@ SC_HAS_PROCESS( UartSC );
     payload.set_response_status( tlm::TLM_GENERIC_ERROR_RESPONSE );
     return;
   }
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  In a perfect world, the router/arbiter function would have masked
@@ -4428,7 +4610,7 @@ SC_HAS_PROCESS( UartSC );
 	    </para>
 
 	    <para>
-	      A modern C++ compiler will often generate code inline for such
+	      A modern C++ compiler will often generate code in line for such
 	      small functions, so they will be implemented as efficiently as
 	      if they had been <literal>#define</literal>d as macros. Indeed
 	      the added type information gives the potential for greater
@@ -4500,7 +4682,7 @@ SC_HAS_PROCESS( UartSC );
       <para>
 	The key aspects of the overall simple &soc; model are captured in a
 	&uml; class diagram and a &uml; sequence diagram, showing how a write
-	transaction transfers a character to the modelled terminal.
+	transaction transfers a character to the modeled terminal.
       </para>
 
       <sect2 id="sec_simple_classes">
@@ -4604,7 +4786,7 @@ SC_HAS_PROCESS( UartSC );
 	  </para>
 
 	  <para>
-	    It is the existance of these separate threads of control which
+	    It is the existence of these separate threads of control which
 	    requires the &or1ksim; wrapper to execute
 	    <function>wait</function>, to allow those threads a chance to
 	    execute.
@@ -4856,9 +5038,11 @@ SC_HAS_PROCESS( UartSC );
 	  <literal>ioEvent</literal> is allocated:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   ioEvent = new sc_core::sc_event();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  When <function>ioHandler</function> is called in response to a &linux;
@@ -4870,13 +5054,15 @@ SC_HAS_PROCESS( UartSC );
 	  notified.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   for( Fd2Inst *cur = instList; cur != NULL ; cur = cur->next ) {
     if( FD_ISSET( cur->fd, &amp;readFdSet )) {
       (cur->inst)->ioEvent->notify();
     }
   }
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  This event then allows the <function>xtermThread</function> to run
@@ -4903,12 +5089,14 @@ SC_HAS_PROCESS( UartSC );
 	  &iss;, &uart; and terminal) are included.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "tlm.h"
 #include "Or1ksimExtSC.h"
 #include "UartSC.h"
 #include "TermSC.h"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  As before the main program (<function>sc_main</function>) takes as
@@ -4916,11 +5104,13 @@ SC_HAS_PROCESS( UartSC );
 	  image. Instances of the three modules are declared.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   Or1ksimExtSC  iss( "or1ksim", argv[1], argv[2] );
   UartSC        uart( "uart", iss.isLittleEndian() );
   TermSC        term( "terminal" );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The endianness for the &uart; is set using the public utility function
@@ -4928,9 +5118,11 @@ SC_HAS_PROCESS( UartSC );
 	  and &iss; can be connected:
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   iss.dataBus( uart.bus );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The Rx buffer in the &uart; is connected to the Tx port in the
@@ -4938,10 +5130,12 @@ SC_HAS_PROCESS( UartSC );
 	  port in the &uart;.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   uart.tx( term.rx );
   term.tx( uart.rx );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  The simulation can then be started with a call to
@@ -4967,7 +5161,8 @@ SC_HAS_PROCESS( UartSC );
 	  address and the register bits of interest
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #define BASEADDR   0x90000000
 #define BAUD_RATE        9600
 #define CLOCK_RATE  100000000           // 100 Mhz
@@ -4990,7 +5185,8 @@ struct uart16450
 
 #define UART_LCR_DLAB   0x80            // Divisor latch access bit
 #define UART_LCR_8BITS  0x03		// 8 bit data bits
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The utility functions to set and clear flags in the &uart; (see <xref
@@ -4999,9 +5195,11 @@ struct uart16450
 	  are included from the file <filename>binutils.c</filename>
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "bitutils.c"
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The main program declares a pointer to the UART register structure,
@@ -5010,7 +5208,8 @@ struct uart16450
 	  16 x the baud rate and setting 8-bit data.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   volatile struct uart16450 *uart = (struct uart16450 *)BASEADDR;
   unsigned short int         divisor;
 
@@ -5023,7 +5222,8 @@ struct uart16450
 
   set( &amp;(uart->lcr), UART_LCR_8BITS );		// Set 8 bit data
   packet
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The remainder of the program is a perpetual loop:
@@ -5059,7 +5259,8 @@ struct uart16450
 	  </listitem>
 	</itemizedlist>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   while( 1 ) {
     unsigned char  ch;
 
@@ -5079,16 +5280,14 @@ struct uart16450
       
     uart->buf = ch;
   }
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The source code for the &uart; loopback program may be found in
 	  <filename>progs-or32/uart-loop.c</filename> in the distribution. It
-	  must be compiled with the utility functions
-	  (<filename>progs-or32/utils.c</filename> and
-	  <filename>progs-or32/utils.h</filename>) and the bootloader
-	  (<filename>progs-or32/start.s</filename>). A pre-compiled version
-	  may be found in <filename>progs-or32/uart-loop</filename>.
+	  will be built using the &or1k; tool chain as part of the overall
+	  system build.
 	</para>
 
       </sect2>
@@ -5123,9 +5322,11 @@ struct uart16450
 	  suitable.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 ./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The &xterm; terminal should appear. Select it and type some
@@ -5139,7 +5340,8 @@ struct uart16450
 	    &uart; loop back program log output.
 	  </title>
 
-          <screen>
+	  <informalfigure>
+	    <screen>
 $ ./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
@@ -5158,7 +5360,9 @@ Read: 'r'
 Read: '!'
 Read: '!'
 Read: '!'
-	  </screen>
+	    </screen>
+	  </informalfigure>
+
 	</figure>
 
 	<para>
@@ -5226,7 +5430,8 @@ Read: '!'
 	  character is received from the terminal.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 void
 UartSC::rxMethod()
 {
@@ -5240,7 +5445,8 @@ UartSC::rxMethod()
   genIntr( UART_IER_RBFI );             // Interrupt if enabled
 
 }       // rxMethod()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  Similarly edit the <function>rxMethod</function> function in
@@ -5248,7 +5454,8 @@ UartSC::rxMethod()
 	  character is received from the UART.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 void
 TermSC::rxMethod()
 {
@@ -5257,7 +5464,8 @@ TermSC::rxMethod()
   cout &lt;&lt; "Char written at " &lt;&lt; sc_time_stamp() &lt;&lt; endl;
 
 }	// rxMethod()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  In both cases the C++ <classname>iostream</classname> header will be
@@ -5266,7 +5474,8 @@ TermSC::rxMethod()
 	  be brought into the local namespace.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include &lt;iostream&gt;
 
 
@@ -5274,7 +5483,8 @@ using sc_core::sc_time_stamp;
 
 using std::cout;
 using std::endl;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<note>
 	  <para>
@@ -5300,7 +5510,8 @@ using std::endl;
 	    &uart; loop back program log output with timing annotation.
 	  </title>
 
-          <screen>
+	  <informalfigure>
+	    <screen>
 	    $ ./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
@@ -5320,7 +5531,9 @@ Char read at    0 s
 Read: 'r'
 
    ... &lt;Lots more output&gt;
-	  </screen>
+	    </screen>
+	  </informalfigure>
+
 	</figure>
 
 	<para>
@@ -5365,8 +5578,9 @@ Read: 'r'
       <filename>TermSyncSC.h</filename>), the code for the timed &or1ksim;
       &iss; wrapper (<filename>Or1ksimSyncSC.cpp</filename> and
       <filename>Or1ksimSyncSC.h</filename>) and the main program for the
-      complete model (syncSocMainSC.cpp) may be founded in the
-      <filename>sysc-models/sync-soc</filename> directory of the distribution.
+      complete model (<filename>syncSocMain.cpp</filename>) may be founded in
+      the <filename>sysc-models/sync-soc</filename> directory of the
+      distribution.
     </para>
     
     <sect1>
@@ -5502,7 +5716,7 @@ Read: 'r'
 	<para>
 	  Before each upcall transaction, the &or1ksim; wrapper class waits
 	  for the period of time used by the underlying &or1ksim; &iss;. This
-	  brings all other threads into syncrhonization, giving them the
+	  brings all other threads into synchronization, giving them the
 	  opportunity to catch up.
 	</para>
 
@@ -5578,9 +5792,11 @@ Read: 'r'
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 unsigned long int  or1ksim_clock_rate();
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
@@ -5592,9 +5808,11 @@ unsigned long int  or1ksim_clock_rate();
 
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 void  or1ksim_set_time_point();
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
@@ -5606,9 +5824,11 @@ void  or1ksim_set_time_point();
 
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 double  or1ksim_get_time_period();
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
@@ -5642,13 +5862,15 @@ double  or1ksim_get_time_period();
 	  derived from that base class.
 	</para>
 
-        <programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "Or1ksimExtSC.h"
 
 class Or1ksimSyncSC
   : public Or1ksimExtSC
 {
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  A custom constructor must be defined, but has the same arguments as
@@ -5666,9 +5888,11 @@ class Or1ksimSyncSC
 	  </footnote>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   unsigned long int  getClockRate();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The virtual function, <function>doTrans</function> function is
@@ -5724,9 +5948,11 @@ class Or1ksimSyncSC
 	  reached.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   wait( sc_core::sc_time( or1ksim_get_time_period(), sc_core::SC_SEC ));
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  At this time the blocking transport function of the simple initiator
@@ -5735,17 +5961,19 @@ class Or1ksimSyncSC
 	  synchronized with the &systemc; clock).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_time  delay = sc_core::SC_ZERO_TIME;
   dataBus->b_transport( trans, delay );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  On return, the <literal>delay</literal> parameter will have been
 	  updated with any additional delay due to the transaction&mdash;in
 	  this case an estimate of the number of cycles to read or write the
 	  relevant &uart; register. This delay represents the additional time
-	  modelled since this thread last called
+	  modeled since this thread last called
 	  <function>wait</function>. The thread should
 	  <function>wait</function> for this time, to allow other thread to
 	  catch up.
@@ -5766,9 +5994,11 @@ class Or1ksimSyncSC
 	  point, ready for use in the next upcall.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   or1ksim_set_time_point();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
         <para>
 	  The utility <function>getClockRate</function> is a simple wrapper
@@ -5777,14 +6007,16 @@ class Or1ksimSyncSC
 	  program (see <xref linkend="sec_sync_main_prog" />).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 unsigned long int
 Or1ksimSyncSC::getClockRate()
 {
   return or1ksim_clock_rate();
 
 }       // getClockRate()
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The definition of the &or1ksim; &iss; wrapper module class with
@@ -5839,10 +6071,12 @@ Or1ksimSyncSC::getClockRate()
 	  represent the delay in reading and writing in nanoseconds.
 	</para>
 
-        <programlisting>
+	<informalfigure>
+	  <programlisting>
 #define UART_READ_NS       60   // Time to access the UART for read
 #define UART_WRITE_NS      60   // Time to access the UART for write
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The class is derived directly from the base class,
@@ -5852,11 +6086,13 @@ Or1ksimSyncSC::getClockRate()
 	  rate.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   UartSyncSC( sc_core::sc_module_name  name,
               unsigned long int        _clockRate,
               bool                     _isLittleEndian );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The <function>busThread</function> thread is reimplemented to add the
@@ -5910,7 +6146,8 @@ Or1ksimSyncSC::getClockRate()
 	  <literal>clockRate</literal>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 UartSyncSC::UartSyncSC( sc_core::sc_module_name  name,
                         unsigned long int        _clockRate,
                         bool                     _isLittleEndian ) :
@@ -5919,7 +6156,8 @@ UartSyncSC::UartSyncSC( sc_core::sc_module_name  name,
 {
 
 }       /* UartSyncSC() */
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The new version of <function>busThread</function> adds only one
@@ -5929,11 +6167,13 @@ UartSyncSC::UartSyncSC( sc_core::sc_module_name  name,
 	  <literal>txReceived</literal>).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
     wait( txReceived );                         // Wait for a Tx request
     wait( charDelay );                          // Wait baud delay
     tx.write( regs.thr );                       // Send char to terminal
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The new version of <function>busReadWrite</function> draws most of
@@ -5943,7 +6183,8 @@ UartSyncSC::UartSyncSC( sc_core::sc_module_name  name,
 	  the transaction.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 void
 UartSyncSC::busReadWrite( tlm::tlm_generic_payload &amp;payload,
                           sc_core::sc_time         &amp;delay )
@@ -5958,20 +6199,23 @@ UartSyncSC::busReadWrite( tlm::tlm_generic_payload &amp;payload,
 
     &lt;code for write commands etc&gt;
 
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The new version of <function>busWrite</function> similarly relies
 	  on the base class for most of its functionality.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 void
 UartSyncSC::busWrite( unsigned char  uaddr,
                       unsigned char  wdata )
 {
   UartSC::busWrite( uaddr, wdata );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  However any change to the divisor latch or line control register
@@ -5984,7 +6228,8 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	  <function>resetCharDelay</function> to recalculate the delay.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   switch( uaddr ) {
   case UART_BUF:                // Only change if divisorLatch update (DLAB=1)
   case UART_IER:
@@ -5996,7 +6241,8 @@ UartSyncSC::busWrite( unsigned char  uaddr,
   case UART_LCR:
     resetCharDelay();           // Could change baud delay
     break;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The time taken to put a character on the Tx line is the product of
@@ -6070,23 +6316,27 @@ UartSyncSC::busWrite( unsigned char  uaddr,
 	  and the new class derived from it.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #include "TermSC.h"
 
 class TermSyncSC
   : public TermSC
 {
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  A new custom constructor is needed, which takes a second argument to
 	  specify the baud rate.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   TermSyncSC( sc_core::sc_module_name  name,
               unsigned long int        baudRate );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The <function>xtermThread</function> thread will be
@@ -6101,9 +6351,11 @@ class TermSyncSC
 	  this represents in sending a character.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_time  charDelay;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The definition of the terminal module class with synchronized
@@ -6127,7 +6379,8 @@ class TermSyncSC
 	  a one off calculation.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
                         unsigned long int        baudRate ) :
   TermSC( name )  
@@ -6135,7 +6388,8 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
   charDelay = sc_core::sc_time( 10.0 / (double)baudRate, sc_core::SC_SEC );
 
 }       /* TermSyncSC() */
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The <function>xtermThread</function> thread is almost identical to
@@ -6144,13 +6398,15 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	  to add the modeled baud rate delay.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
     int ch = xtermRead();               // Should not block
 
     wait( charDelay );                  // Model baud rate delay
     tx.write( (unsigned char)ch );      // Send it
 
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The implementation of the terminal module class with synchronized
@@ -6174,21 +6430,25 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	modules, but this time using the synchronously timed versions.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #include "tlm.h"
 #include "Or1ksimSyncSC.h"
 #include "UartSyncSC.h"
 #include "TermSyncSC.h"
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	The baud rate for the terminal is defined as a constant for
 	convenience.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #define BAUD_RATE  9600
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	As before the main program (<function>sc_main</function>) takes as
@@ -6201,11 +6461,13 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	rate to be set.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
   Or1ksimSyncSC  iss( "or1ksim", argv[1], argv[2] );
   UartSyncSC     uart( "uart", iss.getClockRate(), iss.isLittleEndian() );
   TermSyncSC     term( "terminal", BAUD_RATE );
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	The remainder of the program, connecting components and starting the
@@ -6251,9 +6513,11 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	suitable.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	Once again the &xterm; terminal should appear. Select it and type some
@@ -6269,7 +6533,8 @@ TermSyncSC::TermSyncSC( sc_core::sc_module_name  name,
 	  &uart; loop back program log output.
 	</title>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 $ .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
@@ -6290,7 +6555,9 @@ Read: 'r'
 Char written at 517744580 ns
 
    ... &lt;Lots more output&gt;
-	</screen>
+	  </screen>
+	</informalfigure>
+
       </figure>
 
       <para>
@@ -6328,13 +6595,13 @@ Char written at 517744580 ns
     </para>
 
     <para>
-      The code for the decoupleded &or1ksim; &iss; wrapper
+      The code for the decoupled &or1ksim; &iss; wrapper
       (<filename>Or1ksimDecoupSC.cpp</filename> and
       <filename>Or1ksimDecoupSC.h</filename>), the code for the decoupled
       &uart; module (<filename>UartDecoupSC.cpp</filename> and
       <filename>UartDecoupSC.h</filename>) and the main program for the
-      complete model (decoupSocMainSC.cpp) may be founded in the
-      <filename>sysc-models/decoup-soc</filename> directory of the
+      complete model (<filename>decoupSocMainSC.cpp</filename>) may be founded
+      in the <filename>sysc-models/decoup-soc</filename> directory of the
       distribution.
     </para>
 
@@ -6354,7 +6621,7 @@ Char written at 517744580 ns
       <para>
 	It is worth noting that temporal decoupling does not improve overall
 	model performance <abbrev>per se</abbrev>. All the same elements will
-	need to be modelled. However it does ensure that the various threads
+	need to be modeled. However it does ensure that the various threads
 	in the model stay <emphasis>approximately</emphasis> in step over the
 	duration of the run, making for a more realistic model. In our example
 	it ensures that the &or1ksim; model yields control regularly to allow
@@ -6985,9 +7252,11 @@ Char written at 517744580 ns
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 void  or1ksim_reset_duration( double duration );
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
@@ -7039,10 +7308,12 @@ void  or1ksim_reset_duration( double duration );
 	  defined.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   tlm::tlm_global_quantum      *tgq;
   tlm_utils::tlm_quantumkeeper  issQk;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The definition of the &or1ksim; &iss; wrapper module class with
@@ -7054,7 +7325,7 @@ void  or1ksim_reset_duration( double duration );
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_or1ksimdecoupsc_impl">
 	<title>
 	  <classname>Or1ksimDecoupSC</classname> Module Class Implementation
 	</title>
@@ -7067,12 +7338,14 @@ void  or1ksim_reset_duration( double duration );
 	  call to <function>reset</function>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   tgq = &amp;(tlm::tlm_global_quantum::instance());
 
   issQk.set_global_quantum( refTgq.get() );
   issQk.reset();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<note>
 	  <para>
@@ -7099,11 +7372,13 @@ void  or1ksim_reset_duration( double duration );
 	  period.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   while( true ) {
     sc_core::sc_time  timeLeft =
       tgq->compute_local_quantum() - issQk.get_local_time();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  On return, <function>or1ksim_get_time_period</function> is used to
@@ -7114,12 +7389,14 @@ void  or1ksim_reset_duration( double duration );
 	  the next loop.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
     (void)or1ksim_run( timeLeft.to_seconds());
 
     issQk.inc( sc_core::sc_time( or1ksim_get_time_period(), sc_core::SC_SEC ));
     or1ksim_set_time_point();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  If the local time offset has reached the end of the global quantum,
@@ -7128,10 +7405,12 @@ void  or1ksim_reset_duration( double duration );
 	  (<xref linkend="chap_sync" />).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
     if( issQk.need_sync() ) {
       issQk.sync();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The transport function, <function>doTrans</function> has the same
@@ -7142,10 +7421,12 @@ void  or1ksim_reset_duration( double duration );
 	  is set.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   issQk.inc( sc_core::sc_time( or1ksim_get_time_period(), sc_core::SC_SEC ));
   or1ksim_set_time_point();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The delay argument to the blocking transport is the local time
@@ -7153,11 +7434,13 @@ void  or1ksim_reset_duration( double duration );
 	  delay), and the new value becomes the local time offset on return.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_time  delay = issQk.get_local_time();
   dataBus->b_transport( trans, delay );
   issQk.set( delay );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  At this point synchronization could be required&mdash;the read/write
@@ -7165,11 +7448,13 @@ void  or1ksim_reset_duration( double duration );
 	  quantum.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   if( issQk.need_sync() ) {
     issQk.sync();
   }
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The duration remaining for the &iss; simulation is reset in the same
@@ -7177,12 +7462,14 @@ void  or1ksim_reset_duration( double duration );
 	  time offset. On return the &iss; will continue for that period.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_time  timeLeft      =
     tgq->compute_local_quantum() - issQk.get_local_time();
 
   or1ksim_reset_duration ( timeLeft.to_seconds() );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The implementation of the &or1ksim; &iss; wrapper module class with
@@ -7275,13 +7562,15 @@ void  or1ksim_reset_duration( double duration );
 	  read or write.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   switch( payload.get_command() ) {
 
   case tlm::TLM_READ_COMMAND:
     delay += sc_core::sc_time( UART_READ_NS, sc_core::SC_NS );
     break;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The implementation of the &uart; module class with decoupled timing,
@@ -7307,13 +7596,15 @@ void  or1ksim_reset_duration( double duration );
 	defined as a parameter.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #include "Or1ksimDecoupSC.h"
 #include "UartDecoupSC.h"
 #include "TermSyncSC.h"
 
 #define QUANTUM_US   100
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	Before any modules are instantiated, the system global quantum must be
@@ -7322,9 +7613,11 @@ void  or1ksim_reset_duration( double duration );
 	be no awkward timing interactions.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
   tgq->set( sc_core::sc_time( QUANTUM_US, sc_core::SC_US ));
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	Thereafter the program follows the same structure (but using the
@@ -7371,9 +7664,11 @@ void  or1ksim_reset_duration( double duration );
 	suitable.
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	The results look very similar to those for the synchronized version,
@@ -7386,7 +7681,8 @@ void  or1ksim_reset_duration( double duration );
 	  &uart; loop back program log output with temporal decoupling.
 	</title>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 $ .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
@@ -7407,7 +7703,9 @@ Read: 'r'
 Char written at 667741600 ns
 
    ... &lt;Lots more output&gt;
-	</screen>
+	  </screen>
+	</informalfigure>
+
       </figure>
 
       <para>
@@ -7430,7 +7728,8 @@ Char written at 667741600 ns
 	  10ms global quantum.
 	</title>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 $ .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
 
              SystemC 2.2.0 --- May 16 2008 10:30:46
@@ -7449,7 +7748,9 @@ Char written at 651041620 ns
 Char r read at  1471041676667 ps
 Read: 'r'
 Char written at 1481041600 ns
-	</screen>
+	  </screen>
+	</informalfigure>
+
       </figure>
 
       <para>
@@ -7543,8 +7844,7 @@ Char written at 1481041600 ns
 
     <figure id="fig_simple_soc_intr2">
       <title>
-	Simple &soc; based on the &or1k; &or1ksim; with interrupts and &mmu;
-	enabled.
+	Simple &soc; based on the &or1k; &or1ksim; with interrupts and &mmu;.
       </title>
       <mediaobject>
 	<imageobject>
@@ -7596,7 +7896,7 @@ Char written at 1481041600 ns
       <para>
 	The key aspects of the overall decoupled &soc; model are captured
 	in a &uml; class diagram and a &uml; sequence diagram, showing how an
-	nterrupt is processed during a write transaction to the &uart;.
+	interrupt is processed during a write transaction to the &uart;.
 	
       </para>
 
@@ -7614,7 +7914,7 @@ Char written at 1481041600 ns
 	  &or1ksim; &iss; wrapper and &uart; are both
 	  subclassed to add the behavior needed for interrupt handling. There is
 	  no need to subclass the terminal module, since it has not interrupts
-	  to be modelled.
+	  to be modeled.
 	</para>
 
 	<para>
@@ -7658,7 +7958,7 @@ Char written at 1481041600 ns
 	  A sequence diagram, illustrating how the &or1ksim; wrapper handles
 	  an interrupt when a character is written to the &uart; is shown in
 	  <xref linkend="fig_intr_soc_sequence_diagram" />. Only 
-	  the interaction between the wrapper and the &uart; are shown, since
+	  the interaction between the wrapper and the &uart; is shown, since
 	  the other components largely retain their existing
 	  functionality. The model is fully decoupled, but for compactness the
 	  actions to handle decoupled timing are omitted.
@@ -7705,12 +8005,17 @@ Char written at 1481041600 ns
       </title>
 
       <para>
-	The &or1ksim; &iss; library is extended to provide an
-	<acronym>API</acronym> call to generate an interrupt. The &or1ksim;
+	The &or1ksim; &iss; library is extended to provide
+	&api; calls to generate an interrupt. The &or1ksim;
 	includes a <firstterm>programmable interrupt controller</firstterm>
 	(<acronym>PIC</acronym>), which is enabled. The new
-	<acronym>API</acronym> call, <function>or1ksim_interrupt</function>,
-	takes as parameter the interrupt number to be triggered.
+	&api; call, <function>or1ksim_interrupt</function>,
+	provides an edge-triggered interrupt, and takes as parameter the
+	interrupt number to be triggered. The new &api;
+	calls, <function>or1ksim_interrupt_set</function> and
+	<function>or1ksim_interrupt_set</function>, provide for setting and
+	clearing level sensitive interrupts. The choice of interrupt type to
+	use is made in the &or1ksim; configuration file.
       </para>
 
       <para>
@@ -7744,13 +8049,15 @@ Char written at 1481041600 ns
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 void or1ksim_interrupt( int  i );
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
-	      <function>void or1ksim_interrupt</function> requests the the
+	      <function>or1ksim_interrupt</function> requests the the
 	      interrupt given by its argument be taken at the start of the
 	      next instruction cycle. This is edge-triggered interrupt
 	      functionality, and there is no need to clear the interrupt.
@@ -7759,13 +8066,15 @@ void or1ksim_interrupt( int  i );
 
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 void or1ksim_interrupt_set( int  i );
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
-	      <function>void or1ksim_interrupt_set</function> asserts
+	      <function>or1ksim_interrupt_set</function> asserts
 	      the interrupt given by its argument for consideration by
 	      &or1ksim; at the start of the next instruction cycle. This is
 	      for level triggered interrupt handling, and must be explicitly
@@ -7775,20 +8084,22 @@ void or1ksim_interrupt_set( int  i );
 
 	  <listitem>
 	    <para>
-	      <programlisting>
+	      <informalfigure>
+		<programlisting>
 void or1ksim_interrupt_clear( int  i );
-	      </programlisting>
+		</programlisting>
+	      </informalfigure>
 	    </para>
 	    
 	    <para>
-	      <function>void or1ksim_interrupt_clear</function> deasserts the
+	      <function>or1ksim_interrupt_clear</function> deasserts the
 	      interrupt given by its argument for consideration by &or1ksim;
 	      at the start of the next instruction cycle. This is to clear an
 	      interrupt previously asserted with <function>void
 	      or1ksim_interrupt_set</function> when using level triggered
 	      interrupt handling.
 
-	      <function>void or1ksim_interrupt</function> requests the the
+	      <function>or1ksim_interrupt</function> requests the
 	      interrupt given by its argument be taken at the start of the
 	      next instruction cycle.
 	    </para>
@@ -7814,9 +8125,11 @@ void or1ksim_interrupt_clear( int  i );
 	  the constant, <literal>NUM_INTR</literal>.
 	</para>
 	
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 #define  NUM_INTR  32
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The new class derived from the base class and a custom constructor
@@ -7824,9 +8137,11 @@ void or1ksim_interrupt_clear( int  i );
 	  <classname>sc_signal</classname>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_signal&lt;bool&gt;  intr[NUM_INTR];
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<tip>
 	  <para>
@@ -7848,9 +8163,11 @@ void or1ksim_interrupt_clear( int  i );
 	  in parallel with the main &iss; execution thread.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   void  intrMethod();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The definition of the &or1ksim; &iss; wrapper module class with
@@ -7874,13 +8191,15 @@ void or1ksim_interrupt_clear( int  i );
 	  interrupt signal. There is no need to initialize this function.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   SC_METHOD( intrMethod );
   for( i = 0 ; i &lt; NUM_INTR ; i++ ) {
     sensitive &lt;&lt; intr[i].posedge_event();
   }
   dont_initialize();
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 	
 	<para>
 	  The interrupt method is triggered by a positive edge on one of the
@@ -7890,13 +8209,15 @@ void or1ksim_interrupt_clear( int  i );
 	  same cycle, so all are checked.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   for( i = 0 ; i &lt; NUM_INTR ; i++ ) {
     if( intr[i].event()) {
       or1ksim_interrupt( i );
     }
   }
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The implementation of the &or1ksim; &iss; wrapper module class with
@@ -7969,9 +8290,11 @@ void or1ksim_interrupt_clear( int  i );
 	  <function>busThread</function>.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
   sc_core::sc_fifo&lt;bool&gt;  intrQueue;
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  The definition of the &uart; module class with interrupts,
@@ -7995,14 +8318,16 @@ void or1ksim_interrupt_clear( int  i );
 	  <classname>UartDecoupSC</classname> and sets the FIFO queue size to 1.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
 UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
                         unsigned long int        _clockRate,
                         bool                     _isLittleEndian ) :
   UartDecoupSC( name, _clockRate, _isLittleEndian ),
   intrQueue( 1 )
 {
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<note>
 	  <para>
@@ -8028,7 +8353,7 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 
 	 <para>
 	   <function>intrThread</function> has a very simple
-	   <acronym>API</acronym>. If <literal>true</literal> is read it
+	   &api;. If <literal>true</literal> is read it
 	   asserts an interrupt (drives the interrupt port
 	   <literal>true</literal>), otherwise it deasserts the interrupt port
 	   (drives the interrupt port <literal>false</literal>).
@@ -8040,11 +8365,13 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	 loop, copying requests from the FIFO to the interrupt signal output
 	 port.</para>
 
-	 <programlisting>
+	 <informalfigure>
+	   <programlisting>
   while( true ) {
     intr.write( intrQueue.read() );
   }
-	 </programlisting>
+	   </programlisting>
+	 </informalfigure>
 
 	 <para>
 	   The interrupt generator, <function>genIntr</function> is almost
@@ -8055,10 +8382,12 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	   <function>intrThread</function> thread.
 	 </para>
 
-	 <programlisting>
+	 <informalfigure>
+	   <programlisting>
     setIntrFlags();                    // Show highest priority
     intrQueue.write( true );            // Request an interrupt signal
-	 </programlisting>
+	   </programlisting>
+	 </informalfigure>
 
 	 <para>
 	   The interrupt clear routing is a similar modification, this time
@@ -8066,10 +8395,12 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	   <literal>false</literal> on the FIFO queue.
 	 </para>
 
-	 <programlisting>
+	 <informalfigure>
+	   <programlisting>
   if( isSet( regs.iir, UART_IIR_IPEND )) {     // 1 = not pending
     intrQueue.write( false );                   // Deassert if none left
-	 </programlisting>
+	   </programlisting>
+	 </informalfigure>
 
 	<para>
 	  The implementation of the &uart; module class with interrupts,
@@ -8081,14 +8412,14 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
       </sect2>
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_intr_main">
       <title>
 	Main Program for the Interrupt Driven Model
       </title>
 
       <para>
 	The main program for the model supporting interrupts is in
-	<filename>intrSocSC>cpp</filename>. It has a very similar structure to
+	<filename>intrSocSC.cpp</filename>. It has a very similar structure to
 	the main program used with the temporal decoupling example in <xref
 	linkend="sec_temp_decoup_main" />, but uses the new versions of the
 	&or1ksim; wrapper class and &uart; module,
@@ -8102,12 +8433,14 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	defined to hold the interrupt port number used by the &uart; (2).
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
 #define BAUD_RATE   115200
 #define QUANTUM_US      10
 
 #define INTR_UART        2
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	The main program structure is unchanged, except that the &uart;
@@ -8115,9 +8448,11 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	the &or1ksim; wrapper:
       </para>
 
-      <programlisting>
+      <informalfigure>
+	<programlisting>
   uart.intr( iss.intr[INTR_UART] );
-      </programlisting>
+	</programlisting>
+      </informalfigure>
 
       <para>
 	The code for the SystemC main program for the &soc; with interrupts
@@ -8128,7 +8463,7 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_intr_running">
       <title>
 	Running the Interrupt Driven Model
       </title>
@@ -8156,11 +8491,13 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	  pending flag is clear (indicating the transmit buffer is empty).
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <programlisting>
     do {                        /* Wait for interrupts to clear */
       ;
     } while( is_set( uart->iir, UART_IIR_IPEND ) );
-	</programlisting>
+	  </programlisting>
+	</informalfigure>
 
 	<para>
 	  This is a very basic test&mdash;if all is well it behaves
@@ -8174,11 +8511,8 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	<para>
 	  The source code for the interrupt driven &uart; program may be found
 	  in <filename>progs-or32/uart-loop-intr.c</filename> in the
-	  distribution. It must be compiled with the utility functions
-	  (<filename>progs-or32/utils.c</filename> and
-	  <filename>progs-or32/utils.h</filename>) and the bootloader
-	  (<filename>progs-or32/start.s</filename>). A pre-compiled version
-	  may be found in <filename>progs-or32/uart-loop</filename>.
+	  distribution. It is built using the standard &or1k; tool chain as
+	  part of the main system build.
 	</para>
 
       </sect2>
@@ -8206,18 +8540,25 @@ UartIntrSC::UartIntrSC( sc_core::sc_module_name  name,
 	  &linux; kernel binary.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <informalfigure>
+	    <programlisting>
 ./IntrSocSC linux.cfg ../linux-2.6.19/vmlinux
-	</programlisting>
+	    </programlisting>
+	  </informalfigure>
+	</informalfigure>
 
 	<para>
 	  Initially &linux; copies itself from flash memory to
 	  <acronym>RAM</acronym>.
 	</para>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 Copying Linux... Ok, booting the kernel.
-	</screen>
+	  </screen>
+	</informalfigure>
+
 
 	<para>
 	  After a pause while initial booting is taking place the serial
@@ -8225,7 +8566,8 @@ Copying Linux... Ok, booting the kernel.
 	  appear:
 	</para>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 Linux version 2.6.19-or32 (jeremy@thomas) (gcc version 3.4.4) #59 Wed Jun 25 18:
 48:06 BST 2008
 Detecting Processor units:
@@ -8259,7 +8601,9 @@ init started:  BusyBox v1.4.1 (2007-03-22 18:53:56 EST) multi-call binary
 Starting pid 22, console /dev/ttyS0: '/etc/init.d/rcS'
 
 Please press Enter to activate this console.
-	</screen>
+	  </screen>
+	</informalfigure>
+
 
 	<para>
 	  This takes a simulated time of about 37 seconds, and on a modern PC
@@ -8283,7 +8627,8 @@ Please press Enter to activate this console.
 	  url="http://www.busybox.com">website</ulink> for more details).
 	</para>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 Please press Enter to activate this console. 
 Startingpid 25, console /dev/ttyS0: '/bin/sh'
 
@@ -8308,7 +8653,9 @@ rootfs on / type rootfs (rw)
 /dev/root on / type ext2 (ro)
 proc on /proc type proc (rw)
 # 
-	</screen>
+	  </screen>
+	</informalfigure>
+
 
 	<para>
 	  The importance of choosing a suitable value for the global quantum
@@ -8317,21 +8664,28 @@ proc on /proc type proc (rw)
 	  character at 115,200 baud.
 	</para>
 
-	<programlisting>
+	<informalfigure>
+	  <informalfigure>
+	    <programlisting>
 #define QUANTUM_US     100
-	</programlisting>
+	    </programlisting>
+	  </informalfigure>
+	</informalfigure>
 
 	<para>
 	  The time taken to boot is marginally faster (19s), but this time the
 	  terminal cannot cope with the erratic interrupt behavior.
 	</para>
 
-	<screen>
+	<informalfigure>
+	  <screen>
 VFS: Mounted root (ext2 filesystem) readonly.
 Freeing unused kernel memory: 104k freed
 init started:  BusyBox v1.4.
 Please press Ent
-	</screen>
+	  </screen>
+	</informalfigure>
+
 
 	<para>
 	  The &linux; serial driver loses interrupts and the system locks up
@@ -8369,7 +8723,7 @@ Please press Ent
       &wishbone;). The solution is to represent the &jtag; register in a byte
       vector, and use a &tlm2; generic payload extension to describe the
       &jtag; specific characteristics of bit length and target action (reset,
-      shift through the instruction register or shift throuhg the data
+      shift through the instruction register or shift through the data
       register). This is described in <xref linkend="sec_payload_extension"/>.
     </para>
 
@@ -8403,21 +8757,46 @@ Please press Ent
     </figure>
 
     <para>
-      The <classname>Or1ksimIntrSC</classname> is extended with a new &tlm2;
-      target port and handler for &jtag;. This in turn requires a new &tlm2;
-      generic payload extension class, <classname>JtagExtensionSC</classname>.
-    </para>
-
-    <para>
       For this example, a full debugger is not used to drive the &jtag;
       interface. Instead a simple &jtag; logger,
       <classname>JtagLoggerSC</classname>, is used. This initializes the
-      &jtag; interface, then reads the <firstterm>Next Program
-      Counter</firstterm> (<acronym>NPC</acronym>) &spr; once per second. This
+      &jtag; interface, then reads the <emphasis>Next Program
+      Counter</emphasis> (<acronym>NPC</acronym>) &spr; once per second. This
       is achieved by shifting a &jtag; register for a debug unit
       <literal>WRITE_COMMAND</literal> to specify the &spr; to read, followed
       by shifting a &jtag; register for a debug unit
-      <literal>GO_COMMAND</literal> to read the actual register.
+      <literal>GO_COMMAND</literal> to read the actual register. This
+      simplified design is shown in <xref linkend="fig_simple_soc_jtag_logger"
+      />.
+    </para>
+
+    <figure id="fig_simple_soc_jtag_logger">
+      <title>
+	Simple &soc; based on the &or1k; &or1ksim; with interrupts, &mmu; and
+	&jtag; logger.
+      </title>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="simple-soc-jtag-logger.svg"
+		     format="SVG"
+		     width="14cm"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+	<imageobject>
+	  <imagedata fileref="simple-soc-jtag-logger.png"
+		     format="PNG"
+		     width="80%"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      The <classname>Or1ksimIntrSC</classname> is extended with a new &tlm2;
+      target port and handler for &jtag;. This in turn requires a new &tlm2;
+      generic payload extension class, <classname>JtagExtensionSC</classname>.
     </para>
 
     <para>
@@ -8439,6 +8818,9 @@ Please press Ent
       </title>
 
       <para>
+	The key aspects of the overall decoupled SoC model are captured in a
+	UML class diagram and a UML sequence diagram, showing how a
+	transaction for the &jtag; port is processed.
       </para>
 
       <sect2>
@@ -8447,7 +8829,49 @@ Please press Ent
 	</title>
 
 	<para>
+	  The overall class diagram for the &soc; with &jtag; debug support
+	  incorporating a &uart;, terminal and simple debug logger is shown in
+	  <xref linkend="fig_jtag_soc_class_diagram" />. The design is similar
+	  to that for the &soc; with interrupts (see <xref
+	  linkend="sec_intr_classes" />). The overall diagram is now quite
+	  complex, so, for clarity, only those classes new to the &jtag;
+	  enabled design are shown. The remaining detail was shown earlier in
+	  <xref linkend="fig_intr_soc_class_diagram" />.
 	</para>
+
+	<para>
+	  The &or1ksim; &iss; wrapper is subclassed to add the new target port
+	  and handler for &jtag;. This needs a &systemc;
+	  <firstterm>mutex</firstterm> in order to ensure that access to the
+	  &jtag; port does not clash with running of the underlying &or1ksim;
+	  model. This is discussed in more detail in <xref
+	  linkend="sec_payload_extension" />.
+	</para>
+
+	<para>
+	  The new logger class, <classname>JtagLoggerSC</classname> provides a
+	  simple stream of debug &jtag; register transfers through the debug
+	  &tlm2; interface. That interface makes use of the mandatory
+	  extension class <classname>JtagExtensionSC</classname> to specify
+	  details of the &jtag; register being shifted.
+	</para>
+
+	<figure id="fig_jtag_soc_class_diagram">
+	  <title>
+	    Class diagram for the &or1ksim; &soc; with &jtag; interface.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="jtag-soc-classes.svg" format="SVG"
+			 width="14cm" scalefit="1" align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="jtag-soc-classes.png"
+			 format="PNG" width="80%" scalefit="1" align="center" />
+	      </imageobject>
+	  </mediaobject>
+	</figure>
 
       </sect2>
 
@@ -8457,7 +8881,44 @@ Please press Ent
 	</title>
 
 	<para>
+	  A sequence diagram, illustrating how the &or1ksim; wrapper handles a
+	  debug transaction is shown in <xref
+	  linkend="fig_jtag_soc_sequence_diagram" />. Only the interaction
+	  between the wrapper and the &jtag; debug interface is shown, since
+	  the other components largely retain their existing
+	  functionality. The model is fully decoupled and processes
+	  interrupts, but for compactness these details are not repeated here.
 	</para>
+
+	<para>
+	  The key feature is the use of a &systemc; mutex to ensure that the
+	  &jtag; transactions are only processed between calls to the
+	  &or1ksim; <function>run</function> method.
+	</para>
+
+	<figure id="fig_jtag_soc_sequence_diagram">
+	  <title>
+	    Sequence diagram for a debug transaction on the &or1ksim; &soc;
+	    with &jtag; interface.
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="jtag-soc-sequence-diagram.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="jtag-soc-sequence-diagram.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
 
       </sect2>
 
@@ -8469,6 +8930,59 @@ Please press Ent
       </title>
 
       <para>
+	The &systemc; &tlm2; generic payload is intended for use with models
+	of conventional buses. The payload is a multiple of bytes long and
+	transmitted over an interface that is a multiple of bytes wide.
+      </para>
+
+      <para>
+	This is not a good fit for bit-serial interfaces such as &ieee; 1149.1
+	&jtag;.
+      </para>
+
+      <para>
+	It is possible to build a completely new payload, customized to such
+	an interface, and which would permit use of all the other &tlm2;
+	infrastructure. However such a task is complex and time-consuming, and
+	is not good for compatibility between models.
+      </para>
+
+      <para>
+	As an alternative, &systemc; permits extension of the generic
+	payload. There are two flavors of extension,
+	<emphasis>ignorable</emphasis> extensions are used where the generic
+	payload is still meaningful without the extension being
+	present. <emphasis>Mandatory</emphasis> extensions are used where the
+	information in the payload is essential to correct operation of
+	targets and initiators.
+      </para>
+
+      <para>
+	Ignorable extensions are preferred wherever possible, since they
+	maximize reusability of the interface. The C++ type system is used to
+	enforce mandatory extensions, and their use requires sharing a
+	defining type between all targets and initiators.
+      </para>
+
+      <para>
+	For the &jtag; interface we use an ignorable extension. Where present,
+	this specifies what type of transaction is required (reset, shift
+	through the instruction register, shift through the data register) and
+	the exact bit length of the register being shifted. The actual data is
+	supplied as a byte vector in the generic payload as normal.
+      </para>
+
+      <para>
+	Where the extension data is not provided, the type of transaction is
+	inferred from the generic payload's address: 0 for shifting through
+	the instruction register, 1 for shifting through the data register and
+	any other value for reset. The bit length is calculated as 8 times the
+	generic payload data length.
+      </para>
+
+      <para>
+	In practice the extension will always be used, but by being ignorable,
+	we allow the maximum possible reuse of the interface in applications.
       </para>
 
       <sect2>
@@ -8477,8 +8991,108 @@ Please press Ent
 	</title>
 
 	<para>
+	  The extension class is a subclass of the abstract &systemc; template
+	  class <classname>tlm::tlm_extension</classname>
 	</para>
 
+	<informalfigure>
+	  <programlisting>
+class JtagExtensionSC: public tlm::tlm_extension&lt;JtagExtensionSC&gt;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The extension holds data on the &jtag; access type required (reset,
+	  shift through the instruction register, shift through the data
+	  register) and the exact number of bits to be shifted. For long term
+	  compatibility a data field to request debug is added, although it is
+	  not used in this application note.
+	</para>
+
+	<para>
+	  An enumeration type is specified to define the access type. This is
+	  public, since targets and initiators must be able to reference it.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+  enum AccessType {
+    RESET,
+    SHIFT_IR,
+    SHIFT_DR
+  };
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The constructor initializes the data fields to appropriate default
+	  values (type RESET, bit size zero, debug disabled).
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+JtagExtensionSC ();
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  It might be thought appropriate to have variants that could
+	  simultaneously initialize the arguments, allowing for easy dynamic
+	  allocation and destruction of extensions as needed. However
+	  allocation of the extension class is expensive in &systemc;, and
+	  dynamic allocation is discouraged. Instead a single instance is
+	  typically allocated and reused.
+	</para>
+
+	<para>
+	  Two virtual methods from the parent class must be implemented to
+	  allow instances to cloned and copied.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+virtual tlm::tlm_extension_base* clone() const;
+virtual void copy_from (tlm::tlm_extension_base const &amp;ext);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The public interface to the extension is through its accessors, a
+	  pair for each data field.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+AccessType  getType () const;
+void        setType (AccessType _type);
+
+int         getBitSize () const;
+void        setBitSize (int  _bitSize);
+
+bool        getDebugEnabled () const;
+void        setDebugEnabled (bool  _debugEnabled);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The data itself is held privately within the class.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+AccessType  type;
+int         bitSize;
+bool        debugEnabled;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The definition of the &systemc; generic payload extension class for
+	  &jtag;, <classname>JtagExtensionSC</classname>, may be found in
+	  <filename>sys-models/jtag-soc/JtagExtensionSC.h</filename> in the
+	  distribution.
+	</para>
+	  
       </sect2>
 
       <sect2>
@@ -8487,8 +9101,29 @@ Please press Ent
 	</title>
 
 	<para>
+	  The constructor simply initializes the private data fields to
+	  default values (type RESET, bit size zero, debugging disabled).
 	</para>
 
+	<para>
+	  The two virtual methods which must be implemented,
+	  <function>clone</function> and <function>copy_from</function> use
+	  boilerplate code from the &tlm2; language reference manual. This is
+	  quite sufficient for a simple extension like this.
+	</para>
+
+	<para>
+	  Finally the three pairs of accessor methods allow each field to be
+	  read or set.
+	</para>
+
+	<para>
+	  The implementation of the &systemc; generic payload extension class
+	  for &jtag;, <classname>JtagExtensionSC</classname>, may be found in
+	  <filename>sys-models/jtag-soc/JtagExtensionSC.cpp</filename> in the
+	  distribution.
+	</para>
+	  
       </sect2>
 
     </sect1>
@@ -8499,6 +9134,41 @@ Please press Ent
       </title>
 
       <para>
+	The Or1ksim ISS library is extended to provide API calls to handle
+	&jtag; registers being shifted in and out. The &api;
+	call, <function>or1ksim_jtag_reset</function>, causes the &jtag; unit
+	to process through a reset sequence. The &api;
+	calls, <function>or1ksim_jtag_shift_ir</function> and
+	<function>or1ksim_jtag_shift_dr</function>, take a byte vector and bit
+	length as arguments and shift specified number of bits through the
+	instruction register and data register respectively.
+      </para>
+
+      <para>
+	All three &api; calls return the time taken by the function in seconds
+	(as a C++ <type>double</type>). A key aspect of this &api; is that the
+	calls may not be used during the execution of
+	<function>or1ksim_run</function>. This could occur during processing
+	of an upcall, but at such a time the processor is mid-instruction and
+	the state for debug unit processing is inconsistent. This requirement
+	is enforced in the wrapper by use of a &systemc;
+	<classname>sc_mutex</classname>.
+      </para>
+
+      <para>
+	The Or1ksim wrapper, <classname>Or1ksimIntrSC</classname> is further
+	extended by a new derived class, <classname>Or1ksimJtagSC</classname>,
+	which provides a &tlm2; target port to for &jtag; transactions and a
+	handler method, <function>jtagHandler</function>, for those
+	requests.
+      </para>
+
+      <para>
+	The &jtag; target port makes use of &tlm2; generic payload with an
+	ignorable extension, used to specify precisely the &jtag; operation
+	required and the size in bits of the &jtag; register. The class
+	<classname>JtagExtensionSC</classname> (see <xref
+	linkend="sec_payload_extension" />) is defined for this purpose.
       </para>
 
       <sect2>
@@ -8507,7 +9177,92 @@ Please press Ent
 	</title>
 
 	<para>
+	  These additional functions allow the external &systemc; model to
+	  call into the &or1ksim; &iss; to request debugging activity through
+	  use of a &jtag; register. The &iss; requires that interrupts are not
+	  taken mid-instruction (for example while a peripheral memory access
+	  upcall is in progress). However it is up to the caller to enforce
+	  this restriction.
 	</para>
+
+	<para>
+	  &jtag; registers are represented as a byte vector, with the least
+	  significant bits in the lowest numbered byte. Where the number of
+	  bits is not a multiple of eight, it is the most significant byte
+	  which holds the odd number of bits, shifted to the least significant
+	  position within the byte. Thus for a 12-bit register, bits 0-7 would
+	  be in byte 0 and bits 8-11 would be in the least significant 4 bits
+	  of byte 1.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <informalfigure>
+		<programlisting>
+double  or1ksim_jtag_reset ();
+		</programlisting>
+	      </informalfigure>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_jtag_reset</function> requests the &or1ksim;
+	      &iss; debug unit go through a &jtag; reset cycle to put the
+	      <firstterm>Test Access Port</firstterm> (&tap;) in a consistent
+	      state. It returns the time taken in seconds.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <informalfigure>
+		<programlisting>
+double  or1ksim_jtag_shift_ir (unsigned char *jreg,
+			       int            num_bits);
+		</programlisting>
+	      </informalfigure>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_jtag_shift_ir</function> shifts the &jtag;
+	      register specified by its arguments through the &jtag;
+	      instruction register. It returns the time taken in seconds.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <informalfigure>
+		<programlisting>
+double  or1ksim_jtag_shift_dr (unsigned char *jreg,
+			       int            num_bits);
+		</programlisting>
+	      </informalfigure>
+	    </para>
+	    
+	    <para>
+	      <function>or1ksim_jtag_shift_dr</function> shifts the &jtag;
+	      register specified by its arguments through the &jtag; data
+	      register. It returns the time taken in seconds.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  The behavior of the debug unit in response to &jtag; register
+	  transfers is fully documented in descriptions of the Test Access
+	  Port <xref linkend="ref_mohor_jtag"/> and the OpenCores Debug Unit
+	  <xref linkend="ref_mohor_debug"/>.
+	</para>
+
+	<caution>
+	  <para>
+	    These functions are currently only available in &or1ksim; built
+	    from the &opencores; Subversion tree. In particular they are not a
+	    standard part of the &or1ksim; 0.3.0 library.
+	  </para>
+	</caution>
 
       </sect2>
 
@@ -8517,6 +9272,80 @@ Please press Ent
 	</title>
 
 	<para>
+	  The new module class, <classname>Or1ksimIntrSC</classname> is
+	  derived from the existing <classname>Or1ksimIntrSC</classname>
+	  module class, whose header, <filename>Or1ksimIntrSC.h</filename>, is
+	  included.
+	</para>
+
+	<para>
+	  The key addition to the public interface is a 1-bit wide &tlm2;
+	  target port for &jtag; transactions.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+tlm_utils::simple_target_socket&amp;Or1ksimJtagSC, 1&amp;  jtag;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The constructor is identical in form to that of the base class,
+	  taking the same arguments. It will have more work to do, setting up
+	  the target &tlm2; port handler and clearing the mutex.
+	</para>
+
+	<para>
+	  The protected virtual <function>run</function> method is
+	  reimplemented in this class. Functionally it is very similar to the
+	  base implementation, but a &systemc; mutex is used to ensure that it
+	  does not run while a &jtag; transaction is being processed.
+	</para>
+
+	<para>
+	  As described earlier (see <xref linkend="sec_payload_extension"/>),
+	  the &jtag; transactional interface uses an ignorable payload
+	  extension. If this extension is not present, the address field of
+	  the generic payload is used to infer the action required. For
+	  convenience the addresses corresponding to the instruction and data
+	  registers are specified.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+static const unsigned int  ADDR_SHIFT_IR = 0;
+static const unsigned int  ADDR_SHIFT_DR = 1;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  &jtag; transactions cannot be processed while the underlying
+	  &or1ksim; &iss; is running. This is enforced using a &systemc;
+	  mutex.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+sc_core::sc_mutex  or1ksimMutex;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Finally we need a handler for &jtag; transactions that are received.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+void  jtagHandler( tlm::tlm_generic_payload &amp;payload,
+                   sc_core::sc_time         &amp;delay );
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The definition of the Or1ksim ISS wrapper module class with &jtag;
+	  debug support, <classname>Or1ksimJtagSC</classname> may be found in
+	  <filename>sys-models/jtag-soc/Or1ksimJtagSC.h</filename> in the
+	  distribution.
 	</para>
 
       </sect2>
@@ -8527,6 +9356,87 @@ Please press Ent
 	</title>
 
 	<para>
+	  The constructor passes its arguments to the base class. It then
+	  associates the &jtag; target port with its handler and clears the
+	  mutex.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+// Bind the handler to the JTAG target port.
+jtag.register_b_transport( this, &amp;Or1ksimJtagSC::jtagHandler );
+
+// Unlock the Mutex
+or1ksimMutex.unlock ();
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The implementation of the <function>run</function> method is very
+	  similar to the base class for temporally decoupled models (see <xref
+	  linkend="sec_or1ksimdecoupsc_impl"/>). However the call to
+	  <function>or1ksim_run</function> is surrounded by lock/unlock of the
+	  mutex to ensure it cannot run at the same time as a thread
+	  requesting &jtag; access.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+or1ksimMutex.lock ();
+(void)or1ksim_run (timeLeft.to_seconds ());
+or1ksimMutex.unlock ();
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The handler for &jtag; transactions attempts to determine the type
+	  and exact bit size of the register from the extension payload. If
+	  this is not present (it is an ignorable extension), then it uses the
+	  generic payload address and data length instead.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+// Retrieve the extension.
+JtagExtensionSC *ext;
+payload.get_extension (ext);
+
+// Check if the extension exists. Set up the access type and bit size as
+// appropriate.
+JtagExtensionSC::AccessType  type;
+int                          bitSize;
+
+if (NULL == ext)
+  {
+    unsigned int  addr = (unsigned int) payload.get_address ();
+
+    type    = (ADDR_SHIFT_IR == addr) ? JtagExtensionSC::SHIFT_IR :
+              (ADDR_SHIFT_DR == addr) ? JtagExtensionSC::SHIFT_DR :
+                                        JtagExtensionSC::RESET ;
+    bitSize = 8 * (int) payload.get_data_length ();
+  }
+else
+  {
+    type     = ext->getType ();
+    bitSize = ext->getBitSize ();
+  }
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The handler then calls the appropriate function in the &or1ksim;
+	  &iss;, surrounding the call by a mutex lock/unlock, to ensure that
+	  &jtag; transactions are not processed while the &iss; is
+	  running. This could occur if an upcall caused a
+	  <function>wait&nbsp;()</function> allowing processing of a &jtag;
+	  transaction to occur.
+	</para>
+
+	<para>
+	  The implementation of the Or1ksim ISS wrapper module class with
+	  &jtag; debug support, <classname>Or1ksimJtagSC</classname> may be
+	  found in <filename>sys-models/jtag-soc/Or1ksimJtagSC.cpp</filename>
+	  in the distribution.
 	</para>
 
       </sect2>
@@ -8539,17 +9449,62 @@ Please press Ent
       </title>
 
       <para>
+	In normal use, a debugger, such as &gdb; would be connected to the
+	&jtag; port. For demonstrating the interface, we use a stripped down
+	&jtag; logger class. This uses the debug interface to read the
+	processor's next program counter &spr; once per (modeled) second.
       </para>
 
-      <sect2>
-	<title>
-	  Adding JTAG Interface Functions to the Or1ksim library
-	</title>
+      <para>
+	With the &or1ksim; debug unit (see <xref linkend="ref_mohor_debug"/>),
+	this requires the following steps.
+      </para>
 
-	<para>
-	</para>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Reset the &jtag; interface
+	  </para>
+	</listitem>
 
-      </sect2>
+	<listitem>
+	  <para>
+	    Shift <literal>DEBUG</literal> (0x8) into the &jtag; instruction
+	    register.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Construct a &jtag; data register to select module
+	    <literal>CPU0</literal> so we can access its &spr;s and shift that
+	    into the &jtag; data register.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Construct a &jtag; data register for the
+	    <literal>WRITE_COMMAND</literal> debug unit command, specifying
+	    that we wish to read the next program counter &spr; and shift that
+	    into the &jtag; data register.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Construct a &jtag; data register for the
+	    <literal>GO_COMMAND</literal> debug unit command, to collect the
+	    value read from the next program counter &spr; and shift that into
+	    the &jtag; data register.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	These last two steps are repeated with a wait of one second between,
+	to give a regular report on the value of the next program counter.
+      </para>
 
       <sect2>
 	<title>
@@ -8557,6 +9512,112 @@ Please press Ent
 	</title>
 
 	<para>
+	  The logger will require a simple &tlm2; initiator socket, which
+	  will use the generic payload with a custom extension,
+	  <classname>JtagExtensionSC</classname>. The relevant headers are
+	  included.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+#include &lt;tlm.h&gt;
+#include &lt;tlm_utils/simple_initiator_socket.h&gt;
+
+#include "JtagExtensionSC.h"
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The logger declares an initiator &tlm2; port to connect to the
+	  target port in the &or1ksim; wrapper. This is the public interface
+	  to this module.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+tlm_utils::simple_initiator_socket&lt;JtagLoggerSC, 1&gt;  jtag;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  A constructor is needed to connect the extension to the generic
+	  payload and to declare the &systemc; thread generating &jtag;
+	  transactions.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+JtagLoggerSC (sc_core::sc_module_name  name);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The module uses a single allocation of payload and extension. The
+	  temptation is to allocate and free these dynamically locally where
+	  they are needed. However, as noted earlier (see <xref
+	  linkend="sec_payload_extension"/> this is an expensive operation in
+	  &systemc;, so we have a single instance of each. The extension will
+	  be associated with the payload in the constructor.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+tlm::tlm_generic_payload  payload;
+JtagExtensionSC           ext;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  A &systemc; thread is used to generate the traffic, and this is
+	  implemented in the private method, <function>runJtag</function>.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+virtual void  runJtag();
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The &jtag; registers for the &or1ksim; debug unit have a complex
+	  structure. A set of utility methods is provided to construct the
+	  registers.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+void  jtagReset (sc_core::sc_time &amp;delay);
+
+void  jtagInstruction (unsigned char     inst,
+                       sc_core::sc_time &amp;delay);
+
+void  jtagSelectModule (unsigned char     moduleId,
+                        sc_core::sc_time &amp;delay);
+
+void  jtagWriteCommand (unsigned char      accessType,
+                        unsigned long int  addr,
+                        unsigned long int  numBytes,
+                        sc_core::sc_time  &amp;delay);
+
+void  jtagGoCommandRead (unsigned char      data[],
+                         unsigned long int  dataBytes,
+                         sc_core::sc_time  &amp;delay);
+
+// Utilities
+unsigned long int   crc32 (unsigned long long int  value,
+                           int                     num_bits,
+                           unsigned long int       crc_in);
+
+unsigned long long  reverseBits (unsigned long long  val,
+                                 int                 len);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The definition of the &jtag; logger module class,
+	  <classname>JtagLoggerSC</classname> may be found in
+	  <filename>sys-models/jtag-soc/JtagLoggerSC.h</filename> in the
+	  distribution.
 	</para>
 
       </sect2>
@@ -8567,6 +9628,112 @@ Please press Ent
 	</title>
 
 	<para>
+	  The class is declared as having a dynamic process, since the
+	  constructor will set up a &systemc; thread.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+SC_HAS_PROCESS (JtagLoggerSC);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The constructor passes the module name up to the base class. It
+	  associates the payload extension instance with the generic payload
+	  instance. Finally it declares a new &systemc; thread.
+	</para>
+
+	<para>
+	  We must use a <literal>SC_THREAD</literal> rather than
+	  <literal>SC_METHOD</literal> since the thread method,
+	  <function>runJtag</function> will <function>wait&nbsp;()</function>
+	  for one second between each read of the next program counter.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+  payload.set_extension (&amp;ext);
+  SC_THREAD (runJtag);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The main thread method, <function>runJtag</function> uses the
+	  various support utilities to construct &jtag; registers which are
+	  then transported to the target wrapped &iss;
+	</para>
+
+	<para>
+	  First the &jtag; reset, instruction and module selection are
+	  shifted, each followed by a message, noting how long the step took.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+jtagReset (delay);
+cout &lt;&lt; "Reset after " &lt;&lt; delay &lt;&lt; "." &lt;&lt; endl;
+wait (SC_ZERO_TIME);
+
+delay = SC_ZERO_TIME;
+jtagInstruction (DEBUG_INST, delay);
+cout &lt;&lt; "Instruction shifted after " &lt;&lt; delay &lt;&lt; "." &lt;&lt; endl;
+wait (SC_ZERO_TIME);
+
+delay = SC_ZERO_TIME;
+jtagSelectModule (CPU0_MOD, delay);
+cout &lt;&lt; "Module selected after " &lt;&lt; delay &lt;&lt; "." &lt;&lt; endl;
+wait (SC_ZERO_TIME);
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  A wait for zero time between each transaction ensures any other
+	  thread has an opportunity to resume if needed.
+	</para>
+
+	<para>
+	  The main loop reads the next program counter, waiting for one second
+	  between each loop. The read involves two transactions, one
+	  <literal>WRITE_COMMAND</literal> to specify the transfer required,
+	  one <literal>GO_COMMAND</literal> to accomplish the transfer.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+while (true)
+  {
+    // Specify the WRITE_COMMAND to read the NPC SPR
+    delay = SC_ZERO_TIME;
+    jtagWriteCommand (READ32, SPR_NPC, 4, delay);
+    cout &lt;&lt; "WRITE_COMMAND after " &lt;&lt; delay &lt;&lt; "." &lt;&lt; endl;
+    wait (SC_ZERO_TIME);
+
+    // Read the data, remembering that OR1200 is big endian
+    unsigned char  res[4];            // For the data read back
+
+    delay = SC_ZERO_TIME;
+    jtagGoCommandRead (res, 4, delay);
+    cout &lt;&lt; "GO_COMMAND after " &lt;&lt; delay &lt;&lt; "." &lt;&lt; endl;
+    cout &lt;&lt; "- NPC = 0x" &lt;&lt; hex &lt;&lt; (int) res[3] &lt;&lt; (int) res[2]
+         &lt;&lt; (int) res[1] &lt;&lt; (int) res[0] &lt;&lt; dec &lt;&lt; "." &lt;&lt; endl;
+    wait (sc_time (1000.0, SC_MS));
+  }
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The utilities to help in constructing registers and passing them to
+	  the target are largely concerned with the minutiae of format. In
+	  each the register is constructed, transported to the target and the
+	  returned register analyzed.
+	</para>
+
+	<para>
+	  The implementation of the &jtag; logger module class,
+	  <classname>JtagLoggerSC</classname> may be found in
+	  <filename>sys-models/jtag-soc/JtagLoggerSC.cpp</filename> in the
+	  distribution.
 	</para>
 
       </sect2>
@@ -8579,6 +9746,26 @@ Please press Ent
       </title>
 
       <para>
+	The main program for the model with &jtag; interface is in
+	<filename>jtagSocSC.cpp</filename>. It has a very similar structure to
+	the main program used with the interrupt enabled example in <xref
+	linkend="sec_intr_main"/>, but uses new versions of the Or1ksim
+	wrapper class and adds in the &jtag; logger module to generate &jtag;
+	debug port traffic.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+JtagLoggerSC  logger ("logger");
+logger.jtag (iss.jtag);
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The code for the SystemC main program for the SoC with &jtag; debug
+	interface may be found in
+	<filename>sys-models/jtag-soc/jtagSocMainSC.cpp</filename> in the
+	distribution.
       </para>
 
     </sect1>
@@ -8589,6 +9776,14 @@ Please press Ent
       </title>
 
       <para>
+	Compilation and linking of the program follows the same procedure as
+	previous examples.
+      </para>
+
+      <para>
+	As a simple test, the interrupt loop program with interrupts used in
+	<xref linkend="sec_intr_running"/> is reused, but this time the value
+	of the next program counter will also be printed on the console.
       </para>
 
       <sect2>
@@ -8597,6 +9792,90 @@ Please press Ent
 	</title>
 
 	<para>
+	  The program is run in the same way as earlier tests. For example
+	  from the build directory as follows.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+$ ./sysc-models/jtag-soc/jtag-soc ../simple.cfg progs-or32/uart-loop-intr
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  As before a &xterm; screen will appear, and characters typed at the
+	  keyboard will be reflected. This time however the console will also
+	  log the results of the various &jtag; commands.
+	</para>
+
+	<informalfigure>
+	  <screen>
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+
+  &lt;Lots of Or1ksim startup messages&gt;
+
+Reset after 200 ns.
+Instruction shifted after 160 ns.
+Module selected after 2920 ns.
+WRITE_COMMAND after 5 us.
+GO_COMMAND after 4200 ns.
+- NPC = 0x00142c.
+Read: 'F'
+Read: 'a'
+Read: 'r'
+Read: 'e'
+Read: 'w'
+Read: 'e'
+Read: 'l'
+Read: 'l'
+Read: ' '
+Read: 'G'
+Read: 'a'
+Read: 'l'
+Read: 'a'
+Read: 'x'
+Read: 'y'
+WRITE_COMMAND after 5 us.
+GO_COMMAND after 4200 ns.
+- NPC = 0x0012b0.
+Read: '!'
+WRITE_COMMAND after 5 us.
+GO_COMMAND after 4200 ns.
+- NPC = 0x001284.
+	  </screen>
+	</informalfigure>
+
+
+	<para>
+	  The values for the next program counter can be compared against an
+	  ordered name table for the &uart; application.
+	</para>
+
+	<informalfigure>
+	  <screen>
+$ or32-elf-nm progs-or32/uart-loop-intr | sort
+00000100 T _start
+00001000 T _set
+00001094 T _clr
+00001164 T _is_set
+0000121c T _is_clr
+000012c8 T _main
+00001564 T _simexit
+00001584 T _simputc
+000015a4 T _simputh
+000016f0 T _simputs
+	  </screen>
+	</informalfigure>
+
+
+	<para>
+	  It can be seen that the first value (<constant>0x00142c</constant>)
+	  falls within the <function>main</function> function,
+	  while the second (<constant>0x0012b0</constant>) and third
+	  (<constant>0x001284</constant>) fall within the flag testing
+	  function, <function>is_clr</function>.
 	</para>
 
       </sect2>
@@ -8624,15 +9903,15 @@ Please press Ent
     <itemizedlist>
       <listitem>
 	<para>
-	  A directory, <filename>sysc_models</filename>, containing the
+	  A directory, <filename>sysc-models</filename>, containing the
 	  example &systemc; models;
 	</para>
       </listitem>
 
       <listitem>
 	<para>
-	  A patch file to adapt the &or1ksim; &iss; as described in this
-	  application note;
+	  A directory, <filename>progs-or32</filename>, containing the
+	  &or1k; programs to be used with the models
 	</para>
       </listitem>
 
@@ -8651,51 +9930,164 @@ Please press Ent
     </itemizedlist>
 
     <para>
-      Within the <filename>sysc_models</filename> directory a further
-      directory, <filename>progs_or32</filename>, contains the example
-      programs which run on the &or1ksim; &iss;. They are provided as both
-      source and compiled binary, so that the &or1k; tool chain need not be
-      installed to run the models.
+      The &or1k; tool chain must be available to allow the target programs to
+      be build. This is documented on the OpenCores website (<ulink
+      url="http://www.opencores.org/">www.opencores.org</ulink>) and in a
+      separate &embecosm; application note <xref linkend="ref_app_note_2"
+      endterm="ref_app_note_2_xr"/>.
+    </para>
+
+    <caution>
+      <para>
+	This is a change from issue 1 of this application note, when
+	precompiled versions were provided.
+      </para>
+    </caution>
+
+    <para>
+      Almost all the &or1ksim; library extensions are available in
+      &or1ksim;&nbsp;0.3.0. However the additional functions needed for <xref
+      linkend="chap_jtag"/> are currently only available with the &or1ksim;
+      <command>Subversion</command> tree on the &opencores; website (<ulink
+      url="http://www.opencores.org/">www.opencores.org</ulink>). These
+      functions will be provided in &or1ksim;&nbsp;0.4.0, due to be released
+      in the near future.
     </para>
 
     <sect1>
       <title>
-	Patching &or1ksim;
+	Configuring and Building
       </title>
 
       <para>
-	The instructions for building standard &or1ksim; may be found in <xref
-	linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
-	linkend="ref_app_note_2" /> on the &embecosm; website. This includes
-	some patches to the standard distribution to fix a number of known
-	bugs. The &iss; uses standard GNU configuration and build.
+	The software is built in its own directory, thus avoiding
+	contaminating the source with the built programs. Assuming that the
+	programs have been downloaded and unpacked in a directory named
+	<filename>embecosm-esp1-sysc-tlm2.0-examples-2.0</filename>, then
+	configuration and building is achieved as follows.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+mkdir build
+cd build
+../embecosm-esp1-sysc-tlm2.0-examples-2.0/configure <emphasis>options</emphasis>
+make
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	This will build all the &systemc; models and the &or1k;
+	examples.
       </para>
 
       <para>
-	The changes required to &or1ksim; are provided as a patch file. To use
-	this download and unpack standard &or1ksim; has in directory
-	<filename>or1ksim-0.2.0</filename>. Apply the &embecosm; bug fix patches
-	described above and documented in <xref
-	linkend="ref_app_note_2" endterm="ref_app_note_2_xr" /> <xref
-	linkend="ref_app_note_2" />. This is the source for a working
-	<emphasis>standard</emphasis> &or1ksim; &iss;.
+	A number of options to configure are essential to correct building.
       </para>
+
+      <variablelist termlength="12">
+	<varlistentry>
+	  <term>
+	    <literal>--target=or32-elf</literal>
+	  </term>
+
+	  <listitem>
+	    <para>
+	      This specifies the target for the cross compiler used to
+	      compile the &or1k; programs. Normally this is
+	      <literal>or32-elf</literal>. However an alternative may be
+	      required for custom compiler tool chains.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <literal>--with-or1ksim=<replaceable>dirname</replaceable></literal>
+	  </term>
+
+	  <listitem>
+	    <para>
+	      <replaceable>dirname</replaceable> is the directory where the
+	      &or1ksim; libraries have been installed. If this is not
+	      specified, then the value of the environment variable
+	      <envar>OR1KSIM_HOME</envar> will be used instead. If that is
+	      not defined, then the configuration will fail with an error
+	      message.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <literal>--with-systemc=<replaceable>dirname></replaceable></literal>
+	  </term>
+
+	  <listitem>
+	    <para>
+	      <replaceable>dirname</replaceable> is the directory of the
+	      &systemc; installation. If this is not
+	      specified, then the value of the environment variable
+	      <envar>SYSTEMC</envar> will be used instead. If that is
+	      not defined, then the configuration will fail with an error
+	      message. 
+	    </para>
+
+	    <para>
+	      Since it is normal to have <envar>SYSTEMC</envar> defined if
+	      it is installed, this option is usually not needed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <literal>--with-tlm=<replaceable>dirname></replaceable></literal>
+	  </term>
+
+	  <listitem>
+	    <para>
+	      <replaceable>dirname</replaceable> is the directory of the
+	      &systemc; &tlm2; installation. If this is not specified,
+	      then the value of the environment variable
+	      <envar>TLM_HOME</envar> will be used instead. If that is not
+	      defined, then the configuration will fail with an error
+	      message.
+	    </para>
+
+	    <para>
+	      Since it is normal to have <envar>TLM_HOME</envar> defined
+	      if &tlm2; is installed, this option is usually not needed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
 
       <para>
-	Change to the <filename>or1ksim-0.2.0</filename> directory. Assuming
-	the &embecosm; patches for this application note are in
-	<filename>embecosm_patch_or1ksim_an1.bz2</filename>, they can be
-	applied by the command:
+	There are a wide range of other generic options available to control
+	configuration. These are seldom used, but can be seen by using the
+	following command.
       </para>
 
-      <programlisting>
-bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
-      </programlisting>
+      <informalfigure>
+	<programlisting>
+../configure --help
+	</programlisting>
+      </informalfigure>
 
       <para>
-	The &or1ksim; &iss; can then be built from this patched source in
-	exactly the same way as the standard &iss;.
+	The code is documented throughout with <application
+	class="software">doxygen</application>;. The documentation can be
+	generated by using the following command after configuration.
       </para>
+
+      <informalfigure>
+	<programlisting>
+make doxygen
+	</programlisting>
+      </informalfigure>
+
     </sect1>
 
     <sect1>
@@ -8716,18 +10108,19 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
 
   <appendix id="app_macos">
     <title>
-      Running with Mac OS
+      Running with &macos;
     </title>
     
     <para>
-      Robert G&uuml;nzel of the Department of Integrated Circuit Design at the
-      Technische Universit&auml;t Braunschweig, Germany has managed to get
-      both the OpenRISC tool chain and the examples in this application note
-      running under Mac OS 10.4.
+      Robert <foreignphrase>G&uuml;nzel</foreignphrase> of the Department of
+      Integrated Circuit Design at the <foreignphrase>Technische
+      Universit&auml;t Braunschweig</foreignphrase>, Germany has managed to
+      get both the OpenRISC tool chain and the examples in this application
+      note running under &macos;&nbsp;10.4.
     </para>
 
     <para>
-      There are three main issues that affect the Mac OS version
+      There are three main issues that affect the &macos; version
     </para>
 
     <orderedlist>
@@ -8739,13 +10132,13 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
 
       <listitem>
 	<para>
-	  There is no pseudo-terminal multiplexor
+	  There is no pseudo-terminal multiplexer
 	</para>
       </listitem>
 
       <listitem>
 	<para>
-	  Mac OS does not allow use of the <literal>F_SETOWN</literal> command
+	  &macos; does not allow use of the <literal>F_SETOWN</literal> command
 	  on the file descriptor of a pseudo terminal slave. Thus
 	  <literal>SIGIO</literal> cannot be received, and there is thus no
 	  way of knowing when the user is typing inside the &xterm;.
@@ -8904,7 +10297,7 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
 	  In object oriented programming a class which has inheriting
 	  variables and functions from another class (known as the base
 	  class). Specifically a term favored by C++, also referred to as a
-	  child class or sub-class.
+	  child class or subclass.
 	</para>
 
 	<glossseealso>base&#32;class</glossseealso>
@@ -8944,7 +10337,7 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
     </glossentry>
 
     <glossentry>
-      <glossterm>Generic Payload</glossterm>
+      <glossterm>generic payload</glossterm>
       <glossdef>
 	<para>
 	  Within &tlm2;, a class suitable for use as payload for
@@ -8952,6 +10345,32 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
 	</para>
 
 	<glossseealso>payload</glossseealso>
+	<glossseealso>generic payload extension</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>generic payload extension</glossterm>
+      <glossdef>
+	<para>
+	  Within &tlm2;, a mechanism for extending the generic payload, thus
+	  allowing initiators and targets to specify additional information.
+	</para>
+
+	<para>
+	  In its simplest form, extensions are
+	  <emphasis>ignorable</emphasis>. Initiators and targets will work
+	  correctly if the extension is not present.
+	</para>
+
+	<para>
+	  Extensions may also be <emphasis>mandatory</emphasis>. This is for
+	  use where the additional information provided is necessary for
+	  initiators and targets to work correctly.
+	</para>
+
+	<glossseealso>payload</glossseealso>
+	<glossseealso>generic payload extension</glossseealso>
       </glossdef>
     </glossentry>
 
@@ -8994,6 +10413,28 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
 	</para>
       </glossdef>
 
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Joint Test Action Group</glossterm>
+      <acronym>JTAG</acronym>
+      <glossdef>
+	<para>
+	  &jtag; is the usual name used for the IEEE 1149.1 standard entitled
+	  <emphasis>Standard Test Access Port and Boundary-Scan
+	  Architecture</emphasis> for test access ports used for testing
+	  printed circuit boards and chips using boundary scan.
+	</para>
+	<indexterm>
+	  <primary>&jtag;</primary>
+	</indexterm>
+
+	<para>
+	  This standard allows external reading of state within the board or
+	  chip. It is thus a natural mechanism for debuggers to connect to
+	  embedded systems.
+	</para>
+      </glossdef>
     </glossentry>
 
     <glossentry>
@@ -9051,6 +10492,21 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
     </glossentry>
 
     <glossentry>
+      <glossterm>mutex</glossterm>
+      <glossdef>
+	<para>
+	  An object in a program which provides a lock, used to negotiate
+	  mutual exclusion between multiple threads.
+	</para>
+
+	<para>
+	  &systemc; provides a <classname>sc_mutex</classname> class to
+	  implement mutual exclusion between &systemc; threads.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
       <glossterm>non-blocking</glossterm>
       <glossdef>
 	<para>
@@ -9085,8 +10541,13 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
 	  The data passed between threads by a transaction.
 	</para>
 
-	<glossseealso>Generic Payload</glossseealso>
+	<glossseealso>generic payload</glossseealso>
       </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>payload extension</glossterm>
+      <glosssee>generic payload extension</glosssee>
     </glossentry>
 
     <glossentry>
@@ -9251,6 +10712,16 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
     </glossentry>
 
     <glossentry>
+      <glossterm>Test Access Port</glossterm>
+      <acronym>TAP</acronym>
+      <glossdef>
+	<para>
+	  The interface to a &jtag; interface defined by IEEE 1149.1.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
       <glossterm>thread</glossterm>
       <glossdef>
 	<para>
@@ -9388,6 +10859,60 @@ bzcat -dc ../embecosm_patch_or1ksim_an1.bz2 | patch -p1
       <pagenums>
 	pp 128-133.
       </pagenums>
+    </bibliomixed>
+
+    <bibliomixed id="ref_mohor_debug">
+      <title>
+	SoC Debug Interface.
+      </title>
+      <author>
+	<firstname>Igor </firstname>
+	<surname>Mohor, </surname>
+      </author>
+      <issuenum>
+	Issue 3.0
+      </issuenum>
+      <publisher>
+	<publishername>
+	  OpenCores (<ulink
+	  url="http://www.opencores.org/">www.opencores.org</ulink>).
+	</publishername>
+      </publisher>
+      <pubdate>
+	  14 April 2004.
+      </pubdate>
+      <bibliomisc>
+	Available from the OpenCores <command>Subversion</command> tree at
+	<ulink
+	url="http://www.opencores.org/ocsvn/dbg_interface/dbg_interface/trunk/doc/DbgSupp.pdf">http://www.opencores.org/ocsvn/dbg_interface/dbg_interface/trunk/doc/DbgSupp.pdf</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_mohor_jtag">
+      <title>
+	&ieee; 1149.1 Test Access Port.
+      </title>
+      <author>
+	<firstname>Igor </firstname>
+	<surname>Mohor, </surname>
+      </author>
+      <issuenum>
+	Issue 2.0.
+      </issuenum>
+      <publisher>
+	<publishername>
+	  OpenCores (<ulink
+	  url="http://www.opencores.org/">www.opencores.org</ulink>).
+	</publishername>
+      </publisher>
+      <pubdate>
+	  30 January 2004.
+      </pubdate>
+      <bibliomisc>
+	Available from the OpenCores <command>Subversion</command> tree at
+	<ulink
+	url="http://www.opencores.org/ocsvn/jtag/jtag/trunk/tap/doc/jtag.pdf">http://www.opencores.org/ocsvn/jtag/jtag/trunk/tap/doc/jtag.pdf</ulink>.
+      </bibliomisc>
     </bibliomixed>
 
     <bibliomixed id="ref_app_note_2">
