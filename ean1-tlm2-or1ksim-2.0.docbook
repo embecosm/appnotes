@@ -4016,7 +4016,7 @@ Or1ksimExtSC::isLittleEndian()
         <para>
 	  Bit masks are declared for each of the bits and bit fields of
 	  interest in the &uart;. For example the interrupt identification
-	  register needs a mask for the pending bit a mask for the two bits
+	  register needs a mask for the pending bit of a mask for the two bits
 	  representing the highest priority interrupt and a mask for each
 	  possible interrupt.
 	</para>
@@ -4117,7 +4117,7 @@ class UartSC
 	</title>
 
 	<para>
-	  A &systemc; thread is provided <function>busThread</function> to
+	  A &systemc; thread, <function>busThread</function>, is provided to
 	  handle transactions arriving on the bus. A &systemc; method,
 	  statically sensitive to writes to the Rx buffer is used to handle
 	  bytes arriving in the Rx buffer.
@@ -4222,7 +4222,7 @@ class UartSC
 
 	<para>
 	  An additional register, <literal>intrPending</literal>, holds flags
-	  (corresponding the interrupt enable register bits) indicating which
+	  (corresponding to the interrupt enable register bits) indicating which
 	  interrupts are currently pending. A flag initialized at construction
 	  records the model endianness, <literal>isLittleEndian</literal>.
 	</para>
@@ -4274,7 +4274,7 @@ class UartSC
 	
 	<para>
 	  Implementation of the constructor is preceded, like
-	  <classname>Or1ksimSC</classname>, by the &systemc; macro
+	  <classname>Or1ksimSC</classname>, by the &systemc; macro.
 	</para>
 
 	<informalfigure>
@@ -4594,7 +4594,7 @@ SC_HAS_PROCESS( UartSC );
 	  <function>clrIntr</function> clears the interrupt pending flag (no
 	  need to check if the interrupt is enabled in this case) and sets the
 	  appropriate interrupt identification register flags. Again there is
-	  no external generated in this implementation.
+	  no external signal generated in this implementation.
 	</para>
 
 	<para>
@@ -4604,7 +4604,7 @@ SC_HAS_PROCESS( UartSC );
 	      Many programmers use <literal>#define</literal>d macros for
 	      functions such as these. However such macros have no
 	      encapsulation (they can be used by anyone including the header)
-	      and have a nasty habit of clashing with other peoples macros. By
+	      and have a nasty habit of clashing with other programs macros. By
 	      using functions, the functions can be made private to the
 	      <classname>UartSC</classname> class alone.
 	    </para>
@@ -4802,7 +4802,7 @@ SC_HAS_PROCESS( UartSC );
       </title>
 
       <para>
-	The terminal provides &systemc; buffer to model the Rx and a port to
+	The terminal provides a &systemc; buffer to model the Rx and a port to
 	model the Tx pins of a serial connection. The visualization is
 	provided by a &linux; &xterm; running in a child process, with
 	communication through a pseudo-TTY<footnote>
@@ -5158,7 +5158,7 @@ SC_HAS_PROCESS( UartSC );
 	<para>
 	  A <literal>volatile</literal> structure is declared for the &uart;
 	  registers, with <literal>#define</literal>d constants for the base
-	  address and the register bits of interest
+	  address and the register bits of interest.
 	</para>
 
 	<informalfigure>
@@ -5305,7 +5305,7 @@ struct uart16450
 	  incorporate the library created when building the logger test (see
 	  <xref linkend="sec_iss_run_test" />). The library provides a
 	  convenient mechanism for reusing the code from this model, when
-	  creating subsequent models which used derived classes.
+	  creating subsequent models which use derived classes.
 	</para>
 
 	<para>
@@ -5367,7 +5367,7 @@ Read: '!'
 
 	<para>
 	  At the same time the characters will be echoed on the xterm, as
-	  shown in figure <xref linkend="fig_uart-loopback_screen" />.
+	  shown in <xref linkend="fig_uart-loopback_screen" />.
 	</para>
 
 	<figure id="fig_uart-loopback_screen">
@@ -5594,7 +5594,7 @@ Read: 'r'
 	<classname>UartSyncSC</classname> and
 	<classname>TermSyncSC</classname> are derived from the existing
 	classes to provide added functionality. In addition the underlying
-	&or1ksim; &iss; library will need extending. the main program will
+	&or1ksim; &iss; library will need extending. The main program will
 	need modifying to use these new classes.
       </para>
 
@@ -5636,7 +5636,7 @@ Read: 'r'
 	    the model clock rate (used as input clock rate for the UART) and
 	    to determine the time spent executing instructions (so
 	    <classname>Or1ksimSyncSC</classname> can determine the
-	    synchronization time with &systemc;.
+	    synchronization time with &systemc;).
 	  </para>
 	</listitem>
 
@@ -5975,7 +5975,7 @@ class Or1ksimSyncSC
 	  relevant &uart; register. This delay represents the additional time
 	  modeled since this thread last called
 	  <function>wait</function>. The thread should
-	  <function>wait</function> for this time, to allow other thread to
+	  <function>wait</function> for this time, to allow other threads to
 	  catch up.
 	</para>
 
@@ -6097,7 +6097,7 @@ Or1ksimSyncSC::getClockRate()
 	<para>
 	  The <function>busThread</function> thread is reimplemented to add the
 	  timing delay (as a call to <function>wait</function> in
-	  transmitting a character as described above.
+	  transmitting a character as described above).
 	</para>
 
 	<para>
@@ -8279,7 +8279,7 @@ void or1ksim_interrupt_clear( int  i );
 
 	<para>
 	  The new thread, <function>intrThread</function> is declared. It
-	  will use re-implemented versions of the <function>genIntrr</function>
+	  will use re-implemented versions of the <function>genIntr</function>
 	  and <function>clrIntr</function> functions from the base class,
 	  <classname>UartSC</classname>.
 	</para>

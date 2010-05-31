@@ -28,7 +28,7 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT        = embecosm-tlm2-or1ksim-ean1-issue-2
+DOCROOT        = ean1-tlm2-or1ksim-2.0
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
