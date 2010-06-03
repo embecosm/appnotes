@@ -1486,31 +1486,6 @@ OSCI TLM 2.0, convenience sockets.
 
       <sect2>
 	<title>
-	  Modifying the Standard &or1ksim; &iss;
-	</title>
-
-	<para>
-	  It is not intended that the reader should have to understand the
-	  internal workings of &or1ksim;. With the exception of the examples
-	  in <xref linkend="chap_jtag"/>, the changes described in this
-	  application note form part of &or1ksim; 0.3.0.
-	</para>
-
-	<para>
-	  The changes required to support &jtag; described in <xref
-	  linkend="chap_jtag"/> will form part of &or1ksim; 0.4.0. In the
-	  meantime they are available by building &or1ksim; from the
-	  &opencores; <command>Subversion</command> tree.
-	</para>
-
-	<para>
-	  More information is provided in <xref linkend="app_download" />.
-	</para>
-
-      </sect2>
-
-      <sect2>
-	<title>
 	  Derived classes
 	</title>
 
@@ -1680,15 +1655,20 @@ OSCI TLM 2.0, convenience sockets.
       </para>
 
       <para>
-	Almost all the modifications required for this application note have
-	now been incorporated in &or1ksim; 0.3.0. However some additional
-	modifications are required to support the &jtag; interface described
-	in <xref linkend="chap_jtag" />. Those additional modifications will
-	form part of &or1ksim;&nbsp;0.4.0, but in the meantime are available
-	from the &or1ksim; <command>Subversion</command> tree on the
-	&opencores; website (<ulink
-	url="http://www.opencores.org/">www.opencores.org</ulink>). See <xref
-	linkend="app_download" /> for details.
+	It is not intended that the reader should have to understand the
+	internal workings of &or1ksim;. All the changes described in this
+	application note form part of &or1ksim;&nbsp;0.4.0.
+      </para>
+
+      <para>
+	With the exception of the examples in <xref linkend="chap_jtag"/>,
+	the changes described in this application note also form part of
+	&or1ksim;&nbsp;0.3.0.
+      </para>
+
+      <para>
+	Details of obtaining &or1ksim; are provided in <xref
+	linkend="app_download" />.
       </para>
 
       <sect2 id="sec_or1ksim_libcals">
@@ -1771,8 +1751,8 @@ int  or1ksim_run( double  duration );
 	</itemizedlist>
 
 	<para>
-	  Both these interface functions are provided as standard in &or1ksim;
-	  0.3.0.
+	  These functions are a standard part of the &or1ksim;&nbsp;0.3.0 and
+	  &or1ksim;&nbsp;0.4.0 libraries.
 	</para>
 
       </sect2>
@@ -3782,7 +3762,8 @@ int  or1ksim_is_le();
 	</itemizedlist>
 
 	<para>
-	  This function is a standard part of the &or1ksim; 0.3.0 library.
+	  This function is a standard part of the &or1ksim;&nbsp;0.3.0 and
+	  &or1ksim;&nbsp;0.4.0 libraries.
 	</para>
 
       </sect2>
@@ -5347,7 +5328,6 @@ $ ./build/sysc-models/simple-soc simple.cfg progs_or32/uart-loop
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -5517,7 +5497,6 @@ using std::endl;
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -5843,8 +5822,8 @@ double  or1ksim_get_time_period();
 	</itemizedlist>
 
 	<para>
-	  All these functions are a standard part of the &or1ksim; 0.3.0
-	  library.
+	  These functions are a standard part of the &or1ksim;&nbsp;0.3.0 and
+	  &or1ksim;&nbsp;0.4.0 libraries.
 	</para>
  
      </sect2>
@@ -6373,10 +6352,10 @@ class TermSyncSC
 
 	<para>
 	  The custom constructor calls the base class constructor to set the
-	  module name. The body of the constructor is calculates the delay due
-	  to the baud rate. There is no configurability (this terminal
-	  supports 1 start, 8 data, 0 parity and 1 stop bits only), so this is
-	  a one off calculation.
+	  module name. The body of the constructor calculates the delay due to
+	  the baud rate. There is no configurability (this terminal supports 1
+	  start, 8 data, 0 parity and 1 stop bits only), so this is a one off
+	  calculation.
 	</para>
 
 	<informalfigure>
@@ -6540,7 +6519,6 @@ $ .build/sysc-models/sync-soc simple.cfg progs_or32/uart-loop
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -6568,7 +6546,7 @@ Char written at 517744580 ns
 	<emphasis>after</emphasis> the &uart; has added the baud-rate
 	delay. So the timing from the <emphasis>read</emphasis> message to the
 	<emphasis>write</emphasis> message should be the time for the &uart;
-	delay for the current baud rate and packet bits plus the execution
+	delay for the current baud rate and packet bits, plus the execution
 	time for the code to echo the character on the &or1ksim; &iss;.
       </para>
 
@@ -6590,7 +6568,7 @@ Char written at 517744580 ns
 
     <para>
       In this case study temporal decoupling is added to the &tlm2; model of
-      an &soc;. The &soc; model with arbiter from the previous example is
+      a &soc;. The &soc; model with arbiter from the previous example is
       reused.
     </para>
 
@@ -6611,7 +6589,7 @@ Char written at 517744580 ns
       <para>
 	The idea of temporal decoupling is very simple and has been around for
 	a long time (see for example <xref linkend="ref_fitch_88"
-	endterm="ref_fitch_88_xr" />). In a parallel system, the various
+	endterm="ref_fitch_88" />). In a parallel system, the various
 	threads keep their own local time, and only synchronize when they need
 	to communicate with each other. It is particularly suited to
 	timed-based modeling, since it ensures that no one thread hogs the
@@ -6832,7 +6810,7 @@ Char written at 517744580 ns
 	      behavior.
 	    </para>
 	  </footnote> which can be used to hold the system global quantum. A
-	  set of functions to manipulate the global quantum are provided.
+	  set of functions to manipulate the system global quantum are provided.
 	</para>
 
 	<variablelist>
@@ -6854,7 +6832,7 @@ Char written at 517744580 ns
 	    </term>
 	    <listitem>
 	      <para>
-		Sets the global quantum (as a &systemc;
+		Sets the system global quantum (as a &systemc;
 		<classname>sc_time</classname> object)
 	      </para>
 	    </listitem>
@@ -6866,7 +6844,7 @@ Char written at 517744580 ns
 	    </term>
 	    <listitem>
 	      <para>
-		Returns the value of the global quantum
+		Returns the value of the system global quantum
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -6878,7 +6856,7 @@ Char written at 517744580 ns
 	    <listitem>
 	      <para>
 		Returns the local quantum, i.e. the time from the current
-		&systemc; time stamp to the next multiple of the global
+		&systemc; time stamp to the next multiple of the system global
 		quantum.
 	      </para>
 	    </listitem>
@@ -6911,7 +6889,7 @@ Char written at 517744580 ns
 	</para>
 
 	<para>
-	  A module will instantiate one quantum keeper for each thread that is
+	  A module will instantiate one quantum keeper for each thread that
 	  uses temporal decoupling, initializing them in the constructor.
 	</para>
 
@@ -6929,7 +6907,7 @@ Char written at 517744580 ns
 	<para>
 	  One function is provided to manage the local quantum. The
 	  <function>reset</function> function calls
-	  <function>compute_local_quantum</function> to calculates the local
+	  <function>compute_local_quantum</function> to calculate the local
 	  quantum from the time stamp and the global quantum (which is done by
 	  calling the <function>compute_local_quantum</function> in the
 	  singleton <classname>tlm_global_quantum</classname> object) and sets
@@ -7224,7 +7202,7 @@ Char written at 517744580 ns
 	<listitem>
 	  <para>
 	    Updates to the &or1ksim; &iss; library to support running to a
-	    fixed time time point.
+	    fixed time point.
 	  </para>
 	</listitem>
       </itemizedlist>
@@ -7278,7 +7256,8 @@ void  or1ksim_reset_duration( double duration );
 	</itemizedlist>
 
 	<para>
-	  This function is a standard part of the &or1ksim; 0.3.0 library.
+	  This function is a standard part of the &or1ksim;&nbsp;0.3.0 and
+	  &or1ksim;&nbsp;0.4.0 libraries.
 	</para>
 
       </sect2>
@@ -7588,12 +7567,12 @@ void  or1ksim_reset_duration( double duration );
       </title>
 
       <para>
-	The main program, <filename>decoupSocMainSC.cpp</filename> is similar in
-	structure to the main program used for the synchronous version (see
+	The main program, <filename>decoupSocMainSC.cpp</filename> is similar
+	in structure to the main program used for the synchronous version (see
 	<xref linkend="sec_sync_main_prog" />). This time the headers for the
 	versions of the &or1ksim; wrapper and &uart; implementing temporal
-	decoupling are used and the time to use as the global quantum is
-	defined as a parameter.
+	decoupling are used and the time to use as the system global quantum
+	is defined as a parameter.
       </para>
 
       <informalfigure>
@@ -7688,7 +7667,6 @@ $ .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -7735,7 +7713,6 @@ $ .build/sysc-models/decoup-soc simple.cfg progs_or32/uart-loop
              SystemC 2.2.0 --- May 16 2008 10:30:46
         Copyright (c) 1996-2006 by all Contributors
                     ALL RIGHTS RESERVED
-Or1ksim 0.3.0
 
    ... &lt;Or1ksim initialization messages&gt;
 
@@ -7913,7 +7890,7 @@ Char written at 1481041600 ns
 	  linkend="sec_decoup_classes" />). The
 	  &or1ksim; &iss; wrapper and &uart; are both
 	  subclassed to add the behavior needed for interrupt handling. There is
-	  no need to subclass the terminal module, since it has not interrupts
+	  no need to subclass the terminal module, since it has no interrupts
 	  to be modeled.
 	</para>
 
@@ -8107,7 +8084,8 @@ void or1ksim_interrupt_clear( int  i );
 	</itemizedlist>
 
 	<para>
-	  These functions are a standard part of the &or1ksim; 0.3.0 library.
+	  These functions are a standard part of the &or1ksim;&nbsp;0.3.0 and
+	  &or1ksim;&nbsp;0.4.0 libraries.
 	</para>
 
       </sect2>
@@ -8695,8 +8673,6 @@ Please press Ent
       </sect2>
     </sect1>
 
-
-
   </chapter>
 
   <chapter id="chap_jtag">
@@ -9256,11 +9232,14 @@ double  or1ksim_jtag_shift_dr (unsigned char *jreg,
 	  <xref linkend="ref_mohor_debug"/>.
 	</para>
 
+	<para>
+	  These functions are a standard part of the &or1ksim;&nbsp;0.4.0 library.
+	</para>
+
 	<caution>
 	  <para>
-	    These functions are currently only available in &or1ksim; built
-	    from the &opencores; Subversion tree. In particular they are not a
-	    standard part of the &or1ksim; 0.3.0 library.
+	    These functions are <emphasis>not</emphasis> a standard part of
+	    the &or1ksim;&nbsp;0.3.0 library.
 	  </para>
 	</caution>
 
@@ -9945,13 +9924,24 @@ $ or32-elf-nm progs-or32/uart-loop-intr | sort
     </caution>
 
     <para>
-      Almost all the &or1ksim; library extensions are available in
-      &or1ksim;&nbsp;0.3.0. However the additional functions needed for <xref
-      linkend="chap_jtag"/> are currently only available with the &or1ksim;
-      <command>Subversion</command> tree on the &opencores; website (<ulink
-      url="http://www.opencores.org/">www.opencores.org</ulink>). These
-      functions will be provided in &or1ksim;&nbsp;0.4.0, due to be released
-      in the near future.
+      All the changes described in this application note form part of
+      &or1ksim;&nbsp;0.4.0.
+    </para>
+
+    <para>
+      At the time writing, this version is not fully released. It's release
+      candidate can be downloaded from the &opencores; website (<ulink
+      url="http://www.opencores.org/">www.opencores.org</ulink>). The final,
+      stable release is scheduled for the end of June 2010.
+    </para>
+
+    <para>
+      The functions for all but the final chapter (<xref
+      linkend="chap_jtag"/>) also form part of &or1ksim;&nbsp;0.3.0. Users
+      wishing to build on this form of the library should modify the top level
+      <filename>configure.ac</filename> and the
+      <filename>makefile.am</filename> to remove reference to the
+      <filename>jtag-soc</filename> directory and its files.
     </para>
 
     <sect1>
@@ -9963,7 +9953,7 @@ $ or32-elf-nm progs-or32/uart-loop-intr | sort
 	The software is built in its own directory, thus avoiding
 	contaminating the source with the built programs. Assuming that the
 	programs have been downloaded and unpacked in a directory named
-	<filename>embecosm-esp1-sysc-tlm2.0-examples-2.0</filename>, then
+	<filename>esp1-tlm2-or1ksim-examples-2.0</filename>, then
 	configuration and building is achieved as follows.
       </para>
 
@@ -9971,7 +9961,7 @@ $ or32-elf-nm progs-or32/uart-loop-intr | sort
 	<programlisting>
 mkdir build
 cd build
-../embecosm-esp1-sysc-tlm2.0-examples-2.0/configure <emphasis>options</emphasis>
+../esp1-tlm2-or1ksim-examples-2.0/configure <emphasis>options</emphasis>
 make
 	</programlisting>
       </informalfigure>
