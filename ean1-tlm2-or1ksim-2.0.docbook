@@ -6589,7 +6589,7 @@ Char written at 517744580 ns
       <para>
 	The idea of temporal decoupling is very simple and has been around for
 	a long time (see for example <xref linkend="ref_fitch_88"
-	endterm="ref_fitch_88" />). In a parallel system, the various
+	endterm="ref_fitch_88_xr" />). In a parallel system, the various
 	threads keep their own local time, and only synchronize when they need
 	to communicate with each other. It is particularly suited to
 	timed-based modeling, since it ensures that no one thread hogs the
