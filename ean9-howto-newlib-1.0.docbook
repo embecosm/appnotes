@@ -1,0 +1,1022 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- =========================================================================
+Useful entities
+========================================================================== -->
+
+<!-- ========== Acronyms and abbreviations ========== -->
+
+<!ENTITY bsp  "<acronym>BSP</acronym>" >
+<!ENTITY gcc  "<acronym>GCC</acronym>" >
+<!ENTITY gdb  "<acronym>GDB</acronym>" >
+<!ENTITY gnu  "<acronym>GNU</acronym>" >
+<!ENTITY ieee "<acronym>IEEE</acronym>">
+<!ENTITY posix "<acronym>POSIX</acronym>">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
+
+<!ENTITY autoconf "<application class='software'>autoconf</application>">
+<!ENTITY automake "<application class='software'>automake</application>">
+<!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
+
+<!-- = Hardware applications = -->
+
+<!ENTITY openrisc "<application class='hardware'>OpenRISC</application>">
+
+<!-- = Commands = -->
+
+<!ENTITY bash "<command>bash</command>">
+<!ENTITY make "<command>make</command>">
+
+<!-- = Libraries = -->
+
+<!ENTITY binutils "<systemitem class='library'>binutils</systemitem>" >
+<!ENTITY libc "<systemitem class='library'>libc</systemitem>" >
+<!ENTITY libm "<systemitem class='library'>libm</systemitem>" >
+<!ENTITY libgloss "<systemitem class='library'>libgloss</systemitem>" >
+<!ENTITY newlib "<systemitem class='library'>newlib</systemitem>" >
+<!ENTITY Newlib "<systemitem class='library'>Newlib</systemitem>" >
+
+<!-- = Other = -->
+<!ENTITY nbhy "&#8209;" >
+
+<!-- ========== Cross references ========== -->
+
+<!-- = Organizations = -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY gpl "GNU General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY gpl_www "GNU General Public License (<ulink url='http://www.gnu.org/licenses/gpl.html'>GNU General Public License</ulink>)">
+
+]>
+
+<!-- ==========================================================================
+
+Copyright (c) 2010 Embecosm Limited <info@embecosm.com>.
+
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
+
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
+
+===============================================================================
+
+Application note describing simple use of DejaGNU
+=========================================================================== -->
+
+<book lang="en_GB">
+  <title>
+    Howto: Porting &newlib;
+  </title>
+  <subtitle>
+    A Simple Guide
+  </subtitle>
+
+  <bookinfo>
+
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>
+      July 2010
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 9. Issue 1
+    </releaseinfo>
+
+    <copyright>
+      <year>
+	2010
+      </year>
+      <holder>
+	&embecosm; Limited
+      </holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>
+	Legal Notice
+      </title>
+
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, &embecosm_www;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The software examples written by &embecosm; and used in this document
+	are licensed under the &gpl_www;. For detailed licensing information
+	see the file <filename>COPYING</filename> in the source code of the
+	examples.
+      </para>
+
+      <para>
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
+      </para>
+
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      Newlib is a C library intended for use on embedded systems. It is a
+      conglomeration of several library parts, all under free software
+      licenses that make them easily usable on embedded products.
+    </para>
+
+    <sect1>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+	Porting &newlib; is not difficult, but advice for the beginner is thin
+	on the ground. This application note is intended for software
+	engineers porting &newlib; for the first time.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Examples
+      </title>
+
+      <para>
+	This application note includes examples from the port of &newlib; to
+	the &openrisc; architecture, originally by Chris Bower, then of
+	Imperial College, London, and subsequently extensively updated by
+	Jeremy Bennett of Embecosm.
+      </para>
+
+      <para>
+	The example include a <firstterm>Board Support Package</firstterm>
+	(&bsp;) for use with the &openrisc; architectural simulator &or1ksim;
+	by the same two authors.
+      </para>
+
+      <para>
+	At the time of writing the &openrisc; implementation is
+	not part of the main &newlib; distribution. It can be downloaded from
+	&opencores_www;.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Further information
+      </title>
+
+      <para>
+	The main source of information is the &newlib; website (<ulink
+	url="http://sourceware.org/newlib/">sourceware.org/newlib</ulink>). This
+	includes a FAQ, which has brief instructions on porting &newlib; and
+	documentation for &libc; and &libm;, the two libraries making up
+	&newlib;. The &libc; documentation is particularly useful, because it
+	lists the system calls which must be implemented by any new port,
+	including minimal implementations.
+      </para>
+
+      <para>
+	There is also a mailing list, <email><ulink
+	url="mailto:newlib@sourceware.org">newlib@sourceware.org</ulink></email>
+	where questions can be asked, or new ports submitted.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	About &embecosm; Application Notes
+      </title>
+
+      <para>
+	&embecosm; publishes a series of free and open source application
+	notes, designed to help working engineers with practical problems.
+      </para>
+
+      <para>
+	Feedback is always welcome, which should be sent to
+	<email>info@embecosm.com</email>.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      &newlib; wwithin the &gnu; Tool Chain
+    </title>
+
+    <para>
+      &Newlib; is intended for use with the GNU tool chain. If &newlib; is
+      included within the build of the GNU tool chain, then all the
+      libraries will be built and installed in the correct places to be found
+      by &gcc;
+    </para>
+
+    <sect1>
+      <title>
+	The Unified Source Tree
+      </title>
+
+      <para>
+	The three separate packages, &binutils; &gcc; and &gdb; are all taken
+	from a common source tree. &gcc; and &gdb; both use many libraries
+	from &binutils;. It is convenient to reassemble that source tree and
+	make a single build of all the tools together.
+      </para>
+
+      <para>
+	The easiest way to achieve this is to link all the top level
+	directories in each package into a single unified directory, leaving
+	out any duplicated files or directories.
+      </para>
+
+      <para>
+	The following &bash; script will take unpacked distributions of
+	&binutils; &gcc; and &gdb; and link them into a single directory,
+	<filename>srcw</filename>.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+#!/bin/bash
+
+component_dirs='binutils-2.18.50 gcc-4.2.2 gdb-6.8'
+unified_src=srcw
+
+cd ${unified_src}
+ignore_list=". .. CVS .svn"
+    
+for srcdir in ${component_dirs}
+do
+    echo "Component: $srcdir"
+    case srcdir
+        in
+        /* | [A-Za-z]:[\\/]*)
+            ;;
+            
+        *)
+            srcdir="../${srcdir}"
+            ;;
+    esac
+        
+    files=`ls -a ${srcdir}`
+        
+    for f in ${files}
+    do
+        found=
+            
+        for i in ${ignore_list}
+        do
+            if [ "$f" = "$i" ]
+            then
+                found=yes
+            fi
+        done
+            
+        if [ -z "${found}" ]
+        then
+            echo "$f            ..linked"
+            ln -s ${srcdir}/$f .
+        fi
+    done
+
+    ignore_list="${ignore_list} ${files}"
+done
+
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The entire tool chain can then be configured and built in a separate
+	directory. The <filename>configure</filename> script understands to
+	pass on top level arguments to subsidiary configuration scripts. For
+	example to configure to build a C only tool chain for the 32-bit
+	&openrisc; architecture to be installed in
+	<filename>/opt/or32-elf</filename>, the following would be
+	appropriate.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+mkdir build
+cd build
+../src/configure --target=or32-elf --enable-languages=c --prefix=/opt/or32-elf
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Each tool can be built with its own specific target within that build
+	directory
+      </para>
+
+      <informalfigure>
+	<programlisting>
+cd build
+make all-build all-binutils all-gas all-ld all-gcc all-gdb
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      <note>
+	<para>
+	  The initial &make; target, <literal>all-build</literal> is used to
+	  build some of the baseline libraries and tools used throughout the
+	  tool chain.
+	</para>
+      </note>
+
+      <para>
+	Similarly the tools can be installed using the following:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+cd build
+make install-build install-binutils install-gas install-ld install-gcc \
+     install-gdb
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      <sect2>
+	<title>
+	  Incorporating &Newlib; within the Tool Chain Build
+	</title>
+
+	<para>
+	  &Newlib; can be linked into the unified source directory in the same
+	  fashion. All that is needed is to add &newlib; to the component
+	  directories in the linking script.
+	</para>
+	  
+	<informalfigure>
+	  <programlisting>
+#!/bin/bash
+
+component_dirs='binutils-2.18.50 gcc-4.2.2 newlib-1.17.0 gdb-6.8'
+unified_src=srcw
+...
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The configuration command should also specify that this is a build
+	  using &newlib;
+	</para>
+
+      <informalfigure>
+	<programlisting>
+mkdir build
+cd build
+../src/configure --target=or32-elf --enable-languages=c --with-newlib \
+                 --prefix=/opt/or32-elf
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Two new targets are needed of &newlib;, one to build &newlib; itself,
+	and one to build any board support packages using &libgloss; (see
+	<xref linkend="chap_overview" /> for an explanation of how &libgloss;
+	is used with &newlib;).
+      </para>
+
+      <informalfigure>
+	<programlisting>
+cd build
+make all-build all-binutils all-gas all-ld all-gcc all-target-newlib \
+     all-target-libgloss all-gdb
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Similarly additional targets are needed for installation.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+cd build
+make install-build install-binutils install-gas install-ld install-gcc \
+     install-target-newlib install-target-libgloss install-gdb
+cd ..
+	</programlisting>
+      </informalfigure>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_overview">
+    <title>
+      Overview of &newlib;
+    </title>
+
+    <para>
+    </para>
+
+    <sect1>
+      <title>
+	The relationship between &libgloss; and &newlib;
+      </title>
+
+      <para>
+	&Newlib; is now divided into two parts. The main
+	<filename>newlib</filename> directory contains the bulk of the code
+	for the two main libraries, &libc; and &libm;, together with an
+	<emphasis>architecture</emphasis> specific code for particular
+	targets.
+      </para>
+
+      <para>
+	The <filename>libgloss</filename> directory contains code specific to
+	particular platforms on which the library will be used, generally
+	referred to as the <firstterm>Board Support Package</firstterm>
+	(&bsp;). Any particular target architecture may have multiple &bsp;s,
+	for example for different hardware platforms, for a simulator etc.
+      </para>
+
+      <para>
+	The target architecture specific code within the
+	<filename>newlib</filename> directory may be very modest - possibly as
+	little as an implementation of <function>setjmp</function> and a
+	specification of the &ieee; floating point forma tto use.
+      </para>
+
+      <para>
+	The board support package is more complex. It requires an
+	implementation of eighteen system calls and the definition of one
+	global data structure, although the implementation of some of those
+	system calls may be completely trivial.
+      </para>
+
+      <note>
+	<para>
+	  The separation of &bsp; implementation into &libgloss; is relatively
+	  recent. Consequently the source tree contains a number of older
+	  target implementations where the &bsp; is entirely within
+	  &newlib;. When looking for examples, be sure to choose an
+	  architecture which has been implemented through &libgloss;. The
+	  &openrisc; implementation is one such architecture.
+	</para>
+      </note>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	The C Namespace and Reentrant Functions
+      </title>
+
+      <para>
+	The &bsp; implements the system calls&mdash;functions like
+	<function>close</function>, <function>write</function> etc. It is
+	possible for the &bsp; to implement these directly, but these will
+	then be defined in the main C namespace. It is perfectly permissible
+	for the user to replace these functions, and the user versions take
+	precedence, which requires some care at link time.
+      </para>
+
+      <para>
+	&Newlib; allows the implementer instead to provide namespace clean
+	versions of these functions by prefixing them with an
+	underscore. &Newlib; will ensure that the system calls map to these
+	namespace clean version (i.e. a call to <function>close</function>
+	becomes a call to <function>_close</function>) unless the user has
+	reimplemented that function themselves.
+      </para>
+
+      <para>
+	A <firstterm>reentrant</firstterm> function may be safely called from
+	a second thread, while a first thread of control is executing. In
+	general a function that modifies no static or global state, will be
+	reentrant. 
+      </para>
+
+      <para>
+	Many system calls are trivially reentrant. However for some calls,
+	reentrancy is not easy to provide automatically, so reentrant versions
+	are provided. Thus for <function>close</function>, there is the
+	reentrant version <function>close_r</function>. The reentrant versions
+	take an extra argument, a <emphasis>reentrancy structure</emphasis>,
+	which can be used to ensure correct behavior.
+      </para>
+
+      <para>
+	For many systems, the issue of re-entrancy does not arise. If there is
+	only ever one thread of control, or if separate threads have their own
+	address space there is no problem.
+      </para>
+
+      <para>
+	However it's worth remembering that even a bare metal system may
+	encounter issues with re-entrancy if event handlers are allowed to use
+	the system calls.
+      </para>
+
+      <para>
+	&Newlib; gives considerable flexibility, particularly where namespace
+	clean versions of the basic system calls are implemented. The
+	implementer can choose to provide implementations of the reentrant
+	versions of the functions. Alternatively &newlib; can provide
+	reentrancy at the library level, but mapping the calls down the system
+	calls, which are not themselves re-entrant. This last can often prove
+	a practical solution to the problem.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Adding a new Target to &Newlib;
+      </title>
+
+      <para>
+	Adding a new architecture to &newlib; requires the following steps.
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    Provide a machine specific directory within the
+	    <filename>newlib</filename> directory for architecture specific
+	    code, notably the <function>setjmp</function> implementation.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Provide a platform directory for &bsp; implementation (s) within
+	    the <filename>libgloss</filename> directory. This is where the
+	    implementation of the system calls for each &bsp; will go
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Update the <filename>configure.host</filename> file in the
+	    <filename>newlib</filename> directory to point to the machine and
+	    platform directories for the new target.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+      <sect2>
+	<title>
+	  Extending <filename>configure.host</filename> for a New Target
+	</title>
+      
+	<para>
+	  The <filename>configure.host</filename> needs changes in two places,
+	  to identify the architecture specific machine directory and the
+	  platform directory for &bsp; implementations.
+	</para>
+
+	<para>
+	  The machine name is specified in in <literal>case</literal> swich on
+	  the <literal>${host_cpu}</literal> early on in the file. Add a new
+	  <literal>case</literal> entry defining
+	  <literal>machine_type</literal> for the architecture. Thus for
+	  &openrisc; 32-bit architecture we have:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+  or32)
+        machine_dir=or32
+        ;;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  This specifies that the machine specific code for &openrisc; will be
+	  found in the directory
+	  <filename>newlib/libc/machine/or32</filename>.
+	</para>
+
+	<para>
+	  The platform directory and details are specified in a subsequent
+	  <literal>case</literal> switch on <literal>${host}</literal>
+	  (i.e. the full triplet, not just the <acronym>CPU</acronym> type).
+	  For &openrisc; we have the following.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+  or32-*-*)
+        syscall_dir=syscalls
+        ;;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  This is the simplest possible option, specifying that the &bsp;s for
+	  all &openrisc; targets will implement namespace clean system calls,
+	  and rely on &newlib; to map reentrant calls down to them. The
+	  directory name for the &bsp; implementations will match that of the
+	  machine directory, but within the <filename>libgloss</filename>
+	  directory. So for &openrisc; the &bsp; implementations are in
+	  <filename>libgloss/or32</filename>.
+	</para>
+
+	<para>
+	  There are four common alternatives for specifying how the &bsp;
+	  will be implemented.
+	</para>
+
+	<orderedlist>
+	  <listitem>
+	    <para>
+	      The implementer defines reentrant namespace clean versions of
+	      the system calls. In this case, <literal>syscall_dir</literal>
+	      is set to <literal>syscalls</literal> as above, but in
+	      addition, <literal>-DREENTRANT_SYSCALLS_PROVIDED</literal> is
+	      added to <literal>newlib_cflags</literal> in
+	      <filename>configure.host</filename>. For the &openrisc; we could
+	      have done this with:
+	      <informalfigure>
+		<programlisting>
+  or32-*-*)
+        syscall_dir=syscalls
+        newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED"
+        ;;
+		</programlisting>
+	      </informalfigure>
+	    </para>
+
+	    <para>
+	      For convenience, stub versions of the reentrant functions may
+	      be found in the <literal>libc/reent</literal> directory. These
+	      are in fact the functions used if the reentrant system calls are
+	      not provided, and map to the non-reentrant versions.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The implementer defines non-reentrant, but namespace clean
+	      versions of the system calls. This is the approach we have used
+	      with &openrisc; and all the implementer needs to do in this case
+	      is to set <literal>syscall_dir</literal> is set to
+	      <literal>syscalls</literal> in
+	      <filename>configure.host</filename>. &newlib; will map reentrant
+	      calls down to the non-rentrant one.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The implementer defines non-reentrant, regular
+	      versions of the system calls (i.e. <function>close</function>
+	      rather than <function>_close</function>). The library will
+	      be neither reentrant, not namespace clean, but will work. In
+	      this case,
+	      <literal>-DMISSING_SYSCALL_NAMES</literal> is
+	      added to <literal>newlib_cflags</literal> in
+	      <filename>configure.host</filename>. For the &openrisc; we could
+	      have done this with:
+	      <informalfigure>
+		<programlisting>
+  or32-*-*)
+        newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+        ;;
+		</programlisting>
+	      </informalfigure>
+	    </para>
+
+	    <para>
+	      Note in particular that <literal>syscall_dir</literal> is not
+	      defined in this case.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      The implementer defines non-reentrant, regular
+	      versions of the system calls (i.e. <function>close</function>
+	      rather than <function>_close</function>). The reentrant system
+	      calls are mapped onto these functions. The library will
+	      not be namespace clean, but will offer reentrancy at the library
+	      level. In
+	      this case,
+	      <literal>-DMISSING_SYSCALL_NAMES</literal> and
+	      <literal>-DREENTRANT_SYSCALLS_PROVIDED</literal> are both
+	      added to <literal>newlib_cflags</literal> in
+	      <filename>configure.host</filename>. For the &openrisc; we could
+	      have done this with:
+	      <informalfigure>
+		<programlisting>
+  or32-*-*)
+        newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+        newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED"
+        ;;
+		</programlisting>
+	      </informalfigure>
+	    </para>
+
+	    <para>
+	      Note in particular that <literal>syscall_dir</literal> is not
+	      defined in this case.
+	    </para>
+	  </listitem>
+	</orderedlist>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Modifying &newlib;
+    </title>
+
+    <para>
+    </para>
+
+    <sect1>
+      <title>
+	The Machine Directory
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	&ieee; Endianness
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Implementing the <function>setjmp</function>
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Overriding Header Files
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Modifying &libgloss;
+    </title>
+
+    <para>
+    </para>
+
+    <sect1>
+      <title>
+	The Platform Directory
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Implementing a Board Support Package (&bsp;)
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  Syscall implementations
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  &bsp; configuration and &make; file;
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Modifying the &gnu; Tool Chain
+    </title>
+
+    <sect1>
+      <title>
+	Changes to &gcc;
+      </title>
+
+      <para>
+      </para>
+
+      <sect2>
+	<title>
+	  Adding Machine Specific Options for Newlib
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Updating Spec Definitions
+	</title>
+
+	<para>
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Changes to the &gnu; Linker
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <glossary>
+    <title>
+      Glossary
+    </title>
+
+    <glossentry>
+      <glossterm>Board Support Package</glossterm>
+      <acronym>BSP</acronym>
+      <glossdef>
+	<para>
+	  The low level interface between an operating system or library and
+	  the underlying physical platform.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>reentrant</glossterm>
+      <glossdef>
+	<para>
+	  A function which is <emphasis>reentrant</emphasis> may be safely
+	  called from another thread of control while an initial thread's flow
+	  of control is still within the function.
+	</para>
+
+	<para>
+	  In general a function will be reentrant if it changes no static
+	  state.
+	</para>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_flynt">
+      <title>
+	Tcl Tutorial
+      </title>
+      <author>
+	<firstname>Clif </firstname>
+	<surname>Flynt.</surname>
+      </author>
+      <bibliomisc>
+	Version for TCL 8.5 available at <ulink
+	url="http://www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html">www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+  </bibliography>
+</book>
+ 
