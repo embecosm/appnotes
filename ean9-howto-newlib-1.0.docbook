@@ -8,39 +8,53 @@ Useful entities
 
 <!-- ========== Acronyms and abbreviations ========== -->
 
-<!ENTITY bsp  "<acronym>BSP</acronym>" >
-<!ENTITY gcc  "<acronym>GCC</acronym>" >
-<!ENTITY gdb  "<acronym>GDB</acronym>" >
-<!ENTITY gnu  "<acronym>GNU</acronym>" >
-<!ENTITY ieee "<acronym>IEEE</acronym>">
+<!ENTITY abi   "<acronym>ABI</acronym>" >
+<!ENTITY ascii "<acronym>ASCII</acronym>" >
+<!ENTITY bsp   "<acronym>BSP</acronym>" >
+<!ENTITY bss   "<acronym>BSS</acronym>" >
+<!ENTITY gcc   "<acronym>GCC</acronym>" >
+<!ENTITY gdb   "<acronym>GDB</acronym>" >
+<!ENTITY gnu   "<acronym>GNU</acronym>" >
+<!ENTITY ieee  "<acronym>IEEE</acronym>">
+<!ENTITY nan   "<acronym>NaN</acronym>">
 <!ENTITY posix "<acronym>POSIX</acronym>">
+<!ENTITY uart  "<acronym>UART</acronym>">
 
 <!-- ========== applications ========== -->
 
 <!-- = software applications = -->
 
 <!ENTITY autoconf "<application class='software'>autoconf</application>">
+<!ENTITY autoheader "<application class='software'>autoheader</application>">
 <!ENTITY automake "<application class='software'>automake</application>">
+<!ENTITY ld "<application class='software'>ld</application>">
 <!ENTITY linux "<application class='software'>Linux</application>">
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
 
 <!-- = Hardware applications = -->
 
 <!ENTITY openrisc "<application class='hardware'>OpenRISC</application>">
+<!ENTITY or1k "<application class='hardware'>OpenRISC&nbsp;1000</application>&nbsp;">
+<!ENTITY fr30 "<application class='hardware'>fr30</application>">
 
 <!-- = Commands = -->
 
 <!ENTITY bash "<command>bash</command>">
 <!ENTITY make "<command>make</command>">
+<!ENTITY Make "<command>Make</command>">
 
 <!-- = Libraries = -->
 
 <!ENTITY binutils "<systemitem class='library'>binutils</systemitem>" >
 <!ENTITY libc "<systemitem class='library'>libc</systemitem>" >
-<!ENTITY libm "<systemitem class='library'>libm</systemitem>" >
+<!ENTITY libg "<systemitem class='library'>libg</systemitem>" >
+<!ENTITY libgcc "<systemitem class='library'>libgcc</systemitem>" >
 <!ENTITY libgloss "<systemitem class='library'>libgloss</systemitem>" >
+<!ENTITY libm "<systemitem class='library'>libm</systemitem>" >
+<!ENTITY libnosys "<systemitem class='library'>libnosys</systemitem>" >
 <!ENTITY newlib "<systemitem class='library'>newlib</systemitem>" >
 <!ENTITY Newlib "<systemitem class='library'>Newlib</systemitem>" >
+<!ENTITY uclibc "<systemitem class='library'>uClibc</systemitem>" >
 
 <!-- = Other = -->
 <!ENTITY nbhy "&#8209;" >
@@ -201,7 +215,7 @@ Application note describing simple use of DejaGNU
     </title>
 
     <para>
-      Newlib is a C library intended for use on embedded systems. It is a
+      &Newlib; is a C library intended for use on embedded systems. It is a
       conglomeration of several library parts, all under free software
       licenses that make them easily usable on embedded products.
     </para>
@@ -226,19 +240,19 @@ Application note describing simple use of DejaGNU
 
       <para>
 	This application note includes examples from the port of &newlib; to
-	the &openrisc; architecture, originally by Chris Bower, then of
+	the &or1k; architecture, originally by Chris Bower, then of
 	Imperial College, London, and subsequently extensively updated by
 	Jeremy Bennett of Embecosm.
       </para>
 
       <para>
-	The example include a <firstterm>Board Support Package</firstterm>
-	(&bsp;) for use with the &openrisc; architectural simulator &or1ksim;
+	The examples are two <firstterm>Board Support Package</firstterm>s
+	(&bsp;) for use with the &or1k; architectural simulator &or1ksim;
 	by the same two authors.
       </para>
 
       <para>
-	At the time of writing the &openrisc; implementation is
+	At the time of writing the &or1k; implementation is
 	not part of the main &newlib; distribution. It can be downloaded from
 	&opencores_www;.
       </para>
@@ -254,10 +268,16 @@ Application note describing simple use of DejaGNU
 	The main source of information is the &newlib; website (<ulink
 	url="http://sourceware.org/newlib/">sourceware.org/newlib</ulink>). This
 	includes a FAQ, which has brief instructions on porting &newlib; and
-	documentation for &libc; and &libm;, the two libraries making up
-	&newlib;. The &libc; documentation is particularly useful, because it
-	lists the system calls which must be implemented by any new port,
-	including minimal implementations.
+	documentation for &libc; <xref linkend="ref_libc"/> and &libm;, the
+	two libraries making up &newlib;. The &libc; documentation is
+	particularly useful, because it lists the system calls which must be
+	implemented by any new port, including minimal implementations.
+      </para>
+
+      <para>
+	Key header files within the source also contain useful commenting,
+	notably <filename>ieeefp.h</filename> and
+	<filename>reent.h</filename>.
       </para>
 
       <para>
@@ -266,6 +286,10 @@ Application note describing simple use of DejaGNU
 	where questions can be asked, or new ports submitted.
       </para>
 
+      <para>
+	This application note has drawn heavily on these sources, and the
+	author would like to thank the providers of that original information.
+      </para>
     </sect1>
 
     <sect1>
@@ -289,7 +313,7 @@ Application note describing simple use of DejaGNU
 
   <chapter>
     <title>
-      &newlib; wwithin the &gnu; Tool Chain
+      &newlib; within the &gnu; Tool Chain
     </title>
 
     <para>
@@ -305,7 +329,7 @@ Application note describing simple use of DejaGNU
       </title>
 
       <para>
-	The three separate packages, &binutils; &gcc; and &gdb; are all taken
+	The three separate packages, &binutils;, &gcc; and &gdb; are all taken
 	from a common source tree. &gcc; and &gdb; both use many libraries
 	from &binutils;. It is convenient to reassemble that source tree and
 	make a single build of all the tools together.
@@ -379,7 +403,7 @@ cd ..
 	directory. The <filename>configure</filename> script understands to
 	pass on top level arguments to subsidiary configuration scripts. For
 	example to configure to build a C only tool chain for the 32-bit
-	&openrisc; architecture to be installed in
+	&or1k; architecture to be installed in
 	<filename>/opt/or32-elf</filename>, the following would be
 	appropriate.
       </para>
@@ -531,7 +555,7 @@ cd ..
 	The target architecture specific code within the
 	<filename>newlib</filename> directory may be very modest - possibly as
 	little as an implementation of <function>setjmp</function> and a
-	specification of the &ieee; floating point forma tto use.
+	specification of the &ieee; floating point format to use.
       </para>
 
       <para>
@@ -548,7 +572,7 @@ cd ..
 	  target implementations where the &bsp; is entirely within
 	  &newlib;. When looking for examples, be sure to choose an
 	  architecture which has been implemented through &libgloss;. The
-	  &openrisc; implementation is one such architecture.
+	  &or1k; implementation is one such architecture.
 	</para>
       </note>
 
@@ -590,18 +614,26 @@ cd ..
 	are provided. Thus for <function>close</function>, there is the
 	reentrant version <function>close_r</function>. The reentrant versions
 	take an extra argument, a <emphasis>reentrancy structure</emphasis>,
-	which can be used to ensure correct behavior.
+	which can be used to ensure correct behavior, by providing per-thread
+	versions of global data structures.
       </para>
 
       <para>
-	For many systems, the issue of re-entrancy does not arise. If there is
+	It is worth noting that use of the global error value,
+	<varname>errno</varname> is a common source of non-reentrancy. The
+	standard reentrancy structure includes an entry for a per-thread value
+	of <varname>errno</varname>.
+      </para>
+
+      <para>
+	For many systems, the issue of reentrancy does not arise. If there is
 	only ever one thread of control, or if separate threads have their own
 	address space there is no problem.
       </para>
 
       <para>
 	However it's worth remembering that even a bare metal system may
-	encounter issues with re-entrancy if event handlers are allowed to use
+	encounter issues with reentrancy if event handlers are allowed to use
 	the system calls.
       </para>
 
@@ -611,7 +643,7 @@ cd ..
 	implementer can choose to provide implementations of the reentrant
 	versions of the functions. Alternatively &newlib; can provide
 	reentrancy at the library level, but mapping the calls down the system
-	calls, which are not themselves re-entrant. This last can often prove
+	calls, which are not themselves reentrant. This last can often prove
 	a practical solution to the problem.
       </para>
     </sect1>
@@ -636,9 +668,9 @@ cd ..
 
 	<listitem>
 	  <para>
-	    Provide a platform directory for &bsp; implementation (s) within
-	    the <filename>libgloss</filename> directory. This is where the
-	    implementation of the system calls for each &bsp; will go
+	    Provide a platform directory for &bsp; implementation(s) within
+	    the <filename>libgloss</filename> directory. The code implementing
+	    systems calls for each &bsp; is placed in this directory.
 	  </para>
 	</listitem>
 
@@ -651,7 +683,7 @@ cd ..
 	</listitem>
       </orderedlist>
 
-      <sect2>
+      <sect2 id="sec_configure_host">
 	<title>
 	  Extending <filename>configure.host</filename> for a New Target
 	</title>
@@ -663,11 +695,11 @@ cd ..
 	</para>
 
 	<para>
-	  The machine name is specified in in <literal>case</literal> swich on
+	  The machine name is specified in a <literal>case</literal> switch on
 	  the <literal>${host_cpu}</literal> early on in the file. Add a new
 	  <literal>case</literal> entry defining
 	  <literal>machine_type</literal> for the architecture. Thus for
-	  &openrisc; 32-bit architecture we have:
+	  &or1k; 32-bit architecture we have:
 	</para>
 
 	<informalfigure>
@@ -679,8 +711,8 @@ cd ..
 	</informalfigure>
 
 	<para>
-	  This specifies that the machine specific code for &openrisc; will be
-	  found in the directory
+	  This specifies that the machine specific code for this architecture
+	  will be found in the directory
 	  <filename>newlib/libc/machine/or32</filename>.
 	</para>
 
@@ -688,7 +720,7 @@ cd ..
 	  The platform directory and details are specified in a subsequent
 	  <literal>case</literal> switch on <literal>${host}</literal>
 	  (i.e. the full triplet, not just the <acronym>CPU</acronym> type).
-	  For &openrisc; we have the following.
+	  For the 32-bit &or1k; we have the following.
 	</para>
 
 	<informalfigure>
@@ -700,13 +732,13 @@ cd ..
 	</informalfigure>
 
 	<para>
-	  This is the simplest possible option, specifying that the &bsp;s for
-	  all &openrisc; targets will implement namespace clean system calls,
+	  This is the simplest option, specifying that the &bsp;s for all
+	  &or1k; 32-bit targets will implement namespace clean system calls,
 	  and rely on &newlib; to map reentrant calls down to them. The
 	  directory name for the &bsp; implementations will match that of the
 	  machine directory, but within the <filename>libgloss</filename>
-	  directory. So for &openrisc; the &bsp; implementations are in
-	  <filename>libgloss/or32</filename>.
+	  directory. So for &or1k; 32-bit targets; the &bsp; implementations
+	  are in <filename>libgloss/or32</filename>.
 	</para>
 
 	<para>
@@ -719,11 +751,11 @@ cd ..
 	    <para>
 	      The implementer defines reentrant namespace clean versions of
 	      the system calls. In this case, <literal>syscall_dir</literal>
-	      is set to <literal>syscalls</literal> as above, but in
-	      addition, <literal>-DREENTRANT_SYSCALLS_PROVIDED</literal> is
-	      added to <literal>newlib_cflags</literal> in
-	      <filename>configure.host</filename>. For the &openrisc; we could
-	      have done this with:
+	      is set to <literal>syscalls</literal> as above, but in addition,
+	      <literal>-DREENTRANT_SYSCALLS_PROVIDED</literal> is added to
+	      <literal>newlib_cflags</literal> in
+	      <filename>configure.host</filename>. For the &or1k; 32-bit
+	      target we could have done this with:
 	      <informalfigure>
 		<programlisting>
   or32-*-*)
@@ -746,11 +778,11 @@ cd ..
 	    <para>
 	      The implementer defines non-reentrant, but namespace clean
 	      versions of the system calls. This is the approach we have used
-	      with &openrisc; and all the implementer needs to do in this case
-	      is to set <literal>syscall_dir</literal> is set to
+	      with the &or1k; and all the implementer needs to do in this case
+	      is to set <literal>syscall_dir</literal> to
 	      <literal>syscalls</literal> in
 	      <filename>configure.host</filename>. &newlib; will map reentrant
-	      calls down to the non-rentrant one.
+	      calls down to the non-reentrant versions.
 	    </para>
 	  </listitem>
 
@@ -763,7 +795,7 @@ cd ..
 	      this case,
 	      <literal>-DMISSING_SYSCALL_NAMES</literal> is
 	      added to <literal>newlib_cflags</literal> in
-	      <filename>configure.host</filename>. For the &openrisc; we could
+	      <filename>configure.host</filename>. For the &or1k; we could
 	      have done this with:
 	      <informalfigure>
 		<programlisting>
@@ -792,7 +824,7 @@ cd ..
 	      <literal>-DMISSING_SYSCALL_NAMES</literal> and
 	      <literal>-DREENTRANT_SYSCALLS_PROVIDED</literal> are both
 	      added to <literal>newlib_cflags</literal> in
-	      <filename>configure.host</filename>. For the &openrisc; we could
+	      <filename>configure.host</filename>. For the &or1k; we could
 	      have done this with:
 	      <informalfigure>
 		<programlisting>
@@ -817,12 +849,16 @@ cd ..
 
   </chapter>
 
-  <chapter>
+  <chapter id="chap_newlib">
     <title>
       Modifying &newlib;
     </title>
 
     <para>
+      Changes that depend on the architecture, and not the particular platform
+      being used are made in the <filename>newlib</filename> directory. These
+      comprise changes to standard headers and custom code for the
+      architecture.
     </para>
 
     <sect1>
@@ -831,37 +867,563 @@ cd ..
       </title>
 
       <para>
+	Within the <filename>newlib</filename> directory, machine specific
+	code is placed in a target specific directory,
+	<filename>libc/machine/<replaceable>arch</replaceable></filename>.
       </para>
+
+      <para>
+	The only code that has to be there is the implementation of
+	<function>setjmp</function> and <function>longjmp</function>, since
+	the implementation of these two functions invariably requires target
+	specific machine code. However any other target specific code may
+	also be placed here.
+      </para>
+
+      <sect2>
+	<title>
+	  Implementing the <function>setjmp</function> and
+	  <function>longjmp</function> functions.
+	</title>
+
+	<para>
+	  <function>setjmp</function> and <function>longjmp</function> are a
+	  pair of C function facilitating cross-procedure transfer of
+	  control. Typically they are used to allow resumption of execution at
+	  a known good point after an error.
+	</para>
+
+	<para>
+	  Both take as first argument a buffer, which is used to hold the
+	  machine state at the jump destination. When
+	  <function>setjmp</function> is called it populates that buffer with
+	  the current location state (which includes stack and frame pointers
+	  and the return address for the call to <function>setjmp</function>,
+	  and returns zero.
+	</para>
+
+	<para>
+	  <function>longjmp</function> takes a buffer previously populated by
+	  <function>setjmp</function>. It also takes a (non-zero) second
+	  argument, which will ultimately be the result of the function
+	  call. <function>longjmp</function> restores the machine state from
+	  the buffer. It then jumps to the return address it has just
+	  restored, passing its second argument as the result. That return
+	  address is the return address from the original call to
+	  <function>setjmp</function>, so the effect will be as if
+	  <function>setjmp</function> has just returned with a non-zero
+	  argument.
+	</para>
+
+	<para>
+	  <function>setjmp</function> and <function>longjmp</function> are
+	  typically used in a top level function in the following way.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+#include &lt;setjmp.h&gt;
+
+...
+
+  jmp_buf  buf;
+
+  if (0 == setjmp (buf))
+    {
+      <emphasis>normal processing passing in buf</emphasis>
+    }
+  else
+    {
+      <emphasis>error handling code</emphasis>
+    }
+
+...
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  During normal processing if an error is found, the state held in
+	  <varname>buf</varname> can be used to return control back to the top
+	  level using <function>longjmp</function>/
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+#include &lt;setjmp.h&gt;
+
+...
+
+  if (<emphasis>error detected</emphasis>)
+    {
+      longjmp (buf, 1);
+    }
+
+...
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The program will behave as though the original call to
+	  <function>setjmp</function> had just returned with result 1.
+	</para>
+
+	<para>
+	  It will be appreciated that this is behavior that cannot usually be
+	  written in C. The &or1k; implementation is given as an example. This
+	  processor has 32 registers, <literal>r0</literal> through
+	  <literal>r31</literal>, each of 32-bits. <literal>r0</literal> is
+	  always tied to zero, so need not be saved. <literal>r11</literal> is
+	  the function result register, which is always set by
+	  <function>setjmp</function> and <function>longjmp</function>, so
+	  also need not be saved. In addition we should save and restore the
+	  machine's 32-bit supervision register, which holds the branch flag.
+	</para>
+
+	<para>
+	  Thus we need the buffer to be 31 32-bit words long. This is defined
+	  in the <function>setjmp</function> header (see <xref
+	  linkend="sec_setjmp_header"/>).
+	</para>
+
+	<para>
+	  In the <firstterm>Application Binary Interface</firstterm> (&abi;)
+	  for  the &or1k;, function arguments are passed in registers
+	  <literal>r3</literal> through <literal>r8</literal> and the function
+	  return address is in <literal>r9</literal>.
+	</para>
+
+	<para>
+	  When defining these two functions, in assembler, be aware of any
+	  prefix conventions used by the C compiler. It is common for symbols
+	  defined in C to have an underscore prepended (this is the case for
+	  the &or1k;). Thus in this case the assembler should define
+	  <function>_setjmp</function> and <function>_longjmp</function>.
+	</para>
+
+	<para>
+	  This is the implementation of <function>setjmp</function>.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+        .global _setjmp
+_setjmp:
+        l.sw    4(r3),r1                /* Slot 0 saved for flag in future */
+        l.sw    8(r3),r2
+        l.sw    12(r3),r3
+        l.sw    16(r3),r4
+        l.sw    20(r3),r5
+        l.sw    24(r3),r6
+        l.sw    28(r3),r7
+        l.sw    32(r3),r8
+        l.sw    36(r3),r9
+        l.sw    40(r3),r10              /* Skip r11 */
+        l.sw    44(r3),r12
+        l.sw    48(r3),r13
+        l.sw    52(r3),r14
+        l.sw    56(r3),r15
+        l.sw    60(r3),r16
+        l.sw    64(r3),r17
+        l.sw    68(r3),r18
+        l.sw    72(r3),r19
+        l.sw    76(r3),r20
+        l.sw    80(r3),r21
+        l.sw    84(r3),r22
+        l.sw    88(r3),r23
+        l.sw    92(r3),r24
+        l.sw    96(r3),r25
+        l.sw    100(r3),r26
+        l.sw    104(r3),r27
+        l.sw    108(r3),r28
+        l.sw    112(r3),r29
+        l.sw    116(r3),r30
+        l.sw    120(r3),r31
+
+        l.jr    r9
+        l.addi  r11,r0,0                /* Zero result */
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  In this simplified implementation, the status flags are not
+	  saved&mdash;that is a potential future enhancement. All the general
+	  registers, with the exception of <literal>r0</literal> (always zero)
+	  and <literal>r11</literal> (result register) are saved in the
+	  buffer, which, being the first argument, is pointed to by
+	  <literal>r3</literal>.
+	</para>
+
+	<para>
+	  Finally the result register, <literal>r11</literal> is set to zero
+	  and the function returns using <literal>r9</literal> (the &or1k; has
+	  delayed branches, so the setting of <literal>r11</literal> is placed
+	  after the branch to return.).
+	</para>
+	 
+	<para>
+	  The implementation of <function>longjmp</function> is slightly more
+	  complex, since the second argument will be returned as the effective
+	  result from <function>setjmp</function>, <emphasis>unless</emphasis>
+	  the second argument is zero in which case 1 is used.
+	</para>
+
+	<para>
+	  The result must be dealt with first and placed in the result
+	  register, <literal>r11</literal>, because the second argument, in
+	  <literal>r4</literal> will be subsequently overwritten when the
+	  machine state is restored. Similarly we must ensure that
+	  <literal>r3</literal>, which holds the first argument pointing to
+	  the restore buffer must itself be the last register restored.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+        .global _longjmp
+_longjmp:
+        /* Sort out the return value */
+        l.sfne  r4,r0
+        l.bf    1f
+        l.nop
+
+        l.j     2f
+        l.addi  r11,r0,1                /* 1 as result */
+
+1:      l.addi  r11,r4,0                /* val as result */
+
+        /* Restore all the other registers, leaving r3 to last. */
+2:      l.lwz   r31,120(r3)
+        l.lwz   r30,116(r3)
+        l.lwz   r29,112(r3)
+        l.lwz   r28,108(r3)
+        l.lwz   r27,104(r3)
+        l.lwz   r26,100(r3)
+        l.lwz   r25,96(r3)
+        l.lwz   r24,92(r3)
+        l.lwz   r23,88(r3)
+        l.lwz   r22,84(r3)
+        l.lwz   r21,80(r3)
+        l.lwz   r20,76(r3)
+        l.lwz   r19,72(r3)
+        l.lwz   r18,68(r3)
+        l.lwz   r17,64(r3)
+        l.lwz   r16,60(r3)
+        l.lwz   r15,56(r3)
+        l.lwz   r14,52(r3)
+        l.lwz   r13,48(r3)
+        l.lwz   r12,44(r3)
+        l.lwz   r10,40(r3)              /* Omit r11 */
+        l.lwz   r9,36(r3)
+        l.lwz   r8,32(r3)
+        l.lwz   r7,28(r3)
+        l.lwz   r6,24(r3)
+        l.lwz   r5,20(r3)
+        l.lwz   r4,16(r3)
+        l.lwz   r2,8(r3)                /* Skip r3 */
+        l.lwz   r1,4(r3)                /* Slot 0 saved for flag in future */
+        l.lwz   r3,12(r3)               /* Now safe */
+        
+        /* Result is already in r11. Having restored r9, it will appear as
+           though we have returned from the earlier call to _setjmp. The
+           non-zero result gives it away though. */
+        l.jr    r9
+        l.nop
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The return address, stack pointer and frame pointer having been
+	  restored, the return from the function, will place the execution
+	  point immediately after the original call to
+	  <function>setjmp</function>.
+	</para>
+
+	<para>
+	  The following is a simple test program, which can be used to verify
+	  that <function>setjmp</function> and <function>longjmp</function>
+	  are working correctly.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+#include &lt;setjmp.h&gt;
+#include &lt;stdio.h&gt;
+
+
+void
+testit (jmp_buf  env,
+        int      prev_res)
+{
+  int  res = (0 == prev_res) ? prev_res : prev_res + 1;
+
+  printf ("Long jumping with result %d\n", res);
+  longjmp (env, res);
+
+}       /* testit () */
+
+
+int
+main (int   argc,
+      char *argv[])
+{
+  jmp_buf  env;
+
+  int  res = setjmp (env);
+
+  printf ("res = 0x%08x\n", res);
+
+  if (res &gt; 1)
+    {
+      return  0;
+    }
+
+  testit (env, res);
+
+  return  256;                  /* We should never actually get here */
+
+}       /* main () */
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  &autoconf; and &automake; files are needed for the new code. These
+	  are generally quite standard, and the easiest approach is to copy
+	  the versions used for the &fr30;
+	  architecture. <filename>Makefile.am</filename> should be modified if
+	  necessary 
+	  to specify the source files (for example
+	  <filename>setjmp.S</filename> and
+	  <filename>longjmp.S</filename>). More complex implementations may
+	  require modifications to <filename>configure.in</filename> as
+	  well. After any changes run &autoconf; and/or &automake; as needed
+	  to generate new versions of <filename>configure</filename> and
+	  <filename>Makefile.in</filename>.
+	</para>
+
+      </sect2>
 
     </sect1>
 
     <sect1>
       <title>
-	&ieee; Endianness
+	Changing Headers
       </title>
 
       <para>
+	There are two places, where header definitions must be modified for a
+	new target architecture: the specification of the &ieee; floating
+	point format used, and the specification of the
+	<function>setjmp</function> buffer size.
       </para>
 
-    </sect1>
+      <sect2>
+	<title>
+	  &ieee; Floating Point
+	</title>
 
-    <sect1>
-      <title>
-	Implementing the <function>setjmp</function>
-      </title>
+	<para>
+	  The floating point format is specified within the
+	  <filename>newlib</filename> directory in
+	  <filename>libc/include/machine/ieeefp.h</filename>. Details of how
+	  the &ieee; 754 format is implemented, and variations from the
+	  standard, are specified by defining a number of C macros.
+	</para>
 
-      <para>
-      </para>
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <literal>__IEEE_BIG_ENDIAN</literal>
+	    </para>
 
-    </sect1>
+	    <para>
+	      Define this macro if the floating point format is
+	      <firstterm>big endian</firstterm>.
+	    </para>
 
-    <sect1>
-      <title>
-	Overriding Header Files
-      </title>
+	    <caution>
+	      <para>
+		One, and only one of <literal>__IEEE_BIG_ENDIAN</literal>
+		and <literal>__IEEE_LITTLE_ENDIAN</literal> must be defined.
+	      </para>
+	    </caution>
+	  </listitem>
 
-      <para>
-      </para>
+	  <listitem>
+	    <para>
+	      <literal>__IEEE_LITTLE_ENDIAN</literal>
+	    </para>
+
+	    <para>
+	      Define this macro if the floating point format is
+	      <firstterm>little endian</firstterm>.
+	    </para>
+
+	    <caution>
+	      <para>
+		One, and only one of <literal>__IEEE_LITTLE_ENDIAN</literal>
+		and <literal>__IEEE_BIG_ENDIAN</literal> must be defined.
+	      </para>
+	    </caution>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>__IEEE_BYTES_LITTLE_ENDIAN</literal>
+	    </para>
+
+	    <para>
+	      Define this macro in addition to
+	      <literal>__IEEE_BIG_ENDIAN</literal>, where the words of a
+	      multi-word &ieee; floating pointer number are in big endian
+	      order, but the bytes within each word are in little endian
+	      order.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>_DOUBLE_IS_32BITS </literal>
+	    </para>
+
+	    <para>
+	      Define this if double precision floating point is represented
+	      using the 32-bit &ieee; representation.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>_FLOAT_ARG</literal>
+	    </para>
+
+	    <para>
+	      Floating point arguments are usually promoted to double when
+	      passed as arguments. If this is not the case, then this macro
+	      should be defined to the type actually used to pass floating
+	      point arguments.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>_FLT_LARGEST_EXPONENT_IS_NORMAL</literal>
+	    </para>
+
+	    <para>
+	      Define this if the floating point format uses the largest
+	      exponent for finite numbers rather than &nan; and
+	      infinities. Such a format cannot represent &nan;s or infinities,
+	      but it's <literal>FLT_MAX</literal> is twice the standard &ieee;
+	      value.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>_FLT_NO_DENORMALS</literal>
+	    </para>
+
+	    <para>
+	      Define this if the floating point format does not support &ieee;
+	      denormalized numbers.  In this case, every floating point number
+	      with a zero exponent is treated as a zero representation.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<caution>
+	  <para>
+	    Two of these macros
+	    (<literal>_FLT_LARGEST_EXPONENT_IS_NORMAL</literal> and
+	    <literal>_FLT_NO_DENORMALS</literal>) specify deviations from
+	    &ieee; 754. These macros only work with single-precision floating
+	    point and may not work correctly if hardware floating point
+	    support is used (enabled by configuring with
+	    <literal>--enable-newlib-hw-fp</literal>).
+	  </para>
+	</caution>
+
+	<para>
+	  For most targets it is sufficient to define just one of
+	  <literal>__IEEE_BIG_ENDIAN</literal> or
+	  <literal>__IEEE_LITTLE_ENDIAN</literal>. The definitions should
+	  always be surrounded by a conditional, so they are only used when
+	  the target architecture is selected. For example the &or1k; is
+	  big-endian, so we add the following to the header file.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+#if defined(__or32__)
+#define __IEEE_BIG_ENDIAN
+#endif
+	  </programlisting>
+	</informalfigure>
+
+      </sect2>
+
+      <sect2 id="sec_setjmp_header">
+	<title>
+	  <function>setjmp</function> Buffer Size
+	</title>
+
+	<para>
+	  The implementation of <function>setjmp</function> and
+	  <function>longjmp</function> made use of a buffer to hold the
+	  machine state. The size of that buffer is architecture dependent and
+	  specified within the <filename>newlib</filename> directory in
+	  <filename>libc/include/machine/setjmp.h</filename>.
+	</para>
+
+	<para>
+	  The header specifies the number of entries in the buffer and the
+	  size of each entry (as a C type). So for the &or1k; we use the
+	  following.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+#if defined(__or32__)
+/* Enough space for all regs except r0 and r11 and the status register */
+#define _JBLEN 31
+#define _JBTYPE unsigned long
+#endif
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  As before, the definition is within a conditional, so it is only
+	  used when the target is the &or1k; 32-bit architecture.
+	</para>
+
+	<para>
+	  The type <type>jmp_buf</type> used with
+	  <function>setjmp</function> and <function>longjmp</function> is then
+	  defined as:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+typedef	_JBTYPE jmp_buf[_JBLEN];
+	  </programlisting>
+	</informalfigure>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Overriding Other Header Files
+	</title>
+
+	<para>
+	  If other headers must be overridden (not usually necessary with a
+	  simple port), then the new versions can be placed in
+	  <filename>libc/machine/<replaceable>arch</replaceable>/include</filename>
+	  within the <filename>newlib</filename> directory. These include
+	  files which will be used in preference to those in the standard
+	  distribution.
+	</para>
+
+      </sect2>
 
     </sect1>
 
@@ -873,7 +1435,28 @@ cd ..
     </title>
 
     <para>
+      Any target architecture may need multiple implementations, suited to
+      different platforms on which the code may run. The connection between
+      the library and a specific platform is known as a <firstterm>Board
+      Support Package</firstterm> (&bsp;). In recent versions of &newlib;,
+      &bsp;s are separated out into their own library, &libgloss;, the source
+      for which is in the top level <filename>libgloss</filename> directory.
     </para>
+
+    <para>
+      For &newlib; the &bsp; within &libgloss; comprises an implementation of
+      the C runtime initialization, <filename>crt0.o</filename>, a definition
+      of one global data structure, and implementation of eighteen system
+      calls for each platform.
+    </para>
+
+    <note>
+      <para>
+	&libgloss; is a relatively new addition to &newlib;. Many older ports
+	still have the &bsp; code within the <filename>newlib</filename>
+	directory.
+      </para>
+    </note>
 
     <sect1>
       <title>
@@ -881,6 +1464,16 @@ cd ..
       </title>
 
       <para>
+	A directory is created in the <filename>libgloss</filename> directory
+	corresponding to the machine directory created in the
+	<filename>newlib/libc/machine</filename> directory (see <xref
+	linkend="chap_newlib"/>).
+      </para>
+
+      <para>
+	This directory will hold the source code for the C runtime
+	initialization (<filename>crt0.o</filename>) and for the system calls
+	for each &bsp;
       </para>
 
     </sect1>
@@ -890,30 +1483,2351 @@ cd ..
 	Implementing a Board Support Package (&bsp;)
       </title>
 
-      <para>
-      </para>
-
       <sect2>
 	<title>
-	  Syscall implementations
+	  The C Runtime Initialization, <filename>crt0.o</filename>
 	</title>
 
 	<para>
+	  The C Runtime system must carry out the following tasks.
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Set up the target platform in a consistent state. For example
+	      setting up appropriate exception vectors.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>  
+	      Initialize the stack and frame pointers
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Invoke the C constructor initialization and ensure destructors
+	      are called on exit.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Carry out any further platform specific initialization.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Call the C <function>main</function> function.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Exit with the return code supplied if the C
+	      <function>main</function> function ever terminates.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  The code is invariably assembler, although it may call out to C
+	  functions, and is best illustrated by example from the &or1k;. This
+	  is a &bsp; designed for use with a fast architectural simulator. It
+	  comes in two variants, one providing just standard output to the
+	  console, the other implementing a simulated &uart; with both
+	  standard input and standard output. The <filename>crt0.0</filename>
+	  is common to both &bsp;s and found in <filename>crt0.S</filename>.
+	</para>
+
+	<sect3 id="sec_vectors">
+	  <title>
+	    Exception vector setup
+	  </title>
+
+	  <para>
+	    The first requirement is to populate the exception vectors. The
+	    &or1k; uses memory from <literal>0x0</literal> to
+	    <literal>0x1fff</literal> for exception vectors, with vectors
+	    placed <literal>0x100</literal> bytes apart. Thus a reset
+	    exception will jump to <literal>0x100</literal>, a bus error
+	    exception to <literal>0x200</literal> and so on.
+	  </para>
+
+	  <para>
+	    In this simple &bsp;, the vast majority of exceptions are not
+	    supported. If they are received, they print out (using
+	    <function>printf</function>) identification of the exception and
+	    the address which caused it to the simulator console, and then
+	    exit. We provide a macro for that assembly code, since it will be
+	    reused many times.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#define UNHANDLED_EXCEPTION(str)                                         \
+        l.addi  r1,r1,-20               /* Standard prologue */         ;\
+        l.sw    16(r1),r2                                               ;\
+        l.addi  r2,r1,20                                                ;\
+        l.sw    12(r1),r9                                               ;\
+                                                                        ;\
+        l.movhi r3,hi(.Lfmt)            /* printf format string */      ;\
+        l.ori   r3,r3,lo(.Lfmt)                                         ;\
+        l.sw    0(r1),r3                                                ;\
+        l.movhi r4,hi(str)              /* Name of exception */         ;\
+        l.ori   r4,r4,lo(str)                                           ;\
+        l.sw    4(r1),r4                                                ;\
+        l.mfspr r5,r0,SPR_EPCR_BASE     /* Source of the interrupt */   ;\
+        l.jal   _printf                                                 ;\
+        l.sw    8(r1),r5                                                ;\
+                                                                        ;\
+        l.ori   r3,r0,0xffff            /* Failure RC */                ;\
+        l.jal   _exit                                                   ;\
+        l.nop                                                           ;\
+                                                                        ;\
+        l.rfe                           /* Never executed we hope */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The call to <function>printf</function> is expected to use a
+	    standard format string (at the label <literal>.Lfmt</literal>)
+	    which requires two other arguments, an identification string
+	    (labeled by the parameter <literal>st</literal> to the macro) and
+	    the program counter where the exception occurred (loaded from
+	    Special Purpose Register <literal>SPR_EPCR_BASE</literal>). Return
+	    from exception is provided as a formality, although the call to
+	    <function>exit</function> means that we should never execute it.
+	  </para>
+
+	  <para>
+	    Note that compiled C functions have their names prepended by
+	    underscore on the &or1k;. It is these names that must be used from
+	    the assembler code.
+	  </para>
+
+	  <para>
+	    The format and identification strings are read only data.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        .section .rodata
+.Lfmt:  .string "Unhandled %s exception at address %08p\n"
+.L200:  .string "bus error"
+.L300:  .string "data page fault"
+.L400:  .string "instruction page fault"
+.L500:  .string "timer"
+.L600:  .string "alignment"
+.L700:  .string "illegal instruction"
+.L800:  .string "external interrupt"
+.L900:  .string "data TLB"
+.La00:  .string "instruction TLB"
+.Lb00:  .string "range"
+.Lc00:  .string "syscall"
+.Ld00:  .string "floating point"
+.Le00:  .string "trap"
+.Lf00:  .string "undefined 0xf00"
+.L1000: .string "undefined 0x1000"
+.L1100: .string "undefined 0x1100"
+.L1200: .string "undefined 0x1200"
+.L1300: .string "undefined 0x1300"
+.L1400: .string "undefined 0x1400"
+.L1500: .string "undefined 0x1500"
+.L1600: .string "undefined 0x1600"
+.L1700: .string "undefined 0x1700"
+.L1800: .string "undefined 0x1800"
+.L1900: .string "undefined 0x1900"
+.L1a00: .string "undefined 0x1a00"
+.L1b00: .string "undefined 0x1b00"
+.L1c00: .string "undefined 0x1c00"
+.L1d00: .string "undefined 0x1d00"
+.L1e00: .string "undefined 0x1e00"
+.L1f00: .string "undefined 0x1f00"
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The first executable code is for the exception vectors. These must
+	    go first in memory, so are placed in their own section,
+	    <literal>.vectors</literal>. The linker/loader will ensure this
+	    this code is placed first in memory (see <xref
+	    linkend="sec_linker"/>).
+	  </para>
+
+	  <para>
+	    The reset vector just jumps to the start code. The code is too
+	    large to sit within the <literal>0x100</literal> bytes of an
+	    exception vector entry, and is placed in the main text space, in
+	    function <function>_start</function>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        .section .vectors,"ax"
+
+        /* 0x100: RESET exception */
+        .org    0x100   
+_reset:
+        /* Jump to program initialisation code */
+        l.movhi r2,hi(_start)
+        l.ori   r2,r2,lo(_start)
+        l.jr    r2
+        l.nop
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The second vector, at address <literal>0x200</literal> is the bus
+	    error exception vector. In normal use, like all other exceptions
+	    it it causes exit and uses the
+	    <literal>UNHANDLED_EXCEPTION</literal> macro.
+	  </para>
+
+	  <para>
+	    However during start up, the code tries deliberately to write out
+	    of memory, to determine the end of memory, which will trigger this
+	    bus exception. For this a simple exception handler, which just
+	    skips the offending instruction is required.
+	  </para>
+
+	  <para>
+	    The solution is to place this code first, followed by the
+	    unhandled exception code. Once the end of memory has been located,
+	    the initial code can be overwritten by <literal>l.nop</literal>
+	    opcodes, so the exception will drop through to the
+	    <literal>UNHANDLED_EXCEPTOON</literal> code.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        .org    0x200
+_buserr:
+        l.mfspr r24,r0,SPR_EPCR_BASE
+        l.addi  r24,r24,4               /* Return one instruction on */
+        l.mtspr r0,r24,SPR_EPCR_BASE
+        l.rfe
+
+_buserr_std:
+        UNHANDLED_EXCEPTION (.L200)
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    No effort is made to save the register (<literal>r24</literal>) that
+	    is used in the handler. The start up code testing for end of memory
+	    must not use this register.
+	  </para>
+
+	  <para>
+	    The next exception, data page fault, at location 0x300, like all
+	    other exceptions is unhandled.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        .org    0x300
+        UNHANDLED_EXCEPTION (.L300)
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3 id="sec_stack_init">
+	  <title>
+	    The <function>_start</function> Function and Stack Initialization
+	  </title>
+
+	  <para>
+	    The &or1k; &abi; uses a falling stack. The linker will place code
+	    and static data a the bottom of memory (starting with the
+	    exception vectors). The heap then starts immediately after this,
+	    while the stack grows down from the end of memory.
+	  </para>
+
+	  <para>
+	    The linker will supply the address for the start of heap (it is in
+	    the global variable <varname>end</varname>). However we must find
+	    the stack location by trying to write to memory above the heap to
+	    determine the end of memory. Rather than write to every location,
+	    the code assumes memory is a multiple of 64KB, and tries writing
+	    to the last word of each 64KB block above <literal>end</literal>
+	    until the value read back fails.
+	  </para>
+
+	  <para>
+	    This failure will trigger a bus error exception, which must be
+	    handled (see <xref linkend="sec_vectors"/>). The address used for
+	    the start of the stack (which is also the last word of memory) is
+	    stored in a global location, <varname>_stack</varname> (which C
+	    will recognize as <varname>stack</varname>).
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        .section .data
+        .global _stack
+_stack: .space  4,0
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    <function>_start</function> is declared so it looks like a C
+	    function. &gdb; knows that <function>_start</function> is special,
+	    and this will ensure that backtraces do not wind back further than
+	    <function>main</function>. It is located in ordinary text space,
+	    so will be placed with other code by the linker/loader.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        .section .text
+        .global _start
+        .type   _start,@function
+_start: 
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The first memory location to test is found by rounding the
+	    <varname>end</varname> location down to a multiple of 64KB, then
+	    taking the last word of the 64KB above
+	    that. <literal>0xaaaaaaaa</literal> is used as the test word to
+	    write to memory and read back.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.movhi r30,hi(end)
+        l.ori   r30,r30,lo(end)
+        l.srli  r30,r30,16              /* Round down to 64KB boundary */
+        l.slli  r30,r30,16
+
+        l.addi  r28,r0,1                /* Constant 64KB in register */
+        l.slli  r28,r28,16
+
+        l.add   r30,r30,r28
+        l.addi  r30,r30,-4              /* SP one word inside next 64KB? */
+
+        l.movhi r26,0xaaaa              /* Test pattern to store in memory */
+        l.ori   r26,r26,0xaaaa
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    Each 64KB block is tested by writing the test value and reading
+	    back to see if it matches.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+.L3:
+        l.sw    0(r30),r26
+        l.lwz   r24,0(r30)
+        l.sfeq  r24,r26
+        l.bnf   .L4
+        l.nop
+        
+        l.j     .L3
+        l.add   r30,r30,r28             /* Try 64KB higher */
+
+.L4:
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The previous value is then the location to use for end of stack,
+	    and should be stored in the <varname>_stack</varname> location.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.sub   r30,r30,r28             /* Previous value was wanted */
+        l.movhi r26,hi(_stack)
+        l.ori   r26,r26,lo(_stack)
+        l.sw    0(r26),r30
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The stack pointer (<literal>r1</literal>) and frame pointer
+	    (<literal>r2</literal>) can be initialized with this value.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.add   r1,r30,r0
+        l.add   r2,r30,r0
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    Having determined the end of memory, there is no need to handle
+	    bus errors silently. The words of code between
+	    <literal>_buserr</literal> and <literal>_buserr_std</literal> can
+	    be replaced by <literal>l.nop</literal>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.movhi r30,hi(_buserr)
+        l.ori   r30,r30,lo(_buserr)
+        l.movhi r28,hi(_buserr_std)
+        l.ori   r28,r28,lo(_buserr_std)
+        l.movhi r26,0x1500              /* l.nop 0 */
+        l.ori   r26,r26,0x0000
+
+.L5:
+        l.sfeq  r28,r30
+        l.bf    .L6
+        l.nop
+
+        l.sw    0(r30),r26              /* Patch the instruction */
+        l.j     .L5
+        l.addi  r30,r30,4               /* Next instruction */
+
+.L6:
+	    </programlisting>
+	  </informalfigure>
+
+	  <note>
+	    <para>
+	      It is essential that this code is before any data or instruction
+	      cache is initialized. Otherwise more complex steps would be
+	      required to enforce data write back and invalidate any
+	      instruction cache entry.
+	    </para>
+	  </note>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Cache Initialization
+	  </title>
+
+	  <para>
+	    The OpenRISC 1000 has optional instruction and data caches. If
+	    these are declared (in the <filename>or1ksim-board.h</filename>
+	    header), then they must be enabled by setting the appropriate bit
+	    in the <firstterm>supervision register</firstterm>.
+	  </para>
+
+	  <para>
+	    This is an example of machine specific initialization.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        /* Cache initialisation. Enable IC and/or DC */
+.if IC_ENABLE || DC_ENABLE
+        l.mfspr r10,r0,SPR_SR
+.if IC_ENABLE
+        l.ori   r10,r10,SPR_SR_ICE
+.endif
+.if DC_ENABLE
+        l.ori   r10,r10,SPR_SR_DCE
+.endif
+        l.mtspr r0,r10,SPR_SR
+        l.nop                           /* Flush the pipeline. */
+        l.nop
+        l.nop
+        l.nop
+        l.nop
+.endif
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Clearing &bss;
+	  </title>
+
+	  <para>
+	    <firstterm linkend="gloss_bss">&bss;</firstterm> is the area of
+	    memory used to hold static variables which must be initialized to
+	    zero. It's start and end and defined by two variables from the
+	    linker/loader, <varname>__bss_start</varname> and
+	    <varname>end</varname> respectively.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.movhi r28,hi(__bss_start)
+        l.ori   r28,r28,lo(__bss_start)
+        l.movhi r30,hi(end)
+        l.ori   r30,r30,lo(end)
+
+.L1:
+        l.sw    (0)(r28),r0
+        l.sfltu r28,r30
+        l.bf    .L1
+        l.addi  r28,r28,4
+            </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Constructor and Destructor Handling
+	  </title>
+
+	  <para>
+	    &gcc; may require constructors to be initialized at start up and
+	    destructors to be called on exit. This behavior is captured in the
+	    &gcc; functions <function>__do_global_ctors</function> and
+	    <function>__do_global_dtors</function>. There is some complexity
+	    associated with this functionality, since there may be separate
+	    lists for the main code and shared libraries that are dynamically
+	    loaded.
+	  </para>
+
+	  <para>
+	    It is usual to wrap this functionality in two functions,
+	    <function>init</function> and <function>fini</function>, which are
+	    placed in their own sections, <literal>.init</literal> and
+	    <literal>.fini</literal> loaded respectively before all other text
+	    sections and after all other text sections.
+	  </para>
+
+	  <para>
+	    The start up code should call <function>fini</function> to handle any constructors.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.jal   init
+        l.nop
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The <function>fini</function> function is passed to the library
+	    function <function>_atexit</function> to ensure it is called on a
+	    normal exit.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.movhi r3,hi(fini)
+        l.jal   _atexit
+        l.ori   r3,r3,lo(fini)          /* Delay slot */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    C Initialization Functions
+	  </title>
+
+	  <para>
+	    Now that the C infrastructure is set up, it is appropriate to call
+	    any C functions that are used during initialization. In the &or1k;
+	    case this is a function to initialize a &uart;. Only one version
+	    of the library actually has a &uart;. However it is easiest to
+	    substitute a dummy version of the initialization function in the
+	    version of the library without a &uart;, rather than making this
+	    function conditional.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.jal    __uart_init
+        l.nop
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Invoking the main program
+	  </title>
+
+	  <para>
+	    The final stage is to call the main program. In this simple
+	    implementation there is no mechanism to pass arguments or
+	    environments to <function>main</function>, so the arguments
+	    <varname>argc</varname>, <varname>argv</varname> and
+	    <varname>env</varname> (in <literal>r3</literal>,
+	    <literal>r4</literal> and <literal>r5</literal>) are set to
+	    <literal>0</literal>, <literal>NULL</literal> and
+	    <literal>NULL</literal> respectively.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.or    r3,r0,r0
+        l.or    r4,r0,r0
+        l.jal   _main
+        l.or    r5,r0,r0                /* Delay slot */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    If the main program returns, its result (held in
+	    <literal>r11</literal> on the &or1k;) will be a return code from
+	    the program, which we pass to the <function>exit</function>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+        l.jal   _exit
+        l.addi  r3,r11,0                /* Delay slot */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    <function>exit</function> should not return, but just in case, we
+	    can put the processor in a tight loop at this stage, in order to
+	    ensure consistent behavior.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+.L2:
+        l.j     .L2
+        l.nop
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+	  
+      </sect2>
+
+      <sect2 id="sec_syscalls">
+	<title>
+	  Standard System Call Implementations
+	</title>
+
+	<para>
+	  The simplest way to provide a board support package is to implement
+	  the 18 system calls in non-reentrant fashion. For many bare metal
+	  implementations this is sufficient.
+	</para>
+
+	<para>
+	  The simplest possible &bsp; supports just output to standard output
+	  and non input. We give the minimal implementation for such a system.
+	</para>
+
+	<para>
+	  Where appropriate, we also show the &or1k; implementation as a
+	  practical example.
+	</para>
+
+	<para>
+	  This section duplicates much of the information found in the
+	  &newlib; &libc; documentation <xref linkend="ref_libc"/>. It is
+	  included here for completeness.
+	</para>
+
+	<sect3>
+	  <title>
+	    Error Handling
+	  </title>
+
+	  <para>
+	    Many functions set an error code on failure in the global
+	    variable, <varname>errno</varname>.
+	  </para>
+
+	  <para>
+	    There is a slight complication with &newlib;, because
+	    <varname>errno</varname> is not implemented as a variable, but a
+	    macro (this make life easier for reentrant functions).
+	  </para>
+
+	  <para>
+	    The solution for standard system call implementations, which must
+	    return an error code is to undefine the macro and use the external
+	    variable instead. At the head of such functions use the following.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#undef errno
+extern int errno;
+	    </programlisting>
+	  </informalfigure>
+
+	  <note>
+	    <para>
+	      <varname>errno</varname> is a global variable, so changing it
+	      will immediately make a function non-reentrant.
+	    </para>
+	  </note>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    The Global Environment, <varname>environ</varname>
+	  </title>
+
+	  <para>
+	    The global variable, <varname>environ</varname> must point to a
+	    null terminated list of environment variable name-value pairs.
+	  </para>
+
+	  <para>
+	    For a minimal implementation it is sufficient to use an empty list
+	    as follows.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+char *__env[1] = { 0 };
+char **environ = __env;
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3 id="sec_exit">
+	  <title>
+	    Exit a program, <function>_exit</function>
+	  </title>
+
+	  <para>
+	    Exit a program without any cleanup.
+	  </para>
+
+	  <para>
+	    The &or1k;s implementation makes use of the
+	    <literal>l.nop</literal> opcode. This opcode takes a 16-bit
+	    immediate operand. Functionally the operand has no effect. However
+	    a simulator can inspect the operand to provide functionality
+	    external to the machine.
+	  </para>
+
+	  <para>
+	    When executing on &or1ksim;, <literal>l.nop  1</literal> causes a
+	    tidy exit of the simulator, using the value in
+	    <literal>r3</literal> as the return code.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+void 
+_exit (int  rc)
+{
+  register int  t1 asm ("r3") = rc;
+
+  asm volatile ("\tl.nop\t%0" : : "K" (NOP_EXIT), "r" (t1));
+
+  while (1)
+    {
+    }
+}       /* _exit () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    Note the use of <literal>volatile</literal>. Otherwise there is a
+	    strong possibility of an optimizing compiler recognizing that this
+	    opcode does nothing (we are relying on a simulation side-effect)
+	    and removing it.
+	  </para>
+
+	  <caution>
+	    <para>
+	      The name of this function is already namespace clean. If a
+	      namespace clean implementation of the system calls has been
+	      specified in <filename>configure.host</filename> (see <xref
+	      linkend="sec_configure_host"/>), then this function is still
+	      named <function>_exit</function>, not
+	      <function>__exit</function>.
+	    </para>
+	  </caution>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Closing a file, <function>close</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_close</function>, otherwise implement
+	    <function>close</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    In the minimal implementation, this function always fails, since
+	    there is only standard output, which is not a valid file to
+	    close. This implementation is sufficient for the &or1k;.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_close (int   file)
+{
+  errno = EBADF;
+  
+  return -1;                    /* Always fails */
+
+}       /* _close () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Transfer Control to a New Process, <function>execve</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_execve</function>, otherwise implement
+	    <function>execve</function>. The implementation of this
+	    functionality will be tightly bound to any operating
+	    infrastructure for handling multiple processes.
+	  </para>
+
+	  <para>
+	    A minimal implementation, such as that for bare metal coding, only
+	    offers a single user thread of control. It is thus impossible to
+	    start a new process, so this function always fails.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno;
+extern int  errno;
+
+int
+_execve (char  *name,
+         char **argv,
+         char **env)
+{
+  errno = ENOMEM;
+  return -1;                    /* Always fails */
+
+}       /* _execve () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The choice of <literal>errno</literal> is somewhat
+	    arbitrary. However no value for "no processes available" is
+	    provided, and <literal>ENOMEM</literal> is the closest in meaning
+	    to this.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Create a new process, <function>fork</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_fork</function>, otherwise implement
+	    <function>fork</function>. The implementation of this
+	    functionality will be tightly bound to any operating
+	    infrastructure for handling multiple processes.
+	  </para>
+
+	  <para>
+	    A minimal implementation, such as that for bare metal coding, only
+	    offers a single user thread of control. It is thus impossible to
+	    start a new process, so this function always fails.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_fork ()
+{
+  errno = EAGAIN;
+  return -1;                    /* Always fails */
+
+}       /* _fork () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The choice of <literal>errno</literal> is again somewhat
+	    arbitrary. However no value for "no processes available" is
+	    provided, and <literal>EAGAIN</literal> is the closest in meaning
+	    to this.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Provide the Status of an Open File, <function>fstat</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_fstat</function>, otherwise implement
+	    <function>fstat</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation should assume that all files are
+	    character special devices and populate the status data structure
+	    accordingly.
+	  </para>
+
+          <informalfigure>
+            <programlisting>
+#include &lt;sys/stat.h&gt;
+
+int
+_fstat (int          file,
+        struct stat *st)
+{
+  st->st_mode = S_IFCHR;
+  return  0;
+
+}       /* _fstat () */
+            </programlisting>
+          </informalfigure>
+
+	  <para>
+	    The &or1k; implementation requires two versions of this, one for
+	    the &bsp; using the console for output and one for the &bsp; using
+	    a &uart; and supporting both standard input and standard output.
+	  </para>
+
+	  <para>
+	    Without a &uart;, the implementation still checks that the file
+	    descriptor is one of the two that are supported, and otherwise
+	    returns an error.
+	  </para>
+
+          <informalfigure>
+            <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_fstat (int          file,
+        struct stat *st)
+{
+  if ((STDOUT_FILENO == file) || (STDERR_FILENO == file))
+    {
+      st->st_mode = S_IFCHR;
+      return  0;
+    }
+  else
+    {
+      errno = EBADF;
+      return  -1;
+    }
+}       /* _fstat () */
+            </programlisting>
+          </informalfigure>
+
+	  <para>
+	    The implementation when a &uart; is available is almost identical,
+	    except that <literal>STDIN_FILENO</literal> is also an acceptable
+	    file for which status can be provided.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Get the Current Process ID, <function>getpid</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_getpid</function>, otherwise implement
+	    <function>getpid</function>. The implementation of this
+	    functionality will be tightly bound to any operating
+	    infrastructure for handling multiple processes.
+	  </para>
+
+	  <para>
+	    For a minimal implementation, with no processes, this can just
+	    return a constant. It is perhaps safer to return one rather than
+	    zero, to avoid issue with software that believes process zero is
+	    something special.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+int
+_getpid ()
+{
+  return  1;                            /* Success */
+
+}       /* _getpid () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Determine the Nature of a Stream, <function>isatty</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_isatty</function>, otherwise implement
+	    <function>isatty</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    This specifically checks whether a stream is a terminal. The
+	    minimal implementation only has the single output stream, which is
+	    to the console, so always returns 1.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+int
+_isatty (int   file)
+{
+  return  1;
+
+}       /* _isatty () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <caution>
+	    <para>
+	      Contrary the standard &libc; documentation, this applies to any
+	      stream, not just output streams.
+	    </para>
+	  </caution>
+
+	  <para>
+	    The &or1k; version gives a little more detail, setting
+	    <varname>errno</varname> if the stream is not standard output,
+	    standard error or (for the &uart; version of the &bsp;) standard
+	    input.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;unistd.h&gt;
+
+#undef ERRNO
+extern int  errno;
+
+int
+_isatty (int   file)
+{
+  if ((file == STDOUT_FILENO) || (file == STDERR_FILENO))
+    {
+      return  1;
+    }
+  else
+    {
+      errno = EBADF;
+      return  -1;
+    }
+}       /* _isatty () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &uart; version is almost identical, but also succeeds for
+	    standard input.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Send a Signal, <function>kill</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_kill</function>, otherwise implement
+	    <function>kill</function>. The implementation of this
+	    functionality will be tightly bound to any operating
+	    infrastructure for handling multiple processes.
+	  </para>
+
+	  <para>
+	    A minimal implementation has no concept of either signals or
+	    processes to receive those signals. So this function should always
+	    fail with an appropriate value in <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_kill (int  pid,
+       int  sig)
+{
+  errno = EINVAL;
+  return -1;                    /* Always fails */
+
+}       /* _kill () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Rename an existing file, <function>link</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_link</function>, otherwise implement
+	    <function>link</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation has no file system, so this function must
+	    always fail, with an appropriate value set in
+	    <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_link (char *old,
+       char *new)
+{
+  errno = EMLINK;
+  return -1;                    /* Always fails */
+
+}       /* _link () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Set Position in a File, <function>lseek</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_lseek</function>, otherwise implement
+	    <function>lseek</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation has no file system, so this function can
+	    return 0, indicating that the only stream (standard output) is
+	    positioned at the start of file.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_lseek (int   file,
+        int   offset,
+        int   whence)
+{
+  return  0;
+
+}       /* _lseek () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &or1k; version is a little more detailed, returning zero only
+	    if the stream is standard output, standard error or (for the
+	    &uart; version of the &bsp;) standard input. Otherwise -1 is
+	    returned and an appropriate error code set in
+	    <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;unistd.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_lseek (int   file,
+        int   offset,
+        int   whence)
+{
+  if ((STDOUT_FILENO == file) || (STDERR_FILENO == file))
+    {
+      return  0;
+    }
+  else
+    {
+      errno = EBADF;
+      return  (long) -1;
+    }
+}       /* _lseek () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &uart; version is almost identical, but also succeeds for
+	    standard input.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Open a file, <function>open</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_open</function>, otherwise implement
+	    <function>open</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation has no file system, so this function must
+	    always fail, with an appropriate error code set in
+	    <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_open (const char *name,
+       int         flags,
+       int         mode)
+{
+  errno = ENOSYS;
+  return -1;                    /* Always fails */
+
+}       /* _open () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Read from a File, <function>read</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_read</function>, otherwise implement
+	    <function>read</function>. The detailed implementation will depend
+	    on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation has no file system. Rather than failing,
+	    this function returns 0, indicating end-of-file.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_read (int   file,
+       char *ptr,
+       int   len)
+{
+  return  0;                            /* EOF */
+
+}       /* _read () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &or1k; &bsp; without a &uart; is very similar to the minimal
+	    implementation, but checks that the stream is standard input
+	    before returning 0, and for all other file handles returns an
+	    error.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;unistd.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_read (int   file,
+       char *ptr,
+       int   len)
+{
+  if (STDIN_FILENO == file)
+    {
+      return  0;                        /* EOF */
+    }
+  else
+    {
+      errno = EBADF;
+      return  -1;
+    }
+}       /* _read () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &or1k; &bsp; with a &uart; is more complex. In this case, if
+	    the stream is standard input, a character is read (and optionally
+	    echoed) from the &uart;.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;unistd.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_read (int   file,
+       char *buf,
+       int   len)
+{
+  if (STDIN_FILENO == file)
+    {
+      int  i;
+
+      for (i = 0; i &lt; len; i++)
+	{
+	  buf[i] = _uart_getc ();
+#ifdef UART_AUTO_ECHO
+	  _uart_putc (buf[i]);
+#endif
+	  /* Return partial buffer if we get EOL */
+	  if ('\n' == buf[i])
+	    {
+	      return  i;
+	    }
+	}
+
+      return  i;			/* Filled the buffer */
+    }
+  else
+    {
+      errno = EBADF;
+      return  -1;
+    }
+}	/* _read () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <caution>
+	    <para>
+	      The &or1ksim; &uart; implementation only returns data when
+	      carriage return is hit, rather than as each character becomes
+	      available, which can lead to some unexpected behavior.
+	    </para>
+	  </caution>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Allocate more Heap, <function>sbrk</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_sbrk</function>, otherwise implement
+	    <function>sbrk</function>. This is one function for which there is
+	    no default minimal implementation. It is important that is
+	    implemented wherever possible, since <function>malloc</function>
+	    depends on it, and in turn many other functions depend on
+	    <function>malloc</function>. In this application note, the &or1k;
+	    implementation is used as an example.
+	  </para>
+
+	  <para>
+	    As noted earlier (<xref linkend="sec_stack_init"/>), the heap on
+	    the &or1k; grows up from the end of loaded program space, and the
+	    stack grows down from the top of memory. The linker defines the
+	    symbol <varname>_end</varname>, which will be the start of the
+	    heap, whilst the C runtime initialization places the address of
+	    the last work in memory in the global variable
+	    <varname>_stack</varname>.
+	  </para>
+
+	  <caution>
+	    <para>
+	      <literal>_end</literal> is a symbol defined by the linker, not a
+	      variable, so it is its <emphasis>address</emphasis> that must be
+	      used, not its value.
+	    </para>
+	  </caution>
+
+	  <para>
+	    Within a C program these two variables are referred to without
+	    their leading underscore&mdash;the C compiler prepends all
+	    variable names with underscore.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+#define STACK_BUFFER  65536     /* Reserved stack space in bytes. */
+
+void *
+_sbrk (int nbytes)
+{
+  /* Symbol defined by linker map */
+  extern int  end;              /* start of free memory (as symbol) */
+
+  /* Value set by crt0.S */
+  extern void *stack;           /* end of free memory */
+
+  /* The statically held previous end of the heap, with its initialization. */
+  static void *heap_ptr = (void *)&amp;end;         /* Previous end */
+
+  if ((stack - (heap_ptr + nbytes)) > STACK_BUFFER )
+    {
+      void *base  = heap_ptr;
+      heap_ptr   += nbytes;
+                
+      return  base;
+    }
+  else
+    {
+      errno = ENOMEM;
+      return  (void *) -1;
+    }
+}       /* _sbrk () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The program always tries to keep a minimum of 65,536
+	    (2<superscript>16</superscript>) bytes spare for the stack.
+	  </para>
+
+	  <note>
+	    <para>
+	      This implementation defines <function>_sbrk</function> as
+	      returning type <type>void *</type>. The standard newlib
+	      documentation uses return type <type>caddr_t</type>, which is
+	      defined in <filename>unistd.h</filename>. The author believes
+	      that <type>void *</type> is now the recommended return type for
+	      this function.
+	    </para>
+	  </note>
+
+	  <important>
+	    <para>
+	      <function>sbrk</function> has to return the previous end of the
+	      heap, whose value is held in the static variable,
+	      <varname>heap_ptr</varname>.
+	    </para>
+
+	    <para>
+	      The problem is that this now makes the function
+	      non-reentrant. If the function were interrupted after the
+	      assignment to <varname>base</varname>, but before the following
+	      assignment to <varname>heap_ptr</varname>, and the interrupt
+	      routine itself also called <function>sbrk</function>, then the
+	      heap would become corrupted.
+	    </para>
+
+	    <para>
+	      For simple systems, it would be sufficient to avoid using this
+	      function in interrupt service routines. However the problem then
+	      knowing which functions might call <function>malloc</function>
+	      and hence <function>sbrk</function>, so effectively all library
+	      functions must be avoided.
+	    </para>
+
+	    <para>
+	      The problem cannot even be completely avoided by using reentrant
+	      functions (see <xref linkend="sec_reentrant_syscalls"/>), since
+	      just providing a per thread data structure does not help. The
+	      end of heap is a single global value. The only full solution is
+	      to surround the update of the global variable by a semaphore,
+	      and failing the allocation if the region is blocked (we cannot
+	      wait, or deadlock would result).
+	    </para>
+	  </important>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Status of a File (by Name), <function>stat</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_stat</function>, otherwise implement
+	    <function>stat</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation should assume that all files are
+	    character special devices and populate the status data structure
+	    accordingly.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;sys/stat.h&gt;
+
+int
+_stat (char        *file,
+       struct stat *st)
+{
+  st->st_mode = S_IFCHR;
+  return 0;
+
+}       /* _stat () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &or1k; implementation takes a stricter view of this. Since no
+	    named files are supported, this function always fails.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;sys/stat.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_stat (char        *file,
+       struct stat *st)
+{
+  errno = EACCES;
+  return  -1;
+
+}       /* _stat () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Provide Process Timing Information, <function>times</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_times</function>, otherwise implement
+	    <function>times</function>. The implementation of this
+	    functionality will be tightly bound to any operating
+	    infrastructure for handling multiple processes.
+	  </para>
+
+	  <para>
+	    A minimal implementation need not offer any timing information, so
+	    should always fail with an appropriate value in
+	    <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;sys/times.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_times (struct tms *buf)
+{
+  errno = EACCES;
+  return  -1;
+
+}       /* _times () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Remove a File's Directory Entry, <function>unlink</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_unlink</function>, otherwise implement
+	    <function>unlink</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation has no file system, so this function
+	    should always fail, setting an appropriate value in
+	    <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_unlink (char *name)
+{
+  errno = ENOENT;
+  return -1;                    /* Always fails */
+
+}       /* _unlink () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Wait for a Child Process, <function>wait</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_wait</function>, otherwise implement
+	    <function>wait</function>. The implementation of this
+	    functionality will be tightly bound to any operating
+	    infrastructure for handling multiple processes.
+	  </para>
+
+	  <para>
+	    A minimal implementation has only one process, so can wait for no
+	    other process and should always fail with an appropriate value in
+	    <varname>errno</varname>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_wait (int *status)
+{
+  errno = ECHILD;
+  return -1;                    /* Always fails */
+
+}       /* _wait () */
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Write to a File, <function>write</function>
+	  </title>
+
+	  <para>
+	    For a namespace clean function, implement
+	    <function>_write</function>, otherwise implement
+	    <function>write</function>. The detailed implementation will
+	    depend on the file handling functionality available.
+	  </para>
+
+	  <para>
+	    A minimal implementation only supports writing to standard
+	    output. The core of the implementation is:
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+int
+_write (int   file,
+        char *buf,
+        int   nbytes)
+{
+  int i;
+
+  /* Output character at at time */
+  for (i = 0; i &lt; nbytes; i++)
+    {
+      outbyte (buf[i]);
+    }
+        
+  return nbytes;
+
+}       /* _write () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The function <function>outbyte</function> must use the
+	    functionality of the target platform to write a single character
+	    to standard output. For example copying the character to a serial
+	    line for display. There can be no standard implementation of this
+	    function.
+	  </para>
+
+	  <para>
+	    For the &or1k; two versions are needed one for the &bsp; without a
+	    &uart; one for the &bsp; with a &uart;.
+	  </para>
+
+	  <para>
+	    Without a &uart; the implementation uses the
+	    <literal>l.nop</literal> opcode with a parameter, as with the
+	    implementation of <function>_exit</function> (<xref
+	    linkend="sec_exit"/>). In this case the parameter 4 will cause the
+	    simulator to print out the value in register <literal>r3</literal>
+	    as an &ascii; character.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include "or1ksim-board.h"
+
+static void
+outbyte (char  c)
+{
+  register char  t1 asm ("r3") = c;
+
+  asm volatile ("\tl.nop\t%0" : : "K" (NOP_PUTC), "r" (t1));
+
+}       /* outbyte () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    We also use a stricter implementation of the main
+	    <function>write</function> function, only permitting a write if
+	    the standard output or standard error stream is specified.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#include &lt;errno.h&gt;
+#include &lt;unistd.h&gt;
+
+#undef errno
+extern int  errno;
+
+int
+_write (int   file,
+        char *buf,
+        int   nbytes)
+{
+  int i;
+
+  /* We only handle stdout and stderr */
+  if ((file != STDOUT_FILENO) &amp;&amp; (file != STDERR_FILENO))
+    {
+      errno = EBADF;
+      return -1;
+    }
+
+  /* Output character at at time */
+  for (i = 0; i &lt; nbytes; i++)
+    {
+      outbyte (buf[i]);
+    }
+        
+  return nbytes;
+
+}       /* _write () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    For the &bsp; supporting a &uart;, all that is needed is to change
+	    the <function>outbyte</function> function to use the routines to
+	    drive the &uart;
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+static void
+outbyte (char  c)
+{
+  _uart_putc (c);
+
+}       /* outbyte () */
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The &uart; support routines are provided separately, driving the
+	    interface via its memory mapped registers.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2 id="sec_reentrant_syscalls">
+	<title>
+	  Reentrant System Call Implementations
+	</title>
+
+	<para>
+	  Reentrancy is achieved by providing a global reentrancy structure,
+	  <type>struct&nbsp;_reent</type> for each thread of control, which
+	  holds thread specific versions of global data structures, such as
+	  <varname>errno</varname>.
+	</para>
+
+	<para>
+	  For a fully reentrant system, the &bsp; should implement the
+	  reentrant versions of the system calls, having defined
+	  <literal>syscall_dir=syscalls</literal> and added
+	  <literal>-DREENTRANT_SYSCALLS_PROVIDED"</literal> to
+	  <varname>newlib_cflags</varname> in
+	  <filename>configure.host</filename> (see <xref
+	  linkend="sec_configure_host"/>).
+	</para>
+
+	<para>
+	  16 of the system calls have reentrant versions, which take the
+	  suffix <literal>_r</literal> and are passed an additional first
+	  argument, which is a pointer to the reentrancy structure,
+	  <type>struct&nbsp;reent</type> for the thread of control. Thus
+	  <function>_close</function> is replaced by
+	  <function>_close_r</function>. The reentrant functions are
+	  <function>_close_r</function>, <function>_execve_r</function>,
+	  <function>_fcntl_r</function>, <function>_fork_r</function>,
+	  <function>_fstat_r</function>, <function>_getpid_r</function>,
+	  <function>_link_r</function>, <function>_lseek_r</function>,
+	  <function>_open_r</function>, <function>_read_r</function>,
+	  <function>_sbrk_r</function>, <function>_stat_r</function>,
+	  <function>_times_r</function>, <function>_unlink_r</function>,
+	  <function>_wait_r</function> and <function>_write_r</function>.
+	</para>
+
+	<para>
+	  Two system calls do not need reentrant versions,
+	  <function>_kill</function> and <function>_exit</function>, which are
+	  provided as with non-reentrant versions.
+	</para>
+
+	<para>
+	  For many of the reentrant functions, the behavior is almost
+	  identical to that of the non-reentrant versions, beyond ensuring the
+	  thread specific version of <varname>errno</varname> in the
+	  reentrancy structure is used. Template versions can be found in the
+	  <filename>libc/reent</filename> directory under the
+	  <filename>newlib</filename> directory.
+	</para>
+
+	<para>
+	  There are two ways in which the end user can be supported with these
+	  reentrancy functions. In the first it is up to the user to manage
+	  per thread reentrancy data structures and to call the reentrant
+	  functions explicitly.
+	</para>
+
+	<para>
+	  However the more powerful solution is for the system to manage the
+	  reentrancy structure itself. The end user can call the standard
+	  functions, and they will be mapped to reentrant calls, passing in a
+	  reentrancy structure for the thread.
+	</para>
+
+	<para>
+	  For this approach to be used, <literal>-D__DYNAMIC_REENT__</literal>
+	  must be added to <varname>newlib_cflags</varname> and the &bsp; must
+	  define the function <function>__getreent</function>, to return the
+	  reentrancy structure for the current thread.
 	</para>
 
       </sect2>
 
       <sect2>
 	<title>
-	  &bsp; configuration and &make; file;
+	  &bsp; Configuration and &Make; file;
 	</title>
 
 	<para>
+	  There is little documentation for the configuration and &make; files
+	  for the &bsp;s. The general guideline is to copy the baseline
+	  versions of these files in the default platform library,
+	  <filename>libnosys</filename>, which is based on the minimal
+	  implementations described in <xref linkend="sec_syscalls"/>.
 	</para>
+
+	<para>
+	  This application note uses the configuration and &make; files for
+	  the &or1k; to illustrate the key principles.
+	</para>
+
+	<para>
+	  Building the &bsp; only uses &autoconf; and &autoheader;, but not
+	  &automake;. So there is a <filename>configure.in</filename> (or
+	  <filename>configure.ac</filename>) and
+	  <filename>Makefile.in</filename>, but no
+	  <filename>Makefile.am</filename>. After making any changes it is
+	  important to run &autoconf; and &autoheader; to regenerate the
+	  <filename>configure</filename> script and header files.
+	</para>
+
+	<caution>
+	  <para>
+	    Like the rest of the &gnu; tool chain, &newlib; can be very picky
+	    about the version of &autoconf;. You may need to use the specific
+	    version given in the <filename>configure.in</filename> file.
+	  </para>
+	</caution>
+
+	<sect3>
+	  <title>
+	    <filename>configure.in</filename> for the &bsp;
+	  </title>
+
+	  <para>
+	    The <filename>configure.in</filename> for the &or1k; is closely
+	    based on the version in <filename>libnosys</filename>.
+	  </para>
+
+	  <para>
+	    The initial declarations just need modifying to change the name of
+	    the package.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+AC_PREREQ(2.59)
+AC_INIT(libor32.a,0.2.0)
+AC_CONFIG_HEADER(config.h)
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    There is then code to print a warning if the user has asked for
+	    shared library support (not available) and to locate the
+	    auxiliary tools for &autoconf;.
+	  </para>
+
+	  <para>
+	    The script makes use of <literal>AC_CANONICAL_SYSTEM</literal> to
+	    determine the system type and set appropriate variables. This is
+	    now obsolete, and could is replaced by
+	    <literal>AC_CANONICAL_TARGET</literal> in the &or1k; version. The
+	    installed program names may be changed (for example by
+	    <literal>--prefix</literal>), so we need
+	    <literal>AC_ARG_PROGRAM</literal> and we locate the install
+	    program.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+AC_CANONICAL_TARGET
+
+AC_ARG_PROGRAM
+AC_PROG_INSTALL
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The assumption is made that we are using &gnu; &ld;, so we define
+	    <literal>HAVE_GNU_LD</literal>. The script in
+	    <filename>libnosys</filename> does this in an obsolete way, which
+	    is fixed in the &or1k; script.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+AC_DEFINE(HAVE_GNU_LD, 1, [Using GNU ld])
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The standard script tests the canonical target name to determine
+	    if this is an <acronym>ELF</acronym> target. For &or1k; this is
+	    always the case, so the test can be replaced by a simple
+	    declaration.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+AC_DEFINE(HAVE_ELF, 1, [Using ELF format])
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The script in <filename>libnosys</filename> then tests for the
+	    presence of various features. Most of those are not relevant to
+	    &or1k; so can be left out. However we do need to determine what
+	    the symbol prefix is. We could just define this as being '_', but
+	    instead we let the script work it out, using the standard script's
+	    code.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+AC_CACHE_CHECK([for symbol prefix], libc_symbol_prefix, [dnl
+cat > conftest.c &lt;&lt;\EOF
+foo () { }
+EOF
+
+libc_symbol_prefix=none
+if AC_TRY_COMMAND([${CC-cc} -S conftest.c -o - | fgrep "\$foo" > /dev/null]);
+then
+  libc_symbol_prefix='$'
+else
+  if AC_TRY_COMMAND([${CC-cc} -S conftest.c -o - | fgrep "_foo" > /dev/null]);
+  then
+    libc_symbol_prefix=_
+  fi
+fi
+rm -f conftest* ])
+if test $libc_symbol_prefix != none; then
+  AC_DEFINE_UNQUOTED(__SYMBOL_PREFIX, "$libc_symbol_prefix", [symbol prefix])
+else
+  AC_DEFINE(__SYMBOL_PREFIX, "", [symbol prefix])
+fi
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The code to define the various host tools used is
+	    standard. However it will expect to find an
+	    <filename>aclocal.m4</filename> file in the directory. This can be
+	    regenerated, or simply copied from the
+	    <filename>libnosys</filename> directory. The variable
+	    <varname>host_makefile_frag</varname> refers to standard &make;
+	    script defining how compilation is carried out for the various
+	    source files.
+	  </para>
+
+	  <para>
+	    Finally the new <filename>Makefile</filename> can be generated in
+	    a suitably initialized environment.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+AC_CONFIG_FILES(Makefile,
+                ac_file=Makefile . ${libgloss_topdir}/config-ml.in,
+                srcdir=${srcdir}
+                target=${target}
+                with_multisubdir=${with_multisubdir}
+                ac_configure_args="${ac_configure_args} --enable-multilib"
+                CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+                libgloss_topdir=${libgloss_topdir}
+)
+AC_OUTPUT
+	    </programlisting>
+	  </informalfigure>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    <filename>Makefile.in</filename> for the &bsp;
+	  </title>
+
+	  <para>
+	    The first part of <filename>Makefile.in</filename> is just
+	    transferring values from <filename>configure</filename> and is
+	    used unchanged. The first potential variation is in multilib
+	    handling. If your &gcc; implements multilibs, then that may need
+	    to be mirrored in the &bsp; implementation. If not, then there is
+	    not need to set <literal>MULTIDO</literal> and
+	    <literal>MULTICLEAN</literal> to <literal>true</literal> and these
+	    lines can be removed.
+	  </para>
+
+	  <para>
+	    The <filename>Makefile.in</filename> in
+	    <filename>libnosys</filename> includes an option to use
+	    <emphasis>new</emphasis> versions of the loader and
+	    assembler. However for most implementations, the plain tool is all
+	    that is needed, so simple transfer of the configured values is
+	    sufficient.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+CC = @CC@
+AS = @AS@
+AR = @AR@
+LD = @LD@
+RANLIB = @RANLIB@
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The main tools will already have been transformed to take account
+	    of any prefix (for example using <command>or32-elf-gcc</command>
+	    rather than <command>gcc</command>). However this has not been
+	    done for <command>objdump</command> and
+	    <command>objcopy</command>, so these are transformed here.
+	  </para>
+
+	  <para>
+	    This is the point at which we define the &bsp;s to be built. Any
+	    custom flags for the compilation can be added to
+	    <literal>CFLAGS</literal> here.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+CFLAGS = -g
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    We specify the C start up file(s) and &bsp;(s) to be built.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+CRT0     = crt0.o
+BSP      = libor32.a
+BSP_UART = libor32uart.a
+
+OUTPUTS  = $(CRT0) $(BSP) $(BSP_UART)
+	    </programlisting>
+	  </informalfigure>
+
+	  <important>
+	    <para>
+	      It is important to define <literal>OUTPUTS</literal>. This is
+	      the complete set of programs and libraries being built. It is
+	      used in the <literal>clean</literal> and
+	      <literal>install</literal> targets.
+	    </para>
+	  </important>
+
+	  <para>
+	    For each &bsp; we specify the object files from which it is
+	    built. For the plain &or1k; &bsp; we have:
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+OBJS = _exit.o      \
+       close.o      \
+       environ.o    \
+       execve.o     \
+       fork.o       \
+       fstat.o      \
+       getpid.o     \
+       isatty.o     \
+       kill.o       \
+       link.o       \
+       lseek.o      \
+       open.o       \
+       read.o       \
+       sbrk.o       \
+       stat.o       \
+       times.o      \
+       uart-dummy.o \
+       unlink.o     \
+       wait.o       \
+       write.o
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    For the &bsp; with &uart; support we use many of the same files,
+	    but also  have some different files.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+UART_OBJS = _exit.o       \
+            close.o       \
+            environ.o     \
+            execve.o      \
+            fork.o        \
+            fstat-uart.o  \
+            getpid.o      \
+            isatty-uart.o \
+            kill.o        \
+            link.o        \
+            lseek-uart.o  \
+            open.o        \
+            read-uart.o   \
+            sbrk.o        \
+            stat.o        \
+            times.o       \
+	    uart.o        \
+            unlink.o      \
+            wait.o        \
+            write-uart.o
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    At this point, the version of <filename>Makefile.in</filename> in
+	    <filename>libnosys</filename> specifies explicitly the rules for
+	    compiling object files from C and assembler source. However it is
+	    better to incorporate a standard set of rules, using the
+	    <filename>host_makefile_frag</filename> reference from the
+	    configuration.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+@host_makefile_frag@
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    This is the point at which to specify the first &make; rule to
+	    create the C runtime start up files and &bsp;s.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+all: ${CRT0} ${BSP} ${BSP_UART}
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The object files (including <filename>crt0.o</filename>) will be
+	    built automatically, but we need rules to build the libraries from
+	    them.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+$(BSP): $(OBJS)
+        ${AR} ${ARFLAGS} $@ $(OBJS)
+        ${RANLIB} $@
+
+$(BSP_UART): $(UART_OBJS)
+        ${AR} ${ARFLAGS} $@ $(UART_OBJS)
+        ${RANLIB} $@
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The remainder of <filename>Makefile.in</filename> is standard. It
+	    provides rules to clean the build directory, to install the
+	    generated &bsp;(s) and C start up file(s), and rules to ensure
+	    <filename>configure</filename> and <filename>Makefile</filename>
+	    are regenerated when necessary.
+	  </para>
+
+	  <para>
+	    There also hooks to create, clean and install any documentation
+	    (as <command>info</command> files), which are empty by default.
+	  </para>
+
+	  <para>
+	    Very often these rules are sufficient, so long as all the entities
+	    created have been listed in <literal>OUTPUTS</literal>. They
+	    should be modified if necessary.
+	  </para>
+
+	</sect3>
 
       </sect2>
 
     </sect1>
+
+    <sect1>
+      <title>
+	The Default &bsp;, &libnosys;
+      </title>
+
+      <para>
+	&Newlib; also builds a default &bsp;
+	<filename>libnosys.a</filename>. This can be used with the
+	<literal>-lnosys</literal> flag, and provides a convenient way of
+	testing code will link correctly in the absence of a full &bsp;
+      </para>
+
+      <para>
+	The code can be found in the <filename>libnosys</filename>
+	sub-directory of the main &libgloss; directory.
+      </para>
+
+      <para>
+	For completeness, the configuration file,
+	<literal>configure.in</literal>, in this directory should be updated
+	for any new target that is defining namespace clean versions of the
+	functions. Each such system is selected using a
+	<literal>case</literal> statement. The new entry for the &or1k; is as
+	follows.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+  or32-*-*)
+	;;
+	</programlisting>
+      </informalfigure>
+
+    </sect1>      
 
   </chapter>
 
@@ -922,20 +3836,127 @@ cd ..
       Modifying the &gnu; Tool Chain
     </title>
 
-    <sect1>
+    <sect1 id="sec_custom_newlib_loc">
+      <title>
+	Putting &Newlib; in a Custom Location
+      </title>
+
+      <para>
+	Normally &newlib; will be installed in a standard place with the rest
+	of the tool chain. Its headers will go in the
+	<filename>include</filename> directory within the target specific
+	installation directory. The C runtime start up file, the &newlib;
+	libraries themselves and &bsp; libraries will go in the
+	<filename>lib</filename> directory within the target specific
+	installation directory.
+      </para>
+
+      <para>
+	This arrangement ensures that GCC will pick up the headers and
+	libraries automatically and in the correct sequence.
+      </para>
+      
+      <para>
+	However if &newlib; is not the only C library, then this may be
+	inconvenient. For example the &or1k; usually uses the &uclibc;, and
+	only uses &newlib; when regression testing &gcc;.
+      </para>
+
+      <para>
+	The solution is to move the &newlib; headers and libraries to a custom
+	location and modify &gcc; to search there when &newlib; is being used
+	(see <xref linkend="sec_changing_gcc"/>).
+      </para>
+
+      <para>
+	This is achieved with a simple script at the end of build and
+	install. For example with the &or1k; the following command suffice,
+	where the prefix uses for the entire tool chain build is in
+	<literal>${install_dir}</literal>.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+mkdir -p ${install_dir}/or32-elf/newlib
+rm -rf ${install_dir}/or32-elf/newlib-include
+mv ${install_dir}/or32-elf/include ${install_dir}/or32-elf/newlib-include
+mv ${install_dir}/or32-elf/lib/*.a ${install_dir}/or32-elf/newlib
+mv ${install_dir}/or32-elf/lib/crt0.o ${install_dir}/or32-elf/newlib
+	</programlisting>
+      </informalfigure>
+
+    </sect1>
+
+    <sect1 id="sec_changing_gcc">
       <title>
 	Changes to &gcc;
       </title>
 
       <para>
+	In general &gcc; will work with &newlib; with no change. All that is
+	needed is to include the &bsp; library on the command line.
+      </para>
+
+      <para>
+	However it is convenient to modify &gcc; so that it picks up the &bsp;
+	automatically. This is particularly useful when &newlib; has been
+	installed in a custom location (see <xref
+	linkend="sec_custom_newlib_loc"/>).
+      </para>
+
+      <para>
+	This is achieved by adding machine specific options to &gcc;, and
+	modifying the Spec definitions to pick up the &newlib; libraries when
+	the relevant option is in effect.
+      </para>
+
+      <para>
+	All the relevant files are found in the
+	<filename>gcc/config/<replaceable>target</replaceable></filename>
+	directory of &gcc;. For the 32-bit &or1k; this is
+	<filename>gcc/config/or32</filename>.
       </para>
 
       <sect2>
 	<title>
-	  Adding Machine Specific Options for Newlib
+	  Adding Machine Specific Options for &Newlib;
 	</title>
 
 	<para>
+	  Machine specific options are described in the
+	  <filename><replaceable>target</replaceable>.opt</filename> file. By
+	  convention machine specific options begin with 'm'.
+	</para>
+
+	<para>
+	  For the &or1k; we define two options,
+	  <literal>-mor32-newlib</literal> and
+	  <literal>-mor32-newlib-uart</literal> for the plain and &uart;
+	  enabled versions of the &bsp; respectively.
+	</para>
+
+	<para>
+	  For each option we provide its name one line, any parameters on
+	  subsequent lines and a final line of description. In this case the
+	  only parameter is to say that the parameter can only appear in its
+	  positive form (i.e. <literal>--mno-or32-newlib</literal> is not
+	  permitted).
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+mor32-newlib
+Target RejectNegative
+Link with the OR32 newlib library
+
+mor32-newlib-uart
+Target RejectNegative
+Link with the OR32 newlib UART library
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  These parameters can then be used elsewhere.
 	</para>
 
       </sect2>
@@ -946,18 +3967,351 @@ cd ..
 	</title>
 
 	<para>
+	  &gcc; calls a number of subsidiary programs (the compiler itself,
+	  the assembler, the linker etc). The arguments to these are built up
+	  from the parametrized strings, known as <emphasis>Spec</emphasis>
+	  strings.
 	</para>
+
+	<para>
+	  This application note cannot describe the huge range of possible
+	  parameters. However we use one example to show what is possible. The
+	  changes are all made to the definitions of the strings in
+	  <filename><replaceable>target</replaceable>.h</filename>. In the
+	  case of the &or1k; this is <filename>or32.h</filename>.
+	</para>
+
+	<para>
+	  We need to make four changes.
+	</para>
+
+	<orderedlist>
+	  <listitem>
+	    <para>
+	      We need to tell the C preprocessor to look for headers in the
+	      relocated newlib library directory.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      We need to tell the linker to pick up the newlib C runtime
+	      start up file.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      We need to tell the linker where to find the &newlib; libraries.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      We need to tell the linker to include the &bsp; library in the
+	      right place.
+	    </para>
+	  </listitem>
+	</orderedlist>
+
+	<sect3>
+	  <title>
+	    The Target Specific Installation Directory
+	  </title>
+
+	  <para>
+	    All of these changes will require knowing the location of the
+	    target specific installation directory. Unfortunately there is no
+	    Spec parameter giving this. However we can construct it from two
+	    definitions available when compiling
+	    &gcc;. <literal>STANDARD_EXEC_PREFIX</literal> is the directory
+	    where the &gcc; executables will be found. Two directories up from
+	    that will be the main prefix directory. The target machine is
+	    specified in <literal>DEFAULT_TARGET_MACHINE</literal>. So
+	    concatenating the three strings
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+STANDARD_EXEC_PREFIX "/../../" DEFAULT_TARGET_MACHINE
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    yields the target specific directory. The newlib headers are in
+	    the subdirectory <filename>newlib-include</filename> and the C
+	    runtime start up and libraries in <filename>newlib</filename>.
+	  </para>
+
+	  <para>
+	    We define a new string, <literal>TARGET_PREFIX</literal> based on
+	    the concatenation.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#define CONC_DIR(dir1, dir2) dir1 "/../../" dir2
+#define TARGET_PREFIX CONC_DIR (STANDARD_EXEC_PREFIX, DEFAULT_TARGET_MACHINE)
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    Defined constants cannot be used directly in Spec strings, but we
+	    can make them available by defining the macro
+	    <literal>EXTRA_SPECS</literal>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#define EXTRA_SPECS                                   \
+  { "target_prefix", TARGET_PREFIX }
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The Spec string <literal>target_prefix</literal> is now available
+	    to be used in other Spec strings.
+	  </para>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Specifying the header directory.
+	  </title>
+
+	  <para>
+	    Additional arguments to the C preprocessor are defined in
+	    <literal>CPP_SPEC</literal>. The &newlib; header directory should
+	    we searched after any user specified header directories (from
+	    <literal>-I</literal> arguments) and after the &gcc; system
+	    headers. So it is specified using the
+	    <literal>-idirafter</literal> option.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#undef CPP_SPEC
+#define CPP_SPEC "%{mor32-newlib*:-idirafter %(target_prefix)/newlib-include}"
+	    </programlisting>
+	  </informalfigure>
+	  
+	  <para>
+	    This specifies that any option beginning
+	    <literal>-mor32-newlib</literal> should be replaced by the string
+	    <literal>-idirafter</literal> followed by the
+	    <filename>newlib-incldue</filename> subdirectory of the
+	    <literal>target_prefix</literal> directory.
+	  </para>
+
+	  <para>
+	    So so for example, if we build the &or1k; &gcc; with
+	    <literal>--prefix=/opt/or32-elf-new</literal>, we would have
+	    <literal>STANDARD_EXEC_PREFIX</literal> set to
+	    <filename>/opt/or32-elf-new/lib/gcc</filename> and
+	    <literal>DEFAULT_TARGET_MACHINE</literal> set to
+	    <filename>or32-elf</filename>. The Spec variable
+	    <literal>target_prefix</literal> would therefore me
+	    <literal>/opt/or32-elf-new/lib/gcc/../../or32-elf</literal> and
+	    thus the C preprocessor would have the following added to its
+	    option list.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+-idirafter /opt/or32-elf-new/lib/gcc/../../or32-elf/newlib-include"
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    This substitution only occurs when
+	    <literal>-mor32-newlib</literal> or
+	    <literal>-mor32-newlib-uart</literal> is specified, which is
+	    exactly the behavior desired.
+	  </para>
+
+	  <note>
+	    <para>
+	      If &newlib; is not relocated as described in <xref
+	      linkend="sec_custom_newlib_loc"/>, then the headers will be in a
+	      standard location, which &gcc; will search anyway, so there is
+	      no need to define <literal>CPP_SPEC</literal>.
+	    </para>
+	  </note>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Specifying the C Start up File
+	  </title>
+
+	  <para>
+	    <filename>crt0.o</filename> should be the first object file or
+	    library specified to the linker. This is covered by
+	    <literal>STARTFILE_SPEC</literal>.
+	  </para>
+
+	  <para>
+	    This string already has a partial definition, to look for
+	    <filename>crt0.o</filename> in a standard place, and to include
+	    the <filename>crtinit.o</filename> file from a standard place.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#undef STARTFILE_SPEC
+#define STARTFILE_SPEC "%{!shared:crt0%s crtinit.o%s}"
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    So long as <literal>-shared</literal> is not specified as an
+	    option, this looks for <literal>crt0.o</literal> and
+	    <literal>crtinit.o</literal> in standard directories and
+	    substitutes them on the command line (the suffix
+	    <literal>%s</literal> indicates that the preceding file should be
+	    searched for in standard directories, and its name expanded to
+	    include the directory name.
+	  </para>
+
+	  <para>
+	    This needs changing to indicate that if
+	    <literal>-mor32-newlib</literal> or
+	    <literal>-mor32-newlib-uart</literal> is specified, then
+	    <literal>crt0.o</literal> should be taken from the newlib
+	    directory.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#define STARTFILE_SPEC \
+    "%{!shared:%{mor32-newlib*:%(target_prefix)/newlib/crt0.o} \
+     %{!mor32-newlib*:crt0.o%s} crtinit.o%s}"
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    Note that we must also include the case that when neither of the
+	    &newlib; options is specified, then <filename>crt0.o</filename>
+	    will be searched for in standard directories.
+	  </para>
+
+	  <note>
+	    <para>
+	      If &newlib; is not relocated as described in <xref
+	      linkend="sec_custom_newlib_loc"/>, then
+	      <filename>crt0.o</filename> will be in a standard location,
+	      which &gcc; will search anyway, so there is no need to modify
+	      <literal>STARTFILE_SPEC</literal>.
+	    </para>
+	  </note>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Specifying the &Newlib; library location
+	  </title>
+
+	  <para>
+	    We need to tell the linker where to look for &newlib;
+	    libraries. This is achieved in a similar manner to the search for
+	    the headers, but using the <literal>-L</literal> option and
+	    <literal>LINK_SPEC</literal>.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#undef LINK_SPEC
+#define LINK_SPEC "%{mor32-newlib*:-L%(target_prefix)/newlib}"
+	    </programlisting>
+	  </informalfigure>
+
+	  <note>
+	    <para>
+	      If &newlib; is not relocated as described in <xref
+	      linkend="sec_custom_newlib_loc"/>, then the &newlib; libraries
+	      will be in a standard location searched by &gcc;, so there is no
+	      need to specify <literal>LINK_SPEC</literal>.
+	    </para>
+	  </note>
+
+	</sect3>
+
+	<sect3>
+	  <title>
+	    Adding a &bsp; to the link line.
+	  </title>
+
+	  <para>
+	    The libraries searched by &gcc; are by default specified to be
+	    <literal>-lgcc&nbsp;-lc&nbsp;-lgcc</literal>, with variants if
+	    profiling is being used. When a &bsp; is used, it must be searched
+	    after &libc;, but that can leave references unresolved, so &libc;
+	    must be searched again afterward.
+	  </para>
+
+	  <para>
+	    The sequence of libraries to be searched between the two searches
+	    of &libgcc; is given in <literal>LIB_SPEC</literal>. It already
+	    has a definition.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#define LIB_SPEC "%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    This specifies a variant library when profiling is in
+	    place. &newlib; does not offer profiling support, but it does have
+	    a debugging version of the library (&libg;).
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+#undef LIB_SPEC 
+#define LIB_SPEC "%{!mor32-newlib*:%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}} \
+                  %{mor32-newlib:%{!g:-lc -lor32 -lc}                     \
+                                 %{g:-lg -lor32 -lg}}                     \
+                  %{mor32-newlib-uart:%{!g:-lc -lor32uart -lc}            \
+                                 %{g:-lg -lor32uart -lg}}"
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    This ensures that the correct &bsp; library will be used,
+	    according the the option selected, and that if
+	    <literal>-g</literal> is specified on the command line, the
+	    debugging version of the C library (&libg;) will be used instead.
+	  </para>
+
+	  <para>
+	    Even if the &newlib; is not relocated as described in <xref
+	    linkend="sec_custom_newlib_loc"/>, then this Spec change is
+	    required in order to ensure the correct libraries are picked up.
+	  </para>
+
+	</sect3>
 
       </sect2>
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_linker">
       <title>
 	Changes to the &gnu; Linker
       </title>
 
       <para>
+	In general changes to the linker are not needed. Instead the &bsp;
+	should make use of information provided by the standard linker. For
+	example in the definition of <function>sbrk</function> (see <xref
+	linkend="sec_sbrk"/>) the code uses the <literal>_end</literal> symbol
+	defined by the linker at the end of loaded image to be the start of
+	the heap.
       </para>
 
     </sect1>
@@ -970,6 +4324,28 @@ cd ..
     </title>
 
     <glossentry>
+      <glossterm>Application Binary Interface</glossterm>
+      <acronym>ABI</acronym>
+      <glossdef>
+	<para>
+	  The definition of how registers are used during function call and
+	  return for a particular architecture.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>big endian</glossterm>
+      <glossdef>
+	<para>
+	  A multi-byte number representation, in which the most significant
+	  byte is placed first (i.e. at the lowest address) in memory.
+	</para>
+	<glossseealso>little endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
       <glossterm>Board Support Package</glossterm>
       <acronym>BSP</acronym>
       <glossdef>
@@ -977,6 +4353,29 @@ cd ..
 	  The low level interface between an operating system or library and
 	  the underlying physical platform.
 	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry id="gloss_bss">
+      <glossterm>Block Stated by Symbol</glossterm>
+      <acronym>BSS</acronym>
+      <glossdef>
+	<para>
+	  Universally known by its acronym (the full name is a historical
+	  relic), this refers to an area of storage used for holding static
+	  variables and initialized to zero.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little endian</glossterm>
+      <glossdef>
+	<para>
+	  A multi-byte number representation, in which the least significant
+	  byte is placed first (i.e. at the lowest address) in memory.
+	</para>
+	<glossseealso>big endian</glossseealso>
       </glossdef>
     </glossentry>
 
@@ -996,6 +4395,30 @@ cd ..
       </glossdef>
     </glossentry>
 
+    <glossentry>
+      <glossterm>special purpose register</glossterm>
+      <acronym>SPR</acronym>
+      <glossdef>
+	<para>
+	  A set of up to 2<superscript>16</superscript> 32-bit registers used
+	  to hold additional information controlling the operation of the
+	  &or1k;
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>supervision register</glossterm>
+      <glossdef>
+	<para>
+	  An &or1k; special purpose register holding information about the
+	  most recent test result, whether the processor is in supervisor
+	  mode, and whether certain functions (cache etc) are enabled.
+	</para>
+	<glossseealso>special purpose register</glossseealso>
+      </glossdef>
+    </glossentry>
+
   </glossary>      
 
   <bibliography>
@@ -1003,17 +4426,13 @@ cd ..
       References
     </title>
 
-    <bibliomixed id="ref_flynt">
+    <bibliomixed id="ref_libc">
       <title>
-	Tcl Tutorial
+	The Red Hat &Newlib; C Library
       </title>
-      <author>
-	<firstname>Clif </firstname>
-	<surname>Flynt.</surname>
-      </author>
       <bibliomisc>
-	Version for TCL 8.5 available at <ulink
-	url="http://www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html">www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html</ulink>.
+	Available at <ulink
+	url="http://sourceware.org/newlib/libc.html">sourceware.org/newlib/libc.html</ulink>.
       </bibliomisc>
     </bibliomixed>
 
