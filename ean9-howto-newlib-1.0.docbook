@@ -24,9 +24,13 @@ Useful entities
 
 <!-- = software applications = -->
 
+<!ENTITY aclocal "<application class='software'>aclocal</application>">
 <!ENTITY autoconf "<application class='software'>autoconf</application>">
 <!ENTITY autoheader "<application class='software'>autoheader</application>">
 <!ENTITY automake "<application class='software'>automake</application>">
+<!ENTITY cgen "<application class='software'>CGEN</application>">
+<!ENTITY dejagnu "<application class='software'>DejaGnu</application>">
+<!ENTITY expect "<application class='software'>expect</application>">
 <!ENTITY ld "<application class='software'>ld</application>">
 <!ENTITY linux "<application class='software'>Linux</application>">
 <!ENTITY or1ksim "<application class='software'>Or1ksim</application>">
@@ -50,6 +54,7 @@ Useful entities
 <!ENTITY libg "<systemitem class='library'>libg</systemitem>" >
 <!ENTITY libgcc "<systemitem class='library'>libgcc</systemitem>" >
 <!ENTITY libgloss "<systemitem class='library'>libgloss</systemitem>" >
+<!ENTITY Libgloss "<systemitem class='library'>Libgloss</systemitem>" >
 <!ENTITY libm "<systemitem class='library'>libm</systemitem>" >
 <!ENTITY libnosys "<systemitem class='library'>libnosys</systemitem>" >
 <!ENTITY newlib "<systemitem class='library'>newlib</systemitem>" >
@@ -97,7 +102,7 @@ under the following conditions:
 
 ===============================================================================
 
-Application note describing simple use of DejaGNU
+Application note describing simple porting of Newlib
 =========================================================================== -->
 
 <book lang="en_GB">
@@ -231,6 +236,19 @@ Application note describing simple use of DejaGNU
 	engineers porting &newlib; for the first time.
       </para>
 
+      <para>
+	The detail of all the steps needed are covered here, and have been
+	tested using &newlib; versions 1.17.0 and 1.18.0 with the
+	&or1k;.
+      </para>
+
+      <para>
+	For those who already have some experience, the entire porting process
+	is summarized in the final chapter, with links back to the main
+	document (see <xref linkend="chap_checklist"/>). It's a
+	useful checklist when carrying out a new port.
+      </para>
+
     </sect1>
 
     <sect1>
@@ -275,8 +293,9 @@ Application note describing simple use of DejaGNU
       </para>
 
       <para>
-	Key header files within the source also contain useful commenting,
-	notably <filename>ieeefp.h</filename> and
+	The &newlib; <filename>README</filename> is another source of
+	information. Key header files within the source also contain useful
+	commenting, notably <filename>ieeefp.h</filename> and
 	<filename>reent.h</filename>.
       </para>
 
@@ -284,6 +303,13 @@ Application note describing simple use of DejaGNU
 	There is also a mailing list, <email><ulink
 	url="mailto:newlib@sourceware.org">newlib@sourceware.org</ulink></email>
 	where questions can be asked, or new ports submitted.
+      </para>
+
+      <para>
+	This application note does no cover the detail of testing &newlib;
+	on physical hardware. That subject is well covered by Dan Kegel's
+	<emphasis>Crosstool</emphasis> project <xref
+	linkend="ref_crosstool"/>.
       </para>
 
       <para>
@@ -323,7 +349,7 @@ Application note describing simple use of DejaGNU
       by &gcc;
     </para>
 
-    <sect1>
+    <sect1 id="sec_unified_source">
       <title>
 	The Unified Source Tree
       </title>
@@ -578,7 +604,7 @@ cd ..
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_namespace_reent">
       <title>
 	The C Namespace and Reentrant Functions
       </title>
@@ -648,7 +674,7 @@ cd ..
       </para>
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_adding_target">
       <title>
 	Adding a new Target to &Newlib;
       </title>
@@ -856,12 +882,12 @@ cd ..
 
     <para>
       Changes that depend on the architecture, and not the particular platform
-      being used are made in the <filename>newlib</filename> directory. These
+      being used, are made in the <filename>newlib</filename> directory. These
       comprise changes to standard headers and custom code for the
       architecture.
     </para>
 
-    <sect1>
+    <sect1 id="sec_machine_dir">
       <title>
 	The Machine Directory
       </title>
@@ -880,7 +906,7 @@ cd ..
 	also be placed here.
       </para>
 
-      <sect2>
+      <sect2 id="sec_setjmp_longjmp">
 	<title>
 	  Implementing the <function>setjmp</function> and
 	  <function>longjmp</function> functions.
@@ -944,9 +970,8 @@ cd ..
 	<para>
 	  During normal processing if an error is found, the state held in
 	  <varname>buf</varname> can be used to return control back to the top
-	  level using <function>longjmp</function>/
+	  level using <function>longjmp</function>.
 	</para>
-
 	<informalfigure>
 	  <programlisting>
 #include &lt;setjmp.h&gt;
@@ -1184,26 +1209,154 @@ main (int   argc,
 	  </programlisting>
 	</informalfigure>
 
+      </sect2>
+
+      <sect2 id="sec_machine_dir_reconf">
+	<title>
+	  Updating the Main Machine Directory Configuration files
+	</title>
+
 	<para>
-	  &autoconf; and &automake; files are needed for the new code. These
-	  are generally quite standard, and the easiest approach is to copy
-	  the versions used for the &fr30;
-	  architecture. <filename>Makefile.am</filename> should be modified if
-	  necessary 
-	  to specify the source files (for example
-	  <filename>setjmp.S</filename> and
-	  <filename>longjmp.S</filename>). More complex implementations may
-	  require modifications to <filename>configure.in</filename> as
-	  well. After any changes run &autoconf; and/or &automake; as needed
+	  The machine directory uses &gnu; &autoconf; and &automake; for
+	  configuration. There is a configuration template file
+	  (<filename>configure.in</filename>) and Makefile template
+	  (<filename>Makefile.am</filename>) in the main machine directory
+	  (<filename>libc/machine</filename> within the
+	  <filename>newlib</filename> directory).
+	</para>
+
+	<para>
+	  <filename>configure.ac</filename> contains a <literal>case</literal>
+	  statement configuring the target specific subdirectories. This must
+	  be updated to configure the subdirectory for the new target. Thus
+	  for the &or1k; we have the following.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+if test -n "${machine_dir}"; then
+  case ${machine_dir} in
+        a29k) AC_CONFIG_SUBDIRS(a29k) ;;
+        arm) AC_CONFIG_SUBDIRS(arm) ;;
+
+	&lt;other machines not shown&gt;
+
+        necv70) AC_CONFIG_SUBDIRS(necv70) ;;
+        or32) AC_CONFIG_SUBDIRS(or32) ;;
+        powerpc) AC_CONFIG_SUBDIRS(powerpc) ;;
+
+	&lt;other machines not shown&gt;
+
+        xstormy16) AC_CONFIG_SUBDIRS(xstormy16) ;;
+        z8k) AC_CONFIG_SUBDIRS(z8k) ;;
+  esac;
+fi
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  <filename>Makefile.am</filename> is standard and will not need to be
+	  changed. Having changed the configuration template, the
+	  configuration file, <filename>configure</filename>, will need to be
+	  regenerated. This only requires running &autoconf;
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+autoconf
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Since <filename>Makefile.am</filename> has not been changed there is
+	  no need to run &automake;
+	</para>
+
+      </sect2>
+
+      <sect2 id="sec_machine_target_dir_reconf">
+	<title>
+	  Updating the Target Specific Machine Directory Configuration files
+	</title>
+
+	<para>
+	  <filename>configure.in</filename> and
+	  <filename>Makefile.am</filename> files also be needed for the target
+	  specific directory (i.e.
+	  <filename>libc/machine/<replaceable>target</replaceable></filename>
+	  within the <filename>newlib</filename> directory). These are
+	  generally quite standard, and the easiest approach is to copy the
+	  versions used for the &fr30; architecture. Modern practice is to use
+	  the file name <filename>configure.ac</filename> rather than
+	  <filename>configure.in</filename>, but either will be accepted by
+	  &autoconf;.
+	</para>
+
+	<para>
+	  <filename>Makefile.am</filename> should be modified if necessary to
+	  specify the source files (for example <filename>setjmp.S</filename>
+	  and <filename>longjmp.S</filename>). More complex implementations
+	  may require modifications to <filename>configure.in</filename> as
+	  well.
+	</para>
+
+	<para>
+	  For example the &or1k; machine directory
+	  (<filename>libc/machine/or32</filename> within the
+	  <filename>newlib</filename> directory) contains the following.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+AUTOMAKE_OPTIONS = cygnus
+
+INCLUDES = $(NEWLIB_CFLAGS) $(CROSS_CFLAGS) $(TARGET_CFLAGS)
+
+AM_CCASFLAGS = $(INCLUDES)
+
+noinst_LIBRARIES = lib.a
+
+lib_a_SOURCES = longjmp.S setjmp.S
+lib_a_CCASFLAGS=$(AM_CCASFLAGS)
+lib_a_CFLAGS=$(AM_CFLAGS)
+
+ACLOCAL_AMFLAGS = -I ../../.. -I ../../../..
+CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  After any changes it will be necessary to run &autoconf; and/or
+	  &automake;
 	  to generate new versions of <filename>configure</filename> and
-	  <filename>Makefile.in</filename>.
+	  <filename>Makefile.in</filename>. &autoconf; requires a number of
+	  &newlib; specific macros. These can be generated from the main
+	  &newlib; include file (<filename>acinclude.m4</filename>) by running
+	  &aclocal;. The full set of commands would be.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+aclocal -I ../../..
+autoconf
+automake --cygnus Makefile
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  &aclocal; only need to be run the first time the directory is
+	  created, or when moving the directory to a new release of
+	  &newlib;. &autoconf; need only be run each time
+	  <filename>configure.in</filename> (or
+	  <filename>configure.ac</filename>) is changed. &automake; need only
+	  be run each time <filename>Makefile.am</filename> is changed.
 	</para>
 
       </sect2>
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_newlib_headers">
       <title>
 	Changing Headers
       </title>
@@ -1215,7 +1368,7 @@ main (int   argc,
 	<function>setjmp</function> buffer size.
       </para>
 
-      <sect2>
+      <sect2 id="sec_fp_header">
 	<title>
 	  &ieee; Floating Point
 	</title>
@@ -1409,7 +1562,37 @@ typedef	_JBTYPE jmp_buf[_JBLEN];
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_newlib_config_header">
+	<title>
+	  Miscellaneous System Definitions
+	</title>
+
+	<para>
+	  Various system wide constants are specified within the
+	  <filename>newlib</filename> directory in
+	  <filename>libc/include/sys/config.h</filename>.
+	</para>
+
+	<para>
+	  Very often the system default values are quite sufficient (this is
+	  the case for the &or1k;). However target specific overrides of these
+	  values can be provided at the end of this file. This file is
+	  included in all other source files, so can be used to redefine any
+	  of the constants used in the system. The existing file gives
+	  numerous examples from different machines.
+	</para>
+
+	<caution>
+	  <para>
+	    A number of the constants defined here mirror those in &gcc;'s
+	    <filename>limits.h</filename> file. They should be kept
+	    consistent.
+	  </para>
+	</caution>
+
+      </sect2>
+
+      <sect2 id="sec_other_headers">
 	<title>
 	  Overriding Other Header Files
 	</title>
@@ -1417,10 +1600,10 @@ typedef	_JBTYPE jmp_buf[_JBLEN];
 	<para>
 	  If other headers must be overridden (not usually necessary with a
 	  simple port), then the new versions can be placed in
-	  <filename>libc/machine/<replaceable>arch</replaceable>/include</filename>
-	  within the <filename>newlib</filename> directory. These include
-	  files which will be used in preference to those in the standard
-	  distribution.
+	  <filename>libc/machine/<replaceable>arch</replaceable>/machine</filename>
+	  within the <filename>newlib</filename> directory. These header files
+	  will be used in preference to those in the standard distribution's
+	  <filename>machine</filename> header directory.
 	</para>
 
       </sect2>
@@ -1458,7 +1641,7 @@ typedef	_JBTYPE jmp_buf[_JBLEN];
       </para>
     </note>
 
-    <sect1>
+    <sect1 id="sec_platform_dir">
       <title>
 	The Platform Directory
       </title>
@@ -1476,14 +1659,61 @@ typedef	_JBTYPE jmp_buf[_JBLEN];
 	for each &bsp;
       </para>
 
+      <sect2 id="sec_platform_dir_config">
+	<title>
+	  Ensuring the Platform Directory is Configured
+	</title>
+
+	<para>
+	  <filename>configure.in</filename> within the
+	  <filename>libgloss</filename> directory includes a
+	  <literal>case</literal> statement configuring the target for each
+	  target platform. This should be extended to add the new platform
+	  directory. The &or1k; 32-bit target requires the following change.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+case "${target}" in
+  i[[3456]]86-*-elf* | i[[3456]]86-*-coff*)
+        AC_CONFIG_SUBDIRS([i386])
+        ;;
+  m32r-*-*)
+        AC_CONFIG_SUBDIRS([m32r])
+        ;;
+
+  &lt;Other targets not shown&gt;
+
+  spu-*-elf)
+        AC_CONFIG_SUBDIRS([spu])
+        config_testsuite=false
+        config_libnosys=false
+        ;;
+  or32-*-*)
+        AC_CONFIG_SUBDIRS(or32)
+        ;;
+  iq2000-*-*)
+        AC_CONFIG_SUBDIRS([iq2000])
+        ;;
+esac
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  After making this change the <filename>configure</filename> file
+	  should be regenerated by running &autoconf;.
+	</para>
+
+      </sect2>
+
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_bsp">
       <title>
 	Implementing a Board Support Package (&bsp;)
       </title>
 
-      <sect2>
+      <sect2 id="sec_crt0">
 	<title>
 	  The C Runtime Initialization, <filename>crt0.o</filename>
 	</title>
@@ -1743,7 +1973,7 @@ _buserr_std:
 
 	  <para>
 	    The &or1k; &abi; uses a falling stack. The linker will place code
-	    and static data a the bottom of memory (starting with the
+	    and static data at the bottom of memory (starting with the
 	    exception vectors). The heap then starts immediately after this,
 	    while the stack grows down from the end of memory.
 	  </para>
@@ -1951,7 +2181,7 @@ _start:
 	  <para>
 	    <firstterm linkend="gloss_bss">&bss;</firstterm> is the area of
 	    memory used to hold static variables which must be initialized to
-	    zero. It's start and end and defined by two variables from the
+	    zero. It's start and end are defined by two variables from the
 	    linker/loader, <varname>__bss_start</varname> and
 	    <varname>end</varname> respectively.
 	  </para>
@@ -1992,12 +2222,14 @@ _start:
 	    It is usual to wrap this functionality in two functions,
 	    <function>init</function> and <function>fini</function>, which are
 	    placed in their own sections, <literal>.init</literal> and
-	    <literal>.fini</literal> loaded respectively before all other text
-	    sections and after all other text sections.
+	    <literal>.fini</literal>. The <literal>.init</literal> section is
+	    loaded before all other text sections and the
+	    <literal>.fini</literal> section after all other text sections.
 	  </para>
 
 	  <para>
-	    The start up code should call <function>fini</function> to handle any constructors.
+	    The start up code should call <function>init</function> to handle
+	    any constructors.
 	  </para>
 
 	  <informalfigure>
@@ -2526,8 +2758,8 @@ _isatty (int   file)
 
 	  <caution>
 	    <para>
-	      Contrary the standard &libc; documentation, this applies to any
-	      stream, not just output streams.
+	      Contrary to the standard &libc; documentation, this applies to
+	      any stream, not just output streams.
 	    </para>
 	  </caution>
 
@@ -2583,7 +2815,7 @@ _isatty (int   file)
 	  </para>
 
 	  <para>
-	    A minimal implementation has no concept of either signals or
+	    A minimal implementation has no concept of either signals, nor of
 	    processes to receive those signals. So this function should always
 	    fail with an appropriate value in <varname>errno</varname>.
 	  </para>
@@ -2800,8 +3032,7 @@ _read (int   file,
 	  <para>
 	    The &or1k; &bsp; without a &uart; is very similar to the minimal
 	    implementation, but checks that the stream is standard input
-	    before returning 0, and for all other file handles returns an
-	    error.
+	    before returning 0. For all other streams it returns an error.
 	  </para>
 
 	  <informalfigure>
@@ -2887,7 +3118,7 @@ _read (int   file,
 
 	</sect3>
 
-	<sect3>
+	<sect3 id="sec_sbrk">
 	  <title>
 	    Allocate more Heap, <function>sbrk</function>
 	  </title>
@@ -2896,7 +3127,7 @@ _read (int   file,
 	    For a namespace clean function, implement
 	    <function>_sbrk</function>, otherwise implement
 	    <function>sbrk</function>. This is one function for which there is
-	    no default minimal implementation. It is important that is
+	    no default minimal implementation. It is important that it is
 	    implemented wherever possible, since <function>malloc</function>
 	    depends on it, and in turn many other functions depend on
 	    <function>malloc</function>. In this application note, the &or1k;
@@ -3408,7 +3639,7 @@ outbyte (char  c)
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_bsp_config_make">
 	<title>
 	  &bsp; Configuration and &Make; file;
 	</title>
@@ -3433,16 +3664,27 @@ outbyte (char  c)
 	  <filename>Makefile.in</filename>, but no
 	  <filename>Makefile.am</filename>. After making any changes it is
 	  important to run &autoconf; and &autoheader; to regenerate the
-	  <filename>configure</filename> script and header files.
+	  <filename>configure</filename> script and header files. It will also
+	  need a <filename>aclocal.m4</filename> to give the local macro
+	  definitions, which can be regenerated from the main &libgloss;
+	  <filename>acinclude.m4</filename> using &aclocal;. The command
+	  needed are:
 	</para>
 
-	<caution>
-	  <para>
-	    Like the rest of the &gnu; tool chain, &newlib; can be very picky
-	    about the version of &autoconf;. You may need to use the specific
-	    version given in the <filename>configure.in</filename> file.
-	  </para>
-	</caution>
+	<informalfigure>
+	  <programlisting>
+aclocal -I ..
+autoheader
+autoconf
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  &aclocal; need only be run the first time the directory is
+	  created. &autoheader; is only needed if the &bsp; needs configuration
+	  parameters from the system in a local <filename>config.h</filename>
+	  file.
+	</para>
 
 	<sect3>
 	  <title>
@@ -3476,7 +3718,7 @@ AC_CONFIG_HEADER(config.h)
 	  <para>
 	    The script makes use of <literal>AC_CANONICAL_SYSTEM</literal> to
 	    determine the system type and set appropriate variables. This is
-	    now obsolete, and could is replaced by
+	    now obsolete, and is replaced by
 	    <literal>AC_CANONICAL_TARGET</literal> in the &or1k; version. The
 	    installed program names may be changed (for example by
 	    <literal>--prefix</literal>), so we need
@@ -3598,7 +3840,7 @@ AC_OUTPUT
 	    used unchanged. The first potential variation is in multilib
 	    handling. If your &gcc; implements multilibs, then that may need
 	    to be mirrored in the &bsp; implementation. If not, then there is
-	    not need to set <literal>MULTIDO</literal> and
+	    no need to set <literal>MULTIDO</literal> and
 	    <literal>MULTICLEAN</literal> to <literal>true</literal> and these
 	    lines can be removed.
 	  </para>
@@ -3794,7 +4036,7 @@ $(BSP_UART): $(UART_OBJS)
 
     </sect1>
 
-    <sect1>
+    <sect1 id="sec_libnosys">
       <title>
 	The Default &bsp;, &libnosys;
       </title>
@@ -3803,7 +4045,7 @@ $(BSP_UART): $(UART_OBJS)
 	&Newlib; also builds a default &bsp;
 	<filename>libnosys.a</filename>. This can be used with the
 	<literal>-lnosys</literal> flag, and provides a convenient way of
-	testing code will link correctly in the absence of a full &bsp;
+	testing that code will link correctly in the absence of a full &bsp;
       </para>
 
       <para>
@@ -3812,7 +4054,7 @@ $(BSP_UART): $(UART_OBJS)
       </para>
 
       <para>
-	For completeness, the configuration file,
+	For completeness, the configuration template file,
 	<literal>configure.in</literal>, in this directory should be updated
 	for any new target that is defining namespace clean versions of the
 	functions. Each such system is selected using a
@@ -3829,6 +4071,97 @@ $(BSP_UART): $(UART_OBJS)
 
     </sect1>      
 
+  </chapter>
+
+  <chapter id="chap_build_install">
+    <title>
+      Configuring, Building and Installing &Newlib; and &Libgloss;
+    </title>
+
+    <para>
+      Having made all the changes it is not time to configure, build and
+      install the system. The examples in this chapter for the &or1k; assume a
+      unified source tree in <filename>srcw</filename> and a build directory,
+      <filename>bld-or32</filename>, with the installation directory prefix
+      <filename>/opt/or32-elf-new</filename>.
+    </para>
+
+    <sect1>
+      <title>
+	Configuring &Newlib; and &Libgloss;
+      </title>
+
+      <para>
+	&Newlib; is configured as follows.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+cd bld-or32
+../srcw/configure --target=or32-elf --with-newlib --prefix=/opt/or32-elf-new
+	</programlisting>
+      </informalfigure>
+
+      <note>
+	<para>
+	  Other options may be needed on the command line if other &gnu; tools
+	  are being built. However these are the options relevant to &newlib;
+	</para>
+      </note>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Building &Newlib; and &Libgloss;
+      </title>
+
+      <para>
+	The system is built using &make; from within the
+	<filename>bld-or32</filename> directory.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+make all-target-newlib
+make all-target-libgloss
+	</programlisting>
+      </informalfigure>
+
+    </sect1>
+    
+    <sect1>
+      <title>
+	Testing &Newlib; and &Libgloss;
+      </title>
+
+      <para>
+	Testing &newlib; and &libgloss; requires further configuration. The
+	details are discussed later in this application note (see <xref
+	linkend="chap_testing"/>). For now this step can be skipped.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Installing &Newlib; and &Libgloss;
+      </title>
+
+      <para>
+	The system is installed using &make; from within the
+	<filename>bld-or32</filename> directory.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+make install-target-newlib
+make install-target-libgloss
+	</programlisting>
+      </informalfigure>
+
+    </sect1>
+    
   </chapter>
 
   <chapter>
@@ -3870,8 +4203,8 @@ $(BSP_UART): $(UART_OBJS)
 
       <para>
 	This is achieved with a simple script at the end of build and
-	install. For example with the &or1k; the following command suffice,
-	where the prefix uses for the entire tool chain build is in
+	install. For example with the &or1k; the following command will
+	suffice, where the prefix used for the entire tool chain build is in
 	<literal>${install_dir}</literal>.
       </para>
 
@@ -3917,7 +4250,7 @@ mv ${install_dir}/or32-elf/lib/crt0.o ${install_dir}/or32-elf/newlib
 	<filename>gcc/config/or32</filename>.
       </para>
 
-      <sect2>
+      <sect2 id="sec_gcc_machine_opts">
 	<title>
 	  Adding Machine Specific Options for &Newlib;
 	</title>
@@ -3936,7 +4269,7 @@ mv ${install_dir}/or32-elf/lib/crt0.o ${install_dir}/or32-elf/newlib
 	</para>
 
 	<para>
-	  For each option we provide its name one line, any parameters on
+	  For each option we provide its name on one line, any parameters on
 	  subsequent lines and a final line of description. In this case the
 	  only parameter is to say that the parameter can only appear in its
 	  positive form (i.e. <literal>--mno-or32-newlib</literal> is not
@@ -3961,7 +4294,7 @@ Link with the OR32 newlib UART library
 
       </sect2>
 
-      <sect2>
+      <sect2 id="sec_gcc_specs">
 	<title>
 	  Updating Spec Definitions
 	</title>
@@ -3975,9 +4308,9 @@ Link with the OR32 newlib UART library
 
 	<para>
 	  This application note cannot describe the huge range of possible
-	  parameters. However we use one example to show what is possible. The
-	  changes are all made to the definitions of the strings in
-	  <filename><replaceable>target</replaceable>.h</filename>. In the
+	  parameters. However we will use one example to show what is
+	  possible. The changes are all made to the definitions of the strings
+	  in <filename><replaceable>target</replaceable>.h</filename>. In the
 	  case of the &or1k; this is <filename>or32.h</filename>.
 	</para>
 
@@ -4028,7 +4361,8 @@ Link with the OR32 newlib UART library
 	    where the &gcc; executables will be found. Two directories up from
 	    that will be the main prefix directory. The target machine is
 	    specified in <literal>DEFAULT_TARGET_MACHINE</literal>. So
-	    concatenating the three strings
+	    concatenating the three strings yields the target specific
+	    directory.
 	  </para>
 
 	  <informalfigure>
@@ -4038,9 +4372,9 @@ STANDARD_EXEC_PREFIX "/../../" DEFAULT_TARGET_MACHINE
 	  </informalfigure>
 
 	  <para>
-	    yields the target specific directory. The newlib headers are in
-	    the subdirectory <filename>newlib-include</filename> and the C
-	    runtime start up and libraries in <filename>newlib</filename>.
+	    The newlib headers are in the subdirectory
+	    <filename>newlib-include</filename> and the C runtime start up and
+	    libraries in <filename>newlib</filename>.
 	  </para>
 
 	  <para>
@@ -4111,7 +4445,7 @@ STANDARD_EXEC_PREFIX "/../../" DEFAULT_TARGET_MACHINE
 	    <filename>/opt/or32-elf-new/lib/gcc</filename> and
 	    <literal>DEFAULT_TARGET_MACHINE</literal> set to
 	    <filename>or32-elf</filename>. The Spec variable
-	    <literal>target_prefix</literal> would therefore me
+	    <literal>target_prefix</literal> would therefore be
 	    <literal>/opt/or32-elf-new/lib/gcc/../../or32-elf</literal> and
 	    thus the C preprocessor would have the following added to its
 	    option list.
@@ -4239,7 +4573,7 @@ STANDARD_EXEC_PREFIX "/../../" DEFAULT_TARGET_MACHINE
 
 	</sect3>
 
-	<sect3>
+	<sect3 id="sec_gcc_bsp_location">
 	  <title>
 	    Adding a &bsp; to the link line.
 	  </title>
@@ -4310,14 +4644,618 @@ STANDARD_EXEC_PREFIX "/../../" DEFAULT_TARGET_MACHINE
 	should make use of information provided by the standard linker. For
 	example in the definition of <function>sbrk</function> (see <xref
 	linkend="sec_sbrk"/>) the code uses the <literal>_end</literal> symbol
-	defined by the linker at the end of loaded image to be the start of
-	the heap.
+	defined by the linker at the end of the loaded image to be the start
+	of the heap.
       </para>
 
     </sect1>
 
   </chapter>
 
+  <chapter id="chap_testing">
+    <title>
+      Testing &Newlib; and &Libgloss;
+    </title>
+
+    <para>
+      &Newlib; and &libgloss; both come with &dejagnu; test infrastructures,
+      although as noted in <xref linkend="sec_testing_libgloss"/>, the
+      &libgloss; infrastructure is non-functional.
+    </para>
+
+    <para>
+      The total number of tests is modest (24 tests in release 1.18.0). In
+      practice much of the testing is achieved through the &gcc; test suite
+      (40,000+ tests) and the &gdb; test suite (5,000+ tests).
+    </para>
+
+    <sect1 id="sec_testing_newlib">
+      <title>
+	Testing &Newlib;
+      </title>
+
+      <para>
+	Like all tools, &newlib; can be tested with a &dejagnu;
+	testsuite. &dejagnu; must be installed on the test machine.
+      </para>
+
+      <para>
+	If you already have testing set up for other tools in the &gnu; tool
+	chain on your target, then you can skip the remainder of this section,
+	and just test &newlib; from the build directory with the following.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+	  cd bld-or32
+	  make check-target-newlib
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	If this is the first time you have tried testing, then you'll need to
+	set up your system appropriately. Once this is done, you will be able
+	to test all the &gnu; tool chain components.
+      </para>
+
+      <para>
+	The tests require a target on which to run the tests. This can be a
+	physical machine, or it can be a simulator for the target
+	architecture.
+      </para>
+
+      <para>
+	The details of the target are provided in an &expect; board
+	configuration file. This is referenced from the &dejagnu; global
+	configuration file. The environment variable
+	<literal>DEJAGNU</literal> should point to the global configuration
+	file.
+      </para>
+
+      <para>
+	For the &or1k;, the global configuration file is in
+	<filename>site.exp</filename>, which a subdirectory,
+	<filename>boards</filename> contains
+	<filename>or32-sim.exp</filename>, which is the board configuration
+	file for the OpenRISC simulator target.
+      </para>
+
+      <para>
+	The <filename>site.exp</filename> file must add the
+	<filename>boards</filename> directory to the list of board directories
+	to search and must ensure that the target triplet name is mapped to
+	the name of the board configuration file.
+      </para>
+
+      <para>
+	This <filename>site.exp</filename> file can be reused for checking
+	other targets in the &gnu; tool chain, which may have a different
+	testsuite hierarchy. We cannot therefore just reference the
+	<filename>boards</filename> directory relative to the test
+	directory. All we know is that it will be in one of the directories
+	above, and there is no other boards directory in the hierarchy, so we
+	add all the possible directories. Not elegant, but effective.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+#Make sure we look in the right place for the board description files
+if ![info exists boards_dir] {
+        set boards_dir {}
+}
+
+# Crude way of finding the boards directory
+lappend boards_dir "${tool_root_dir}/../boards"
+lappend boards_dir "${tool_root_dir}/../../boards"
+lappend boards_dir "${tool_root_dir}/../../../boards"
+lappend boards_dir "${tool_root_dir}/../../../../boards"
+
+global target_list
+  case "$target_triplet" in {
+    { "or32-*-elf" } {
+        set target_list { "or32-sim" }
+    }
+  }
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Within the <filename>boards</filename> directory, the board
+	configuration file, <filename>or32-sim.cfg</filename> gives all the
+	details required for the configuration.
+      </para>
+
+      <para>
+	The tool chains supported by this board are specified first. In the
+	case of the &or1k;, only one is supported.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+set_board_info target_install {or32-elf}
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	We then need to load some generic routines, and the generic board
+	configuration.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+load_generic_config "sim"
+load_base_board_description "basic-sim"
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The default settings assume that a program is executed on the target
+	by a command named <command>run</command>, built in a target specific
+	subdirectory of the top level <filename>sim</filename> directory. In
+	the case of the &or1k; this directory would be
+	<filename>sim/or32</filename>.
+      </para>
+
+      <para>
+	At a minimum, <command>run</command> takes as argument an executable
+	to run and returns the exit code from the program as result.
+      </para>
+
+      <para>
+	The <filename>sim</filename> directory is usually distributed as part
+	of &gdb;. Simulators may be derived from &cgen; specifications of the
+	architecture, or by integrating third party simulators. The latter is
+	the case for the &or1k;.
+      </para>
+
+      <para>
+	The default settings for a target are obtained using the
+	<literal>setup_sim</literal> procedure.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+setup_sim or32
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The remainder of the file is used to configure variations on the
+	default settings. This is done using the
+	<literal>set_board_info</literal> procedure.
+      </para>
+
+      <para>
+	The &or1k; simulator needs an additional argument to pass in a
+	configuration file. We know that will be in the &libgloss; target
+	directory and named <filename>sim.cfg</filename>. We can use the
+	<literal>lookfor_file</literal> procedure to search up from the
+	current source directory to locate the file.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+set cfg_file [lookfor_file ${srcdir} libgloss/or32/sim.cfg]
+set_board_info sim,options "-a \"-f ${cfg_file}\""
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	A number of helpful procedures make it easy to locate parts of the
+	tool chain and their default arguments. For the &or1k; we make one
+	change, which is to specify <literal>-mor32-newlib</literal> for the
+	linker flags, so that the &newlib; &bsp; will be used.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+process_multilib_options ""
+set_board_info compiler "[find_gcc]"
+set_board_info cflags "[libgloss_include_flags] [newlib_include_flags]"
+set_board_info ldflags "[libgloss_link_flags] -mor32-newlib [newlib_link_flags]"
+set_board_info ldscript ""
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Not all targets have the same functionality, and the remaining options
+	specify those limitations. This is a generic board specification, so
+	some of these apply to testing components other than &newlib;. The
+	limitations specified will mean that some tests, which are
+	inappropriate do not run.
+      </para>
+
+      <para>
+	For the &or1k; we specify that the simulator is fast, that programs it
+	runs cannot be passed arguments, that it does not support signals
+	(for testing &gdb;) and that the maximum stack size is 64KB (for
+	testing &gcc;).
+      </para>
+
+      <informalfigure>
+	<programlisting>
+set_board_info slow_simulator 0
+set_board_info noargs  1
+set_board_info gdb,nosignals  1
+set_board_info gcc,stack_size 65536
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	We can now set <literal>DEJAGNU</literal> to point to the global
+	configuration directory, change to the build directory and run the
+	&make; command to check newlib.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+	  export DEJAGNU=`pwd`/site.exp
+	  cd bld-or32
+	  make check-target-newlib
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The good thing is that this set up is generic across all the &gnu;
+	tool chain, so all the other tools can be checked in the same way.
+      </para>
+
+      <sect2>
+	<title>
+	  Checking Physical Hardware
+	</title>
+
+	<para>
+	  The same technique can be used to run the tests against physical
+	  hardware rather than a simulator. The setup of the board
+	  configuration is rather more complicated, with considerable
+	  variation for different arrangements.
+	</para>
+
+	<para>
+	  The detail is beyond the scope of this project, but is well
+	  described in the Dan Kegel's <emphasis>Crosstool</emphasis> project
+	  <xref linkend="ref_crosstool"/>.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="sec_testing_libgloss">
+      <title>
+	Testing &Libgloss;
+      </title>
+
+      <para>
+	In principle, having set up &newlib; testing, testing &libgloss;
+	should be as simple as:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+	  cd bld-or32
+	  make check-target-libgloss
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Unfortunately, the current &newlib; release (at the time of writing
+	1.18.0) does not implement testing for &libgloss;. The
+	<filename>testsuite</filename> subdirectory exists, but the code to
+	configure it is currently commented out in
+	<filename>configure.in</filename>.
+      </para>
+
+      <para>
+	It should not be difficult to build the infrastructure. However as
+	noted at the start of this chapter (see <xref
+	linkend="chap_testing"/>), testing of &newlib; and &libgloss; is as
+	much achieved through &gcc; and &gdb; testing as through the modest
+	number of tests within &newlib;
+      </para>
+
+    </sect1>
+  
+  </chapter>
+
+  <chapter id="chap_checklist">
+    <title>
+      Summary Checklist
+    </title>
+
+    <para>
+      This summary can be used as a checklist when creating a new port of
+      &newlib;. The configuration and build steps are typically encapsulated
+      in a simple shell script, which builds, tests and installs the entire
+      &gnu; tool chain as well as &newlib; and &libgloss;
+    </para>
+
+    <para>
+      Throughout this checklist, the new target architecture is referred to as
+      <replaceable>target</replaceable>.
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Construct a unified source tree including the &newlib; distribution
+	  (<xref linkend="sec_unified_source"/>).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Edit <filename>newlib/configure.host</filename> adding entries for
+	  the new target (<xref linkend="sec_adding_target"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Decide whether to implement reentrant or non-reentrant system
+	      calls and whether to use namespace clean system call names
+	      (<xref linkend="sec_namespace_reent"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+      </listitem>
+
+      <listitem>
+	<para>
+	  Add a &newlib; machine subdirectory for the new target,
+	  <filename>newlib/libc/machine/<replaceable>target</replaceable></filename>
+	  (<xref linkend="sec_machine_dir"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Modify <filename>configure.in</filename> in
+	      <filename>newlib/libc/machine</filename> to configure the new
+	      target subdirectory and run &autoconf; in
+	      <filename>newlib/libc/machine</filename> to regenerate the
+	      <filename>configure</filename> script (<xref
+	      linkend="sec_machine_dir_reconf"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Implement <function>setjmp</function> and
+	  <function>longjmp</function> the target specific machine directory,
+	  <filename>newlib/libc/machine/<replaceable>target</replaceable></filename>
+	  (<xref linkend="sec_setjmp_longjmp"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Write code in assembler for each function (<xref
+	      linkend="sec_setjmp_longjmp"/>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Copy and modify <filename>Makefile.am</filename> and
+	      <filename>configure.in</filename> from the &fr30; directory and
+	      run &aclocal;, &autoconf; and &automake; in
+	      <filename>newlib/libc/machine/<replaceable>target</replaceable></filename>
+	      to regenerate the <filename>configure</filename> script and
+	      Makefile template.  (<xref
+	      linkend="sec_machine_target_dir_reconf"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Modify &newlib; header files (<xref
+	  linkend="sec_newlib_headers"/>)/
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Add entries in <filename>newlib/libc/include/ieeefp.c</filename>
+	      (<xref linkend="sec_fp_header"/>)
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Add entry in in
+	      <filename>newlib/libc/include/setjmp.c</filename> (<xref
+	      linkend="sec_setjmp_header"/>)
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Add entries in
+	      <filename>newlib/libc/include/sys/config.h</filename> (<xref
+	      linkend="sec_newlib_config_header"/>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Optionally add other custom headers in
+	      <filename>newlib/libc/machine/target/machine</filename> (<xref
+	      linkend="sec_other_headers"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Add a libgloss platform directory,
+	  <filename>libgloss/<replaceable>target</replaceable></filename>
+	  (<xref linkend="sec_platform_dir"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Modify <filename>libgloss/configure.in</filename> to configure the
+	      platform subdirectory and run &autoconf; in the
+	      <filename>libgloss</filename> directory to regenerate the
+	      <filename>configure</filename> script (<xref
+	      linkend="sec_platform_dir_config"/>.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Implement the Board Support Package(s) for the target (<xref
+	  linkend="sec_bsp"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Implement the C Runtime start up,
+	      <filename>crt0.o</filename> for each &bsp; (<xref
+	      linkend="sec_crt0"/>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Implement the environment global and 18 system call functions
+	      for each &bsp; following the convention namespace and reentrancy
+	      conventions specified in
+	      <filename>newlib/configure.host</filename> (<xref
+	      linkend="sec_syscalls"/> and see <xref
+	      linkend="sec_reentrant_syscalls"/>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Create
+	      <filename>libgloss/<replaceable>target</replaceable>/Makefile.in</filename>
+	      and
+	      <filename>libgloss/<replaceable>target</replaceable>/configure.ac</filename>,
+	      based on the versions in the
+	      <filename>libgloss/libnosys</filename> directory and run
+	      &aclocal; and &autoconf; in
+	      <filename>libgloss/<replaceable>target</replaceable></filename>
+	      (<xref linkend="sec_bsp_config_make"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  If necessary update
+	  <filename>libgloss/libnosys/configure.in</filename> to indicate the
+	  target is using namespace clean system calls and run &autoconf; in
+	  <filename>libgloss/libnosys</filename> (<xref
+	  linkend="sec_libnosys"/>).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Modify &gcc; for &newlib; (<xref linkend="sec_changing_gcc"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Optionally add target specific option(s) to specify &newlib;
+	      &bsp;(s) (<xref linkend="sec_gcc_machine_opts"/>).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Optionally specify the location of &newlib; headers, the &bsp; C
+	      runtime start up file and the newlib libraries if they have been
+	      moved from their standard locations and/or names (<xref
+	      linkend="sec_gcc_specs"/>)
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Specify the &libgloss; &bsp; library to be linked, ensuring
+	      <function>malloc</function> and <function>free</function> are
+	      linked in if required (<xref
+	      linkend="sec_gcc_bsp_location"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Ensure the linker scripts are suitable for use with &newlib; (<xref
+	  linkend="sec_linker"/>).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Configure and build &newlib; and &libgloss; (<xref
+	  linkend="chap_build_install"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Rebuild &gcc;
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Rebuild &ld; if any linker scripts have been changed.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Test &newlib; (<xref linkend="sec_testing_newlib"/>).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Install &newlib; and &libgloss; (<xref
+	  linkend="chap_build_install"/>).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Reinstall &gcc;
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Reinstall &ld; if any linker scripts have been changed.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+    </orderedlist>
+
+  </chapter>
+    
   <glossary>
     <title>
       Glossary
@@ -4433,6 +5371,20 @@ STANDARD_EXEC_PREFIX "/../../" DEFAULT_TARGET_MACHINE
       <bibliomisc>
 	Available at <ulink
 	url="http://sourceware.org/newlib/libc.html">sourceware.org/newlib/libc.html</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_crosstool">
+      <title>
+	The Crosstool Project,
+      </title>
+      <author>
+	<firstname>Dan</firstname>
+	<surname>Kegel.</surname>
+      </author>
+      <bibliomisc>
+	Available at <ulink
+	url="http://www.kegel.com/crosstool/">www.kegel.com/crosstool</ulink>.
       </bibliomisc>
     </bibliomixed>
 
