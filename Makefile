@@ -30,7 +30,7 @@ DOCROOT        = ean10-howto-llvmas
 # ----------------------------------------------------------------------------
 # Others do all the hard work
 
-include $(HOME)/work/documentation/embecosm-tools/local_scripts/linux_book.mk
+include $(HOME)/svntrunk/Documentation/local_scripts/linux_book.mk
 
 
 .PHONY: spell
