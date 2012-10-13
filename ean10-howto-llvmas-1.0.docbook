@@ -38,7 +38,7 @@
 ]>
 
 <book lang="en_US">
-  <title>Implementing &LLVM; Integrated Assembler</title>
+  <title>Howto: Implementing &LLVM; Integrated Assembler</title>
   <subtitle>A Simple Guide</subtitle>
 
   <bookinfo>
@@ -51,7 +51,7 @@
       <ulink url="http://www.embecosm.com">&embecosm;</ulink>
     </corpauthor>
 
-    <pubdate>September 2012</pubdate>
+    <pubdate>October 2012</pubdate>
     <releaseinfo>Application Note 10. Issue 1</releaseinfo>
 
     <copyright>
@@ -133,15 +133,16 @@
       </para>
       <para>
         This guide assumes that the basic LLVM toolchain has already been
-        implemented and functioning for the target architecture using a MC (
+        implemented and is functioning for the target architecture using a MC (
         &LLVM; Machine Code) based instruction printer. (i.e. LLVM is already
         capable of producing assembly files for the target architecture via
         <command>llc</command>.)
       </para>
       <para>
-        The detail of steps here have been tested using the (at time of writing)
-        latest development version of LLVM, the source of which can be found on
-        GitHub at <ulink url='https://www.github.com/openrisc/llvm-or1k'>
+        The detail of steps here have been tested using the (at time of
+        writing) latest development version of LLVM for the OpenRISC 1000, the
+        source of which can be found on GitHub
+        at <ulink url='https://www.github.com/openrisc/llvm-or1k'>
         www.github.com/openrisc/llvm-or1k</ulink>.
       </para>
     </sect1>
