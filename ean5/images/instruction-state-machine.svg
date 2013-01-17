@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="900"
+   height="581"
+   id="svg46127"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="instruction-state-machine.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/jeremy/svntrunk/Documentation/appnotes/ean5-systemc-jtag-cycle-acc/images/instruction-state-machine.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs46129">
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path5645"
+         d="M 5.77,0 L -2.88,5 L -2.88,-5 L 5.77,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="scale(0.8,0.8)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective46135" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.3011111"
+     inkscape:cx="450"
+     inkscape:cy="300"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:showpageshadow="false"
+     inkscape:object-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-intersection-line-segments="true"
+     inkscape:window-width="1600"
+     inkscape:window-height="1151"
+     inkscape:window-x="0"
+     inkscape:window-y="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid46646"
+       dotted="true"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata46132">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
+        <dc:title>State machine for a JTAG instruction register scan</dc:title>
+        <dc:date>1 February 2009</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Embecosm Limited</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Embecosm Limited</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:source>www.embecosm.com</dc:source>
+        <dc:language>en-GB</dc:language>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>JTAG</rdf:li>
+            <rdf:li>IR-Scan</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>The state machine for processing an instruction register capture-shift-update sequence</dc:description>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g50354"
+       transform="translate(-9.386746e-6,0)">
+      <g
+         transform="translate(-68.349261,-139.5)"
+         id="g46666">
+        <text
+           xml:space="preserve"
+           style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Consolas;-inkscape-font-specification:Consolas"
+           x="280.88379"
+           y="241.00491"
+           id="text46648"
+           sodipodi:linespacing="100%"><tspan
+             sodipodi:role="line"
+             id="tspan46650"
+             x="280.88379"
+             y="241.00491">SHIFT_IR_PREPARING</tspan></text>
+        <rect
+           style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect46660"
+           width="240"
+           height="30"
+           x="260"
+           y="220"
+           rx="10"
+           ry="10" />
+      </g>
+      <g
+         transform="translate(-68.349261,-29.5)"
+         id="g46671">
+        <text
+           xml:space="preserve"
+           style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Consolas;-inkscape-font-specification:Consolas"
+           x="286.3916"
+           y="311.00494"
+           id="text46652"
+           sodipodi:linespacing="100%"><tspan
+             sodipodi:role="line"
+             id="tspan46654"
+             x="286.3916"
+             y="311.00494">SHIFT_IR_SHIFTING</tspan></text>
+        <rect
+           style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect46662"
+           width="240"
+           height="30"
+           x="260"
+           y="290"
+           rx="10"
+           ry="10" />
+      </g>
+      <g
+         transform="translate(-288.34926,90.5)"
+         id="g46676">
+        <text
+           xml:space="preserve"
+           style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Consolas;-inkscape-font-specification:Consolas"
+           x="506.3916"
+           y="371.00494"
+           id="text46656"
+           sodipodi:linespacing="100%"><tspan
+             sodipodi:role="line"
+             id="tspan46658"
+             x="506.3916"
+             y="371.00494">SHIFT_IR_UPDATING</tspan></text>
+        <rect
+           style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect46664"
+           width="240"
+           height="30"
+           x="480"
+           y="350"
+           rx="10"
+           ry="10" />
+      </g>
+      <path
+         transform="translate(-28.349261,-59.5)"
+         d="M 350,70 A 10,10 0 1 1 330,70 A 10,10 0 1 1 350,70 z"
+         sodipodi:ry="10"
+         sodipodi:rx="10"
+         sodipodi:cy="70"
+         sodipodi:cx="340"
+         id="path46681"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         transform="translate(-28.349261,500.5)"
+         d="M 350,70 A 10,10 0 1 1 330,70 A 10,10 0 1 1 350,70 z"
+         sodipodi:ry="10"
+         sodipodi:rx="10"
+         sodipodi:cy="70"
+         sodipodi:cx="340"
+         id="path46683"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:open="true"
+         transform="matrix(-1,0,0,1,734.45103,-14.5)"
+         sodipodi:end="8.8959849"
+         sodipodi:start="3.4942121"
+         d="M 541.84586,99.639282 A 30,30 0 1 1 544.0975,125.13475"
+         sodipodi:ry="30"
+         sodipodi:rx="30"
+         sodipodi:cy="110"
+         sodipodi:cx="570"
+         id="path46685"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;marker-end:url(#TriangleOutL);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path47210"
+         d="M 311.65074,20.5 L 311.65074,75.5"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path47729"
+         d="M 311.65074,110.5 L 311.65074,255.5"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path47731"
+         d="M 311.65074,290.5 L 311.65074,435.5"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path47733"
+         d="M 311.65074,470.5 L 311.65074,555.5"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="100%"
+         id="text49302"
+         y="40.5"
+         x="321.65073"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           y="40.5"
+           x="321.65073"
+           id="tspan49304"
+           sodipodi:role="line">TAP state machine</tspan><tspan
+           id="tspan49306"
+           y="60.5"
+           x="321.65073"
+           sodipodi:role="line">is synchronized</tspan></text>
+      <path
+         sodipodi:open="true"
+         transform="matrix(-1,0,0,1,734.45103,165.5)"
+         sodipodi:end="8.8959849"
+         sodipodi:start="3.4942121"
+         d="M 541.84586,99.639282 A 30,30 0 1 1 544.0975,125.13475"
+         sodipodi:ry="30"
+         sodipodi:rx="30"
+         sodipodi:cy="110"
+         sodipodi:cx="570"
+         id="path49308"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;marker-end:url(#TriangleOutL);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:open="true"
+         transform="matrix(-1,0,0,1,734.45103,345.5)"
+         sodipodi:end="8.8959849"
+         sodipodi:start="3.4942121"
+         d="M 541.84586,99.639282 A 30,30 0 1 1 544.0975,125.13475"
+         sodipodi:ry="30"
+         sodipodi:rx="30"
+         sodipodi:cy="110"
+         sodipodi:cx="570"
+         id="path49310"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;marker-end:url(#TriangleOutL);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <text
+         sodipodi:linespacing="100%"
+         id="text49312"
+         y="130.5"
+         x="321.65073"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           y="130.5"
+           x="321.65073"
+           id="tspan49314"
+           sodipodi:role="line">TAP state machine</tspan><tspan
+           id="tspan49316"
+           y="150.5"
+           x="321.65073"
+           sodipodi:role="line">is at Shift-IR</tspan></text>
+      <text
+         sodipodi:linespacing="100%"
+         id="text49318"
+         y="310.5"
+         x="321.65073"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           id="tspan49322"
+           y="310.5"
+           x="321.65073"
+           sodipodi:role="line">All bits shifted </tspan><tspan
+           id="tspan49332"
+           y="330.5"
+           x="321.65073"
+           sodipodi:role="line">through TDI</tspan></text>
+      <text
+         sodipodi:linespacing="100%"
+         id="text49324"
+         y="490.5"
+         x="321.65073"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           y="490.5"
+           x="321.65073"
+           id="tspan49326"
+           sodipodi:role="line">TAP state machine</tspan><tspan
+           id="tspan49328"
+           y="510.5"
+           x="321.65073"
+           sodipodi:role="line">is at Update-IR</tspan></text>
+      <text
+         sodipodi:linespacing="100%"
+         id="text49334"
+         y="92.545898"
+         x="551.65076"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           id="tspan49338"
+           y="92.545898"
+           x="551.65076"
+           sodipodi:role="line">Advance TAP state</tspan><tspan
+           id="tspan49342"
+           y="112.5459"
+           x="551.65076"
+           sodipodi:role="line">machine to Shift-IR</tspan></text>
+      <text
+         sodipodi:linespacing="100%"
+         id="text49344"
+         y="272.5459"
+         x="550.8988"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           id="tspan49348"
+           y="272.5459"
+           x="550.8988"
+           sodipodi:role="line">Shift bits out of TDI</tspan><tspan
+           id="tspan49352"
+           y="292.5459"
+           x="550.8988"
+           sodipodi:role="line">and in from TDO</tspan></text>
+      <text
+         sodipodi:linespacing="100%"
+         id="text49354"
+         y="450.48535"
+         x="551.65076"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           id="tspan49356"
+           y="450.48535"
+           x="551.65076"
+           sodipodi:role="line">Advance TAP state</tspan><tspan
+           id="tspan49358"
+           y="470.48535"
+           x="551.65076"
+           sodipodi:role="line">machine to Update-IR</tspan></text>
+      <text
+         sodipodi:linespacing="100%"
+         id="text49366"
+         y="372.35391"
+         x="550.51794"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         xml:space="preserve"><tspan
+           id="tspan49370"
+           y="372.35391"
+           x="550.51794"
+           sodipodi:role="line">Shift in last TDO bit</tspan></text>
+    </g>
+  </g>
+</svg>
