@@ -1,0 +1,4722 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- =========================================================================
+Useful entities
+========================================================================== -->
+
+<!-- ========== Acronyms and abbreviations ========== -->
+
+<!ENTITY abi   "<acronym>ABI</acronym>">
+<!ENTITY api   "<acronym>API</acronym>">
+<!ENTITY bist  "<acronym>BIST</acronym>">
+<!ENTITY codec "<acronym>codec</acronym>">
+<!ENTITY cpld  "<acronym>CPLD</acronym>">
+<!ENTITY cpu   "<acronym>CPU</acronym>">
+<!ENTITY crc   "<acronym>CRC</acronym>">
+<!ENTITY dut   "<acronym>DUT</acronym>">
+<!ENTITY gnu   "<acronym>GNU</acronym>">
+<!ENTITY gpr   "<acronym>GPR</acronym>">
+<!ENTITY fifo  "<acronym>FIFO</acronym>">
+<!ENTITY fpga  "<acronym>FPGA</acronym>">
+<!ENTITY ieee  "<acronym>IEEE</acronym>">
+<!ENTITY iss   "<acronym>ISS</acronym>">
+<!ENTITY jtag  "<acronym>JTAG</acronym>">
+<!ENTITY mmu   "<acronym>MMU</acronym>">
+<!ENTITY npc   "<acronym>NPC</acronym>">
+<!ENTITY osci  "<acronym>OSCI</acronym>">
+<!ENTITY pdf   "<acronym>PDF</acronym>">
+<!ENTITY ppc   "<acronym>PPC</acronym>">
+<!ENTITY ram   "<acronym>RAM</acronym>">
+<!ENTITY rsp   "<acronym>RSP</acronym>">
+<!ENTITY rtl   "<acronym>RTL</acronym>">
+<!ENTITY soc   "<acronym>SoC</acronym>">
+<!ENTITY spr   "<acronym>SPR</acronym>">
+<!ENTITY sram  "<acronym>SRAM</acronym>">
+<!ENTITY tap   "<acronym>TAP</acronym>">
+<!ENTITY tdm   "<acronym>TDM</acronym>">
+<!ENTITY tlm   "<acronym>TLM</acronym>">
+<!ENTITY uart  "<acronym>UART</acronym>">
+<!ENTITY vcd   "<acronym>VCD</acronym>">
+
+<!-- ========== commonly used things ========== -->
+
+<!ENTITY systemc "SystemC">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
+
+<!ENTITY gcc       "<application class='software'><acronym>GCC</acronym></application>">
+<!ENTITY gdb       "<application class='software'><acronym>GDB</acronym></application>">
+<!ENTITY gtkwave   "<application class='software'>GTKWave</application>">
+<!ENTITY icarus    "<application class='software'>Icarus Verilog</application>">
+<!ENTITY linux     "<application class='software'>Linux</application>">
+<!ENTITY make      "<command>make</command>">
+<!ENTITY verilator "<application class='software'>Verilator</application>">
+
+<!-- = Hardware applications = -->
+
+<!ENTITY or1k      "<application class='hardware'>OpenRISC 1000</application>">
+<!ENTITY or1200    "<application class='hardware'>OpenRISC 1200</application>">
+<!ENTITY orpsoc    "<application class='hardware'>ORPSoC</application>">
+
+<!-- = Commands = -->
+
+<!-- = Libraries = -->
+
+<!-- ========== Cross references ========== -->
+
+<!-- = Organizations = -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY lgpl "GNU Lesser General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY gpl_www "GNU General Public License (<ulink url='http://www.gnu.org/licenses/gpl.html'>GNU General Public License</ulink>)">
+
+]>
+
+<!-- ==========================================================================
+
+Copyright (c) 2009 Embecosm Limited <info@embecosm.com>.
+
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
+
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
+
+===============================================================================
+
+Application note describing a SystemC cycle accurate interface to JTAG
+
+$Id$
+
+=========================================================================== -->
+
+<book lang="en_GB">
+  <title>
+    Integrating the GNU Debugger with Cycle Accurate Models
+  </title>
+  <subtitle>
+    A Case Study using a Verilator SystemC Model of the OpenRISC 1000
+  </subtitle>
+
+  <bookinfo>
+
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>
+      March 2009
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 7. Issue 1
+    </releaseinfo>
+
+    <copyright>
+      <year>
+	2009
+      </year>
+      <holder>
+	&embecosm; Limited
+      </holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>
+	Legal Notice
+      </title>
+
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, Jeremy Bennett of &embecosm_www;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The software for the &systemc; cycle accurate model written by
+	&embecosm; and used in this document is licensed under the
+	&gpl_www;. For detailed licensing information see the file
+	<filename>COPYING</filename> in the source code.
+      </para>
+
+      <para>
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
+      </para>
+
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      This document describes how to integrate the &gnu; Debugger, &gdb;, with
+      fast cycle accurate &systemc; models of processors and systems-on-chip
+      (&soc;). This provides a highly productive environment for early
+      software development, testing and performance analysis before silicon is
+      available.
+    </para>
+
+    <para>
+      The interface is made through the cycle accurate model of the &jtag;
+      (IEEE 1149.1) interface of the chip <xref linkend="ref_ieee_jtag"/>
+      <xref linkend="ref_ti_jtag"/>. This means the interface is readily
+      reusable for &fpga; implementations or finished silicon.
+    </para>
+
+    <sect1>
+      <title>
+	Why Use Cycle Accurate Modeling
+      </title>
+
+      <para>
+	Cycle accurate models in C and &systemc; are becoming an increasingly
+	important part of the verification process, particularly for SoCs with
+	performance critical embedded software. They represent a software
+	friendly compromise, offering higher performance than traditional
+	event-driven simulation, but greater accuracy than hand-written
+	instruction set simulators (&iss;) and transaction level models
+	(&tlm;).
+      </para>
+    
+      <para>
+	Typically such models follow 2-state, zero-delay synthesis semantics,
+	offering an early insight into the behavior of the synthesized
+	design. Applications include:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Implementation of low level firmware, such as board support
+	    packages &codec;s and specialist device drivers, which rely on
+	    exact behavior of SoC peripherals.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Software optimization. This can be particularly important for
+	    &codec; development, where the performance depends critically on
+	    interaction between processor, memory, cache and MMU. In such
+	    scenarios, estimates by &iss; and &tlm; can be out by a factor of
+	    3, resulting either in wasted silicon, or chips that cannot meet
+	    their required performance.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Detailed performance analysis of systems, based on the actual
+	    hardware implementation running with its embedded software.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>
+	For all these purposes, a debugger is required, capable of
+	communicating with the cycle accurate model. This application note
+	shows how to implement that debugger interface for &gdb; using the
+	&gdb; Remote Serial Protocol (&rsp;).
+      </para>
+    
+      <para>
+	This application note builds on several earlier Embecosm Application
+	notes:
+      </para>
+    
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    EAN3. <citetitle>Howto: Porting the GNU Debugger: Practical
+	    Experience with the OpenRISC 1000 Architecture</citetitle> <xref
+	    linkend="ref_app_note_3"/>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    EAN4. <citetitle>Howto: GDB Remote Serial Protocol: Writing a RSP
+	    Server</citetitle> <xref linkend="ref_app_note_4"/>.
+	  </para>
+	</listitem>
+      
+	<listitem>
+	  <para>
+	    EAN5. <citetitle>Using JTAG with SystemC: Implementation of a
+	    Cycle Accurate Interface</citetitle> <xref
+	    linkend="ref_app_note_5"/>.
+	  </para>
+	</listitem>
+      
+	<listitem>
+	  <para>
+	    EAN6. <citetitle>High Performance SoC Modeling with Verilator: A
+	    Tutorial for Cycle Accurate SystemC Model Creation and
+	    Optimization</citetitle> <xref linkend="ref_app_note_6"/>.
+	  </para>
+	</listitem>
+      
+      </itemizedlist>
+    
+    </sect1>
+
+    <sect1>
+      <title>
+	Target Audience
+      </title>
+      
+      <para>
+	This application note is intended for any engineer who needs to
+	interface &gdb; to a cycle accurate model of a &cpu; or SoC. The earlier
+	application notes provide guidance on &gdb; &jtag; and cycle accurate
+	modeling.
+      </para>
+      
+      <para>
+	While based entirely on open source tools, the techniques
+	described are equally applicable to commercial tools.
+      </para>
+      
+    </sect1>
+    
+    <sect1>
+      <title>
+	Open Source
+      </title>
+
+      <para>
+	This application note uses entirely free and open source tools. The
+	designed used is an open source SoC, &orpsoc; <xref
+	linkend="ref_orpsoc"/>. The cycle accurate model is implemented in
+	&systemc; <xref linkend="ref_osci_systemc_ug"/> generated
+	automatically by &verilator; <xref linkend="ref_verilator"/>. The
+	embedded software is compiled using the &gnu; C compiler <xref
+	linkend="ref_gcc_ug"/> and debugged using the &gnu; debugger <xref
+	linkend="ref_gdb_ug"/>.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Further Sources of Information
+      </title>
+
+      <sect2>
+	<title>
+	  Written Documentation
+	</title>
+
+	<para>
+	  First and foremost this application note draws on techniques
+	  described in Embecosm Application Notes 3-6 <xref
+	  linkend="ref_app_note_3"/> <xref linkend="ref_app_note_4"/> <xref
+	  linkend="ref_app_note_5"/> <xref linkend="ref_app_note_6"/>. These
+	  should be used as the primary source of additional information.
+	</para>
+
+	<para>
+          &verilator; has its own website (<ulink
+          url="http://www.veripool.org">www.veripool.org</ulink>), providing
+          guidance for downloading, installing and using the tool. In
+          particular this application note should be read in conjunction with
+          the &verilator; user guide.
+        </para>
+
+	<para>
+	  &systemc; is defined by &ieee; standard 1666, and the
+	  standardization documents are the ultimate reference. The &systemc;
+	  standard <xref linkend="ref_ieee_systemc"/> is a free &pdf; download
+	  (a novelty for the &ieee;). The open source reference implementation
+	  from &osci; includes an introductory tutorial.
+	</para>
+
+	<para>
+	  &jtag; is also an &ieee; standard (1149.1), and the standardization
+	  document is the ultimate reference. Unlike the &systemc; standard,
+	  the &jtag; standard <xref linkend="ref_ieee_jtag"/> costs money. The
+	  Texas Instruments &jtag; primer <xref linkend="ref_ti_jtag"/> is a
+	  useful free alternative.
+	</para>
+
+	<para>
+	  The main user guide for &gdb; <xref linkend="ref_gdb_ug" /> provides
+	  a great deal of context about how &gdb; is intended to work. The
+	  &gdb; Internals document <xref linkend="ref_gdb_int" /> is essential
+	  reading before and during any porting exercise. It is not complete,
+	  nor is it always up to date, but it provides the first place to look
+	  for explanation of what a particular function does.
+	</para>
+
+	<para>
+	  The files making up the examples used in this application noted are
+	  comprehensively commented, and can be processed with Doxygen <xref
+	  linkend="ref_doxygen" />. Each class, member and method's behavior,
+	  parameters and return value is described.
+	</para>
+	<indexterm>
+	  <primary>Doxygen</primary>
+	</indexterm>
+    
+      </sect2>
+
+      <sect2>
+	<title>
+	  Other Information Channels
+	</title>
+
+	<para>
+	  There is a wealth of material to support both &systemc; and &jtag;
+	  on the Internet.
+	</para>
+
+	<para>
+	  The Open &systemc; Initiative (&osci;) provides an open source
+	  reference implementation of the &systemc; library, which includes
+	  tutorial material in its documentation directory. These may be
+	  accessed from the &osci; website (<ulink
+	  url="http://www.systemc.org">www.systemc.org</ulink>).
+	</para>
+
+	<para>
+	  &osci; also provide a number of public mailing lists. The help forum
+	  and the community forum are of particular relevance. Subscription is
+	  through the &osci; website (see above).
+	</para>
+
+	<para>
+	  The main GDB website is at <ulink
+	  url="http://sourceware.org/gdb/">sourceware.org/gdb/</ulink>. It is
+	  supplemented by the less formal &gdb; Wiki at <ulink
+	  url="http://sourceware.org/gdb/wiki/">sourceware.org/gdb/wiki/</ulink>. 
+	</para>
+
+	<para>
+	  The &gdb; developer community communicate through the &gdb; mailing
+	  lists and using <acronym>IRC</acronym> chat. These are always good
+	  places to find solutions to problems.
+	</para>
+
+	<para>
+	  The main mailing list for discussion is gdb@sourceware.org, although
+	  for detailed understanding, the patches mailing list,
+	  gdb-patches@sourceware.org is useful. See the main &gdb; website for
+	  details of subscribing to these mailing lists.
+	</para>
+
+	<para>
+	  <acronym>IRC</acronym> is on channel <literal>#gdb</literal> on
+	  <literal>irc.freenode.net</literal>.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	About &embecosm;
+      </title>
+
+      <para>
+	&embecosm; is a consultancy specializing in open source tools, models
+	and training for the embedded software community. All &embecosm;
+	products are freely available under open source licenses.
+      </para>
+      <indexterm>
+	<primary>&embecosm;</primary>
+      </indexterm>
+
+      <para>
+	&embecosm; offers a range of commercial services:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Customization of open source tools and software, including porting
+	    to new architectures.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Support, tutorials and training for open source tools and software.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Custom software development for the embedded market, including
+	    bespoke software models of hardware.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Independent evaluation of software tools.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	For further information, visit the &embecosm; website at <ulink
+	url="http://www.embecosm.com/">www.embecosm.com</ulink>.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_overview">
+    <title>
+      Overview of Technologies and Tools
+    </title>
+
+    <sect1>
+      <title>
+	&osci; &systemc; IEEE 1666
+      </title>
+
+      <para>
+	The development of &systemc; as a standard for modeling hardware
+	started in 1996. Version 2.0 of the proposed standard was released by
+	the Open &systemc; Initiative (&osci;) in 2002. In 2006, &systemc;
+	became IEEE standard 1666-2005 <xref linkend="ref_ieee_systemc" />.
+      </para>
+
+      <para>
+	Most software languages are not particularly suited to modeling
+	hardware systems<footnote>
+	  <para>
+	    There are some exceptions, most notably Simula67, one of the
+	    languages which inspired C++. In some respects it is remarkably
+	    like &systemc;.
+	  </para>
+	</footnote>. <firstterm>&systemc;</firstterm> was developed to provide
+	features that facilitate hardware modeling, in particular to model the
+	parallelism of hardware, in a mainstream programming language.
+      </para>
+
+      <para>
+	An important objective was that software engineers should be
+	comfortable with using &systemc;, even though it is a hardware
+	modeling language. Rather than invent a new language, &systemc; is
+	based on the existing C++ language. &systemc; is a true super-set of
+	C++, so any C++ program is automatically a valid &systemc; program.
+      </para>
+
+      <para>
+	&systemc; uses the template, macro and library features of C++ to
+	extend the language. The key features it provides are:
+      </para>
+
+      <itemizedlist>
+
+	<listitem>
+	  <para>
+	    A C++ class, <classname>sc_module</classname>, suitable for
+	    defining hardware modules containing parallel
+	    processes.
+	  </para>
+
+	  <note>
+	    <para>
+	      <emphasis>Process</emphasis> is a general term in &systemc;
+	      to describe the various ways of representing parallel flows
+	      of control. It has nothing to do with processes in the &linux;
+	      or Microsoft Windows operating systems.
+	    </para>
+	  </note>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A mechanism to define functions modeling the parallel
+	    threads of control within <classname>sc_module</classname>
+	    classes;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Two classes, <classname>sc_port</classname> and
+	    <classname>sc_export</classname> to represent points of
+	    connection to and from a <classname>sc_module</classname>;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A class, <classname>sc_interface</classname> to describe the
+	    software services required by a <classname>sc_port</classname>
+	    or provided by a <classname>sc_export</classname>;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A class, <classname>sc_prim_channel</classname> to represent the
+	    channel connecting ports;
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A set of derived classes, of
+	    <classname>sc_prim_channel</classname>,
+	    <classname>sc_interface</classname>,
+	    <classname>sc_port</classname> and
+	    <classname>sc_export</classname> to represent and connect common
+	    channel types used in hardware design such as signals, buffers and
+	    FIFOs; and
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A comprehensive set of types to represent data in both
+	    <firstterm>2-state</firstterm> and <firstterm>4-state</firstterm>
+	    logic.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	The full specification is 441 pages long <xref
+	linkend="ref_ieee_systemc" />. The &osci; reference distribution
+	includes a very useful introductory user guide and tutorial <xref
+	linkend="ref_osci_systemc_ug" />.
+      </para>
+	
+    </sect1>
+
+    <sect1>
+      <title>
+	Cycle Accurate Modeling
+      </title>
+
+      <para>
+	Cycle accurate models provide an accurate description of the state of
+	the model on each clock cycle. As such they represent a mid-point
+	between traditional event driven simulation (providing detail within
+	the clock cycle) and high level transaction models (providing details
+	of bus transactions, but usually only approximate estimates of the
+	cycle count).
+      </para>
+
+      <para>
+	Cycle accurate models are of particular value, because they
+	reflect the level of detail seen by a software engineer using a
+	chip. The software engineer generally cannot see what is happening
+	within clock cycles.
+      </para>
+
+      <sect2>
+	<title>
+	  Level of Modeling Detail
+	</title>
+
+	<para>
+	  There is some variation in the level of detail shown with specific
+	  modeling techniques. For example cycle accurate models generated by
+	  ARC VTOC from Verilog &rtl; will show the value of every state holding
+	  register in the model on each clock edge, and any asynchronous
+	  signal edge. Hand-written cycle accurate models within ARM SoC
+	  Designer will typically only show the state on the active edge of
+	  the clock cycle, and that state will be restricted to the external
+	  ports and defined internal registers.
+	</para>
+
+	<para>
+	  Most cycle accurate models follow 2-state, zero delay synthesis
+	  semantics. In this way they are closer to the behavior of the actual
+	  chip than traditional 4-state event-driven simulation. However there
+	  is no absolute reason why cycle-accurate models could not follow
+	  4-state simulation semantics.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Tool Support
+	</title>
+
+	<para>
+	  Some cycle accurate models are written by hand&mdash;for example the
+	  cycle accurate models supplied by ARM for their processor
+	  cores. However the great majority of cycle accurate models are
+	  generated automatically from Verilog or VHDL &rtl;. There are two
+	  commercial products (ARC VTOC and Carbon Design Systems
+	  <command>ModelStudio</command>) and one free open source product
+	  (Verilator).
+	</para>
+
+	<para>
+	  These models typically follow 2-state, zero delay, synthesizable
+	  semantics. Embecosm Application Note 6 <citetitle>High Performance
+	  SoC Modeling with Verilator: A Tutorial for Cycle Accurate SystemC
+	  Model Creation and Optimization</citetitle> <xref
+	  linkend="ref_app_note_6"/> describes how to created a &verilator;
+	  SystemC model of &orpsoc; which simulates at up to 130kHz on a
+	  standard Linux PC.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Modeling Language
+	</title>
+
+	<para>
+	  All these tools generate models in C/C++. However &systemc; is
+	  becoming increasingly popular, and is generated by all the tools as
+	  well. However the reference &osci; &systemc; simulator carries a
+	  serious performance penalty, and in all cases the model is a &systemc;
+	  wrapper for the top level ports around a plain C/C++ model.
+	</para>
+
+	<para>
+	  The performance penalty of &systemc; wrappers should be a
+	  consideration when generating cycle accurate models. Performance can
+	  be particularly adversely affected by any ports of wider than
+	  64-bits. The reference &systemc; simulator has a very
+	  low-performance implementation of such ports.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	OpenCores and the OpenRISC Project
+      </title>
+
+      <para>
+	The &or1k; project forms part of the OpenCores organization (<ulink
+	url="http://www.opencores.org">www.opencores.org</ulink>). Its aim is
+	to create a free open source computing platform, comprising:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    An open source 32/64 bit RISC/DSP architecture;
+	  </para>
+	</listitem>
+	
+	<listitem>
+	  <para>
+	    A set of open source implementations of the architecture; and
+	  </para>
+	</listitem>
+	
+	<listitem>
+	  <para>
+	    A complete open source tool chain and operating system.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>
+	The &or1k; project has resulted in Verilog for a 32-bit processor
+	core, the &or1200; (sometimes known as <abbrev>OR1200</abbrev>) and a
+	complete reference System on Chip (&soc;) design using that core,
+	&orpsoc;.
+      </para>
+
+      <para>
+	&or1k; is a traditional RISC load-store architecture. Optional operands
+	for multiplication and division may be added and there are optional
+	data and instruction caches and MMUs.
+      </para>
+
+      <para>
+	A particularly useful feature is the <literal>l.nop</literal>
+	opcode. This takes an optional 16-bit constant operand, which is
+	placed in the low 16-bits of the instruction word. This field has no
+	impact on the execution of the instruction, but may be analyzed as
+	required by external test benches.
+      </para>
+
+      <sect2>
+	<title>
+	  The OpenRISC Reference Platform System-on-Chip (&orpsoc;)
+	</title>
+
+	<para>
+	  &orpsoc; is a complete SoC based on the OpenRISC 1000. It combines
+	  the processor with &sram;, flash memory and a range of peripherals
+	  as shown in <xref linkend="fig_orpsoc"/>.
+	</para>
+
+	<figure id="fig_orpsoc">
+	  <title>
+	    The OpenRISC Reference Platform System-on-Chip (&orpsoc;).
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="orpsoc.svg"
+			 format="SVG"
+			 width="14cm"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="orpsoc.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The full design is around 150k gates + memories. It runs on standard
+	  Altera and Xilinx &fpga; boards and is also available commercially
+	  from Flextronics.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      The Target Model
+    </title>
+
+    <para>
+      The demonstration system is based on a fully configured &orpsoc; with
+      data and instruction caches, data and instruction &mmu;s, multiply and
+      divide instructions, 2MB Flash and 2MB &sram;. &sram; and all other
+      memories are implemented as generic flip-flop memory. Flash memory is
+      modeled as generic &sram; initialized from a file. The architecture of
+      &orpsoc; was shown earlier in <xref linkend="fig_orpsoc"/>.
+    </para>
+
+    <para>
+      A cycle accurate &systemc; model of &orpsoc; is generated using
+      &verilator;. The creation of this model is described in Embecosm
+      Application Note 6 <xref linkend="ref_app_note_6"/>.
+    </para>
+
+    <para>
+      With the exception of &jtag; (see <xref linkend="sec_jtag"/>), none of
+      the peripherals is modeled&mdash;all external ports are tied off to
+      appropriate values.
+    </para>
+
+    <para>
+      The system clock is set at 10&nbsp;MHz (clock period 100&nbsp;ns). This
+      is an arbitrary choice, but makes for easy reading of &vcd;
+      traces. Modern &fpga;s are capable of running &orpsoc; at around
+      30&nbsp;MHz.
+    </para>
+
+    <sect1 id="sec_jtag">
+      <title>
+	&jtag; Interface
+      </title>
+
+      <para>
+	The five JTAG ports in &orpsoc; are modeled as &systemc;
+	<type>sc_in&lt;bool&gt;</type> (for <varname>jtag_tck</varname>,
+	<varname>jtag_tdi</varname>, <varname>jtag_tms</varname> and
+	<varname>jtag_trst</varname>) and <type>sc_in&lt;bool&gt;</type> ports
+	(for <varname>jtag_tdo</varname>).
+      </para>
+
+      <para>
+	Rather than drive the JTAG ports directly, requiring detailed
+	management of the Test Access Port (&tap;) state machine, the &gdb;
+	interface uses the Embecosm cycle accurate &systemc; &jtag; interface
+	<xref linkend="ref_app_note_5"/>. This provides a &systemc; FIFO
+	interface on which requests to read and write the &jtag; instruction
+	and data registers can be queued, as well as requests to reset the
+	&jtag; &tap; state machine.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Embedded Software Applications
+      </title>
+
+      <para>
+	The &orpsoc; model is designed to load an initial image into Flash
+	memory at start up. When debugging with GDB it is more usual to use
+	the debugger to load a particular image into RAM. So the initial flash
+	image is just a simple program which initializes the caches, then sits
+	in a tight loop. It may be found in the <filename>sw/loop</filename>
+	directory and makes use of the OpenRISC 1000 utilities in
+	<filename>sw/utils</filename> and the library in
+	<filename>sw/support</filename>.
+      </para>
+
+      <para>
+	The directory <filename>sw/test-progs</filename> contains a series of
+	programs for loading into RAM by &gdb;. The programs are:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <filename>hello.c</filename>. A simple "Hello World" program.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+    </sect1>
+
+    <sect1>
+      <title>Building the Model</title>
+
+      <para>
+	The distribution includes a top level &make; file, which will build
+	the target model and link it to the &gdb; &rsp; server
+	interface. Plain <command>make</command> will build an unoptimized
+	server and model. Using <command>make&nbsp;run-fast</command> will
+	build a model with profile-based optimization (which can increase
+	performance by a factor of 3). Using
+	<command>make&nbsp;VFLAGS=-trace</command> will build an unoptimized
+	version of the server and model which also generates a &vcd; dump of
+	the model in <filename>v-dump.vcd</filename> (and consequently runs
+	many times slower).
+      </para>
+
+      <para>
+	The build process assumes the availability of packages from other
+	Embecosm packages. In particular the Embecosm Cycle Accurate SystemC
+	interface <xref linkend="ref_app_note_5"/> is assumed to be installed
+	in <filename>/opt/ca-sysc-jtag</filename> and the Cycle Accurate
+	SystemC Model generated using Verilator <xref
+	linkend="ref_app_note_6"/> is assumed to be in a peer directory named
+	<filename>or1k-verilator</filename>. Alternative locations may be used
+	by editing the top level <filename>Makefile</filename>.
+      </para>
+
+      <para>
+	A number of additional parameters are available, which mirror the
+	parameters described in Embecosm Application Note 6, <citetitle>High
+	Performance SoC Modeling with Verilator: A Tutorial for Cycle Accurate
+	SystemC Model Creation and Optimization</citetitle> <xref
+	linkend="ref_app_note_6"/>.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      The GDB Remote Serial Protocol Server
+    </title>
+
+    <sect1>
+      <title>
+	System Class and Module Structure
+      </title>
+
+      <para>
+	The overall structure of the system is shown in <xref
+	linkend="fig_overall_structure"/>.
+      </para>
+
+      <figure id="fig_overall_structure">
+	<title>
+	  Top level Structure of the GDB Server for Cycle Accurate Models.
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="overall-structure.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="overall-structure.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	The top level SystemC module is the GDB Server. This relies on the RSP
+	packet interface to communicate over TCP/IP with the GDB client. It
+	uses a model of the &or1k; Debug Unit to talk to the cycle accurate
+	model of &orpsoc;. The Debug Unit in turn uses the Embecosm &jtag;
+	interface, allowing it to keep its &jtag; interactions at a high
+	level.
+      </para>
+
+      <para>
+	The model side is implemented in SystemC, the RSP interface in plain
+	C++.
+      </para>
+
+      <para>
+	This structure is reflected in the top level class diagram, shown in
+	<xref linkend="fig_overall_class_diag"/>. The SystemC classes are C++
+	classes which have <classname>sc_module</classname> as a base
+	class. By convention SystemC classes have the suffix
+	<literal>SC</literal> and Verilator generated model classes have the
+	prefix <literal>V</literal> followed by the name of the top level
+	Verilog module.
+      </para>
+
+      <figure id="fig_overall_class_diag">
+	<title>
+	  Top level Class Diagram of the GDB Server for Cycle Accurate Models.
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="overall-class-diag.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="overall-class-diag.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+    </sect1>
+
+    <sect1 id="sec_rsp_connection">
+      <title>
+	The &rsp; Packet Interface, <classname>RspConnection</classname>
+      </title>
+
+      <para>
+	The &rsp; packet interface is responsible for establishing the
+	TCP/IP connection to and from the &gdb; server class,
+	<classname>GdbServerSC</classname> and transferring &rsp; packets to
+	and from the server. Packets are represented by their own class,
+	<classname>RspPacket</classname>.
+      </para>
+
+      <para>
+	The class diagram in
+	<xref linkend="fig_rsp_class_diag"/> shows the relationship
+	between these components.
+      </para>
+
+      <figure id="fig_rsp_class_diag">
+	<title>
+	  Class Diagram for the &rsp; interface.
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="rsp-class-diag.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="rsp-class-diag.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	The main <classname>GdbServerSC</classname> class is responsible for
+	creating both the <classname>RspConnection</classname> instance and
+	the <classname>RspPacket</classname> instance. In the &rsp; protocol
+	there is only ever one packet active at any time, so a single instance
+	suffices. It is passed by pointer to
+	<classname>RspConnection</classname> for use when getting and putting
+	packets on the TCP/IP connection.
+      </para>
+
+      <para>
+	The &rsp; connection is written in plain C++. There is no need for
+	&systemc; functionality. Indeed the use of system library routines to
+	establish sockets and listen for new connections does not sit
+	comfortably within the &systemc; paradigm. A <function>wait</function>
+	in the system library context suspends the entire process pending
+	action, whereas <function>wait</function> in the &systemc; context
+	merely suspends the current thread.
+      </para>
+
+      <para>
+	This does not cause any practical problem with the synchronous &gdb;
+	&rsp; interface. The TCP/IP connection is only used when the target is
+	suspended, so there is no need for &systemc; to be active.
+      </para>
+
+      <sect2>
+	<title>
+	  <classname>RspConnection</classname> class
+	</title>
+
+	<para>
+	  The public interface to this class is as follows:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>RspConnection</function>. The constructor, provided in
+	      two flavors. The first takes a single integer argument, the port
+	      number to listen on. The second takes an optional string
+	      argument, the name of a TCP/IP service to listen on (which
+	      defaults to <literal>"or1ksim-rsp"</literal>).
+	    </para>
+
+	    <para>
+	      Both use the private function, <function>rspInit</function> to
+	      save the port number (0 if the service name is to be used) and
+	      service name and set the file descriptor for the connection
+	      (private variable <varname>clientFd</varname>) to -1, indicating
+	      no connection is present.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>~RspConnection</function>. The destructor, which
+	      closes any connection which has been established.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>rspConnect ()</function>. This function listens for
+	      client GDB connections over TCP/IP using the port or service
+	      specified in the constructor. The connection is established with
+	      a keep-alive flag (for long debug sessions) and with Nagel's
+	      algorithm disabled. This ensures that the characters of a packet
+	      are transmitted as a soon as they are available, rather than
+	      being grouped for more efficient transmission. This is
+	      appropriate for an interactive interface such as a debugger.
+	    </para>
+
+	    <para>
+	      Once a connection is established, its file descriptor (which
+	      cannot be negative) is stored in the private variable,
+	      <varname>clientFd</varname>.
+	    </para>
+
+	    <para>
+	      The function returns <literal>false</literal> if a catastrophic
+	      failure occurs in setting up the connection. This will cause the
+	      &gdb; server to terminate. A result of <literal>true</literal>
+	      indicates either a successful connection, or that the connection
+	      attempt may be retried. The two can be distinguished by use of
+	      the <function>isConnected</function> function (see below).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>rspClose</function>. This closes the connection if it
+	      is open and sets the file descriptor
+	      (<varname>clientFd</varname>) to -1. It may be safely called
+	      without checking if the connection is still open, since it will
+	      check the value of <varname>clientFd</varname> before closing
+	      it.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>isConnected</function>. This returns
+	      <literal>true</literal> if a connection is established
+	      (i.e. <varname>clientFd</varname> is not negative) and
+	      <literal>false</literal> otherwise.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>getPkt</function>. This takes a pointer to a packet
+	      and populates it with the data from the next packet read from
+	      the TCP/IP stream. It will continue to retry until a packet is
+	      successfully read (i.e. is complete, fits into the packet data
+	      structure and has a correct checksum) or the connection
+	      fails. The packet is acknowledged back to the client.
+	    </para>
+
+	    <para>
+	      The &rsp; protocol requires certain characters
+	      (<literal>'$'</literal>, <literal>'#'</literal> and
+	      <literal>'}'</literal>) in the data field of incoming packets to
+	      be escaped. However rather than inspecting every packet for
+	      escaped characters, it is the raw data which is stored. This is
+	      because there is only one packet type (<literal>X</literal>)
+	      which can have these characters, and it is more efficient to
+	      unescape the characters only in the handler for that packet.
+	    </para>
+
+	    <para>
+	      The private function <function>getRspChar</function> is used to
+	      read individual characters from the socket. It will
+	      automatically retry in the event of an interrupt.
+	    </para>
+
+	    <para>
+	      The function returns <literal>true</literal> if a packet is
+	      successfully read and <literal>false</literal> if the connection
+	      fails.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>putPkt</function>. This is the complement to
+	      <function>getPkt</function>, sending its argument packet back to
+	      the client. It will continue to retry until receipt is
+	      successfully acknowledged or the connection fails.
+	    </para>
+
+	    <para>
+	      Unlike <function>getPkt</function>, <function>putPkt</function>
+	      escapes its data field. Characters <literal>'$'</literal>,
+	      <literal>'#'</literal>, <literal>'*'</literal> and
+	      <literal>'}'</literal> are escaped by preceding them with
+	      <literal>'}'</literal> and then the original character XORed
+	      with 0x20. It makes sense to centralize escaping here, since
+	      several commands may generate results using these characters.
+	    </para>
+
+	    <para>
+	      The private function <function>putRspChar</function> is used to
+	      write individual characters to the socket. It will automatically
+	      retry in the event of an interrupt.
+	    </para>
+
+	    <para>
+	      The function returns <literal>true</literal> if a packet is
+	      successfully sent and <literal>false</literal> if the connection
+	      fails.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>RspPacket</classname> class
+	</title>
+
+	<para>
+	  The &rsp; packet cannot be represented as a simple string, since binary
+	  packets may contain null (string terminator) characters. Instead the
+	  packet is represented as a character buffer and separate length
+	  field. However by convention the character buffer is also
+	  null-terminated, allowing non-binary packets to be printed out for
+	  debugging purposes. The public interface to this class is as
+	  follows:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>RspPacket</function>. The constructor takes a single
+	      integer argument, the size of the data buffer to allocate. It
+	      allocates that buffer and stores the record of its size.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>~RspPacket</function>. The destructor deletes the
+	      allocated data buffer.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>data</varname>. A pointer to the data buffer.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>packStr</function>. Takes a string constant as
+	      argument and packs it into the data buffer, setting the length
+	      field to the length of the string.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>getBufSize</function>, <function>getLen</function> and
+	      <function>setLen</function>. Accessor functions to get the size
+	      of the data buffer and to get and set the length of the data
+	      currently stored there.
+	    </para>
+
+	    <note>
+	      <para>
+		Although by convention all data is stored null-terminated in
+		the buffer, this null-termination is a convenience for
+		debugging the &gdb; server and does not form part of the
+		data. The length does not include this null-termination
+		character.
+	      </para>
+	    </note>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="sec_debug_unit">
+      <title>
+	Modeling the &or1k; Debug Unit
+      </title>
+
+      <para>
+	The &or1k; Debug Unit model provides a higher level abstraction of the
+	debug interface to the &or1k;, and sits above the &jtag;
+	interface. It allows access to main memory and special purpose
+	registers (&spr;s) together with control of the &cpu; reset and stall
+	lines. These are all mapped onto lower level &jtag; register accesses
+	using the Embecosm cycle accurate &systemc; &jtag; interface.
+      </para>
+
+      <para>
+	The Debug Unit model also offers higher level caching functions. The
+	&jtag; clock typically has a period ten times greater than the main
+	system clock. Combined with the serial nature of &jtag; this means
+	that accessing a single register or memory location can take many
+	hundreds of system clock cycles.
+      </para>
+
+      <para>
+	While the processor is stalled, registers and memories do not change,
+	so caching is possible and can greatly increase performance. This is
+	provided through the <classname>SprCache</classname> and
+	<classname>MemCache</classname> classes.
+      </para>
+
+      <para>
+	The class diagram in
+	<xref linkend="fig_debug_class_diag"/> shows the relationship
+	between these components.
+      </para>
+
+      <figure id="fig_debug_class_diag">
+	<title>
+	  Class Diagram for the Debug Unit model
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="debug-class-diag.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="debug-class-diag.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	The main <classname>GdbServerSC</classname> class is responsible for
+	creating the <classname>DebugUnitSC</classname> instance, passing in the
+	&systemc; &fifo; used to connect to the &systemc; &jtag;
+	interface. The Debug Unit in turn instantiates the
+	<classname>SprCache</classname> and <classname>MemCache</classname>
+	instances.
+      </para>
+
+      <note>
+	<para>
+	  There are at least two different variants of the &or1k; Debug
+	  Unit. This application note describes the version used within the
+	  &or1k; Reference Platform System-on-Chip (&orpsoc;). An
+	  alternative implementation by Igor Mohor is simpler and more
+	  recent. Where the two need to be distinguished, they will be
+	  referred to as the &orpsoc; Debug Unit and Mohor Debug Unit
+	  respectively. Where not thus qualified, the &orpsoc; Debug Unit is
+	  the implementation being referred to.
+	</para>
+      </note>
+
+      <sect2>
+	<title>
+	  How &jtag; is used by the &or1k; Debug Unit
+	</title>
+
+	<para>
+	  The &or1k; debug unit uses a 4-bit &jtag; instruction register. It
+	  adds two additional instructions, <literal>CHAIN_SELECT</literal>
+	  (binary 0011) and <literal>DEBUG</literal> (binary 1000).
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      When instruction <literal>CHAIN_SELECT</literal> is used, the
+	      subsequent value shifted into the &jtag; data register indicates
+	      the debug chain (see <xref linkend="sec_debug_chain"/>) that
+	      will be used for subsequent debug operations.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      When instruction <literal>DEBUG</literal> is used,
+	      subsequent values shifted into the &jtag; data register are
+	      interpreted as instructions for the debug chain selected by the
+	      most recent <literal>CHAIN_SELECT</literal> instruction. 4 bits
+	      are used to specify the debug chain.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  All data registers have a cyclic redundancy check (&crc;) field as
+	  their final (most significant) 8-bits, calculated on the remaining
+	  bits. The &crc; used is the 8-bit ATM Header Error Correction <xref
+	  linkend="ref_atm_spec"/>, using the irreducible polynomial
+	  x<superscript>8</superscript> + x<superscript>2</superscript> + x +
+	  1. This is capable of detecting all single and double bit errors in
+	  the data register and single burst errors of up to 8 bits.
+	</para>
+
+	<para>
+	  So the usual sequence of operations is as follows:
+	</para>
+
+	<orderedlist>
+	  <listitem>
+	    <para>
+	      Shift instruction register <literal>CHAIN_SELECT</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Shift data register with the desired debug chain (4 bits) +
+	      &crc; (8 bits).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Shift instruction register <literal>DEBUG</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Shift the instructions appropriate to the selected debug chain
+	      in to the data register. The number of bits depends on the
+	      chosen debug chain (see <xref linkend="sec_debug_chain"/>).
+	    </para>
+	  </listitem>
+
+	</orderedlist>
+
+	<sect3 id="sec_debug_chain">
+	  <title>
+	    &jtag; Debug Chains
+	  </title>
+
+	  <para>
+	    The debug chain is a 4-bit field. The &or1k; Debug Unit defines 6
+	    scan chains:
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<literal>GLOBAL_BS</literal> (binary 0000). The default
+		debug chain, selected on reset, with no functionality.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<literal>RISC_DEBUG</literal> (binary 0001). The data
+		register is used to read and write Special Purpose Registers
+		(&spr;s). It is described in more detail in <xref
+		linkend="sec_risc_debug_chain"/>.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<literal>RISC_TEST</literal> (binary 0010). This debug
+		chain is specified, but not used. It has no functionality if
+		selected.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<literal>TRACE_TEST</literal> (binary 0011). This is
+		optionally available for the Debug Unit (under control of a
+		Verilog <literal>`define</literal>), offering hardware trace
+		functionality. It is not described further in this application
+		note.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<literal>REGISTER</literal> (binary 0100). The data register
+		is used to access and set the &cpu;'s control registers. It is
+		described in more detail in <xref
+		linkend="sec_register_chain"/>.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<literal>WISHBONE</literal> (binary 0101). The data
+		register is used to read and write main memory attached to the
+		Wishbone bus. It is described in more detail in <xref
+		linkend="sec_wishbone_chain"/>.
+	      </para>
+	    </listitem>
+
+	  </itemizedlist>
+	</sect3>
+
+	<sect3 id="sec_risc_debug_chain">
+	  <title>
+	    The <literal>RISC_DEBUG</literal> Debug Chain
+	  </title>
+
+	  <para>
+	    The <literal>RISC_DEBUG</literal> chain uses a 73-bit data
+	    register as shown in <xref linkend="fig_risc_debug_chain"/>.
+	  </para>
+
+	  <figure id="fig_risc_debug_chain">
+	    <title>
+	      <literal>RISC_DEBUG</literal> &jtag; data register format
+	    </title>
+	    
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="risc-debug-chain.svg"
+			   format="SVG"
+			   width="14cm"
+			   scalefit="1"
+			   align="center" />
+	      </imageobject>
+	      <imageobject>
+		<imagedata fileref="risc-debug-chain.png"
+			   format="PNG"
+			   width="80%"
+			   scalefit="1"
+			   align="center" />
+	      </imageobject>
+	    </mediaobject>
+	  </figure>
+
+	  <para>
+	    The first 32 bits (&spr;) specify the &spr; to be accessed. Bit 32
+	    (W) is set if the value is to be written. Bits 33-64 (Data) form
+	    the value to be written (if W is set) or the value read when the
+	    result is shifted out. The final 8 bits (65-72) are the &crc;.
+	  </para>
+
+	  <para>
+	    The &cpu; logic is fast enough that the data field can be set during
+	    a single &jtag; capture-shift-update operation.
+	  </para>
+
+	</sect3>
+
+	<sect3 id="sec_register_chain">
+	  <title>
+	    The <literal>REGISTER</literal> Debug Chain
+	  </title>
+
+	  <para>
+	    The <literal>REGISTER</literal> chain uses a 46-bit data
+	    register as shown in <xref linkend="fig_register_chain"/>.
+	  </para>
+
+	  <figure id="fig_register_chain">
+	    <title>
+	      <literal>REGISTER</literal> &jtag; data register format
+	    </title>
+	    
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="register-chain.svg"
+			   format="SVG"
+			   width="14cm"
+			   scalefit="1"
+			   align="center" />
+	      </imageobject>
+	      <imageobject>
+		<imagedata fileref="register-chain.png"
+			   format="PNG"
+			   width="80%"
+			   scalefit="1"
+			   align="center" />
+	      </imageobject>
+	    </mediaobject>
+	  </figure>
+
+	  <para>
+	    The first 5 bits (Reg) specify the &cpu; control register to be
+	    accessed. Bit 5 (W) is set if the value is to be written. Bits
+	    6-37 (Data) form the value to be written (if W is set) or the
+	    value read when the result is shifted out. The final 8 bits
+	    (38-45) are the &crc;.
+	  </para>
+
+	  <para>
+	    The &cpu; logic is fast enough that the data field can be set during
+	    a single &jtag; capture-shift-update operation.
+	  </para>
+
+	  <para>
+	    The &or1k; Debug Unit defines 6 &cpu; control registers:
+	  </para>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<literal>MODER</literal>  (binary 00000),
+		<literal>TSEL</literal>   (binary 00001),
+		<literal>QSEL</literal>   (binary 00010),
+		<literal>SSEL</literal>   (binary 00011) and
+		<literal>RECSEL</literal> (binary 10000). These registers
+		control hardware trace, if that functionality is
+		implemented. They are not described further here.
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		<literal>RISCOP</literal> (binary 00100). The bits in this
+		register control the &cpu;. Bit 0 is the reset bit. If written
+		to 1, the &cpu; will be reset. Bit 1 is the stall bit. The value
+		read indicates whether the &cpu; is stalled. The &cpu; can be
+		stalled by writing 1 to this bit and unstalled by reading 0
+		from this bit.
+	      </para>
+
+	      <caution>
+		<para>
+		  Remember that accessing a  &jtag; register takes hundreds of
+		  system clock cycles. It is quite possible to unstall the
+		  processor and for the processor to have stalled again
+		  (perhaps due to hardware single step, or an adjacent
+		  breakpoint) before the register is next read. This can cause
+		  confusion, with "unstalling" appearing to have no effect. A
+		  &vcd; trace always clarifies what is happening.
+		</para>
+	      </caution>
+	    </listitem>
+
+	  </itemizedlist>
+
+	  <note>
+	    <para>
+	      The Mohor Debug Unit has no support for trace and the value of
+	      the Reg field is ignored. All accesses are for the
+	      <literal>RISCOP</literal> register.
+	    </para>
+	  </note>
+		
+	</sect3>
+
+	<sect3 id="sec_wishbone_chain">
+	  <title>
+	    The <literal>WISHBONE</literal> Debug Chain
+	  </title>
+
+	  <para>
+	    The <literal>WISHBONE</literal> chain uses a 73-bit data
+	    register as shown in <xref linkend="fig_wishbone_chain"/>.
+	  </para>
+
+	  <figure id="fig_wishbone_chain">
+	    <title>
+	      <literal>WISHBONE</literal> &jtag; data register format
+	    </title>
+	    
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="wishbone-chain.svg"
+			   format="SVG"
+			   width="14cm"
+			   scalefit="1"
+			   align="center" />
+	      </imageobject>
+	      <imageobject>
+		<imagedata fileref="wishbone-chain.png"
+			   format="PNG"
+			   width="80%"
+			   scalefit="1"
+			   align="center" />
+	      </imageobject>
+	    </mediaobject>
+	  </figure>
+
+	  <para>
+	    The first 32 bits (Address) specify the memory address to be
+	    accessed. Bit 32 (W) is set if the value is to be written. Bits
+	    33-64 (Data) form the value to be written (if W is set) or the
+	    value read when the result is shifted out. The final 8 bits
+	    (65-72) are the &crc;.
+	  </para>
+
+	  <para>
+	    The Wishbone memory interface may not be able to set the data
+	    field during a single &jtag; capture-shift-update operation. This
+	    is particularly the case with slow memory. This can be solved
+	    either by using the <literal>PAUSE-DR</literal> state of the
+	    &jtag; &tap; state machine, or by performing two reads, one
+	    immediately after the other.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>DebugUnitSC</classname> class
+	</title>
+
+	<para>
+	  This class is a &systemc; module (i.e. it has
+	  <classname>sc_module</classname> as a base class).
+	</para>
+
+	<para>
+	  The Debug Unit functions work by queuing instances of
+	  <classname>TapAction</classname> sub-classes on a queue (&fifo;)
+	  connected to the &jtag; interface (class
+	  <classname>JtagSC</classname>). This allows the debug unit to read
+	  and write the various &jtag; registers. In each case the debug unit
+	  waits (using the &systemc; <function>wait</function> function) for
+	  notification that the action is complete before proceeding. The full
+	  interface is described in Embecosm Application Note 5
+	  <citetitle>Using JTAG with SystemC: Implementation of a Cycle
+	  Accurate Interface</citetitle> <xref linkend="ref_app_note_5"/>.
+	</para>
+
+	<para>
+	  The Debug Unit caches the current value of the debug chain. This
+	  means it can avoid selecting the chain for a debug action, where it
+	  is unchanged from the previous action.
+	</para>
+
+	<para>
+	  The public interface to <literal>DebugUnitSC</literal> is as
+	  follows:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>DebugUnitSC</function>. Constructor, which takes as
+	      argument a pointer to the &tap; action queue of the target
+	      processor's &jtag; interface.
+	    </para>
+
+	    <para>
+	      The constructor instantiates the &spr; and memory caches and
+	      marks the current stall state of the target as unknown and the
+	      current debug chain as undefined.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>~DebugUnitSC</function>. The destructor, which deletes
+	      the &spr; and memory caches.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>resetDebugUnit</function>. This function is called to
+	      reset the &jtag; interface (rather than the &cpu;). It achieves
+	      this by queuing a <classname>TapActionReset</classname>
+	      instance on the &jtag; queue.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>reset</function>. This function resets the CPU. This is
+	      achieved by selecting the <literal>REGISTER</literal> debug
+	      chain and writing bit 1 of the <literal>RISCOP</literal> CPU
+	      control register.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>stall</function> and <function>unstall</function>. These
+	      stall and unstall the processor by selecting the
+	      <literal>REGISTER</literal> debug chain and respectively setting
+	      and clearing bit 0 of the <literal>RISCOP</literal> CPU control
+	      register. As a matter of good practice the current value of the
+	      register is read, the relevant bit changed and the value written
+	      back. This ensures any other bits are unchanged.
+	    </para>
+
+	    <para>
+	      In practice the only other bit that has any effect in the
+	      current implementation is bit-1 (the reset bit), which should
+	      always be clear in this circumstance. However using this
+	      approach ensures robustness of the code in the event of new
+	      control bits being added in future debug units. If performance
+	      was particularly critical, this function could be optimized by
+	      not reading the current value of the register.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>isStalled</function>. Return <literal>true</literal> if
+	      the processor is currently stalled and <literal>false</literal>
+	      otherwise.
+	    </para>
+
+	    <para>
+	      The Debug Unit maintains a private enumeration variable
+	      (<varname>stallState</varname>) tracking the stall state of the
+	      processor. It is set to <literal>STALLED</literal> whenever the
+	      processor is explicitly stalled (by using the
+	      <function>stall</function> function) or is discovered to be
+	      stalled. It is set to <literal>UNKNOWN</literal> whenever the
+	      processor is explicitly unstalled, or found to be unstalled.
+	    </para>
+
+	    <note>
+	      <para>
+		A processor which is running (i.e. UNSTALLED) can at any time
+		stall, for example due to hitting a breakpoint. Hence the only
+		two useful values are <literal>STALLED</literal> and
+		<literal>UNKNOWN</literal>.
+	      </para>
+	    </note>
+
+	    <para>
+	      If the <varname>StallState</varname> shows the processor is
+	      currently stalled, the function immediately returns
+	      TRUE. Otherwise it selects the <literal>REGISTER</literal> debug
+	      chain and reads bit 0 of the <literal>RISCOP</literal> CPU
+	      control register. It then sets <varname>StallState</varname> to
+	      <literal>STALLED</literal> if the bit is set and
+	      <literal>UNKNOWN</literal> if it is clear and returns
+	      <literal>true</literal> if the state is stalled and
+	      <literal>false</literal> otherwise.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>readSpr</function> and
+	      <function>writeSpr</function>. These functions respectively read
+	      and write a &spr; by selecting the <literal>RISC_DEBUG</literal>
+	      debug chain and shifting a data register with the &spr;, W and
+	      Data fields set appropriately.
+	    </para>
+
+	    <para>
+	      This access can be optimized by use of the &spr; cache. This is
+	      described in <xref linkend="sec_cache"/>.
+	    </para>
+
+	    <para>
+	      Almost all &spr;s are readable. However the Next Program Counter
+	      (&npc;) &spr; has some unexpected behavior due to the operation
+	      of the processor pipeline, which must be managed. This is
+	      described in <xref linkend="sec_npc"/>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>andSpr</function> and <function>orSpr</function>. Most
+	      &spr; accesses involve reading a &spr; using AND and OR
+	      operations to clear or set a bit and then writing the value
+	      back. These functions are provided as a convenience for such
+	      operations. They just call the main <function>readSpr</function>
+	      and <function>writeSpr</function> functions.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>readMem32</function> and
+	      <function>writeMem32</function>. These functions respectively
+	      read and write a 32-bit value from memory attached to the
+	      Wishbone bus of the &or1k;. The <literal>WISHBONE</literal>
+	      debug chain is selected, and the value read or written by
+	      shifting a data register with the Address, W and Data fields set
+	      appropriately.
+	    </para>
+
+	    <para>
+	      In the case of <function>readMem32</function> the memory access
+	      is usually not fast enough to populate the data out field in
+	      time. The solution is either to use the &jtag;
+	      <literal>PAUSE-DR</literal> state after bit 32 has been shifted,
+	      or to perform the read twice. The Embecosm Cycle Accurate
+	      &systemc; &jtag; interface currently has no support for
+	      mid-transfer use of <literal>PAUSE-DR</literal>, so in this
+	      implementation reads are performed twice.
+	    </para>
+
+	    <note>
+	      <para>
+		The &gdb; client will work with target endianness for any data
+		it accesses, so there is no need to make any transformation of
+		data being transferred.
+	      </para>
+	    </note>
+
+	    <caution>
+	      <para>
+		Using &gdb; to read or write memory mapped device registers
+		can be unreliable, particularly if reading has side effects
+		(due to reads being performed twice). It is best avoided.
+	      </para>
+	    </caution>
+	      
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>readMem8</function> and
+	      <function>writeMem8</function>. These functions respectively
+	      read and write a single byte from memory attached to the
+	      Wishbone bus of the &or1k;.
+	    </para>
+
+	    <para>
+	      Since the Debug Unit only provides for 32-bit read and write,
+	      the operation is achieved by using 32-bit access (using
+	      <function>readMem32</function> and
+	      <function>writeMem32</function>) and selecting the relevant
+	      byte. In the case of writing this requires reading the original
+	      32-bit value, patching the relevant byte and writing back the
+	      32-bit value.
+	    </para>
+
+	    <para>
+	      Since the byte access will use host-endian arithmetic, the value
+	      read must be converted from model endianness and any value
+	      written must be converted back to model endianness. The
+	      <classname>Utils</classname> class provides suitable static
+	      functions to do this in <function>Utils::mtohl</function> and
+	      <function>Utils::htoml</function>.
+	    </para>
+
+	    <note>
+	      <para>
+		Endianness is a compile time constant of the &gdb;
+		server. Either <literal>TARGET_BIG_ENDIAN</literal> or
+		<literal>TARGET_LITTLE_ENDIAN</literal> must be defined in the
+		C++ compilation flags (<literal>CXXFLAGS</literal>) when
+		compiling <filename>sysc-modules/Utils.cpp</filename>.
+	      </para>
+
+	      <para>
+		This is conveniently set in the <filename>Makefile</filename>
+		for that directory
+		(<filename>sysc-modules/Makefile</filename>). The distribution
+		has <literal>TARGET_BIG_ENDIAN</literal> set, since this
+		corresponds to the default setting in the &or1k; Verilog
+		source.
+	      </para>
+	    </note>
+
+	    <caution>
+	      <para>
+		With the need for multiple accesses to 32-bit values for both
+		read and write, using these functions to access memory mapped
+		device registers is best avoided, particularly where registers
+		(or any neighboring registers) have side-effects.
+	      </para>
+	    </caution>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>SprCache</classname> class
+	</title>
+
+	<para>
+	  The &or1k; provides for up to 2<superscript>16</superscript> Special
+	  Purpose Registers (&spr;s). These are frequently accessed to
+	  implement debugging commands, yet do not change when the &cpu; is
+	  stalled (but see the issue concerning the Next Program counter in
+	  <xref linkend="sec_npc"/>).
+	</para>
+
+	<para>
+	  In practice only a few &spr;s are used repeatedly. It makes sense to
+	  cache the &spr;s in a simple closed hash table.
+	  <classname>SprCache</classname> represents the cache as three
+	  private C++ arrays. The Boolean array
+	  <varname>sprIsvalid</varname> indicates whether than entry is valid,
+	  the <varname>sprKeyNum</varname> array holds the &spr; value for which
+	  this entry is valid and <varname>sprValue</varname> holds the
+	  corresponding cached value. Clearing the cache is a matter of
+	  setting all entries in <literal>sprIsValid</literal> to
+	  <literal>false</literal> using <function>memset</function>.
+	</para>
+
+	<para>
+	  A key feature is that the Next Program Counter (&npc;)
+	  <emphasis>must</emphasis> always be cached (see <xref
+	  linkend="sec_npc"/>). The cache will reject attempts to write once
+	  it is 70% full (so caching remains efficient). However a flag may be
+	  used to force caching beyond this point. This is safe, because it is
+	  only ever used for one register, the &npc;
+	</para>
+
+	<para>
+	  The use of <classname>SprCache</classname> within the Debug Unit is
+	  discussed in the chapter on optimization (<xref
+	  linkend="sec_cache"/>).
+	</para>
+
+	<para>
+	  The public interface to <literal>SprCache</literal> is as
+	  follows:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>SprCache</function>. Constructor. Allocates the arrays
+	      and calls <function>clear</function> to reset the cache.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>~SprCache</function>. Destructor. Deletes the arrays.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>clear</function>. Clears the cache by using
+	      <function>memset</function> to set all entries in
+	      <varname>sprIsValid</varname> to <literal>false</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>write</function>. Writes a value for a &spr; into the
+	      cache. Will do nothing if the cache is 70% full,
+	      <emphasis>unless</emphasis> a flag parameter is set to force
+	      caching (used for &npc;).
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>read</function>. Returns <literal>true</literal> if a
+	      &spr; is in the cache. The cached value is returned by reference
+	      through the second argument.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>MemCache</classname> class
+	</title>
+
+	<para>
+	  It also make sense to cache memory accesses when the &cpu; is
+	  stalled. The same locations are repeatedly accessed as the stack is
+	  analyzed.
+	</para>
+
+	<para>
+	  It is not generally feasible (nor efficient) to cache all of
+	  memory. Instead a small hash table is used. In this case the hash
+	  table is represented by three private arrays, each of the same size
+	  (specified in the constructor and dynamically
+	  allocated). <varname>tabIsValid</varname> is a Boolean array
+	  indicating if the corresponding hash table slot is in
+	  use. <varname>tabKeyAddr</varname> holds the memory address being
+	  used to key a particular hash table
+	  slot. <varname>tabValue</varname> holds the associated cached
+	  value. The hash table can be cleared by using
+	  <function>memset</function> to set all the elements of
+	  <varname>tabIsValid</varname> to <literal>false</literal>.
+	</para>
+
+	<para>
+	  The hash table provides for no retry function if a lookup
+	  clashes. The new key address replaces any existing entry. In
+	  practice clashes are very unlikely, so this makes lookup efficient.
+	</para>
+
+	<para>
+	  The use of <classname>MemCache</classname> within the Debug Unit is
+	  discussed in the chapter on optimization (<xref
+	  linkend="sec_cache"/>).
+	</para>
+
+	<para>
+	  The public interface to <literal>MemCache</literal> is as
+	  follows:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>MemCache</function>. Constructor, which takes the size
+	      of the hash table as an optional argument. The default if no
+	      size is specified is 1009. The hash table arrays
+	      (<varname>tabIsValid</varname>, <varname>tabKeyAddr</varname>
+	      and <varname>tabValue</varname>) are allocated. The table is
+	      cleared by calling <function>clear</function>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>~MemCache</function>. The destructor, which frees the
+	      hash table arrays.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>clear</function>. Clears the hash table by using
+	      <function>memset</function> to set all elements of
+	      <varname>tabIsValid</varname> to <literal>false</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>write</function>. Writes a hash table entry for a
+	      specified address and value. Any existing entry at that location
+	      is overwritten.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>read</function>.  Returns <literal>true</literal> if
+	      the given memory address is in the cache. The cached value is
+	      returned by reference through the second argument.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Overall &gdb; Server Behavior
+      </title>
+
+      <para>
+	The class diagram in <xref linkend="fig_gdbserver_class_diag"/> shows
+	the relationship between the main <classname>GdbServerSC</classname>
+	&systemc; module class and other classes. The &gdb; server
+	instantiates a class, <classname>MpHash</classname> to track &gdb;
+	matchpoints (that is breakpoints and watchpoints) in a hash
+	table. <classname>MpHash</classname> is in turn built from instances
+	of <classname>MpEntry</classname>.
+      </para>
+
+      <figure id="fig_gdbserver_class_diag">
+	<title>
+	  Class Diagram for the &gdb; server.
+	</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="gdbserver-class-diag.svg"
+		       format="SVG"
+		       width="14cm"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="gdbserver-class-diag.png"
+		       format="PNG"
+		       width="80%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <sect2>
+	<title>
+	  <classname>GdbServerSC</classname> class
+	</title>
+
+	<para>
+	  The public interface to the <classname>GdbServerSC</classname> class
+	  is its constructor and destructor. The constructor arguments include
+	  the start and end address of Flash memory, the port on which &rsp;
+	  TCP/IP connections will be accepted and a pointer to the &jtag;
+	  &fifo; for &tap; actions.
+	</para>
+
+	<para>
+	  The constructor instantiates a new instance of
+	  <classname>RspConnection</classname> to handle the &rsp; TCP/IP
+	  interface (see <xref linkend="sec_rsp_connection"/>) and a new
+	  instance of <classname>DebugUnitSC</classname> to model the interface
+	  to the &or1k; Debug Unit and drive the &jtag; interface (see <xref
+	  linkend="sec_debug_unit"/>). It creates an instance of
+	  <classname>RspPacket</classname> to hold the data associated with
+	  the packet currently in use.
+	</para>
+
+	<para>
+	  The &gdb; server needs to keep track of breakpoints and watchpoints
+	  (collectively known as matchpoints) which have been
+	  inserted. These use &or1k; <literal>l.trap</literal>
+	  instructions. Class <classname>MpHash</classname> holds details of
+	  each matchpoint: its type, address and the instruction that was
+	  replaced by <literal>l.trap</literal>. The
+	  <classname>GdbServerSC</classname> constructor creates an instance
+	  of this class.
+	</para>
+
+	<para>
+	  Finally the constructor declares the private function
+	  <function>rspServer</function> as a new &systemc; THREAD.
+	</para>
+
+	<sect3>
+	  <title>
+	    The &systemc; Thread, <function>rspServer</function>
+	  </title>
+
+	  <para>
+	    On start up, the &or1k; model loads an image from Flash memory
+	    which initializes the exception vectors in &ram;, sets up any
+	    caches and then jumps to the reset vector (location 0x100). &gdb;
+	    debugging should not start until this initialization has occurred.
+	  </para>
+
+	  <para>
+	    This is achieved by detecting when the processor first tries to
+	    access a location outside Flash memory (hence the need for this
+	    addresses to be passed to the constructor). At start up, the thread
+	    resets the &jtag; interface of the Debug Unit, then waits until
+	    the next program counter has a value outside the flash memory
+	    address range.
+	  </para>
+
+	  <para>
+	    This is followed by the main loop. The first part of the loop
+	    checks if a connection to a &gdb; client has been established, and
+	    if not loops trying to listen. When a new connection is
+	    established it immediately stalls the processor, pending
+	    instructions from the client.
+	  </para>
+
+	  <para>
+	    The second part of the loop waits until the processor has stalled
+	    (it will already be stalled on first connection). Once it has
+	    stalled it notifies the &gdb; client, then processes the next
+	    &rsp; packet from the client using the function
+	    <function>rspClientRequest</function>. The majority of packets
+	    will leave the &cpu; unstalled, so subsequent moves round the loop
+	    will immediately come back to the same point and call
+	    <function>rspClientRequest</function> again.
+	  </para>
+
+	  <para>
+	    The exceptions are continue, step and restart packets which
+	    unstall the processor. There will be no further &rsp; packets
+	    processed until the processor stalls again. This will either be
+	    due to hitting a breakpoint or the connection being dropped and
+	    reconnected.
+	  </para>
+
+	  <note>
+	    <para>
+	      This loop relies on detecting a stalled processor (using the
+	      variable <varname>targetStopped</varname>) being a fast
+	      operation. It would not be efficient if the target had to be
+	      interrogated via &jtag; between processing each &gdb; packet.
+	    </para>
+	  </note>
+
+	  <para>
+	    The processing of individual packets by
+	    <function>rspClientRequest</function> follows the same approach
+	    described in Embecosm Application Note 4 <citetitle>Howto: GDB
+	    Remote Serial Protocol: Writing a RSP Server</citetitle> <xref
+	    linkend="ref_app_note_4"/>. The only difference is the code is in
+	    C++ rather than C. The details of individual packet actions are
+	    not described further in this application note. All the actions
+	    use reading and writing of &spr;s and memory in the same
+	    way. However for this application they use the functions provided
+	    by the Debug Unit class, <classname>DebugUnitSC</classname>.
+	  </para>
+
+	</sect3>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  <classname>MpHash</classname> Class
+	</title>
+
+	<para>
+	  <classname>MpHash</classname> is a closed hash table, whose entries
+	  are linked lists of <classname>MpEntry</classname> entities (see
+	  <xref linkend="sec_mp_entry"/>). Each entry represents one
+	  breakpoint or watchpoint. Five types of matchpoint are supported:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <literal>BP_MEMORY</literal>literal>. A memory (soft)
+	      breakpoint.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>BP_HARDWARE</literal>. A hardware breakpoint
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>WP_WRITE</literal>. A hardware write watchpoint
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>WP_READ</literal>. A hardware read watchpoint
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <literal>WP_ACCESS</literal>. A hardware access (read or write)
+	      watchpoint.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  Entries are keyed on both the address <emphasis>and</emphasis> type
+	  of the matchpoint. It is quite possible to have both a breakpoint
+	  and watchpoint on the same location, but they are separate entities.
+	</para>
+
+	<note>
+	  <para>
+	    Although all five matchpoint types are supported in the matchpoint
+	    table, the current implementation of the &gdb; server does not
+	    provide an implementation for hardware breakpoints or any
+	    watchpoints.
+	  </para>
+	</note>
+
+	<para>
+	  The public interface to <classname>MpHash</classname> is as follows:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <function>MpHash</function>. The constructor. Takes an optional
+	      argument specifying the size of hash table to allocate (default
+	      value 1021). Allocates a new array for the hash table in private
+	      variable <varname>hashTab</varname> (an array of pointers to
+	      <classname>MpEntry</classname>) and  sets all the pointers to
+	      <literal>NULL</literal> to mark the table as empty.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>~MpHash</function>. Destructor. Deletes the allocated
+	      hash table.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>add</function>. Adds a new entry to the hash table if
+	      it isn't already there. If it is there already it does nothing.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>lookup</function>. Look for an entry in the hash
+	      table. If the entry is found, return a pointer to its
+	      <classname>MpEntry</classname>, if not return
+	      <literal>NULL</literal>.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <function>remove</function>. Remove an entry from the hash
+	      table. Return <literal>true</literal> if the entry was found and
+	      deleted, <literal>false</literal> otherwise.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+      </sect2>
+
+      <sect2 id="sec_mp_entry">
+	<title>
+	  <classname>MpEntry</classname> Struct
+	</title>
+
+	<para>
+	  <classname>MpEntry</classname> is declared as a struct, rather
+	  than a class, to emphasize it is purely a data structure, with no
+	  explicit member functions. It represents a single matchpoint in the
+	  hash table.
+	</para>
+
+	<para>
+	  There are three public member variables:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <varname>type</varname>. The type of matchpoint being
+	      represented.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>addr</varname>. The address of the matchpoint
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <varname>instr</varname>. For memory (soft) breakpoints the
+	      &or1k; instruction which has been substituted by a
+	      <literal>l.trap</literal> instruction.
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  There is one private variable, <varname>next</varname>, a pointer to
+	  <classname>MpEntry</classname>, used to form lists of entries in
+	  the hash table. <classname>MpHash</classname> is declared a friend
+	  class, giving it access to this variable to construct the lists.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Building the Complete System
+      </title>
+
+      <para>
+	The main program is found in <filename>OrpsocMain.cpp</filename>, with
+	a header file, <filename>OrpsocMain.h</filename>, providing system
+	wide constants.
+      </para>
+
+      <para>
+	Since this is &systemc;, <filename>OrpsocMain.cpp</filename> declares
+	<function>sc_main</function>. This instantiates all the &systemc;
+	modules and connects them as described in Embecosm Application Note 6
+	<citetitle>High Performance SoC Modeling with Verilator: A Tutorial
+	for Cycle Accurate SystemC Model Creation and Optimization</citetitle>
+	<xref linkend="ref_app_note_6"/>. The Embecosm Cycle Accurate
+	&systemc; &jtag; interface is instantiated and connected as described
+	in Embecosm Application Note 5 <citetitle>Using JTAG with SystemC:
+	Implementation of a Cycle Accurate Interface</citetitle> <xref
+	linkend="ref_app_note_5"/>.
+      </para>
+
+      <para>
+	The port number to connect on may be supplied as an argument to the
+	&gdb; server program (so will appear in <varname>argv</varname>). If
+	not provided it defaults to 51000.
+      </para>
+
+      <para>
+	Finally the &gdb; server &systemc; module,
+	<classname>GdbServerSC</classname> is instantiated taking the port
+	number and pointer to the &jtag; &fifo; as arguments. The
+	<classname>GdbServerSC</classname> &systemc; thread will then execute,
+	processing &rsp; packets and driving the &or1k; model via its &jtag;
+	interface.
+      </para>
+
+      <sect2 id="sec_hello">
+	<title>
+	  An Example Debugging Session.
+	</title>
+
+	<para>
+	  The directory <filename>sw/test-progs</filename> contains a number
+	  of simple test programs. Use the <filename>Makefile</filename> to
+	  build these. The programs include a simple "Hello World" program in
+	  <filename>hello.c</filename>, which compiles to the file
+	  <filename>hello</filename>.
+	</para>
+
+	<para>
+	  First build the &gdb; server. Use the command <command>make</command>
+	  from the top level directory.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+$ make
+
+&lt;makefile output&gt;
+
+time -p ./Vorpsoc_fpga_top
+
+             SystemC 2.2.0 --- May 16 2008 10:30:46
+        Copyright (c) 1996-2006 by all Contributors
+                    ALL RIGHTS RESERVED
+Loading flash image from sim/src/flash.in
+(orpsoc.v.uart_top) UART INFO: Data bus width is 32. Debug Interface present.
+
+(orpsoc.v.uart_top) UART INFO: Doesn't have baudrate output
+
+Listening for RSP on port 51000
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  In a separate window, change to the
+	  <filename>sw/test-progs</filename> sub-directory and build the
+	  example programs using <filename>make</filename>. Then start the
+	  &or1k; implementation of &gdb; (see Embecosm Application Note 2:
+	  <citetitle>The OpenCores OpenRISC 1000 Simulator and Tool Chain:
+	  Installation Guide</citetitle> <xref linkend="ref_app_note_2"/> for
+	  details of how to install the tool chain).
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+$ or32-uclinux-gdb
+Building automata... done, num uncovered: 0/216.
+Parsing operands data... done.
+GNU gdb 6.8
+Copyright (C) 2008 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "--host=i686-pc-linux-gnu --target=or32-uclinux".
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  First load the program symbol table using the
+	  <command>file</command> command. Then connect to the &gdb; server
+	  using the <command>target&nbsp;remote</command> command. Since no
+	  port number was specified, the default 51000 will be used:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) file hello
+Reading symbols from .../sw/test-progs/hello...done.
+(gdb) target remote :51000
+Remote debugging using :51000
+0x040001f0 in ?? ()
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  At start up the processor is stalled, so it looks to the &gdb;
+	  client as though the target has just hit a breakpoint at the address
+	  of the Previous Program Counter (&ppc;). Since the processor stalled
+	  just as it finished executing in Flash memory, the address of the
+	  &ppc; is an address in Flash. That has nothing to do with the "Hello
+	  World" program which will be loaded, and for which the symbol table
+	  has already been loaded. So the &gdb; client cannot identify which
+	  source code this location corresponds to and just reports it as
+	  <literal>??</literal>.
+	</para>
+
+	<para>
+	  The window with the &gdb; server acknowledges the connection:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+Listening for RSP on port 51000
+Remote debugging from host 0.0.0.0
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Since this is a local connection the remote host is reported as
+	  0.0.0.0.
+	</para>
+
+	<para>
+	  The client can now load the hello world program. This will take a
+	  few seconds, even for a program as small as this, since each word
+	  has to be loaded over the model of JTAG, taking round 750 clock
+	  cycles. Even with a model running at nearly 100kHz this takes some
+	  time.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) load hello
+Loading section .text, size 0x1350 lma 0x0
+Loading section .rodata, size 0x1f lma 0x1350
+Start address 0x100, load size 4975
+Transfer rate: 323 bytes/sec, 236 bytes/write.
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  A breakpoint can be set on the main program and execution continued:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) break main
+Breakpoint 1 at 0x12f4: file hello.c, line 26.
+(gdb) continue
+Continuing.
+
+Breakpoint 1, main () at hello.c:26
+26        simputs ("Hello World!\n");
+(gdb) list
+21      #include "utils.h"
+22
+23
+24      main()
+25      {
+26        simputs ("Hello World!\n");
+27        simputs ("The answer is ");
+28        simputn (6 * 7);
+29        simputs ("\n");
+30        simexit (42);
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Placing a breakpoint on <function>simputs</function> allows the
+	  output generation to be followed:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) break simputs
+Breakpoint 2 at 0x1234: file utils.c, line 105.
+(gdb) c
+Continuing.
+
+Breakpoint 2, simputs (str=0x1350 "Hello World!\n") at utils.c:105
+105       for( i = 0; str[i] != '\0' ; i++ ) {
+(gdb) list
+100      */
+101     void  simputs( char *str )
+102     {
+103       int  i;
+104
+105       for( i = 0; str[i] != '\0' ; i++ ) {
+106         simputc( (int)(str[i]) );
+107       }
+108
+109     }       /* simputs() */
+(gdb)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  At this stage no characters have been output, but continuing again
+	  will cause the function to execute once:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) continue
+Continuing.
+
+Breakpoint 2, simputs (str=0x1350 "Hello World!\n") at utils.c:105
+105       for( i = 0; str[i] != '\0' ; i++ ) {
+(gdb)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Switching back to the server window, the first line of output can be
+	  seen:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+Listening for RSP on port 51000
+Remote debugging from host 0.0.0.0
+Hello World!
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The &gdb; extensions for &or1k; are supported, so the
+	  <command>info&nbsp;spr</command> and <command>spr</command> commands
+	  are both available:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) info spr cpucfgr
+SYS.CPUCFGR = SPR0_2 = 32 (0x20)
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The CPU configuration register is showing that only the
+	  <literal>ORBIS32</literal> instruction set is currently supported.
+	</para>
+
+	<para>
+	  Deleting all breakpoints the program will run to completion:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) delete
+Delete all breakpoints? (y or n) y
+(gdb) continue
+Continuing.
+Remote connection closed
+(gdb)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The server window shows the program running to completion. In this
+	  example <filename>hello.c</filename> calls
+	  <function>simexit</function> which uses the &or1k;
+	  <literal>l.nop&nbsp;1</literal> instruction to cause the simulation
+	  to terminate.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+Listening for RSP on port 51000
+Remote debugging from host 0.0.0.0
+Hello World!
+The answer is 42
+546960700.00 ns: Exiting (42)
+SystemC: simulation stopped by user.
+Closing connection
+real 2708.49
+user 87.82
+sys 0.53
+$
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  On completion the &rsp; connection is dropped.
+	</para>
+
+      </sect2>
+
+    </sect1>
+	
+    <sect1>
+      <title>
+	Foibles of Real Hardware
+      </title>
+
+      <para>
+	Real hardware always has small issues which deviate from the standard
+	documentation. Sometimes these are bugs, but on other occasions they
+	represent subtleties of behavior which have not been fully
+	documented. Any model generated automatically from Verilog &rtl; will
+	always faithfully model these small details. The &or1k; is no
+	exception and the &rtl; includes examples of both classes of minor
+	deviation from the documentation.
+      </para>
+
+      <para>
+	Any debug interface must take account of such variations, in order to
+	ensure consistent behavior.
+      </para>
+
+      <sect2 id="sec_npc">
+	<title>
+	  Setting the Next Program Counter &spr;
+	</title>
+
+	<para>
+	  The &or1k; instruction set architecture specifies two &spr;s
+	  describing the program counter. The Previous Program Counter (&ppc;)
+	  represents the address of the instruction just completed. The Next
+	  Program Counter (&npc;) represents the address of the instruction
+	  about to be executed.
+	</para>
+
+	<para>
+	  However the &or1k; is a pipelined processor with a 4/5 stage
+	  pipeline, so at any one time up to 4 instructions can be at some
+	  stage of execution. The pipeline stages are:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Instruction Fetch
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Instruction Decode
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Execute
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Memory access (only for load/store instructions). Will stall the
+	      pipeline while the memory is accessed.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Write Back
+	    </para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para>
+	  The &ppc; represents the address of the instruction that has just
+	  completed the write back stage of the pipeline. The &npc; represents
+	  the address of the instruction which is the next to reach the write
+	  back stage of the pipeline (which may be at an earlier phase than
+	  write back, if the pipeline is not currently full).
+	</para>
+
+	<para>
+	  The problem comes if the &npc; is written while the processor is
+	  stalled. This must cause a flush of the pipeline, so until the
+	  processor is unstalled there is no instruction anywhere in the
+	  pipeline waiting to be executed. Thus a subsequent read of the &npc;
+	  will return zero, <emphasis>not</emphasis> the value just written.
+	</para>
+
+	<para>
+	  This behavior can be seen by following a &vcd; trace through a
+	  number of debug actions. This uses the "Hello World" example from
+	  <xref linkend="sec_hello"/>. The program is loaded and run to a
+	  breakpoint set at the start of <function>main</function> (address
+	  0x12f4).
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) target remote :51000
+(gdb) load hello
+Loading section .text, size 0x1350 lma 0x0
+Loading section .rodata, size 0x1f lma 0x1350
+Start address 0x100, load size 4975
+Transfer rate: 82 bytes/sec, 236 bytes/write.
+(gdb) break main
+Breakpoint 1 at 0x12f4: file hello.c, line 26.
+(gdb) continue
+Continuing.
+
+Breakpoint 1, main () at hello.c:26
+26        simputs ("Hello World!\n");
+	  (gdb) 	</programlisting>
+	</informalfigure>
+
+	<para>
+	  At this point (111,173.85&mu;s), the wave trace in <xref
+	  linkend="fig_break_vcd"/> shows the processor stalling. The program
+	  counter for the write back stage is the address of break point
+	  (0x12f4) and the instruction associated with the write back phase is
+	  the <literal>l.trap</literal> instruction (0x21000001) used to
+	  generate the trap.
+	</para>
+
+	<figure id="fig_break_vcd">
+	  <title>
+	    &vcd; trace of the &or1k; pipeline following a
+	    <literal>l.trap</literal> stall.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="break-vcd-bw.png"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="break-vcd.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The succeeding instructions can be seen part processed in the
+	  pipeline. Disassembling around the breakpoint, the assembly code is:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) disassemble 0x12f0 0x1300
+Dump of assembler code from 0x12f0 to 0x1300:
+0x000012f0 &lt;main+12&gt;:   l.sw     0(r1),r9
+0x000012f4 &lt;main+16&gt;:   l.movhi  r3,0x0
+0x000012f8 &lt;main+20&gt;:   l.ori    r3,r3,0x1350
+0x000012fc &lt;main+24&gt;:   l.jal    &lt;simputs&gt;
+End of assembler dump.
+(gdb)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The instruction at the breakpoint (0x12f4) is not
+	  <literal>l.movhi</literal> as shown in the disassembly, but has been
+	  replaced by the <literal>l.trap</literal> to cause the
+	  breakpoint. The next instruction, at location 0x12f8 is
+	  <literal>l.ori&nbsp;r3,r3,0x1350</literal> (0xa8631350). This
+	  instruction is between instruction decode and execution stages. The
+	  address is shown in both stages and the instruction itself can be
+	  seen in the instruction decode stage.
+	</para>
+
+	<para>
+	  On hitting a breakpoint, the first action of &gdb; is to set the
+	  program counter back by one instruction. This is because the
+	  instruction that was replaced by <literal>l.trap</literal> for the
+	  breakpoint must be put back so it can be executed before resuming
+	  any further execution. This involves writing the &npc;, changing it
+	  from its value of 0x12f8 (the <literal>l.ori</literal> instruction)
+	  back to 0x12f4.
+	</para>
+
+	<para>
+	  This behavior can be seen in <xref linkend="fig_flush_vcd"/> at time
+	  104,890.85&mu;s. The write back program counter is left unchanged
+	  (0x12f4), since the instruction has already been executed. However
+	  the program counters for instruction decode and execute are set to
+	  zero. The program counter for instruction fetch is set to the new
+	  value, 0x12f4. The instruction registers for all stages have
+	  nonsense values in them (there is no &or1k; instruction beginning
+	  with 0x14).
+	</para>
+
+	<figure id="fig_flush_vcd">
+	  <title>
+	    &vcd; trace of the &or1k; pipeline following a write setting &npc;
+	    to 0x12f4.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="flush-vcd-bw.png"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="flush-vcd.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The Next Program Counter (&npc;) is used in &gdb; as the value of
+	  the Program Counter (<command>$pc</command>). This can be changed
+	  using the <command>set</command> command:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) set $pc=0x100
+(gdb)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The value appears as the new address for the instruction decode stage
+	  of the pipeline. This is shown in <xref linkend="fig_new_pc_vcd"/> at
+	  time 110,264.85&mu;s. Addresses for all other pipeline stages are
+	  unchanged, and the instruction values for these stages are still
+	  meaningless.
+	</para>
+
+	<figure id="fig_new_pc_vcd">
+	  <title>
+	    &vcd; trace of the &or1k; pipeline following a second write setting
+	    &npc; to 0x100.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="new-pc-vcd-bw.png"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="new-pc-vcd.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  Once the pipeline is unstalled, it will refill. This can be achieved
+	  by continuing execution:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) continue
+Continuing.
+
+Breakpoint 1, main () at hello.c:26
+26        simputs ("Hello World!\n");
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Execution will restart from the new value of &npc; (0x100, the reset
+	  vector).  A disassembly shows the instructions at that address:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) disassemble 0x100 0x110
+Dump of assembler code from 0x100 to 0x110:
+0x00000100 &lt;_start+0&gt;:  l.addi   r1,r0,32512
+0x00000104 &lt;_start+4&gt;:  l.addi   r2,r1,0
+0x00000108 &lt;_start+8&gt;:  l.mfspr  r3,r0,0x11
+0x0000010c &lt;_start+12&gt;: l.ori    r3,r3,0x2
+End of assembler dump.
+(gdb)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The &vcd; trace in <xref linkend="fig_pipeline_refill_vcd"/> shows
+	  the processor unstalling at
+	  time 111,173.85&mu;s. In consecutive cycles the pipeline fills with
+	  the instructions from locations 0x100 (0x9c207f00,
+	  <literal>l.addi&nbsp;r1,r0,0x7f00</literal>, 0x104 (0x9c410000,
+	  <literal>l.addi&nbsp;r2,r1,0</literal>), 0x108 (0xb4600011,
+	  <literal>l.mfspr&nbsp;r3,r0,0x11</literal>) and 0x10c (0xa8630002,
+	  <literal>l.ori&nbsp;r3,r3,0x2</literal>).
+	</para>
+	  
+	<figure id="fig_pipeline_refill_vcd">
+	  <title>
+	    &vcd; trace of the &or1k; pipeline refill when the &cpu; is unstalled.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="pipeline-refill-vcd-bw.png"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="pipeline-refill-vcd.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  This complexity of behavior is not generally what is wanted by a
+	  debugger. &gdb; will regularly write the &npc; to a new value, but
+	  expects that subsequent reads will return the value just written. It
+	  is therefore essential that notwithstanding any other arrangements
+	  the &npc; must be cached while the processor is stalled.
+	</para>
+
+	<para>
+	  &gdb; from time to time may write the &npc; to its current
+	  value. The intention is that this should have no effect, yet if the
+	  &npc; &spr; is written the pipeline will be flushed. This can be
+	  particularly catastrophic if the flush causes a delayed branch to be
+	  lost.
+	</para>
+
+	<para>
+	  Thus the interface must ensure that any request to write the value
+	  of the &npc; does nothing if the value is the same as the value
+	  already there.
+	</para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  JTAG register bit width
+	</title>
+
+	<para>
+	  This appears to be a hardware bug. However there may be a good
+	  reason for the behavior, since it is quite explicit in the source
+	  Verilog.
+	</para>
+
+	<para>
+	  The &jtag; data registers are all one bit bigger than stated in
+	  <xref linkend="sec_debug_unit"/>. When shifting a register in an extra
+	  top bit is provided, but ignored. When shifting the register out
+	  however the extra bit is provided before the &crc;. This affects all
+	  data registers. The data register specifying the debug chain has the
+	  format in <xref linkend="fig_real_chain_dr"/>.
+	</para>
+
+	<figure id="fig_real_chain_dr">
+	  <title>
+	    &jtag; chain data register actual implementation.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="real-chain-dr.svg"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="real-chain-dr.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  The formats of the data registers used with the
+	  <literal>RISC_DEBUG</literal> and <literal>WISHBONE</literal> debug
+	  chains are the same, as shown in <xref
+	  linkend="fig_real_other_dr"/>.
+	</para>
+
+	<figure id="fig_real_other_dr">
+	  <title>
+	    &jtag; <literal>RISC_DEBUG></literal> and
+	    <literal>WISHBONE</literal> debug chains data register actual
+	    implementation.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="real-other-dr.svg"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="real-other-dr.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+	
+	<para>
+	  The format of the data register used with the
+	  <literal>REGISTER</literal> debug
+	  chain is shown in <xref
+	  linkend="fig_real_register_dr"/>.
+	</para>
+
+	<figure id="fig_real_register_dr">
+	  <title>
+	    &jtag; <literal>REGISTER></literal> debug chain data register
+	    actual implementation.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="real-register-dr.svg"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="real-register-dr.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+	
+      </sect2>
+
+      <sect2>
+	<title>
+	  Hardware Single Step
+	</title>
+
+	<para>
+	  This is a genuine bug in the interaction between Debug Unit and
+	  &cpu;. When hardware single step is used, the pipeline can become
+	  confused, leading to multiple executions of the same instruction,
+	  and eventually to the same instruction being executed forever.
+	</para>
+
+	<para>
+	  Hardware single-step is always used in two places. First when
+	  restarting after a breakpoint to execute the instruction that was
+	  replaced by <literal>l.trap</literal>. &gdb; single steps the
+	  instruction, then replaces it with <literal>l.trap</literal>, so the
+	  breakpoint can be used again.
+	</para>
+
+	<para>
+	  Secondly &gdb; uses single step for the <command>stepi</command>
+	  command.
+	</para>
+
+	<para>
+	  A sequence of <command>stepi</command> commands illustrates the
+	  problem:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) si
+0x00001224 in simputs (str=0x0) at utils.c:102
+102     {
+(gdb) si
+0x00001228      102     {
+(gdb) si
+0x00001228      102     {
+(gdb) si
+0x0000122c      102     {
+(gdb) si
+0x00001230      102     {
+(gdb) si
+0x00001230      102     {
+(gdb) si
+0x00001230      102     {
+(gdb) si
+0x00001230      102     {
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The &vcd; trace in <xref linkend="fig_step_bug_vcd"/> shows the
+	  pipeline failing to fill correctly after some of the single steps
+	</para>
+
+	<figure id="fig_step_bug_vcd">
+	  <title>
+	    &vcd; trace of the &or1k; pipeline after multiple single steps.
+	  </title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="step-bug-vcd-bw.png"
+			 format="SVG"
+			 width="14cm"
+		       scalefit="1"
+		       align="center" />
+	    </imageobject>
+	    <imageobject>
+	      <imagedata fileref="step-bug-vcd.png"
+			 format="PNG"
+			 width="80%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  From around 140ms, the pipeline refill starts to go wrong. The ticks
+	  on the <literal>dbg_stall</literal> line are the individual single
+	  steps. By 180ms the pipeline is completely filled with the
+	  instruction at address 0x1230 (0xd7e21ffc,
+	  <literal>l.sw&nbsp;-4(r2),r3</literal>).
+	</para>
+
+	<para>
+	  Unfortunately single stepping is sometimes used by &gdb; in other
+	  circumstances. For example a <command>step</command> (high level
+	  instruction step) or <command>next</command>command> may use multiple
+	  steps rather than setting and running to a temporary
+	  breakpoint. Under these circumstances the &gdb; client will hang,
+	  because the target does not seem to reach its target.
+	</para>
+
+	<para>
+	  There is a workaround, which is to use ctrl-C (twice) to break the
+	  connection and then reconnect. The &or1k; is stalled at the time, so
+	  on reconnection will be at the same location. Using
+	  <command>continue</command> allows the pipeline to refill correctly.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+(gdb) s
+^C^CInterrupted while waiting for the program.
+Give up (and stop debugging it)? (y or n) y
+(gdb) target remote :51000
+Remote debugging using :51000
+0x00001230 in simputs (str=0x1350 "Hello World!\n") at utils.c:102
+102     {
+(gdb) c
+Continuing.
+
+Breakpoint 4, simputs (str=0x1350 "Hello World!\n") at utils.c:105
+105       for( i = 0; str[i] != '\0' ; i++ ) {
+(gdb) 
+	  </programlisting>
+	</informalfigure>
+
+	<sect3>
+	  <title>
+	    Solving the Problem
+	  </title>
+
+	  <para>
+	    The solution is to modify the handling of the &rsp; step (s)
+	    packet, so that two consecutive hardware single-step operations
+	    are never used. A second step is implemented using
+	    <literal>l.trap</literal>.
+	  </para>
+
+	  <para>
+	    This is not completely trivial, since the case where the second
+	    step would have occurred on a branch delay slot must be
+	    handled. Fortunately under this circumstance the single step bug
+	    does not seem to occur, so it is sufficient to permit a second
+	    single step in the case where that step occurs on a delay slot.
+	  </para>
+
+	  <para>
+	    The example code distributed with this application note does
+	    not have this solution implemented. It is left as an exercise for
+	    the reader.
+	  </para>
+
+	</sect3>
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_optimization">
+    <title>
+      Optimizing the &gdb; Server
+    </title>
+
+    <para>
+      As noted earlier, any &jtag; action takes many hundreds of system clock
+      cycles. This is due to the serial nature of the protocol and the &jtag;
+      clock typically running ten times slower than the system clock.
+    </para>
+
+    <para>
+      There are thus two ways to improve performance:
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Minimize the number of &jtag; actions used.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Maximize the performance of the underlying cycle accurate model.
+	</para>
+      </listitem>
+    </orderedlist>
+
+    <sect1>
+      <title>
+	Assessing Performance
+      </title>
+
+      <para>
+	To test performance of the &gdb; server, a &gdb; script is used with a
+	small program (in <filename>sw/test-progs/perf.c</filename>) which
+	exercises the model by computing Ackermann's function <xref
+	linkend="ref_ackermann"/> <xref linkend="ref_ackermann_wiki"/>. This
+	is driven by a &gdb; script in
+	<filename>sw/test-progs/gdb-script</filename>. This script sets a
+	breakpoint on the entry point to <function>a</function>, which computes
+	Ackermann's function. It then carries out the following tests:
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Continues past the breakpoint 50 times. This tests the efficiency
+	    of running to a breakpoint.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Disassembles the function 5 times. This tests the efficiency of
+	    memory access.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Prints the &cpu; configuration register 10 times. This tests the
+	    efficiency of &spr; access.
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	&gdb; is run in silent batch mode:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+or32-uclinux-gdb -batch -batch-silent --command gdb-script
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The output is completely suppressed, removing any client I/O
+	overhead. To measure the client's speed of loading (a measure of both
+	model and memory access efficiency), the "Hello World" program from
+	<xref linkend="sec_hello"/> is loaded manually.
+      </para>
+
+      <sect2>
+	<title>
+	  Load Generated by Debugging Commands
+	</title>
+
+	<para>
+	  The raw load generated by the debugging script can be measured by
+	  comparing the number of cycles taken using the script, with the
+	  number of cycles taken when just loading the program and running to
+	  completion. The results, using a server with no compiler
+	  optimization (<literal>-O0</literal>) and no caching of memory or
+	  &spr;s (see <xref linkend="sec_cache"/>) are shown in <xref
+	  linkend="tab_debug_load"/>.
+	</para>
+
+	<table id="tab_debug_load" frame="all">
+	  <title>
+	    Load generated by the &gdb; debugging script.
+	  </title>
+
+	  <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	    <colspec colwidth="6*" colname="Description"/>
+	    <colspec colwidth="2*" colname="Cycles"/>
+	    <colspec colwidth="2*" colname="ExecTime"/>
+	    <colspec colwidth="2*" colname="ServerPerf"/>
+	    <thead>
+	      <row>
+		<entry align="left">
+		  <para>
+		    Run Description
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Cycles
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Time
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    Performance
+		  </para>
+		</entry>
+	      </row>
+	    </thead>
+
+	    <tbody>
+	      <row>
+		<entry>
+		  <para>
+		    No optimization, no cache, no debug script
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    1,491,415
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    45.83&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    33&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	      <row>
+		<entry>
+		  <para>
+		    No optimization, no cache, with debug script
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    12,593,861
+		</para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    374.02&nbsp;s
+		  </para>
+		</entry>
+		<entry align="right">
+		  <para>
+		    34&nbsp;kHz
+		  </para>
+		</entry>
+	      </row>
+	      
+	    </tbody>
+	  </tgroup>
+	</table>
+
+	<para>
+	  As can be seen the debugging commands add over 11 million cycles to
+	  the server model in this baseline configuration.
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="sec_cache">
+      <title>
+	Caching &spr; and Memory Access
+      </title>
+
+      <para>
+	When stalled, &spr; and memory values cannot change. It therefore
+	makes sense to cache these values to eliminate &jtag; activity on
+	duplicate accesses when stalled. The classes to provide this
+	functionality (<classname>SprCache</classname> and
+	<classname>MemCache</classname>) were described in <xref
+	linkend="sec_debug_unit"/>.
+      </para>
+
+      <para>
+	Caching can be disabled when building the model by defining
+	<literal>NOCACHE</literal> on the command line or in
+	<filename>DebugUnit.h</filename>.
+      </para>
+
+      <caution>
+	<para>
+	  The Next Program Counter &npc; is <emphasis>always</emphasis> cached
+	  for the reasons described above in <xref linkend="sec_npc"/>.
+	</para>
+      </caution>
+
+      <para>
+	The effect of caching on server performance and client load times can
+	be seen in <xref linkend="tab_debug_cache"/>. This compares the
+	performance of an unoptimized server with and without caches.
+      </para>
+
+      <table id="tab_debug_cache" frame="all">
+	<title>
+	  Effect of &spr; and memory caches on &gdb; server and client
+	  performance.
+	</title>
+
+	<tgroup cols="5" align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="6*" colname="Description"/>
+	  <colspec colwidth="2*" colname="Cycles"/>
+	  <colspec colwidth="2*" colname="ExecTime"/>
+	  <colspec colwidth="2*" colname="ServerPerf"/>
+	  <colspec colwidth="2*" colname="ClientLoadRate"/>
+	  <thead>
+	    <row>
+	      <entry align="left">
+		<para>
+		  Run Description
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Cycles
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Time
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Perf
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Load Rate
+		</para>
+	      </entry>
+	    </row>
+	  </thead>
+
+	  <tbody>
+	    <row>
+	      <entry>
+		<para>
+		  No optimization, no cache
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  12,593,861
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  374.02&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  34&nbsp;kHz
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  161&nbsp;bytes/s
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  No optimization, with cache
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  8,097,241
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  257.34&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  31&nbsp;kHz
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  164&nbsp;bytes/s
+		</para>
+	      </entry>
+	    </row>
+	    
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para>
+	The extra cycles due to the debugging load have been reduced by 4.5
+	million, just over 40%. The time taken to load a program is unchanged.
+	The memory cache cannot help, since this is an initial load.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Compiler Optimization
+      </title>
+
+      <para>
+	As was shown in Embecosm Application Note 6 <citetitle>High
+	Performance SoC Modeling with Verilator: A Tutorial for Cycle Accurate
+	SystemC Model Creation and Optimization</citetitle> <xref
+	linkend="ref_app_note_6"/>, compiler optimization has a very
+	significant impact on performance.
+      </para>
+
+      <para>
+	The effect of compiler optimizations can be seen in <xref
+	linkend="tab_debug_compiler_opt"/>. This compares the performance
+	using no optimization, optimization using <literal>-Os</literal> (the
+	best for single pass optimization) and profile directed optimization
+	using <literal>-O3</literal> and profile statistics from a debugging
+	run using the Ackermann's Function test program. To build a model
+	using profile directed optimization with optimization level
+	<literal>-O3</literal> use the <literal>run-fast</literal> target of
+	the <filename>Makefile</filename> in the distribution.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+make run-fast OPT=-O3
+	</programlisting>
+      </informalfigure>
+
+      <table id="tab_debug_compiler_opt" frame="all">
+	<title>
+	  Effect of compiler optimization on &gdb; server and client
+	  performance.
+	</title>
+
+	<tgroup cols="5" align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="6*" colname="Description"/>
+	  <colspec colwidth="2*" colname="Cycles"/>
+	  <colspec colwidth="2*" colname="ExecTime"/>
+	  <colspec colwidth="2*" colname="ServerPerf"/>
+	  <colspec colwidth="2*" colname="ClientLoadRate"/>
+	  <thead>
+	    <row>
+	      <entry align="left">
+		<para>
+		  Run Description
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Cycles
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Time
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Perf
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  Load Rate
+		</para>
+	      </entry>
+	    </row>
+	  </thead>
+
+	  <tbody>
+	    <row>
+	      <entry>
+		<para>
+		  No optimization(-O0)
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  8,097,241
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  257.34&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  31&nbsp;kHz
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  164&nbsp;bytes/s
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Single pass optimization (-Os)
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  8,097,241
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  124.71&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  65&nbsp;kHz
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  383&nbsp;bytes/s
+		</para>
+	      </entry>
+	    </row>
+	    
+	    <row>
+	      <entry>
+		<para>
+		  Profile directed optimization (-O3)
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  8,097,241
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  92.69&nbsp;s
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  87&nbsp;kHz
+		</para>
+	      </entry>
+	      <entry align="right">
+		<para>
+		  487&nbsp;bytes/s
+		</para>
+	      </entry>
+	    </row>
+	    
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para>
+	Using a single optimization pass more than doubles performance of both
+	the server and client load times. Using profile directed optimization
+	almost trebles performance.
+      </para>
+
+    </sect1>
+    
+    <sect1>
+      <title>
+	Overhead of the &rsp; Debugger Interface
+      </title>
+
+      <para>
+	There is a performance overhead to the &rsp; interface. It involves
+	adding the &jtag; module, with a thread sensitive to each &jtag;
+	clock and the &gdb; server module to process all the packets.
+      </para>
+
+      <para>
+	Even with minimal debugging activity (just loading the program and
+	running to completion), the fastest the Ackermann's function model
+	would execute was 93&nbsp;kHz. The same optimized model was used
+	without the debug interface in Embecosm Application Note 6 and
+	achieved 130&nbsp;kHz.
+      </para>
+
+      <para>
+	This is an inescapable overhead. However it is independent of the size
+	of the underlying model. It shows significantly with the OpenRISC 1000,
+	because of the efficiency of the underlying processor model. With
+	larger and more complex &soc;s it would be a less significant overhead.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Summary of Performance Optimization
+      </title>
+
+      <para>
+	Optimization is essential to achieving good debugging performance.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Caching Memory and &spr;s yielded a 40% improvement in the
+	    overhead of debugging.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Simple optimization with <literal>-Os</literal> more than doubled
+	    performance.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Profile directed optimization nearly trebled performance.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Overall, combining caching and and profile directed optimization,
+	    server execution time fell from 374&nbsp;s to 92&nbsp;s,
+	    representing a four-fold improvement in performance.
+	  </para>
+	</listitem>
+
+      </itemizedlist>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Summary
+    </title>
+
+    <para>
+      This application note has shown how to build and optimize a &gdb; &rsp;
+      interface to a cycle accurate model of a complete &soc; in
+      &systemc;. The steps can be summarized as:
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Implement an interface which can read and write &rsp; packets from and
+	  to TCP/IP
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Implement a model for the target's debug interface, which generates
+	  &jtag; register actions.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Implement the main &gdb; server class, which maps actions requested
+	  in &rsp; packets to the functionality of the debug interface.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Use caching to minimize the number of &jtag; register actions
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Use C++ compiler options to maximize the performance of the &gdb;
+	  server.
+	</para>
+      </listitem>
+
+    </orderedlist>
+
+    <para>
+      The result is a &gdb; interface to a cycle accurate &systemc; model of a
+      complete &soc;, with a performance which makes low-level firmware
+      development a quite feasible activity.
+    </para>
+
+    <para>
+      Suggestions for corrections or improvements are welcomed. Please contact
+      the author at <ulink
+      url="mailto:jeremy.bennett@embecosm.com"><literal>jeremy.bennett@embecosm.com</literal></ulink>.
+    </para>
+
+  </chapter>
+
+  <glossary id="sec_glossary">
+    <title>
+      Glossary
+    </title>
+
+    <glossentry>
+      <glossterm>2-state</glossterm>
+      <glossdef>
+	<para>
+	  Hardware logic model which is based only on logic high and logic low
+	  (binary 0 and binary 1) values.
+	</para>
+
+	<glossseealso>4-state</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>4-state</glossterm>
+      <glossdef>
+	<para>
+	  Hardware logic model which considers unknown (<literal>X</literal>)
+	  and unproven (<literal>Z</literal>) values as well as logic high and
+	  logic low (binary 0 and binary 1).
+	</para>
+
+	<glossseealso>2-state</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>big&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a big endian architecture, the
+	  least significant byte in a data word resides at the highest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
+
+	<para>
+	  The alternative is little endian addressing.
+	</para>
+
+	<glossseealso>little&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>elaboration</glossterm>
+      <glossdef>
+	<para>
+	  In an event driven simulator, the analysis of source Verilog to
+	  create an executable which will subsequently perform the simulation.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Joint Test Action Group</glossterm>
+      <acronym>JTAG</acronym>
+      <glossdef>
+	<para>
+	  &jtag; is the usual name used for the IEEE 1149.1 standard entitled
+	  <emphasis>Standard Test Access Port and Boundary-Scan
+	  Architecture</emphasis> for test access ports used for testing
+	  printed circuit boards and chips using boundary scan.
+	</para>
+
+	<para>
+	  This standard allows external reading of state within the board or
+	  chip. It is thus a natural mechanism for debuggers to connect to
+	  embedded systems.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little&#32;endian</glossterm>
+      <glossdef>
+	<para>
+	  A description of the relationship between byte and word addressing
+	  on a computer architecture. In a little endian architecture, the
+	  least significant byte in a data word resides at the lowest
+	  byte address (of the bytes in the word) in memory.
+	</para>
+	<indexterm>
+	  <primary>endianism</primary>
+	</indexterm>
+
+	<para>
+	  The alternative is big endian addressing.
+	</para>
+
+	<glossseealso>big&#32;endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Open &systemc; Initiative</glossterm>
+      <acronym>OSCI</acronym>
+      <glossdef>
+	<para>
+	  The industry standardization body for &systemc;
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>System on Chip</glossterm>
+      <acronym>SoC</acronym>
+      <glossdef>
+	<para>
+	  A silicon chip which includes one or more processor cores.
+	</para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>&systemc;</glossterm>
+      <glossdef>
+	<para>
+	  A set of libraries and macros, which extend the C++ programming
+	  language to facilitate modeling of hardware.
+	</para>
+
+	<para>
+	  Standardized by the <glossterm>Open &systemc; Initiative</glossterm>,
+	  who provide an open source reference implementation.
+	</para>
+
+	<glossseealso>Open&#32;&systemc;&#32;Initiative</glossseealso>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_ackermann">
+      <firstname>Wilhelm</firstname> <surname>Ackermann</surname>.
+      <title>
+	<foreignphrase>Zum Hilbertschen Aufbau der reellen
+	Zahlen</foreignphrase>
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  <foreignphrase>Mathematische Annalen</foreignphrase>
+	</title>
+	<volumenum>99</volumenum>,
+	<pubdate>1928</pubdate>, <pagenums>118-133</pagenums>.
+	<bibliosource class="doi">
+	  <ulink
+	      url="http://dx.doi.org/10.1007%2FBF01459088">doi:10.1007/BF01459088</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+
+    <bibliomixed id="ref_ackermann_wiki">
+      <title>
+	Ackermann function.
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  Wikipedia entry.
+	</title>
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://en.wikipedia.org/wiki/Ackermann_function">en.wikipedia.org/wiki/Ackermann_function</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_atm_spec">
+      <title>
+	ATM User-Network Interface Specification.
+      </title>
+      <publishername>ATM Forum</publishername>,
+      <pubdate>1993</pubdate>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_cummings_99">
+      <firstname>Clifford</firstname> E <surname>Cummings</surname>.
+      <title>
+	"full_case parallel_case", the Evil Twins of Verilog Synthesis.
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  SNUG 1999
+	</title>
+	<pubdate>1999</pubdate>.
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://www.sunburst-design.com/papers/">www.sunburst-design.com/papers</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_cummings_00">
+      <firstname>Clifford</firstname> E <surname>Cummings</surname>.
+      <title>
+	Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  SNUG 2000
+	</title>
+	<pubdate>2000</pubdate>.
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://www.sunburst-design.com/papers/">www.sunburst-design.com/papers</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_2">
+      <title>
+	&embecosm; Application Note 2. The &opencores; &or1k; Simulator and
+	Tool Chain: Installation Guide. Issue 3.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	November 2008.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>tool chain</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_3">
+      <title>
+	&embecosm; Application Note 3. Howto: Porting the GNU Debugger:
+	Practical Experience with the OpenRISC 1000 Architecture. Issue 2.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	November 2008.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>cycle accurate modeling</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_4">
+      <title>
+	&embecosm; Application Note 4. Howto: GDB Remote Serial Protocol:
+	Writing a RSP Server. Issue 2.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	November 2008.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>cycle accurate modeling</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_5">
+      <title>
+	&embecosm; Application Note 5. Using JTAG with SystemC: Implementation
+	of a Cycle Accurate Interface. Issue 1.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	January 2009.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>cycle accurate modeling</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_app_note_6">
+      <title>
+	&embecosm; Application Note 6. High Performance SoC Modeling with
+	&verilator;: A Tutorial for Cycle Accurate &systemc; Model Creation
+	and Optimization. Issue 1.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	February 2009.
+      </pubdate>
+      <indexterm>
+	<primary>&or1k;</primary>
+	<secondary>cycle accurate modeling</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_esp4">
+      <title>
+	&embecosm; Software Package 4. Cycle Accurate &systemc; &jtag;
+	Interface: Reference Implementation.
+      </title>
+      <publisher>
+	<publishername>
+	  Embecosm Limited,
+	</publishername>
+      </publisher>
+      <pubdate>
+	January 2009.
+      </pubdate>
+      Available for free download from the &embecosm; website at
+      <bibliosource class="uri">
+	<ulink url="http://www.embecosm.com">www.embecosm.com</ulink>
+      </bibliosource>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_gdb_int">
+      <firstname>John</firstname> <surname>Gillmore</surname> and
+      <firstname>Stan</firstname> <surname>Shebbs</surname>.
+      <title id="ref_gdb_int_xr">
+	&gdb; Internals: A guide to the internals of the &gnu; debugger,
+      </title>
+      issue <issuenum>2</issuenum>.
+      <publisher>
+	<publishername>
+	  Cygnus Solutions
+	</publishername>
+      </publisher>
+      <pubdate>
+	2006
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://sourceware.org/gdb/current/onlinedocs/gdbint_toc.html"/>
+      </bibliosource>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>Internals document</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gtkwave">
+      <title>
+	&gtkwave; 3.1 Wave Analyzer User's Guide.
+      </title>
+      <pubdate>
+	February 2008.
+      </pubdate>
+      <bibliosource class="uri">
+	<ulink url="http://gtkwave.sourceforge.net/">gtkwave.sourceforge.net/</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_ieee_systemc">
+      <title>
+	IEEE Standard &systemc;&reg; Language:
+      </title>
+      <subtitle>
+	Reference Manual.
+      </subtitle>
+      <publisher>
+	<publishername>
+	  IEEE Computer Society
+	</publishername>
+      </publisher>
+      <pubdate>
+	2005
+      </pubdate>.
+      <biblioid class="pubnumber">
+	IEEE Std 1666&trade;-2005.
+      </biblioid>
+      Available for free download from
+      <bibliosource class="uri">
+	<ulink
+	    url="http://standards.ieee.org/getieee/1666/index.html">standards.ieee.org/getieee/1666/index.html</ulink>
+      </bibliosource>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_ti_jtag">
+      <title>
+	IEEE Std 1149.1 (&jtag;) Testability:
+      </title>
+      <subtitle>
+	Primer.
+      </subtitle>
+      <publisher>
+	<publishername>
+	  Texas Instruments Semiconductor Group
+	</publishername>
+      </publisher>
+      <pubdate>
+	1997.
+      </pubdate>
+      Available for free download from the Texas Instruments website at
+      <bibliosource class="uri">
+	<ulink url="http://focus.ti.com/lit/an/ssya002d/ssya002d.pdf">focus.ti.com/lit/an/ssya002d/ssya002d.pdf</ulink>
+      </bibliosource>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_ieee_jtag">
+      <title>
+	IEEE standard test access port and boundary-scan architecture
+      </title>
+      <publisher>
+	<publishername>
+	  IEEE Computer Society
+	</publishername>
+      </publisher>
+      <pubdate>
+	2001 (reaffirmed 2008)
+      </pubdate>.
+      <biblioid class="pubnumber">
+	IEEE Std 1149.1&trade;-2001
+      </biblioid>.
+    </bibliomixed>
+
+    <bibliomixed id="ref_mills_cummings_99">
+      <firstname>Don</firstname> <surname>Mills</surname> and
+      <firstname>Clifford</firstname> E <surname>Cummings</surname>.
+      <title>
+	&rtl; Coding Styles That Yield Simulation and Synthesis Mismatches
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  SNUG 1999
+	</title>
+	<pubdate>1999</pubdate>.
+	<bibliosource class="uri">
+	  <ulink
+	      url="http://www.sunburst-design.com/papers/">www.sunburst-design.com/papers</ulink>.
+	</bibliosource>
+      </bibliomset>
+    </bibliomixed>
+
+    <bibliomixed id="ref_orpsoc">
+      <title>
+	The OpenRISC Reference Platform System-on-Chip.
+      </title>
+      <bibliosource class="uri">
+	Available for download from <ulink
+	url="http://www.opencores.org">www.opencores.org</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_verilator">
+      <firstname>Wilson</firstname> <surname>Snyder</surname>.
+      <title>
+	&verilator; 3.700.
+      </title>
+      <pubdate>
+	January 2009.
+      </pubdate>
+      <bibliosource class="uri">
+	<ulink
+	url="http://www.veripool.org/wiki/verilator">www.veripool.org/wiki/verilator</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gcc_ug">
+      <firstname>Richard</firstname> <surname>Stallman</surname> and the &gcc;
+      Developer Community.
+      <title>
+	Using the GNU Compiler Collection (&gcc;),
+      </title>
+      <publisher>
+	<publishername>
+	  Free Software Foundation
+	</publishername>
+      </publisher>
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink url="http://gcc.gnu.org/onlinedocs/gcc/"/>
+      </bibliosource>
+      <indexterm>
+	<primary>&gcc;</primary>
+	<secondary>User Guide</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_gdb_ug">
+      <firstname>Richard</firstname> <surname>Stallman</surname>,
+      <firstname>Roland</firstname> <surname>Pesch</surname>,
+      <firstname>Stan</firstname> <surname>Shebbs</surname>, et al.
+      <title>
+	Debugging with &gdb;: The &gnu; Source-Level Debugger,
+      </title>
+      issue <issuenum>9</issuenum>.
+      <publisher>
+	<publishername>
+	  Free Software Foundation
+	</publishername>
+      </publisher>
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink
+	    url="http://sourceware.org/gdb/current/onlinedocs/gdb_toc.html"/>
+      </bibliosource>
+      <indexterm>
+	<primary>&gdb;</primary>
+	<secondary>User Guide</secondary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_osci_systemc_ug">
+      <title>
+	&systemc; Version 2.0 User Guide.
+      </title>
+      <publisher>
+	<publishername>
+	  Open &systemc; Initiative,
+	</publishername>
+      </publisher>
+      <pubdate>
+	2002.
+      </pubdate>
+      <bibliosource class="uri">
+	Available for download from <ulink
+	url="http://www.systemc.org">www.systemc.org</ulink>
+      </bibliosource>
+    </bibliomixed>
+
+    <bibliomixed id="ref_doxygen">
+      <firstname>Dimitri</firstname> <surname>van Heesch</surname>.
+      <title>
+	Doxygen: Source code documentation generator tool,
+      </title>
+      <pubdate>
+	2008
+      </pubdate>.
+      <bibliosource class="uri">
+	<ulink url="http://www.doxygen.org">www.doxygen.org</ulink>
+      </bibliosource>
+      <indexterm>
+	<primary>Doxygen</primary>
+      </indexterm>
+    </bibliomixed>
+
+    <bibliomixed id="ref_dhrystone">
+      <firstname>Reinhold</firstname> <surname>Weicker</surname>.
+      <title>
+	Dhrystone: A Synthetic Systems Programming Benchmark.
+      </title>
+      <bibliomset relation="journal">
+	<title>
+	  Communications of the ACM,
+	</title>
+	<volumenum>27</volumenum>, <issuenum>10</issuenum>,
+	<pubdate>October 1984</pubdate>, <pagenums>1013-1030</pagenums>.
+      </bibliomset>
+    </bibliomixed>
+
+  </bibliography>
+
+</book>
