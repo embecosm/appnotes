@@ -1,0 +1,2016 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- =========================================================================
+Useful entities
+========================================================================== -->
+
+<!-- ========== Acronyms and abbreviations ========== -->
+
+<!ENTITY api "<acronym>API</acronym>">
+<!ENTITY ascii "<acronym>ASCII</acronym>">
+<!ENTITY gnu "<acronym>GNU</acronym>">
+<!ENTITY posix "<acronym>POSIX</acronym>">
+<!ENTITY tcl "<acronym>TCL</acronym>">
+
+<!-- ========== applications ========== -->
+
+<!-- = software applications = -->
+
+<!ENTITY autoconf "<application class='software'>autoconf</application>">
+<!ENTITY automake "<application class='software'>automake</application>">
+<!ENTITY dejagnu "<application class='software'>DejaGnu</application>">
+<!ENTITY Expect "<application class='software'>Expect</application>">
+<!ENTITY expect "<application class='software'>expect</application>">
+<!ENTITY libtool "<application class='software'>libtool</application>">
+<!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY unix "<application class='software'>Unix</application>">
+
+<!-- = Hardware applications = -->
+
+<!ENTITY or1k "<application class='hardware'>OpenRISC 1000</application>">
+
+<!-- = Commands = -->
+
+<!ENTITY expect_cmd "<function>expect</function>">
+<!ENTITY runtest "<command>runtest</command>">
+<!ENTITY make "<command>make</command>">
+
+<!-- = Libraries = -->
+
+<!ENTITY stdio "<systemitem class='library'>stdio</systemitem>" >
+
+<!-- = Other = -->
+<!ENTITY nbhy "&#8209;" >
+
+<!-- ========== Cross references ========== -->
+
+<!-- = Organizations = -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+<!ENTITY gpl "GNU General Public License">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+<!ENTITY gpl_www "GNU General Public License (<ulink url='http://www.gnu.org/licenses/gpl.html'>GNU General Public License</ulink>)">
+
+]>
+
+<!-- ==========================================================================
+
+Copyright (c) 2010 Embecosm Limited <info@embecosm.com>.
+
+This work is licensed under the Creative Commons Attribution 2.0 UK:
+England & Wales License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by/2.0/uk/ or send a letter to Creative
+Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+	
+This license means you are free:
+  - to copy, distribute, display, and perform the work
+  - to make derivative works
+
+under the following conditions:
+  - ATTRIBUTION. You must give the original author, Embecosm, credit;
+  - For any reuse or distribution, you must make clear to others the license
+    terms of this work;
+  - Any of these conditions can be waived if you get permission from the
+    copyright holder, Embecosm; and
+  - Nothing in this license impairs or restricts the author's moral rights.
+
+===============================================================================
+
+Application note describing simple use of DejaGNU
+=========================================================================== -->
+
+<book lang="en_GB">
+  <title>
+    Howto: Using &dejagnu; for Testing
+  </title>
+  <subtitle>
+    A Simple Introduction
+  </subtitle>
+
+  <bookinfo>
+
+    <author>
+      <firstname>Jeremy</firstname>
+      <surname>Bennett</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>
+      April 2010
+    </pubdate>
+
+    <releaseinfo>
+      Application Note 8. Issue 1
+    </releaseinfo>
+
+    <copyright>
+      <year>
+	2010
+      </year>
+      <holder>
+	&embecosm; Limited
+      </holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>
+	Legal Notice
+      </title>
+
+      <para>
+	This work is licensed under the Creative Commons Attribution 2.0 UK:
+	England &amp; Wales License. To view a copy of this license, visit
+	<ulink
+	url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+	or send a letter to Creative Commons, 171 Second Street, Suite 300,
+	San Francisco, California, 94105, USA.
+      </para>
+	
+      <para>
+	This license means you are free:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      to copy, distribute, display, and perform the work
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      to make derivative works
+	    </para>
+	  </listitem>
+	</itemizedlist>
+	under the following conditions:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>Attribution.</emphasis> You must give the original
+	      author, &embecosm_www;, credit;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      For any reuse or distribution, you must make clear to others the
+	      license terms of this work;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Any of these conditions can be waived if you get permission from
+	      the copyright holder, &embecosm;; and
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Nothing in this license impairs or restricts the author's moral
+	      rights.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The software examples written by &embecosm; and used in this document
+	are licensed under the &gpl_www;. For detailed licensing information
+	see the file <filename>COPYING</filename> in the source code of the
+	examples.
+      </para>
+
+      <para>
+	&embecosm; is the business name of &embecosm; Limited, a private
+	limited company registered in England and Wales. Registration number
+	6577021.
+      </para>
+
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>
+      Introduction
+    </title>
+
+    <para>
+      &dejagnu; is a testing framework, originally developed
+      for the GNU project. This application note was written in response to
+      the author's frustration at setting up a &dejagnu; test
+      framework for the first time, using the existing documentation <xref
+      linkend="ref_savoye_04" />.
+    </para>
+
+    <para>
+      &dejagnu; can be used standalone, but it is most useful when integrated
+      with the &gnu; autotools (&autoconf; &automake; and &libtool;). This
+      application note describes both modes of use.
+    </para>
+
+    <para>
+      This application note is deliberately incomplete. It only covers the
+      most commonly used features and options. The intention is that, having
+      got an initial test suite up and running, the user will be confident
+      in reading the full &dejagnu; documentation (see <xref
+      linkend="sec_further_info"/>).
+    </para>
+
+    <sect1>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+	Setting up &dejagnu; for the first time is a challenge. This
+	application note is intended for software engineers putting together
+	their first test suite using &dejagnu;.
+      </para>
+
+    </sect1>
+
+    <sect1 id="sec_further_info">
+      <title>
+	Further information
+      </title>
+
+      <para>
+	The main source of information is the &dejagnu; user guide by Rob
+	Savoye <xref linkend="ref_savoye_04"/>. The most useful section is the
+	<citetitle>Unit Testing &api;</citetitle>, which lists all the
+	procedures which can be used when writing tests.
+      </para>
+
+      <para>
+	&dejagnu; is implemented as the &runtest; command. It is documented in
+	its own manual page (<command>man&nbsp;runtest</command>). However the
+	manual page is incomplete, and additional options to this command may
+	be identified by using <command>runtest&nbsp;&nbhy;&nbhy;help</command>.
+      </para>
+
+      <para>
+	Tests are written in an extension to the Tool Command Language
+	(&tcl;), known as &expect;. &tcl; is extensively documented on its
+	website (see <ulink
+	url="http://www.tcl.tk/doc/">www.tcl.tk/doc</ulink>). Of particular
+	value is the &tcl; tutorial on that site <xref linkend="ref_flynt"/>.
+      </para>
+
+      <para>
+	&Expect; has its own manual page (<command>man&nbsp;expect</command>),
+	which provides a "succinct" description of the main language
+	commands. Comprehensive documentation may be found in the book
+	<citetitle>Exploring Expect</citetitle> by Don Libes <xref
+	linkend="ref_libes_95"/>.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	About &embecosm; Application Notes
+      </title>
+
+      <para>
+	&embecosm; publishes a series of free and open source application
+	notes, designed to help working engineers with practical problems.
+      </para>
+
+      <para>
+	Feedback is always welcome, which should be sent to
+	<email>info@embecosm.com</email>.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_overview">
+    <title>
+      Overview of &dejagnu;
+    </title>
+
+    <para>
+      &dejagnu; is designed to run on &posix; compliant systems and is
+      compliant with the &posix;&nbsp;1003.3 standard for test frameworks. It
+      comprises a command to run tests (&runtest;), a language in which to
+      write tests (&expect;), a standard directory structure for the tests and
+      a set of configuration files.
+    </para>
+
+    <note>
+      <para>
+	&dejagnu; is not installed by default on most Linux systems. However
+	most systems provide it as a standard extra. If not, it can be
+	downloaded from <ulink
+	url="http://www.gnu.org/software/dejagnu/">www.gnu.org/software/dejagnu</ulink>.
+      </para>
+    </note>
+
+    <sect1 id="sec_runtest">
+      <title>
+	The &runtest; command
+      </title>
+
+      <para>
+	Central to &dejagnu; is the &runtest; command. It takes the general
+	form:
+      </para>
+
+      <informalfigure>
+	<synopsis>
+runtest [<replaceable>options</replaceable>] [<replaceable>test</replaceable>]
+	</synopsis>
+      </informalfigure>
+
+      <para>
+	The most important options when getting started are as follows.
+      </para>
+
+      <variablelist termlength="15">
+	<varlistentry>
+	  <term>
+	    <option>--tool</option> <replaceable>toolname</replaceable>
+	  </term>
+	  <listitem>
+	    <para>
+	      The naming of this option is confusing. It is the name of the
+	      group of tests being carried out. This might be the name of a
+	      tool (for example <command>or1ksim</command>), but it might
+	      equally be an indicator of a type of test (for example
+	      <literal>unit</literal>).
+	    </para>
+
+	    <para>
+	      The <replaceable>toolname</replaceable> is important, because it
+	      is used to construct the names of other entities: the
+	      directories where tests may be found and the name of a tool
+	      specific configuration file.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <option>--srcdir</option> <replaceable>dir</replaceable>
+	  </term>
+	  <listitem>
+	    <para>
+	      This specifies a path where directories of tests may be found. A
+	      directory containing tool specific configuration files
+	      (<filename>lib</filename>) is also found in this directory.
+	    </para>
+
+	    <para>
+	      The actual names of the directories containing tests must be
+	      prefixed by the name of the tool, and by convention end with the
+	      suffix <literal>.tests</literal>.
+	    </para>
+
+	    <para>
+	      Thus for the tool <literal>or1ksim</literal>, the tests might
+	      appear in directories named <literal>or1ksim.tests</literal> or
+	      <literal>or1ksim-profiling.tests</literal>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <option>--outdir</option> <replaceable>dir</replaceable>
+	  </term>
+	  <listitem>
+	    <para>
+	      This specifies a directory where all the output logs will be
+	      placed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <option>--target_board</option> <replaceable>board</replaceable>
+	  </term>
+	  <listitem>
+	    <para>
+	      This is one of the hidden options, only shown with
+	      <command>runtest&nbsp;&nbhy;&nbhy;help</command>. It specifies
+	      board(s) on which the tests should be run. This also controls
+	      which board specific configuration file(s) will be used (see
+	      <xref linkend="sec_config"/>).
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+      <para>
+	If no <replaceable>test</replaceable> is specified, &runtest; will run
+	all the tests it can find, which match the specified
+	<replaceable>toolname</replaceable>. Otherwise it will run only the
+	test specified.
+      </para>
+
+      <note>
+	<para>
+	  Options may also be set in configuration files (see <xref
+	  linkend="sec_config"/>). Where an option is set both on the command
+	  line and in a configuration file, the command line will take
+	  precedence.
+	</para>
+      </note>
+
+      <caution>
+	<para>
+	  There are a number of options which are not documented in the
+	  manual. You can see all of the options by running
+	  <command>runtest&nbsp;--help</command>
+	</para>
+      </caution>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	The &expect; language
+      </title>
+
+      <para>
+	Strictly speaking, &expect; is a tool, rather than a language. However
+	it is easiest to regard it as a language which extends &tcl;. Before
+	writing code using &expect; you should be fully familiar with &tcl;
+	<xref linkend="ref_flynt"/>.
+      </para>
+
+      <para>
+	&Expect; scripts spawn test programs, to which they supply input and
+	check that the response is as expected. A full description of how to
+	write tests is given in <xref linkend="chap_expect_tests"/> below.
+      </para>
+
+    </sect1>
+
+    <sect1 id="sec_dir_structure">
+      <title>
+	A typical test framework directory structure
+      </title>
+
+      <para>
+	&dejagnu; has some basic expectations of where it will find files,
+	although this can be overridden with command line options to
+	&runtest;.
+      </para>
+
+      <para>
+	By convention, the test framework lives within a directory
+	<filename>testsuite</filename>. Within that directory are the
+	following sub-directories:
+      </para>
+
+      <variablelist termlength="9">
+	<varlistentry>
+	  <term>
+	    <filename>config</filename>
+	  </term>
+	  <listitem>
+	    <para>
+	      An optional directory containing &expect; configuration files
+	      for each of the different types of target board that might be
+	      tested (see <xref linkend="sec_config"/>). The use of this
+	      directory depends on it being set up as part of the
+	      configuration.
+	    </para>
+
+	    <para>
+	      These have the general name
+	      <filename><replaceable>board</replaceable>.exp</filename>. For
+	      example <filename>unix.exp</filename> for the default Unix
+	      target.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <filename>lib</filename>
+	  </term>
+	  <listitem>
+	    <para>
+	      A directory containing &expect; configuration files for each of
+	      the tools being tested (see <xref linkend="sec_config"/>).
+	    </para>
+
+	    <para>
+	      These files are named
+	      <filename><replaceable>toolname</replaceable>.exp</filename>,
+	      where <replaceable>toolname</replaceable> is the tool being
+	      tested.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    Test directories
+	  </term>
+	  <listitem>
+	    <para>
+	      Directories named
+	      <filename><replaceable>toolname</replaceable>[<replaceable>type</replaceable>].tests</filename>
+	      contain &expect; tests for the tool
+	      <replaceable>toolname</replaceable>. The optional
+	      <replaceable>type</replaceable> field allows the tests to be
+	      split into several directories.
+	    </para>
+
+	    <para>
+	      For example a compiler tool named <literal>xcc</literal> might
+	      have tests both of the compiler (in one directory,
+	      <filename>xcc-compile.tests</filename>) and the resulting code
+	      (in a second directory, <filename>xcc-execute.tests</filename>).
+	    </para>
+
+	    <para>
+	      Strictly speaking the suffix <filename>.tests</filename> is not
+	      required, but it is a common convention.
+	    </para>
+
+	    <para>
+	      Within each test directory, the tests, written in &expect;, all
+	      have the file suffix <filename>.exp</filename>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect1>
+
+    <sect1 id="sec_config">
+      <title>
+	&dejagnu; configuration files
+      </title>
+
+      <para>
+	Configuration files are used to set global variables and to define
+	helper functions.
+      </para>
+
+      <para>
+	&dejagnu; has a number of global variables which are set to correspond
+	to &runtest; command line arguments. However they can alternatively be
+	set in the various configuration files (if both are used, the command
+	line takes precedence). The &dejagnu; guide <xref
+	linkend="ref_savoye_04"/> documents them in full, but some of the most
+	useful are shown in in <xref linkend="tab_dejagnu_global_vars"/>.
+      </para>
+
+      <table id="tab_dejagnu_global_vars" frame='all'>
+	<title>
+	  &runtest; options and corresponding &expect; variables.
+	</title>
+	<tgroup cols='3' align="left" colsep="1" rowsep="1">
+	  <colspec colwidth="4*" colname="runtest" />
+	  <colspec colwidth="4*" colname="expect" />
+	  <colspec colwidth="16*" colname="description" />
+
+	  <thead>
+	    <row>
+	      <entry>
+		&runtest;
+	      </entry>
+	      <entry>
+		&expect;
+	      </entry>
+	      <entry>
+		Description
+	      </entry>
+	    </row>
+	  </thead>
+
+	  <tbody>
+	    <row>
+	      <entry>
+		<literal>--all</literal>
+	      </entry>
+	      <entry>
+		<varname>all_flag</varname>
+	      </entry>
+	      <entry>
+		<para>
+		  Display all test results if set (default is only to display
+		  failures).
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		<literal>--srcdir</literal>
+	      </entry>
+	      <entry>
+		<varname>srcdir</varname>
+	      </entry>
+	      <entry>
+		<para>
+		  The directory containing test sub-directories and the tool
+		  specific configuration directory, <filename>lib</filename>.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		<literal>--tool</literal>
+	      </entry>
+	      <entry>
+		<varname>tool</varname>
+	      </entry>
+	      <entry>
+		<para>
+		  The name of the tool being tested.
+		</para>
+	      </entry>
+	    </row>
+
+	    <row>
+	      <entry>
+		<literal>--verbose</literal>
+	      </entry>
+	      <entry>
+		<varname>verbosity</varname>
+	      </entry>
+	      <entry>
+		<para>
+		  The degree of verbosity required. Default is 0. Value of the
+		  variable is incremented for each time it appears on the
+		  command line.
+		</para>
+	      </entry>
+	    </row>
+
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para>
+	&dejagnu; has a plethora of configuration files, each of which contain
+	&expect; script that is processed before each test. The historical
+	naming of some of these files can be confusing.
+      </para>
+
+      <para>
+	Although these configuration files are all optional, &runtest; may
+	complain if it can't find them. So it's worth setting them up, just to
+	stop the messages.
+      </para>
+
+      <para>
+	The configuration files are read in the following sequence.
+      </para>
+
+      <variablelist termlength="6">
+	<varlistentry>
+	  <term>Personal config file</term>
+	  <listitem>
+	    <para>
+	      This is in the user's home directory,
+	      <filename>~/.dejagnurc</filename>. In general it is only used to
+	      set variables that control personal taste in output.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>Local config file</term>
+	  <listitem>
+	    <para>
+	      This is always named <filename>site.exp</filename> and is looked
+	      for in the directory where the tests are being run. In general
+	      it is used to set variables specific to the tool or tools being
+	      tested.
+	    </para>
+
+	    <para>
+	      If &gnu; autotools (&autoconf;, &automake; and &libtool;) are
+	      being used to drive &dejagnu; this file will be created
+	      automatically whenever &make; is run. It will be placed in the
+	      main test suite directory, but within the build directory
+	      hierarchy, <emphasis>not</emphasis> the source directory
+	      hierarchy. It is this directory from which &runtest; will be
+	      executed.
+	    </para>
+
+	    <para>
+	      When &gnu; autotools generate <filename>site.exp</filename>, the
+	      file is created in two halves, separated by a comment line. Only
+	      the first part is regenerated every time &make; is run, so
+	      changes may safely be made in the second half.
+	    </para>
+
+	    <para>
+	      This is a convenient place for quickly testing changes. However
+	      the local config file in an autotools environment is inherently
+	      transient (it is in the build directory, not the source
+	      directory), so permanent changes should be placed in one of the
+	      other config files.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>Global config file</term>
+	  <listitem>
+	    <para>
+	      This is intended as a file to allow a group testing the same
+	      product to share common settings. It is identified by the
+	      <envar>DEJAGNU</envar> environment variable, which should always
+	      be set to avoid warnings.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>Board config file</term>
+	  <listitem>
+	    <para>
+	      This is used for settings specific to a particular target board,
+	      as specified by the <option>--target_board</option> option to
+	      &runtest; (see <xref linkend="sec_runtest"/>). If no target
+	      board is specified, then &dejagnu; running on a &posix; system
+	      will typically decide the target is &unix; and look for a file
+	      named <filename>unix.exp</filename>.
+	    </para>
+
+	    <para>
+	      The search path for board configuration files is in the global
+	      variable <varname>boards_dir</varname>, which by default
+	      includes <filename>/usr/share/dejagnu/baseboards</filename> and
+	      <filename>/usr/share/dejagnu/config</filename>.
+	    </para>
+
+	    <para>
+	      It is common to append additional directories to this search
+	      path in one of the earlier configuration directories (typically
+	      the global config file) to provide additional board specific
+	      information. This can be done by using the &tcl;
+	      <literal>lappend</literal> function. For example, to look in the
+	      <filename>config</filename> sub-directory of the main test
+	      directory for board specific settings, the following would be
+	      suitable in the global configuration file.
+	    </para>
+
+	    <informalfigure>
+	      <programlisting>
+lappend boards_dir "$srcdir/boards"
+	      </programlisting>
+	    </informalfigure>
+
+	    <note>
+	      <para>
+		If multiple board configuration files are found in the
+		different directories, they will all be used in the order they
+		are found.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>Tool config file</term>
+	  <listitem>
+	    <para>
+	      Finally &dejagnu; will load code from a tool specific
+	      configuration file. This will be found in the
+	      <filename>lib</filename> sub-directory of the main test
+	      directory. For a tool named <replaceable>toolname</replaceable>,
+	      the file will be
+	      <filename>lib/<replaceable>toolname</replaceable>.exp</filename>.
+	    </para>
+
+	    <para>
+	      This is the place to put helper functions for use by test code.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+      <note>
+	<para>
+	  When running &runtest;, multiple test programs may be found in the
+	  test directory or directories. These are effectively concatenated,
+	  so they are run one after the other after running all the
+	  configurations.
+	</para>
+
+	<para>
+	  The important thing to remember is that this means the configuration
+	  files are only read once, <emphasis>not</emphasis> once for each
+	  test.
+	</para>
+      </note>
+
+    </sect1>
+  </chapter>
+
+  <chapter id="chap_expect_tests">
+    <title>
+      Writing tests using &expect;
+    </title>
+
+    <para>
+      Each &dejagnu; test is a sequence of &expect; commands. These are
+      standard &tcl; commands with some additions, which make the language
+      particularly suitable for testing. <command>man&nbsp;expect</command>
+      documents all the commands specific to &expect;. The most useful of
+      these are:
+    </para>
+
+    <variablelist termlength="9">
+      <varlistentry>
+	<term>&expect_cmd;</term>
+	<listitem>
+	  <para>
+	    This is the most important of the commands. It takes a series of
+	    pairs of patterns and actions and waits until one of the patterns
+	    matches the output of a spawned process (see
+	    <literal>spawn</literal> below), or a specified time period has
+	    passed or an end of file has been seen. When a pattern matches,
+	    its corresponding body is executed.
+	  </para>
+	  
+	  <para>
+	    This command has a considerable number of options, and is
+	    described in detail in a separate section (see <xref
+	    linkend="sec_expect_cmd"/>).
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><literal>send</literal></term>
+	<listitem>
+	  <para>
+	    This command is used to send data to the standard input of a
+	    spawned process (see <literal>spawn</literal> below).
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><literal>send_error</literal></term>
+	<term><literal>send_log</literal></term>
+	<term><literal>send_user</literal></term>
+	<listitem>
+	  <para>
+	    These commands are used to send output to respectively the
+	    standard error of the user, the log file and the standard output
+	    of the user. In other words for data that is
+	    <emphasis>not</emphasis> to go to the spawned process.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><literal>spawn</literal></term>
+	<listitem>
+	  <informalfigure>
+	    <synopsis>
+spawn [<replaceable>opts</replaceable>] <replaceable>program</replaceable> <replaceable>args</replaceable>
+	    </synopsis>
+	  </informalfigure>
+
+	  <para>
+	    <literal>spawn</literal> starts a program and its arguments in
+	    a child process, connecting its stdin, stdout and stderr so they
+	    may be written and read by other &expect; commands, most notably
+	    the &expect_cmd; command.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+
+    <note>
+      <para>
+	There is the potential for confusion here, since &expect; is both the
+	name of the language and a command within that language.
+      </para>
+    </note>
+
+    <para>
+      &Expect; defines and uses a number of &tcl; global variables. The most
+      important are associated with the &expect_cmd; command and documented in
+      the section on that command (see <xref linkend="sec_expect_cmd"/>).
+    </para>
+
+    <para>
+      On top of this &dejagnu; defines a number of procedures which facilitate
+      testing. These are documented in the &dejagnu; manual's section on Unit
+      Testing <xref linkend="ref_savoye_04"/>. The most useful are: 
+    </para>
+
+    <variablelist termlength="9">
+      <varlistentry>
+	<term><function>fail</function></term>
+	<term><function>pass</function></term>
+	<term><function>xfail</function></term>
+	<term><function>xpass</function></term>
+	<term><function>untested</function></term>
+	<term><function>unresolved</function></term>
+	<term><function>unsupported</function></term>
+	<listitem>
+	  <para>
+	    These procedures all report the result of a test. They are
+	    described in more detail below (see <xref
+	    linkend="sec_test_results"/>.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><function>warning</function></term>
+	<listitem>
+	  <para>
+	    Writes a message to the log, prepended by the string
+	    <literal>WARNING</literal>. Once more than
+	    <varname>warning_threshold</varname> warnings have been given the
+	    test is assumed to be unresolved. The next call to one of the
+	    result procedures will behave as though
+	    <function>unresolved</function> had been called.
+	  </para>
+
+	  <para>
+	    The value of <varname>warning_threshold</varname> (default 3) may
+	    be read and written with
+	    <function>get_warning_threshold</function> and
+	    <function>set_warning_threshold</function>.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><function>perror</function></term>
+	<listitem>
+	  <para>
+	    Writes a message to the log, prepended by the string
+	    <literal>ERROR</literal>. The next call to one of the result
+	    procedures will behave as though <function>unresolved</function>
+	    had been called.
+	  </para>
+	</listitem>
+      </varlistentry>
+
+    </variablelist>
+
+    <sect1 id="sec_test_results">
+      <title>
+	Test results
+      </title>
+
+      <para>
+	The results from all the tests encountered by &runtest; are reported
+	in the log file and counted, for reporting on completion. The results
+	are triggered by calling the appropriate result procedure, which takes
+	a string to identify the test concerned. The possible results are as
+	follows:
+      </para>
+
+      <variablelist termlength="12">
+	<varlistentry>
+	  <term>FAIL</term>
+	  <listitem>
+	    <para>
+	      Indicates that a test has failed. Triggered by calling the
+	      <function>fail</function> procedure.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>PASS</term>
+	  <listitem>
+	    <para>
+	      Indicates that a test has passed. Triggered by calling the
+	      <function>pass</function> procedure.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>XFAIL</term>
+	  <listitem>
+	    <para>
+	      Indicates that a test has failed as expected. Triggered by
+	      calling the <function>xfail</function> procedure.
+	    </para>
+
+	    <note>
+	      <para>
+		POSIX 1003.3 does not recognize the concept of expected
+		failure (tests either fail or pass), so compliant tests should
+		not generate this result.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>XPASS</term>
+	  <listitem>
+	    <para>
+	      Indicates that a test which was expected to fail has
+	      passed. Triggered by calling the <function>xpass</function>
+	      procedure.
+	    </para>
+
+	    <note>
+	      <para>
+		POSIX 1003.3 does not recognize the concept of expected
+		failure (tests either fail or pass), so compliant tests should
+		not generate this result.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>UNTESTED</term>
+	  <listitem>
+	    <para>
+	      Indicates that a feature was not tested. Triggered by calling
+	      the <function>untested</function> procedure. This is a good way
+	      to mark tests that need to be completed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>UNRESOLVED</term>
+	  <listitem>
+	    <para>
+	      Indicates that the output from a test needs manual
+	      inspection. Triggered by calling the
+	      <function>unresolved</function> procedure. Commonly used when
+	      tests timeout.
+	    </para>
+
+	    <note>
+	      <para>
+		Any test which calls <function>perror</function> or calls
+		<function>warning</function> more than
+		<varname>warning_threshold</varname> times will cause the next
+		call to any result function in this list to behave as though
+		<function>unresolved</function> was called.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>UNSUPPORTED</term>
+	  <listitem>
+	    <para>
+	      Indicates that a test is not supported. Triggered by calling the
+	      <function>unsupported</function> procedure. Used for tests which
+	      depend on some conditionally available feature. For example for
+	      tests which cannot run on a particular target board.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+    </sect1>
+
+    <sect1 id="sec_expect_cmd">
+      <title>
+	The &expect_cmd; command
+      </title>
+
+      <para>
+	The general form of this command is
+      </para>
+
+      <informalfigure>
+	<synopsis>
+expect -<replaceable>flags</replaceable> <replaceable>pat<subscript>1</subscript></replaceable> <replaceable>body<subscript>1</subscript></replaceable> ... -<replaceable>flags</replaceable> <replaceable>pat<subscript>n</subscript></replaceable> <replaceable>body<subscript>n</subscript></replaceable>
+	</synopsis>
+      </informalfigure>
+
+      <para>
+        The command waits until one of the patterns matches the output of a
+        spawned process, a specified time period has passed, or an end-of-file
+        is seen. It then executes the corresponding body.
+      </para>
+
+      <para>
+	If (as is usual) the command takes more than one line, the arguments
+	must be surrounded by braces. However substitutions will
+	still occur within these braces, unlike standard &tcl;
+      </para>
+
+      <para>
+	A very simple example might be as follows.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+expect {
+    ERROR            {fail "Error encountered.\n"; }
+    "Test complete"  {pass "Test completed.\n";}
+    timeout          {unresolved "Timeout.\n";}
+}
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	The &expect_cmd; command returns a result, which is the
+	result of the body executed on a pattern match.
+      </para>
+
+      <para>
+	The &expect_cmd; command will be called each time there is new
+	input. It is important to understand two aspects of &expect_cmd;
+	command behavior.
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    The &expect_cmd; command will skip past any unmatched
+	    text. So the above example would pass if the spawned program
+	    generated the following output.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+Computing results
+Final result is 42
+Test complete
+	    </programlisting>
+	  </informalfigure>
+
+	  <para>
+	    The first two lines don't match, so are ignored.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    The &expect_cmd; command is <emphasis>not</emphasis>
+	    line oriented. Thus the following output from the spawned program
+	    would also pass.
+	  </para>
+
+	  <informalfigure>
+	    <programlisting>
+FooTest completeBar
+	    </programlisting>
+	  </informalfigure>
+	</listitem>
+      </orderedlist>
+
+      <sect2>
+	<title>
+	  Patterns for use with the &expect_cmd; command
+	</title>
+
+	<para>
+	  There are a wide range of possible patterns that &expect; can use.
+	</para>
+
+	<variablelist termlength="9">
+	  <varlistentry>
+	    <term>Plain strings</term>
+	    <listitem>
+	      <para>
+		Plain strings. In the previous example the strings
+		<literal>ERROR</literal> and <literal>"Test
+		complete"</literal> were used. Double quotation marks are
+		needed where the string contains a space.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><literal>eof</literal></term>
+	    <listitem>
+	      <para>
+		Matches if the stream from the spawned process reaches end of
+		file. Typically because the spawned process has completed
+		execution.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><literal>timeout</literal></term>
+	    <listitem>
+	      <para>
+		Matches if more than <varname>timeout</varname> seconds have
+		passed since the spawned process started execution. The
+		default timeout period is 10 seconds, but may be changed by
+		setting the <varname>timeout</varname> global variable.
+	      </para>
+
+	      <para>
+		The timeout value may be also set for the current &expect_cmd;
+		command by using the <literal>-timeout</literal> flag as a
+		pattern (see below).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><literal>default</literal></term>
+	    <listitem>
+	      <para>
+		Equivalent to matching either <literal>eof</literal> or
+		<literal>timeout</literal>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term></term>
+	  <listitem>
+	    <para>
+	      <literal>-timeout</literal> <replaceable>t</replaceable>. Use
+	      <replaceable>t</replaceable> seconds as the timeout for the
+	      current &expect_cmd; command.
+	    </para>
+	  </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><literal>full_buffer</literal></term>
+	    <listitem>
+	      <para>
+		By default, the &expect_cmd; command buffers up to 2000
+		bytes. If more than this is encountered while reading bytes,
+		earlier bytes will be forgotten. This keyword will match if
+		the buffer is full, allowing this circumstance to be trapped.
+	      </para>
+	    
+	      <note>
+		<para>
+		  The size of the buffer can be increased using the procedure
+		  <function>match_max</function>. However very large values
+		  down will slow down the pattern matcher.
+		</para>
+	      </note>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><literal>null</literal></term>
+	    <listitem>
+	      <para>
+		Matches a single &ascii; character 0.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>"Globbed" expressions</term>
+	    <listitem>
+	      <para>
+		These are patterns specified as for the &tcl; <function>string
+		match</function> command, which is similar to the syntax of
+		shell regular expressions (commonly known as "glob" patterns).
+	      </para>
+
+	      <para>
+		It is possible that patterns might match flags to the
+		&expect_cmd; command, in which case they can be protected by
+		using the <literal>-gl</literal> flag. So for example the
+		following would match the string <literal>"-gl"</literal>.
+	      </para>
+
+	      <informalfigure>
+		<programlisting>
+expect {
+    -gl -gl {puts "Matched -gl\n"}
+}
+		</programlisting>
+	      </informalfigure>
+
+	      <para>
+		In general any pattern starting with '-' should be protected
+		using <literal>-gl</literal> to future proof against new
+		flags.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>Regular expressions</term>
+	    <listitem>
+	      <para>
+		These patterns follow the syntax defined by the &tcl;
+		<function>regexp</function> command. They are introduced with
+		the flag <literal>-re</literal>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>Exact strings</term>
+	    <listitem>
+	      <para>
+		These are prefixed by the <literal>-ex</literal> flag. This is
+		needed for strings containing characters such as '*' that
+		would otherwise be interpreted as part of a globbed pattern.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>Case insensitive match</term>
+	    <listitem>
+	      <para>
+		Prefixing any pattern by the <literal>-nocase</literal> flag
+		will cause the input to be matched as though it were all lower
+		case. The pattern should thus be all in lower case.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	<para>
+	  When matching a pattern, any matching and previously unmatched
+	  output is saved in the variable
+	  <varname>expect_out(buffer)</varname>. The matched output may be
+	  found in <varname>expect_out(0,string)</varname>.
+	</para>
+
+	<para>
+	  If a regular expression with sub-expressions was used, then the
+	  matching sub-expressions (up to 9 in total) may be found in
+	  <varname>expect_out(1,string)</varname> through
+	  <varname>expect_out(1,string)</varname>.
+	</para>
+
+	<para>
+	  If the flag <literal>-indices</literal> was used before any match,
+	  the start and end indices of the matching string can be found in
+	  <varname>expect_out(0,start)</varname> and
+	  <varname>expect_out(0,end)</varname>. Where the pattern was a
+	  regular expression, start and end positions of up to 9 sub-strings
+	  may be found in <varname>expect_out(1,start)</varname> and
+	  <varname>expect_out(1,end)</varname> through
+	  <varname>expect_out(9,start)</varname> and
+	  <varname>expect_out(9,end)</varname>.
+	</para>
+
+	<para>
+	  These strings are useful when evaluating the body associated with
+	  the pattern matched.
+	</para>
+
+	<para>
+	  Once matching is complete, the matched output (and any preceding
+	  output) is discarded from the internal buffers. However it can be
+	  retained by preceding the match with the
+	  <literal>-notransfer</literal> flag. This has little value in
+	  finished scripts, but can help when developing and debugging tests.
+	</para>
+
+      </sect2>
+	  
+    </sect1>
+
+    <sect1 id="sec_example">
+      <title>
+	An example test
+      </title>
+
+      <para>
+	Writing a test is a matter of spawning the test program, then using
+	the &expect_cmd; to match the output and report failure as
+	appropriate.
+      </para>
+
+      <para>
+	A simple example is as follows.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+# Timeout reduced to 3 seconds
+set timeout 3
+
+# The name of this test and the command we will run
+set test_name "Simple test"
+set command_line "or32-elf-sim -f default.cfg test-prog.or32"
+
+# When verbose, tell the user what we are running
+if { $verbose > 1 } {
+    send_user "starting $command_line\n"
+}
+
+# Run the program.
+spawn $command_line
+
+expect {
+    # Check for any warning messages in the output first
+    Warning {
+        fail "$test_name: warning: $expect_out(buffer)"
+    }
+
+    # Check for any error messages
+    ERROR {
+        fail "$test_name: error: $expect_out(buffer)"
+    }
+
+    # The string indicating successful completion
+    "Test complete" {
+         pass "$test_name\n"
+    }
+
+    # EOF and timeout only come after everything else. EOF must be an error.
+    eof {
+        fail "$test_name: EOF\n"
+    }
+
+    # Timeout requires inspection to determine the cause of failure.
+    timeout {
+        unresolved "$test_name: timeout"
+    }
+}
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	This test will look first for the strings <literal>"Warning"</literal>
+	or <literal>"ERROR"</literal> in the output stream from the spawned
+	program. Then it will look for the string
+	<literal>Test&nbsp;complete</literal>. Finally it will check for
+	end-of-file or timeout.
+      </para>
+
+      <para>
+	The ordering matters. For a small program, the spawned output could
+	all fit in the buffer. By that time, the program might have completed
+	execution. So that buffer would match both
+	<literal>Test&nbsp;complete</literal> and end-of-file. So we must
+	check for successful completion first.
+      </para>
+
+      <para>
+	Similarly the program might generate warnings or errors, but still
+	print <literal>Test&nbsp;complete</literal>. So we should check for
+	warnings or errors <emphasis>before</emphasis> we test for successful
+	completion.
+      </para>
+
+      <sect2 id="sec_support_procs">
+	<title>
+	  Automating testing
+	</title>
+
+	<para>
+	  The example in <xref linkend="sec_example"/> is a fairly common
+	  framework, and it makes sense to automate it using &tcl;
+	  procedure. For example the test name and command line could be
+	  passed as arguments to the procedure as follows.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+proc runmytest { test_name command_line } {
+    global verbose
+
+    # When verbose, tell the user what we are running
+    if { $verbose > 1 } {
+        send_user "starting $command_line\n"
+    }
+    
+    # Run the program.
+    spawn $command_line
+    
+    expect {
+        # Check for any warning messages in the output first
+        Warning {
+        fail "$test_name: warning: $expect_out(buffer)"
+        }
+    
+        # Check for any error messages
+        ERROR {
+        fail "$test_name: error: $expect_out(buffer)"
+        }
+    
+        # The string indicating successful completion
+        "Test complete" {
+             pass "$test_name\n"
+        }
+    
+        # EOF and timeout only come after everything else. EOF must be an error.
+        eof {
+        fail "$test_name: EOF\n"
+        }
+    
+        # Timeout requires inspection to determine the cause of failure.
+        timeout {
+            unresolved "$test_name: timeout"
+        }
+    }
+}
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The code is identical, except we must note from within the procedure
+	  that <varname>verbose</varname> is a global variable.
+	</para>
+
+	<para>
+	  Our series of tests could then just be as follows
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+# Timeout reduced to 3 seconds
+set timeout 3
+
+runmytest "Simple test" "or32-elf-sim -f default.cfg test-prog.or32"
+runmytest "Harder test" "or32-elf-sim -f default.cfg test-prog2.or32"
+runmytest "Hardest test" "or32-elf-sim -f default.cfg test-prog3.or32"
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  The correct place for a procedure shared amongst a number of tests
+	  like this is the tool configuration file (see <xref
+	  linkend="sec_config"/>).
+	</para>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="chap_standalone_dejagnu">
+    <title>
+      Using &dejagnu; standalone
+    </title>
+
+    <para>
+      To run a &dejagnu; test framework standalone is straightforward.
+    </para>
+
+    <orderedlist>
+      <listitem>
+	<para>
+	  Create a directory structure for the test framework (see <xref
+	  linkend="sec_dir_structure"/>).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Write any test programs and compile them.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Write tests in &expect; and place them in the tool specific test
+	  directory (or directories) (see <xref linkend="chap_expect_tests"/>)
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Place any &tcl; support procedures for the tests in the tool
+	  specific configuration file (see <xref linkend="sec_config"/> and
+	  <xref linkend="sec_support_procs"/>).
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Run &runtest;, specifying the source directory and tool name.
+	</para>
+      </listitem>
+    </orderedlist>
+
+    <para>
+      This sequence of steps can easily be captured in either a script file,
+      or a hand-written &make; file.
+    </para>
+
+  </chapter>
+
+  <chapter id="chap_autotools_dejagnu">
+    <title>
+      Using &dejagnu; with &autoconf;, &automake; and &libtool;
+    </title>
+
+    <para>
+      Almost all use of &dejagnu; is in practice within the context of
+      projects using the &gnu; autotools (&autoconf;, &automake; and
+      &libtool;). These tools understand &dejagnu; and provide specific hooks.
+    </para>
+
+    <para>
+      The overall directory structure is as described earlier (see <xref
+      linkend="sec_dir_structure"/>). By convention the tests are all run from
+      a directory named <filename>testsuite</filename>, but this need not be
+      the case. That directory, as well as containing the tool specific test
+      directories, tool specific configuration directory
+      (<filename>lib</filename>) and possible a board specific configuration
+      directory should also contain the global configuration file and
+      directories for any test programs that must be compiled.
+    </para>
+
+    <para>
+      Autotools programs are usually configured and built in a separate
+      directory structure. &runtest; will be executed in the
+      <filename>testsuite</filename> directory, within the build directory
+      hierarchy, <emphasis>not</emphasis> the source hierarchy. It is within
+      this directory that the local configuration file,
+      <filename>site.exp</filename> will be generated when running &make;.
+    </para>
+
+    <para>
+      There are no explicit changes needed in the use of &libtool;. However
+      some changes are needed to <filename>configure.ac</filename> for
+      &autoconf; and <filename>Makefile.am</filename> for &automake;.
+    </para>
+
+    <sect1>
+      <title>
+	The <filename>configure.ac</filename> file
+      </title>
+
+      <para>
+	This is the file that is modified by &autoconf; and provides
+	ultimately the definitions that will feed into &automake;. It will
+	need some additional changes to tell it about &dejagnu;
+      </para>
+
+      <note>
+	<para>
+	  In some older systems, this file may be named
+	  <filename>configure.in</filename>.
+	</para>
+      </note>
+
+      <para>
+	Where there are multiple configuration files, it is usually the top
+	level one which is changed. The important thing is it should be the
+	configuration file which feeds into the transformation of the
+	<filename>Makefile.am</filename> file in the main test directory
+	(<filename>testsuite</filename>).
+      </para>
+
+      <para>
+	The file should be extended to set the <envar>DEJAGNU</envar>
+	environment variable to point to the global configuration file. There
+	are two approaches to this. The simplest is just to set the
+	value. However it is more flexible to only set a value if it is not
+	already set. This allows the user to try different global
+	configurations by manually setting <envar>DEJAGNU</envar> before
+	running tests.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+if test x"$DEJAGNU" = x
+then
+  DEJAGNU="\$(top_srcdir)/testsuite/global-conf.exp"
+fi
+
+AC_SUBST(DEJAGNU)
+	</programlisting>
+      </informalfigure>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	<filename>Makefile.am</filename> files
+      </title>
+
+      <para>
+	There should be a <filename>Makefile.am</filename> in the main test
+	directory (<filename>testsuite</filename>) and each of its
+	sub-directories.
+      </para>
+
+      <para>
+	If <literal>dejagnu</literal> appears in
+	<varname>AUTOMAKE_OPTIONS</varname>, then &automake; will assume a
+	&dejagnu; based test system. This will be run when the user uses
+	<command>make&nbsp;check</command>.
+      </para>
+
+      <para>
+	The tests must pick up the <envar>DEJAGNU</envar> environment
+	variable. So it should be exported from the
+	<filename>Makefile.am</filename> in the main test directory.
+      </para>
+      
+      <para>
+	The tool(s) must be named. This is done by setting the
+	<varname>DEJATOOL</varname> variable. If there are multiple tools to
+	be tested, specify them all with <varname>DEJATOOL</varname>
+      </para>
+
+      <para>
+	The following shows part of a <filename>Makefile.am</filename> for a
+	typical test main directory.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+SUBDIRS = config         \
+          lib            \
+          libsim.tests   \
+          or1ksim.tests  \
+          test-code      \
+          test-code-or1k
+
+EXTRA_DIST = global-conf.exp
+
+# Setup for DejaGNU
+AUTOMAKE_OPTIONS    = dejagnu
+
+export DEJAGNU
+
+DEJATOOL            = libsim  \
+                      or1ksim
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Note the use of <varname>EXTRA_DIST</varname> to specify that the
+	global configuration file must be added to the distribution. In this
+	example there is a board specific configuration directory
+	(<filename>config</filename>), an &expect; test directory for each of
+	two tools (<filename>libsim.tests</filename> and
+	<filename>or1ksim.tests</filename>) and two directories of test
+	program code (<filename>test-code</filename> and
+	<filename>test-code-or1k</filename>).
+      </para>
+
+      <para>
+	<filename>Makefile.am</filename> files are needed in the various
+	config and &expect; test directories, but only to ensure their code is
+	added to the distribution. There is nothing that needs compiling. For
+	example, the <filename>Makefile.am</filename> in the tool specific
+	configuration directory (<filename>lib</filename>) is as follows.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+# Just distribute this stuff
+EXTRA_DIST = libsim.exp  \
+             or1ksim.exp
+	</programlisting>
+      </informalfigure>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Fine tuning &autoconf; and &automake; with &dejagnu;
+      </title>
+
+      <para>
+	The flags passed to &runtest; by default are held in the variable
+	<varname>RUNTESTDEFAULTFLAGS</varname>. Its default value is
+	<literal>--tool&nbsp;$$tool&nbsp;--srcdir&nbsp;$$srcdir</literal>.
+	<literal>$$tool</literal> will expand to each tool specified in
+	<varname>DEJATOOL</varname> and <varname>$$srcdir</varname> to the
+	full name of the source directory.
+      </para>
+
+      <para>
+	This variable can be overridden in the configuration file.
+      </para>
+
+      <para>
+	It is also sometimes useful to override &runtest; options just within
+	the <filename>Makefile.am</filename>. This can be done by setting the
+	variable <varname>AM_RUNTESTFLAGS</varname> within the
+	<filename>Makefile.am</filename>.
+      </para>
+
+      <sect2>
+	<title>
+	  Example: Short test names.
+	</title>
+
+	<para>
+	  &dejagnu; will log the name of each file of &expect; code found in
+	  the test directory. However by default it will use the full
+	  file name, which can make for hard to read listings.
+	</para>
+
+	<para>
+	  This can be adjusted by redefining
+	  <varname>RUNTESTDEFAULTFLAGS</varname> in
+	  <filename>configure.ac</filename>.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+# The following line will ensure that short names are used for test names.
+RUNTESTDEFAULTFLAGS="--tool \$\$tool"
+AC_SUBST(RUNTESTDEFAULTFLAGS)
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  By not defining <option>--srcdir</option> on the command line,
+	  &runtest; will look instead in the local configuration file,
+	  automatically generated by &automake; and &autoconf;, which includes a
+	  definition of the global variable <varname>srcdir</varname>.
+	</para>
+
+	<para>
+	  This is useful, because in the local configuration file, the <literal>srcdir</literal>
+	  is specified with its relative name (for example
+	  <filename>../../testsuite</filename>). This is shorter than the value
+	  of <varname>$srcdir</varname> that would be used as the command line
+	  value. The result is that the name of the tests run will be shorter,
+	  making for clearer output. Instead of:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+                === or1ksim tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+Using ../../testsuite/config/unix.exp as board description file for target.
+Running /home/jeremy/svntrunk/Projects/or1ksim/testsuite/or1ksim.tests/basic
+.exp ...
+Running /home/jeremy/svntrunk/Projects/or1ksim/testsuite/or1ksim.tests/cache
+.exp ...
+
+...
+
+Running /home/jeremy/svntrunk/Projects/or1ksim/testsuite/or1ksim.tests/mycom
+press.exp ...
+Running /home/jeremy/svntrunk/Projects/or1ksim/testsuite/or1ksim.tests/tick.
+exp ...
+
+                === or1ksim Summary ===
+
+# of expected passes            21
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  We get the more concise:
+	</para>
+      
+	<informalfigure>
+	  <programlisting>
+                === or1ksim tests ===
+
+Schedule of variations:
+    unix
+
+Running target unix
+Using ../../testsuite/config/unix.exp as board description file for target.
+Running ../../testsuite/or1ksim.tests/basic.exp ...
+Running ../../testsuite/or1ksim.tests/cache.exp ...
+
+...
+
+Running ../../testsuite/or1ksim.tests/mycompress.exp ...
+Running ../../testsuite/or1ksim.tests/tick.exp ...
+
+                === or1ksim Summary ===
+
+# of expected passes            21
+	  </programlisting>
+	</informalfigure>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+  <glossary>
+    <title>
+      Glossary
+    </title>
+
+    <glossentry>
+      <glossterm>Expect</glossterm>
+      <glossdef>
+	<para>
+	  &Expect; is a program that "talks" to other interactive
+	  programs. Colloquially it is used to refer to the language used by
+	  that program, which is an extension of &tcl;.
+	</para>
+
+	<glossseealso>Tool Command Language</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>runtest</glossterm>
+      <glossdef>
+	<para>
+	  &runtest; is the main command of the &dejagnu; testing framework. It
+	  runs a series of tests written in &expect; and reports the results
+	  of those tests.
+	</para>
+
+	<glossseealso>Expect</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Tool Command Language</glossterm>
+      <acronym>TCL</acronym>
+      <glossdef>
+	<para>
+	  TCL is an open source dynamic scripting language, widely used for
+	  rapid prototyping and system admin tasks. It is designed to be
+	  highly extensible.
+	</para>
+      </glossdef>
+    </glossentry>
+
+  </glossary>      
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_flynt">
+      <title>
+	Tcl Tutorial
+      </title>
+      <author>
+	<firstname>Clif </firstname>
+	<surname>Flynt.</surname>
+      </author>
+      <bibliomisc>
+	Version for TCL 8.5 available at <ulink
+	url="http://www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html">www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_libes_95">
+      <title>
+	Exploring Expect: A Tcl-Based Toolkit for Automating Interactive
+	Programs
+      </title>
+      <author>
+	<firstname>Don </firstname>
+	<surname>Libes.</surname>
+      </author>
+      <publisher>
+	<publishername>
+	  O'Reilly and Associates
+	</publishername>
+      </publisher>
+      <pubdate>
+	  1995,
+      </pubdate>
+      <isbn>1-56592-090-2.</isbn>
+    </bibliomixed>
+
+    <bibliomixed id="ref_savoye_04">
+      <title>
+	DejaGnu: The GNU Testing Framework
+      </title>
+      <author>
+	<firstname>Rob </firstname>
+	<surname>Savoye.</surname>
+      </author>
+      <publisher>
+	<publishername>
+	  Free Software Foundation
+	</publishername>
+      </publisher>
+      <pubdate>
+	  2004.
+      </pubdate>
+      <bibliomisc>
+	Available at <ulink
+	url="http://www.gnu.org/software/dejagnu/manual/">www.gnu.org/software/dejagnu/manual</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+  </bibliography>
+</book>
+ 
