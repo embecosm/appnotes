@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="900"
+   height="732"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="comb-loop.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/jeremy/svntrunk/Documentation/appnotes/ean6-or1k-verilator-tutorial/images/comb-loop.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path3494"
+         d="M 5.77,0 L -2.88,5 L -2.88,-5 L 5.77,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="scale(0.8,0.8)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path3354"
+         d="M 0,0 L 5,-5 L -12.5,0 L 5,5 L 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.2733333"
+     inkscape:cx="450"
+     inkscape:cy="375"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:showpageshadow="false"
+     inkscape:snap-guide="true"
+     inkscape:snap-bbox="false"
+     inkscape:object-paths="false"
+     inkscape:window-width="1600"
+     inkscape:window-height="1151"
+     inkscape:window-x="0"
+     inkscape:window-y="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2383"
+       dotted="true"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Combinatorial Loop Example from ORPSoC</dc:title>
+        <dc:date>17 February 2009</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Embecosm Limited</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Embecosm Limited</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:source>www.embecosm.com</dc:source>
+        <dc:language>en-GB</dc:language>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>combinatorial loop</rdf:li>
+            <rdf:li>ORPSoC</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>Example of a combinatorial loop in the OpenRISC Reference Platform System-on-Chip</dc:description>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Jeremy Bennett</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <cc:license
+           rdf:resource="" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="283.57959"
+       y="16.325932"
+       id="text3155"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3157"
+         x="283.57959"
+         y="16.325932"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold">rx_kbd_data_ready</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="283.87158"
+       y="146.43823"
+       id="text3159"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3181"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+         x="283.87158"
+         y="146.43823">rx_translated_data_read_o</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="283.87158"
+       y="376.43823"
+       id="text3163"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3189"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+         x="283.87158"
+         y="376.43823">rx_kbd_read_o</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="283.8772"
+       y="476.43823"
+       id="text3167"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3191"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+         x="283.8772"
+         y="476.43823">rx_kbd_read_wb</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="283.57959"
+       y="246.32593"
+       id="text3171"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3185"
+         x="283.57959"
+         y="246.32593"><tspan
+           style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+           id="tspan3187">rx_translated_data_ready</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="284.23657"
+       y="636.43823"
+       id="text3175"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3193"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+         x="284.23657"
+         y="636.43823">rx_read</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="484.4668"
+       y="69.571152"
+       id="text3210"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3218"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="484.4668"
+         y="69.571152">via input <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3224">rx_data_ready_i</tspan></tspan><tspan
+         sodipodi:role="line"
+         id="tspan3220"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="484.4668"
+         y="96.438232">of <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3226">ps2_translation_table</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="484.4668"
+       y="299.57114"
+       id="text3228"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3230"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="484.4668"
+         y="299.57114">via input <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3232">rx_kbd_data_ready_i</tspan></tspan><tspan
+         sodipodi:role="line"
+         id="tspan3234"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="484.4668"
+         y="326.43823">of <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3236">ps2_wb_if</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="483.5459"
+       y="196.03395"
+       id="text3238"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3244"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="483.5459"
+         y="196.03395">output of <tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3251">ps2_translation_table</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="483.5459"
+       y="426.03394"
+       id="text3253"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3255"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="483.5459"
+         y="426.03394">output of <tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3257">ps2_wb_if</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="483.72559"
+       y="532.29974"
+       id="text3259"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3261"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="483.72559"
+         y="532.29974">through <tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3283">rx_read_i</tspan> and <tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3287">rx_read_o</tspan></tspan><tspan
+         sodipodi:role="line"
+         id="tspan3265"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="483.72559"
+         y="559.16681">of <tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3279">ps2_translation_table</tspan> via</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="483.72559"
+         y="586.03394"
+         id="tspan3293">input <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3263">rx_read </tspan>of <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3267">ps2_keyboard</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+       x="484.4668"
+       y="689.45886"
+       id="text3336"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3338"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="484.4668"
+         y="689.45886">via output <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3340">rx_data_ready</tspan></tspan><tspan
+         sodipodi:role="line"
+         id="tspan3342"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Bookman Old Style;-inkscape-font-specification:Bookman Old Style Light"
+         x="484.4668"
+         y="716.32593">of <tspan
+   style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+   id="tspan3344">ps2_keyboard</tspan></tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1"
+       d="M 284.4668,31.042721 L 284.4668,121.04272"
+       id="path3346" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1"
+       d="M 284.4668,161.04272 L 284.4668,221.04272"
+       id="path4649" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1"
+       d="M 284.4668,261.04272 L 284.4668,351.04272"
+       id="path4651" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1"
+       d="M 284.4668,391.04272 L 284.4668,451.04272"
+       id="path4653" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1"
+       d="M 284.4668,491.04272 L 284.4668,611.04272"
+       id="path4657" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutL);stroke-opacity:1"
+       d="M 284.4668,651.04272 L 284.4668,731.04272 L 34.466797,731.04272 L 34.466797,11.042721 L 164.4668,11.042721"
+       id="path4659"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+</svg>
