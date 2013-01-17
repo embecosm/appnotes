@@ -1,0 +1,2289 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- acronyms and abbreviations -->
+
+<!ENTITY enum   "<acronym>enum</acronym>" >
+<!ENTITY MC   "<acronym title='Machine Code'>MC</acronym>" >
+<!ENTITY mc   "<acronym title='Machine Code'>MC</acronym>" >
+<!ENTITY nop   "<function>NOP</function>" >
+<!ENTITY union   "<acronym>union</acronym>" >
+
+<!-- software applications -->
+<!ENTITY clang "<application class='software'>clang</application>">
+<!ENTITY linux "<application class='software'>Linux</application>">
+<!ENTITY llvm "<application class='software'>LLVM</application>">
+<!ENTITY LLVM "<application class='software'>LLVM</application>">
+
+<!-- hardware applications -->
+<!ENTITY openrisc "<application class='hardware'>OpenRISC</application>">
+<!ENTITY or1k "<application class='hardware'>OpenRISC&nbsp;1000</application>&nbsp;">
+
+<!-- commands -->
+<!ENTITY bash "<command>bash</command>">
+<!ENTITY make "<command>make</command>">
+<!ENTITY cmake "<command>cmake</command>">
+<!ENTITY llvm-mc "<command>llvm-mc</command>">
+
+<!-- organizations -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY opencores "OpenCores">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+<!ENTITY opencores_www "OpenCores (<ulink
+  url='http://www.opencores.org'>www.opencores.org</ulink>)">
+
+]>
+
+<book lang="en_US">
+  <title>Howto: Implementing &LLVM; Integrated Assembler</title>
+  <subtitle>A Simple Guide</subtitle>
+
+  <bookinfo>
+    <author>
+      <firstname>Simon</firstname>
+      <surname>Cook</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>October 2012</pubdate>
+    <releaseinfo>Application Note 10. Issue 1</releaseinfo>
+
+    <copyright>
+      <year>2012</year>
+      <holder>&embecosm; Limited</holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>Legal Notice</title>
+      <para>
+        This work is licensed under the Creative Commons Attribution 2.0 UK:
+        England &amp; Wales License. To view a copy of this license, visit
+        <ulink url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+        or send a letter to Creative Commons, 171 Second Street, Suite 300,
+        San Francisco, California, 94105, USA.
+      </para>
+  
+      <para>
+        This license means you are free:
+        <itemizedlist>
+          <listitem>
+            <para>to copy, distribute, display, and perform the work</para>
+          </listitem>
+          <listitem>
+            <para>to make derivative works</para>
+          </listitem>
+        </itemizedlist>
+        under the following conditions:
+        <itemizedlist>
+          <listitem>
+            <para>
+              <emphasis>Attribution.</emphasis> You must give the original
+              author, &embecosm_www;, credit;
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              For any reuse or distribution, you must make clear to others the
+              license terms of this work;
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Any of these conditions can be waived if you get permission from
+              the copyright holder, &embecosm;; and
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Nothing in this license impairs or restricts the author's moral
+              rights.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+
+      <para>
+        &embecosm; is the business name of &embecosm; Limited, a private
+        limited company registered in England and Wales. Registration number
+        6577021.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>Introduction</title>
+    <para>
+      The &llvm; machine code project is part of the &llvm; compiler suite and
+      designed for aiding in the assembly and disassembly of native instructions
+      as well as the handling of object files.
+    </para>
+
+    <sect1>
+      <title>Target Audience</title>
+      <para>
+        This guide is for developers who are already comfortable with the
+        LLVM build system and the TableGen language/tool for the creation and
+        manipulation of target-specific parameters.
+      </para>
+      <para>
+        This guide assumes that the basic LLVM toolchain has already been
+        implemented and is functioning for the target architecture using a MC (
+        &LLVM; Machine Code) based instruction printer. (i.e. LLVM is already
+        capable of producing assembly files for the target architecture via
+        <command>llc</command>.)
+      </para>
+      <para>
+        The detail of steps here have been tested using the (at time of
+        writing) latest development version of LLVM for the OpenRISC 1000, the
+        source of which can be found on GitHub
+        at <ulink url='https://www.github.com/openrisc/llvm-or1k'>
+        www.github.com/openrisc/llvm-or1k</ulink>.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Examples</title>
+      <para>
+        This application note includes examples from the LLVM backend for
+        &or1k;, originally written by Stefan Kristiansson and
+        extended by Simon Cook of Embecosm for the implementation of the
+        integrated assembler.
+      </para>
+      <para>
+        Examples used are definitions of instructions, methods for their
+        encoding and decoding, written by the same authors.
+      </para>
+      <para>
+        At the time of writing the OpenRISC 1000 implementation is not part of
+        the main LLVM distribution, but the source can be downloaded and
+        compiled from <ulink url='https://www.github.com/openrisc/llvm-or1k'>
+        www.github.com/openrisc/llvm-or1k</ulink>.
+      </para>
+      <para>
+        Instructions for building and testing can be found in the file
+        <filename>README.or1k</filename>.
+      </para>
+      <para>
+        General examples of source code, file names, etc. will use the term
+        <function><replaceable>arch</replaceable></function> in italics. An
+        implementation of the LLVM assembler would replace this with the name
+        of the target directory. For example, with the case of &or1k;,
+        <function><replaceable>arch</replaceable></function> would be replaced
+        with <function>OR1K</function>.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Further Information</title>
+      <para>
+        The main source of information regarding LLVM is the LLVM website
+        (<ulink url='http://www.llvm.org'>www.llvm.org</ulink>). This
+        website hosts the main documentation (<ulink 
+        url='http://www.llvm.org/docs'>www.llvm.org/docs</ulink>),
+        including instructions on how to implement various parts of a LLVM
+        backend. 
+      </para>
+      <para>
+        In addition, the LLVM API documentation at <ulink 
+        url='http://www.llvm.org/doxygen'>www.llvm.org/doxygen</ulink>
+        contains useful information about available APIs and in many cases
+        is the best source for information. 
+      </para>
+      <para>
+        There is also a mailing list <ulink url='mailto:llvmdev@cs.uicu.edu'>
+        llvmdev@cs.uicu.edu</ulink> and IRC channel #llvm on irc.oftc.net where
+        questions about LLVM development can be asked.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>About &embecosm; Application Notes</title>
+      <para>
+        Embecosm publishes a series of free and open source application notes,
+        designed to help working engineers with practical problems. 
+      </para>
+      <para>
+        Feedback is always welcome, which should be sent to
+        <email>info@embecosm.com</email>.
+      </para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Integrated Assembler within LLVM</title>
+    <para>
+      The integrated assembler when used with the rest of the LLVM system allows
+      source to be compiled directly to a native object file without the need of
+      outputting assembly instructions to a file and then parsing them back in
+      order to encode them.
+    </para>
+    <para>
+      This provides the benefit of faster compiling, and when combined with the
+      C language compiler &clang;, allows C/C++ to native object file 
+      compilation in one step ready for linking.
+    </para>
+    <para>
+      This application note focuses on the LLVM assembler in the case where its
+      intended use is as part of the &clang; C compiler. As such, assembly
+      parsing, encoding and decoding is restricted to the case where purely
+      instructions are given to the &llvm-mc; tool described below. It is
+      however possible to extend the assembler to accept and reconstruct
+      assembly directives, allowing &llvm-mc; to behave more like a standalone
+      compiler. 
+    </para>
+    <para>
+      No special steps/changes are required to allow &clang; to use the
+      integrated assembler, once it is set up and functioning, it can be
+      invoked by using the <function>-integrated-as</function> as one of the
+      arguments, alongside with the target architecture, as demonstrated below.
+    </para>
+    <informalfigure>
+      <programlisting>
+clang -target or1k -O3 -integrated-as helloworld.c
+      </programlisting>
+    </informalfigure>
+
+    <sect1>
+      <title>&llvm-mc;</title>
+      <para>
+        The &llvm-mc; tool, described as the "&llvm; machine code playground",
+        is used for testing components of a target's &MC; implementation. The
+        main task this tool fulfills is to assemble a .s file (via the
+        <function>-assemble</function> command), disassemble strings of bytes
+        (<function>-disassemble</function>), as well as show the encoding of 
+        instructions and their internal representations
+        (<function>-show-encoding</function> and <function>-show-inst</function>
+         respectively).
+      </para>
+      <para>
+        In order to determine the architecture, the parameter 
+        <function>-arch=<replaceable>arch</replaceable></function> is used and
+        <function>-mattr=<replaceable>a1,+a2,-a3</replaceable></function>
+        is used to enable and disable features of the processor required for
+        instructions to be valid.
+      </para>
+      <para>
+        An example of the above for the &or1k; architecture is the optional
+        support for multiplication and division instructions. To enable these,
+        a command like the following would be used.
+      </para>
+      <informalfigure>
+        <programlisting>
+llvm-mc -assemble -show-encoding -arch=or1k -mattr=+mul,+div input.s
+        </programlisting>
+      </informalfigure>
+    </sect1>
+  </chapter>
+    
+  <chapter>
+    <title>Implementing Assembly Parser Support</title>
+    <para>
+      The first component which needs to be implemented is support for parsing
+      assembly files. This allows &llvm-mc; to correctly read in assembly
+      instructions and provide an internal representation of these for
+      encoding.
+    </para>
+    <para>
+      The assembly parser is configured as a separate library which has the
+      initial target implementation library as its parent. This library is 
+      placed in the 
+      <filename>lib/Target/<replaceable>arch</replaceable>/AsmParser
+      </filename> directory.
+    </para>
+
+    <sect1>
+      <title>LLVM Build System</title>
+      <para>
+        As with all libraries, the assembly parser library needs declaring
+        within the build system so that when compiled, the functionality
+        this library provides is added.
+      </para>
+      <para>
+        This consists of a <filename>Makefile</filename> for when &make; is used
+        for the build, a <filename>CMakeLists.txt</filename> file for when
+        &cmake; is used instead and a <filename>LLVMBuild.txt</filename> file
+        for the rest of build system.
+      </para>
+      <para>
+        These files declare which libraries are required and need to be
+        compiled first. In this case the TableGen output for the architecture
+        needs to be generated first so that function generated can be used
+        within the library.
+      </para>
+      <para>
+        For example, the build files for the &or1k; implementation are as
+        follows.
+      </para>
+      <figure>
+        <title><filename>LLVMBuild.txt</filename></title>
+        <programlisting>
+;===- ./lib/Target/OR1K/AsmParser/LLVMBuild.txt ----------------*- Conf -*--===;
+;
+;                     The LLVM Compiler Infrastructure
+;
+; This file is distributed under the University of Illinois Open Source
+; License. See LICENSE.TXT for details.
+;
+;===------------------------------------------------------------------------===;
+;
+; This is an LLVMBuild description file for the components in this subdirectory.
+;
+; For more information on the LLVMBuild system, please see:
+;
+;   http://llvm.org/docs/LLVMBuild.html
+;
+;===------------------------------------------------------------------------===;
+
+[component_0]
+type = Library
+name = OR1KAsmParser
+parent = OR1K
+required_libraries = MC MCParser Support OR1KDesc OR1KInfo
+add_to_library_groups = OR1K
+        </programlisting>
+      </figure>
+      <figure>
+        <title><filename>CMakeLists.txt</filename></title>
+        <programlisting>
+add_llvm_library(LLVMOR1KASMParser
+  OR1KAsmParser.cpp
+  )
+
+add_dependencies(LLVMOR1KAsmParser OR1KCommonTableGen)
+        </programlisting>
+      </figure>
+      <figure>
+        <title><filename>Makefile</filename></title>
+        <programlisting>
+##===- lib/Target/OR1K/AsmParser/Makefile ------------------*- Makefile -*-===##
+#
+#                     The LLVM Compiler Infrastructure
+#
+# This file is distributed under the University of Illinois Open Source
+# License. See LICENSE.TXT for details.
+#
+##===----------------------------------------------------------------------===##
+LEVEL = ../../../..
+LIBRARYNAME = LLVMOR1KAsmParser
+
+# Hack: we need to include 'main' or1k target directory to grab private headers
+CPP.Flags += -I$(PROJ_OBJ_DIR)/.. -I$(PROJ_SRC_DIR)/..
+
+include $(LEVEL)/Makefile.common
+        </programlisting>
+      </figure>
+      <para>
+        The final parts of the build system that need modifying is adding the
+        new library to its parent.
+      </para>
+      <para>
+        In the <filename>CMakeLists.txt</filename> file for the target, the
+        TableGen assembly matcher needs to be generated and the AsmParser
+        directory added. The equivalent variables also need changing in the
+        <filename>Makefile</filename>. For &or1k; this would be as follows.
+      </para>
+      <figure>
+        <title><filename>CMakeLists.txt</filename></title>
+        <programlisting>
+tablegen(LLVM OR1KGenAsmMatcher.inc -gen-asm-matcher)
+add_subdirectory(AsmParser)
+        </programlisting>
+      </figure>
+      <figure>
+        <title><filename>Makefile</filename></title>
+        <programlisting>
+ # Make sure that tblgen is run, first thing.
+ BUILT_SOURCES = OR1KGenRegisterInfo.inc OR1KGenInstrInfo.inc \
+-               OR1KGenAsmWriter.inc OR1KGenDAGISel.inc \
++               OR1KGenAsmWriter.inc OR1KGenAsmMatcher.inc OR1KGenDAGISel.inc \
+                OR1KGenSubtargetInfo.inc OR1KGenCallingConv.inc
+ 
+-DIRS = InstPrinter TargetInfo MCTargetDesc
++DIRS = AsmParser InstPrinter TargetInfo MCTargetDesc
+        </programlisting>
+      </figure>
+      <para>
+        Finally, in the <filename>LLVMBuild.txt</filename> file for the target
+        library, the parameter <function>has_parser</function> is defined
+        as 1.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+        <function><replaceable>arch</replaceable>ASMParser</function> Class
+      </title>
+      <para>
+        The assembly parser consists of one source file, 
+        <filename><replaceable>arch</replaceable>ASMParser.cpp</filename>
+        which contains the <function><replaceable>arch</replaceable>ASMParser
+        </function> class, inheriting from <function>MCTargetAsmParser
+        </function> in addition to a second class for holding target-specific
+        operand information.
+      </para>
+      <note>
+        <para>
+          Information about this class can be found in &llvm;'s documentation
+          at
+          <ulink url='http://llvm.org/docs/doxygen/html/classllvm_1_1MCTargetAsmParser.html'>
+          llvm.org/docs/doxygen/html/classllvm_1_1MCTargetAsmParser.html</ulink>
+        </para>
+      </note>
+      <para>
+        The primary class consists of the <function>MatchAndEmitInstruction
+        </function> function which is called for each instruction to be
+        parsed, emitting out an internal representation of each instruction as
+        well as supporting functions which help it parse instruction operands.
+      </para>
+      <para>
+        It should be noted that the following two lines appear in the class
+        declaration to import functions generated by TableGen which will do
+        most of the heavy lifting in the system.
+      </para>
+      <informalfigure>
+        <programlisting>
+#define GET_ASSEMBLER_HEADER
+#include "<replaceable>arch</replaceable>GenAsmMatcher.inc"
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+       <title>
+        <function><replaceable>arch</replaceable>Operand</function> Structure
+      </title>
+      <para>
+        Before the instruction matcher can be created the
+        <replaceable>arch</replaceable>Operand structure must be defined. This
+        represents a parsed machine instruction, storing information about
+        the types and contents of its operands.
+      </para>
+      <note>
+        <para>
+          This class inherits from <function>MCParsedAsmOperand</function>,
+          whose API can be found at
+          <ulink url='http://llvm.org/docs/doxygen/html/classllvm_1_1MCParsedAsmOperand.html'>
+          llvm.org/docs/doxygen/html/classllvm_1_1MCParsedAsmOperand.html</ulink>.
+        </para>
+      </note>
+      <para>
+        Within this structure is an &enum; and &union; which store the operand
+        along with its type.
+      </para>
+      <para>
+        In the case for &or1k;, these operand types are tokens, registers and
+        immediate. Similarly, <function>SMLoc</function>s (source code
+        locations) are stored for the start and stop locations of the operand.
+      </para>
+      <informalfigure>
+        <programlisting>
+  enum KindTy {
+    Token,
+    Register,
+    Immediate
+  } Kind;
+
+  SMLoc StartLoc, EndLoc;
+
+  union {
+    struct {
+      const char *Data;
+      unsigned Length;
+    } Tok;
+    struct {
+      unsigned RegNum;
+    } Reg;
+    struct {
+      const MCExpr *Val;
+    } Imm;
+  };
+        </programlisting>
+      </informalfigure>
+      <para>
+        The majority of functions within this struct are simply getters and
+        setters for the different operands stored in the object. For the
+        getters, asserts are added to check that the operand is of the correct
+        type before returning its value. An example is shown below.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+  StringRef getToken() const {
+    assert (Kind == Token && "Invalid type access!");
+    return StringRef(Tok.Data, Tok.Length);
+  }]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Generator functions called <function>CreateToken</function>,
+        <function>CreateReg</function> etc. are defined which take the data
+        type for the operand as well as the start and end locations of the
+        operand (with the exception of tokens which only take a start
+        location). These functions then create a new object for the provided
+        operand details, set its contents and then returns it.
+      </para>
+      <para>
+        The final functions in this structure add operands to a particular
+        instruction. These use the <function>addOperand</function> function
+        of a <function>MCInst</function> to add the relevant operand. For
+        registers, the <function>getReg()</function> is simply used.
+        Immediates however use a more complex method where if it is possible
+        to add the instruction as an immediate it is done so, otherwise it
+        is added as an expression, as demonstrated below.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+  void addExpr(MCInst &Inst, const MCExpr *Expr) const {
+    // Add as immediates where possible. Null MCExpr = 0
+    if (Expr == 0)
+      Inst.addOperand(MCOperand::CreateImm(0));
+    else if (const MCConstantExpr *CE = dyn_cast<MCConstantExpr>(Expr))
+      Inst.addOperand(MCOperand::CreateImm(CE->getValue()));
+    else
+      Inst.addOperand(MCOperand::CreateExpr(Expr));
+  }]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Matching and Emitting Instructions</title>
+      <para>
+        With the OR1KOperand structure defined, the main <function>
+        MatchAndEmitInstruction</function> can be implemented, calling on the
+        <function>MatchInstructionImpl</function> generated by TableGen to do
+        the hard work.
+      </para>
+      <para>
+        When called, <function>MatchInstructionImpl</function> will use a
+        given <function>MCInst</function> to store details on the instruction
+        if possible, returning an error value. If the instruction was
+        successfully parsed, the value <function>Match_Success</function> is
+        returned and the instruction can be simply emitted via the provided 
+        <function>MCStreamer</function>.
+      </para>
+      <para>
+        If however there is a problem parsing the instruction, the return code
+        will be different and set depending on where the problem occurred.
+        For example <function>Match_MissingFeature</function> is returned if
+        a required target feature is not enabled and 
+        <function>Match_MnemonicFail</function> is returned if the instruction 
+        mnemonic is not recognized.
+      </para>
+      <para>
+        These return codes can be used to generate a useful error message,
+        though the simplest case would be just to state than an error occurred
+        and then return. This case is demonstrated below.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+bool OR1KAsmParser::
+MatchAndEmitInstruction(SMLoc IDLoc,
+                        SmallVectorImpl<MCParsedAsmOperand*> &Operands,
+                        MCStreamer &Out) {
+  MCInst Inst;
+  SMLoc ErrorLoc;
+  unsigned ErrorInfo;
+
+  if (MatchInstructionImpl(Operands, Inst, ErrorInfo)) {
+    Out.EmitInstruction(Inst);
+    return false;
+  }
+  else
+    return Error(IDLoc, "Error parsing instruction");
+}]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+     <sect1>
+       <title>Parsing Registers and Immediates</title>
+       <para>
+         The rest of the functions within 
+         <function><replaceable>arch</replaceable>ASMParser</function> handle
+         parsing particular operand types.
+       </para>
+       <para>
+         To parse the name of a register, a
+         <function>ParseRegister</function> function is created. The lexer 
+         reading the file is asked for which type of token the function has
+         been given. A register is an identifier (i.e. short string, e.g.
+         <function>r0</function>). To firstly filter out incorrect token
+          types, if it is not an identifier, the function simply returns 0 to
+          indicate that it was unable to parse it.
+       </para>
+       <para>
+         If the token is an identifier, it is then given to the TableGen 
+         generated <function>MatchRegisterName</function> function. This
+         returns a value corresponding to the register if it is valid,
+         otherwise 0 is returned.
+       </para>
+       <para>
+         For example if <function>MatchRegisterName</function> is given an
+         instruction mnemonic, which is obviously incorrect but also an
+         identifier, 0 will be returned, so checking for an error is key.
+       </para>
+       <note>
+         <para>
+           Register values start with a value of 1, so in the case of an
+           architecture like &or1k; which uses r0, r1, etc. to name registers,
+           r0 will be represented by 1, r1 by 2, etc.
+         </para>
+         <para>
+           In addition, this numbering convention is specified by TableGen so
+           it is not guaranteed that register numbers are the same between
+           different compiled versions of &llvm;.
+         </para>
+       </note>
+       <para>
+         If a match was made, the lexer then consumes the token that was used
+         in the match, preparing it for the next operand or instruction.
+         Finally an <function><replaceable>arch</replaceable>Operand</function>
+         is created for the register using the <function>CreateReg</function> 
+         function defined above and then returned.
+       </para>
+       <informalfigure>
+         <programlisting><![CDATA[
+OR1KOperand *OR1KAsmParser::ParseRegister(unsigned &RegNo) {
+  SMLoc S = Parser.getTok().getLoc();
+  SMLoc E = SMLoc::getFromPointer(Parser.getTok().getLoc().getPointer() -1);
+
+  switch(getLexer().getKind()) {
+    default: return 0;
+    case AsmToken::Identifier:
+      RegNo = MatchRegisterName(getLexer().getTok().getIdentifier());
+      if (RegNo == 0)
+        return 0;
+      getLexer().Lex();
+      return OR1KOperand::CreateReg(RegNo, S, E);
+  }
+  return 0;
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The same method is applied when parsing immediates. In this case
+        any integer, plus or minus is accepted as a valid token type for the
+        operand. If the type matches, then a <function>MCParser</function> is
+        used to calculate the immediate via the 
+        <function>ParseExpression</function> function.
+      </para>
+      <para>
+        If the expression returned is valid it is then evaluated as an
+        absolute value, with an 
+        <function><replaceable>arch</replaceable>Operand</function> being
+        created and returned as before.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Parsing Operands</title>
+      <para>
+        The <function>ParseOperand</function> function makes use of the two
+        previously defined functions in order to parse an operand of which
+        type is originally unknown.
+      </para>
+      <note>
+        <para>
+          This section describes how this function is used in the &or1k;
+          implementation, specifically for how it handles memory operands.
+          Other architectures will need to modify this function to match the
+          needs and types of operands expected to be found in an assembly
+          output.
+        </para>
+      </note>
+      <para>
+        In the &or1k; architecture, there are three types of operand which
+        need parsing by this method, registers, immediates and memory operands
+        which are of the form <function>imm(reg)</function>.
+      </para>
+      <para>
+        Firstly attempts are made to parse an operand as a register, using the
+        previously defined <function>ParseRegister</function> function.
+        If this succeeds then the operand is added to the list of operands
+        for the instruction and the function returns.
+      </para>
+      <para>
+        If this does not work (the operand is not a register), an attempt is
+        then made to parse the operand as an immediate. Should the immediate
+        operand successfully be parsed, then it should be considered as a
+        memory operand first, before placing it into the list of operands.
+      </para>
+      <para>
+        As the form of a memory operand in &or1k; is of the form 
+        <function>imm(reg)</function>, then the next token is evaluated to
+        determine if it is a the start of a memory operand. If this type
+        matches (i.e. it is a left parenthesis, the next token is evaluated as
+        a register. Finally should the last token be a right parenthesis, then
+        a memory operand has instead been parsed.
+      </para>
+      <para>
+        Should parsing as a memory operand succeed, the two components are
+        added to the operand list whereas if the first test failed (the first
+        operand was not an left parenthesis) just the immediate is added.
+      </para>
+      <para>
+        If however, no valid operand was found (either not a valid type or
+        memory parsing failed after identifying a left parenthesis), then
+        an error is created and returned instead.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+bool OR1KAsmParser::
+ParseOperand(SmallVectorImpl<MCParsedAsmOperand*> &Operands) {
+  OR1KOperand *Op, *Op2 = 0;
+
+  // Attempt to parse token as register
+  unsigned RegNo;
+  Op = ParseRegister(RegNo);
+  
+  // Attempt to parse token as immediate
+  if (!Op) {
+    Op = ParseImmediate();
+    
+    // If next token is left parenthesis, then attempt to parse as memory
+    // operand
+    if (Op)
+      if (getLexer().is(AsmToken::LParen)) {
+        getLexer().Lex();
+        // Swap tokens around so that they can be parsed
+        Op2 = Op;
+        Op = ParseRegister(RegNo);
+
+        // Invalid memory operand, fail
+        if (!Op || getLexer().isNot(AsmToken::RParen)) {
+          Error(Parser.getTok().getLoc(), "unknown operand");
+          return true;
+        }
+        getLexer().Lex();
+      }
+  }
+
+  // If the token could not be parsed then fail
+  if (!Op) {
+    Error(Parser.getTok().getLoc(), "unknown operand");
+    return true;
+  }
+
+  // Push back parsed operand(s) into list of operands
+  Operands.push_back(Op);
+  if (Op2)
+    Operands.push_back(Op2);
+
+  return false;
+}]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Parsing Instructions</title>
+      <para>
+        The final function which needs defining is
+        <function>ParseInstruction</function>, which parses the instruction
+        mnemonic, followed by all the operands until the end of the statement
+        is reached, called by <function>MatchInstructionImpl</function> to
+        identify all operands for matching.
+      </para>
+      <para>
+        The instruction mnemonic is parsed by a TableGen generated function, 
+        but is first split into sections separated by the dots in the
+        mnemonic, with each part being added to the instructions operand list.
+      </para>
+      <para>
+        For example the mnemonic <function>l.add</function> would become
+        <function>[l, .add]</function>, <function>lf.add.s</function> would
+        become <function>[lf, .add, .s]</function>, etc.
+      </para>
+      <para>
+        Once the mnemonic has been split up and added to the operand list, the
+        <function>ParseOperand</function> function defined above is repeatedly 
+        called to parse the next operand until the end of the statement is
+        reached (<function>AsmToken::EndOfStatement</function>), with commas
+        being consumed between operands.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+bool OR1KAsmParser::
+ParseInstruction(StringRef Name, SMLoc NameLoc,
+                 SmallVectorImpl<MCParsedAsmOperand*> &Operands) {
+  // First operand is token for instruction
+  size_t dotLoc = Name.find('.');
+  Operands.push_back(OR1KOperand::CreateToken(Name.substr(0,dotLoc),NameLoc));
+  if (dotLoc < Name.size()) {
+    size_t dotLoc2 = Name.rfind('.');
+    if (dotLoc == dotLoc2)
+      Operands.push_back(OR1KOperand::CreateToken(Name.substr(dotLoc),NameLoc));
+    else {
+      Operands.push_back(OR1KOperand::CreateToken(Name.substr
+                                        (dotLoc, dotLoc2-dotLoc), NameLoc));
+      Operands.push_back(OR1KOperand::CreateToken(Name.substr
+                                        (dotLoc2), NameLoc));
+    }
+  }
+
+  // If there are no more operands, then finish
+  if (getLexer().is(AsmToken::EndOfStatement))
+    return false;
+
+  // Parse first operand
+  if (ParseOperand(Operands))
+    return true;
+
+  // Parse until end of statement, consuming commas between operands
+  while (getLexer().isNot(AsmToken::EndOfStatement) &&
+        getLexer().is(AsmToken::Comma)) {
+    // Consume comma token
+    getLexer().Lex();
+
+    // Parse next operand
+    if(ParseOperand(Operands))
+      return true;
+  }
+
+  return false;
+}]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Testing</title>
+      <note>
+        <para>
+          These tests are not needed to fully test the integrated assembly
+          implementation and will be superseded by future tests, but are
+          explained here for testing the assembly parser if implemented
+          separately from the other components.
+        </para>
+      </note>
+      <para>
+        Tests for assembly parsing should consist of an instance of each
+        instruction in the target's instruction set, along with the expected
+        output from <command>llvm-mc -show-inst</command>. An example is shown
+        and explained below.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+# RUN: llvm-mc -arch=or1k -show-inst %s | FileCheck %s
+
+    l.add r1, r2, r3
+# CHECK: <MCInst #{{[0-9]+}} ADD
+# CHECK-NEXT: <MCOperand Reg:2>
+# CHECK-NEXT: <MCOperand Reg:3>
+# CHECK-NEXT: <MCOperand Reg:4>>]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Each test consists of the instruction, which in this case is an add,
+        followed by a <function>CHECK</function> line for the mnemonic and for
+        each operand. The first <function>CHECK</function> line searches for
+        the mnemonic, whose name was set in the TableGen declaration, in this
+        case <function>ADD</function>. It does not matter about the internal
+        value of this operand, so a search for <function>{{[0-9]+}}</function>
+        matches any value as valid.
+      </para>
+      <para>
+        Next each operand is tested; <function>CHECK-NEXT</function> ensures
+        that a test only passes if the line immediately follows the previous
+        check line, i.e. that the operands specified belong with the
+        instruction mnemonic specified in the previous line. In this case,
+        registers 1, 2 and 3 were specified in the instruction then tests for
+        register number 2, 3 and 4 are carried out, which are the internal
+        representation of these registers.
+      </para>
+      <para>
+        The same is applied for immediate operands, except that the
+        <function>MCOperand</function> type is <function>Imm</function> and it
+        is expected that the immediate is the same as that in the instruction, 
+        not increased by one.
+      </para>
+      <para>
+        For &or1k;, tests for memory operands are carried out by checking for
+        the register operand first and then the immediate on the line that 
+        follows (i.e. the same order that they were pushed to the operands 
+        when defining <function>ParseInstruction</function>).
+      </para>
+      <para>
+        Tests can be called in the usual way and should all pass if
+        instructions are well defined in TableGen.
+      </para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Implementing Instruction Encoding</title>
+    <para>
+      The next stage in implementing the LLVM assembler is to provide support
+        for encoding instructions into their native bit patterns.
+    </para>
+    <sect1>
+      <title>Build System</title>
+      <para>
+        Unlike the assembly parser, no extra library is needed in order to
+        encode instructions, as the instruction encoder lives in the target's
+        <filename>MCTargetDesc</filename> directory.
+      </para>
+      <para>
+        As such, the only changes that need to be made to the build system are
+        those that tell LLVM which files need to be compiled and generated by
+        TableGen. In this case, the files are the 
+        <filename><replaceable>arch</replaceable>MCCodeEmitter</filename>
+        C++ source file and the generated
+        <filename><replaceable>arch</replaceable>GenCodeEmitter.inc</filename>.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Registration</title>
+      <para>
+        To register the code emitter, the following code needs adding to the
+        machine code target description 
+        <filename><replaceable>arch</replaceable>MCTargetDesc.cpp</filename>.
+      </para>
+      <informalfigure>
+        <programlisting>
+  // Register the MC code emitter
+  TargetRegistry::RegisterMCCodeEmitter(The<replaceable>arch</replaceable>Target,
+                                        llvm::create<replaceable>arch</replaceable>MCCodeEmitter);
+
+        </programlisting>
+      </informalfigure>
+      <para>
+        The <function>create<replaceable>arch</replaceable>MCCodeEmitter
+        </function> function is declared in the 
+        <filename><replaceable>arch</replaceable>MCTargetDesc.h</filename> 
+        header file and is defined in
+        <filename><replaceable>arch</replaceable>MCCodeEmitter.cpp</filename>.
+        This function simply creates and returns a new 
+        <function><replaceable>arch</replaceable>MCCodeEmitter</function>.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Register Support Function</title>
+      <para>
+        Before the instruction encoding class can be implemented, it is useful
+        to implement a function that will convert a register symbol to its
+        register value.
+      </para>
+      <para>
+        A version of this function is generated by TableGen, though it is
+        dependent on the order that registers are defined in a register class
+        (assuming the first register defined is encoded as zero, etc.).
+        Therefore if the register class does not match this (e.g. the class is
+        defined in a different order for allocation purposes), then a custom
+        function is required.
+      </para>
+      <para>
+        The register number support function is a simple switch statement
+        which returns the encoding of a register to be used in an instruction.
+        The default case should be a call to llvm_unreachable to warn of a
+        problem where the encoding of an invalid register is requested.
+      </para>
+      <para>
+        The following example demonstrates how the function looks for the
+        &or1k; implementation.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+static inline unsigned getOR1KRegisterNumbering(unsigned Reg) {
+  switch(Reg) {
+    case OR1K::R0  : return 0;
+    case OR1K::R1  : return 1;
+    ... other cases not shown ...
+    case OR1K::R31 : return 31;
+    default: llvm_unreachable("Unknown register number!");
+  }]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Encoding Instructions</title>
+      <para>
+        Instructions are encoded through an implementation of the 
+        <function>MCCodeEmitter</function> class, which uses information about
+        the target and encodes instructions through the 
+        <function>EncodeInstruction</function> function, streaming encoded
+        bytes through a provided output stream.
+      </para>
+      <note>
+        <para>
+          Information about this class can be found in &llvm;'s documentation
+          at
+          <ulink url='http://llvm.org/docs/doxygen/html/classllvm_1_1MCCodeEmitter.html'>
+          llvm.org/docs/doxygen/html/classllvm_1_1MCCodeEmitter.html</ulink>
+        </para>
+      </note>
+      <para>
+        This class requires only the <function>EncodeInstruction</function>
+        function to be defined. However other functions should also be defined
+          to assist in encoding instructions.
+      </para>
+      <para>
+        The key function here is <function>getBinaryCodeForInstr</function>,
+        which is generated by TableGen. It takes a provided instruction and
+        with the instruction encoding information defined with the 
+        instructions to generate the encoded instruction.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+  // getBinaryCodeForInstr - TableGen'erated function for getting the
+  // binary encoding for an instruction.
+  uint64_t getBinaryCodeForInstr(const MCInst &MI) const;]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Other functions that are defined in this class (though not necessary),
+        are support functions for outputting a number of bytes and constants
+        (encoded instruction) with the correct endianness for the target.
+        Examples of these functions are provided below.
+      </para>
+      <para>
+        In addition, functions are required to assist in encoding custom
+        operand types, should their encoding not be known from their TableGen definition.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+  // Emit one byte through output stream (from MCBlazeMCCodeEmitter)
+  void EmitByte(unsigned char C, unsigned &CurByte, raw_ostream &OS) const {
+    OS << (char)C;
+    ++CurByte;
+  }
+
+  // Emit a series of bytes (from MCBlazeMCCodeEmitter)
+  void EmitConstant(uint64_t Val, unsigned Size, unsigned &CurByte,
+                    raw_ostream &OS) const {
+    assert(Size <= 8 && "size too big in emit constant");
+
+    for (unsigned i = 0; i != Size; ++i) {
+      EmitByte(Val & 255, CurByte, OS);
+      Val >>= 8;
+    }
+  }]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The generated <function>getBinaryCodeForInstr</function> function
+        requires one other function to be defined, 
+        <function>getMachineOpValue</function>, which provides the encoding
+        for the default operand types (registers and immediates) where no
+        relocation is required.
+      </para>
+      <para>
+        This function first checks the type of operand. If it is a register,
+        then the custom function for retrieving register numbers defined
+        above is called to get the encoding of this register. If instead it is
+        an immediate, then it is cast to an unsigned value which is then
+        returned.
+      </para>
+      <para>
+        Finally, if the operand is an expression (which is the case
+        where relaxation is required), then information about this relocation
+        is stored in a fixup, with 0 being returned as the encoding at this
+        point.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+unsigned OR1KMCCodeEmitter::
+getMachineOpValue(const MCInst &MI, const MCOperand &MO,
+                  SmallVectorImpl<MCFixup> &Fixups) const {
+  if (MO.isReg())
+    return getOR1KRegisterNumbering(MO.getReg());
+  if (MO.isImm())
+    return static_cast<unsigned>(MO.getImm());
+  
+  // MO must be an expression
+  assert(MO.isExpr());
+
+  const MCExpr *Expr = MO.getExpr();
+  MCExpr::ExprKind Kind = Expr->getKind();
+
+  if (Kind == MCExpr::Binary) {
+    Expr = static_cast<const MCBinaryExpr*>(Expr)->getLHS();
+    Kind = Expr->getKind();
+  }
+
+  assert (Kind == MCExpr::SymbolRef);
+
+  OR1K::Fixups FixupKind = OR1K::Fixups(0);
+
+  switch(cast<MCSymbolRefExpr>(Expr)->getKind()) {
+    default: llvm_unreachable("Unknown fixup kind!");
+      break;
+    case MCSymbolRefExpr::VK_OR1K_PLT:
+      FixupKind = OR1K::fixup_OR1K_PLT26;
+      break;
+    ... other cases not shown ...
+  }
+
+  // Push fixup (all info is contained within)
+  Fixups.push_back(MCFixup::Create(0, MO.getExpr(), MCFixupKind(FixupKind)));
+  return 0;
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The main <function>EncodeInstruction</function> function simply takes
+        a provided instruction, passing it to the TableGen
+        <function>getBinaryCodeForInstr</function> function, returning the
+        encoded version of the instruction, which is then emitted via the
+        support functions for outputting constants which were defined above.
+      </para>
+      <note>
+        <para>
+          In the case of &or1k;, all instructions are 32 bits in length,
+          therefore the same amount of data is outputted in all cases. Where
+          an instruction set has variable length instructions, then testing
+          the opcode would be required to determine the length of instruction
+          to emit.
+        </para>
+      </note>
+      <informalfigure>
+        <programlisting><![CDATA[
+void OR1KMCCodeEmitter::
+EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+                         SmallVectorImpl<MCFixup> &Fixups) const {
+  // Keep track of the current byte being emitted
+  unsigned CurByte = 0;
+  // Get instruction encoding and emit it
+  ++MCNumEmitted;       // Keep track of the number of emitted insns.
+  unsigned Value = getBinaryCodeForInstr(MI);
+  EmitConstant(Value, 4, CurByte, OS);
+}]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Encoding Custom Operands</title>
+      <para>
+        Depending on the operand types defined in the architecture, custom
+        encoding function may be required in order to encode these more
+        complex types.
+      </para>
+      <para>
+        One example of an operand that may require custom encoding is the
+        &or1k; memory operand which combines a register with an immediate
+        offset. This is used for example with the <function>l.lwz</function>
+        instruction, which loads a word from memory from a location specified
+        by a register as a pointer plus some immediate offset stored in the
+        instruction.
+      </para>
+      <informalfigure>
+        <programlisting>
+    l.lhz r1, 4(r2)
+        </programlisting>
+      </informalfigure>
+      <para> If an operand requires custom encoding, then
+        <function>EncoderMethod</function> has to be specified in the operand
+        TableGen definition, stating which function is used to encode the
+        operand.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+def MEMri : Operand<i32> {
+  let PrintMethod = "printMemOperand";
+  let EncoderMethod = "getMemoryOpValue";
+  let MIOperandInfo = (ops GPR, i32imm);
+}]]>
+        </programlisting>
+      </informalfigure>
+      <note>
+        <para>
+          It does not matter where in an instruction an operand appears,
+          encoding acts within the bit field of the size of the operand. The
+          generated <function>getBinaryCodeForInstr</function> function takes
+          care of mapping operand bits to their corresponding instruction
+          bits.
+        </para>
+      </note>
+      <para>
+        The following example covers the &or1k; memory operand, but the same
+        method can be applied to any compound operand type.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+unsigned OR1KMCCodeEmitter::
+getMemoryOpValue(const MCInst &MI, unsigned Op) const {
+  unsigned encoding;
+  const MCOperand op1 = MI.getOperand(1);
+  assert(op1.isReg() && "First operand is not register.");
+  encoding = (getOR1KRegisterNumbering(op1.getReg()) << 16);
+  MCOperand op2 = MI.getOperand(2);
+  assert(op2.isImm() && "Second operand is not immediate.");
+  encoding |= (static_cast<short>(op2.getImm()) & 0xffff);
+  return encoding;
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        To create the encoding for this operand, the individual components
+        (the immediate and the register) can be obtained in the same way as
+        was done in <function>getMachineOpValue</function> and then be
+        shifted to the relevant operand bits.
+      </para>
+      <para>
+        For this example the first operand (a register) is taken and its
+        encoding taken and then shifted 16 bits left. (The &or1k; memory
+        operand is a register followed by a 16 bit immediate). The second 
+        operand (the immediate offset) is then encoded and combined with the 
+        register value to give the full encoding of the operand.
+      </para>
+      <note>
+        <para>
+          The operand locations are hard coded in this example as in the
+          &or1k; implementation, memory operands are always at known locations
+          and no instruction may have more than one memory operand. In a more
+          generic case, it is best to use the provided Op value instead of
+          hard coding operand placement.
+        </para>
+      </note>
+      <para>
+        With the functions defined, instruction encoding should now operate
+        correctly.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Testing</title>
+      <para>
+        Tests written for instruction encoding replace any tests written for 
+        assembly parsing with those that check for valid encoding. Assembly
+        parsing is implicitly tested as the correct encoding is emitted only
+        if the instruction was correctly parsed.
+      </para>
+      <para>
+        Each instruction in turn should have its instruction manually encoded
+        based on the instruction set documentation and then tested with
+        llvm-mc and the -show-encoding directive. An example of a test is
+        shown below.
+      </para>
+      <informalfigure>
+        <programlisting>
+# RUN: llvm-mc -arch=or1k -mattr=mul,div,ror -show-encoding %s | FileCheck %s
+
+    l.add r1, r2, r3
+# CHECK: # encoding: [0xe0,0x22,0x18,0x00]
+        </programlisting>
+      </informalfigure>
+      <para>
+        The <function>-show-encoding</function> flag will cause &llvm-mc; to
+        output the encoded version of the provided instruction, which is in
+        the format shown above. Tests can then be executed in the usual way.
+      </para>
+      <para>
+        To aid in writing these tests, a python function is specified below
+        that takes an instruction encoding and prints out the
+        <function>CHECK</function> line for a 32-bit big-endian processor.
+      </para>
+      <informalfigure>
+        <programlisting>
+def a(asm):
+  asm=hex(asm)[2:].zfill(8)
+  print '# CHECK: # encoding: [0x'+asm[-8:-6]+',0x'+asm[-6:-4]+',0x'+ \
+  asm[-4:-2]+',0x'+asm[-2:]+']'
+        </programlisting>
+      </informalfigure>
+      <para>
+        This function can then be simply used in the same way as this example
+        for the &or1k; <function>l.add</function> instruction when in a big
+        endian mode.
+      </para>
+      <informalfigure>
+        <programlisting>
+<![CDATA[a(0x38<<26|1<<21<2<<16|3<<11)]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Implementing Instruction Decoding</title>
+    <para>
+      Whilst strictly not necessary to assemble code, the ability to
+      disassemble instructions may be of use, so this is next implemented.
+    </para>
+
+    <sect1>
+      <title>TableGen Requirements</title>
+      <para>
+        The instruction decoder uses a decode function built by TableGen in
+        order to match instructions to their operands. In order for this
+        function to be built correctly, it is important that only one
+        instruction is mapped to any given bit pattern. If this is not the
+        case then LLVM will fail to compile.
+      </para>
+      <para>
+        If two instructions do collide, a message such as the following will 
+        appear in the build log, identifying which instructions conflicted.
+      </para>
+      <informalfigure>
+        <programlisting>
+Decoding Conflict: 
+        010001.......................... 
+        ................................ 
+    JR  010001__________________________ 
+    RET 010001__________________________ 
+        </programlisting>
+      </informalfigure>
+      <para>
+        Conflicts can be solved by providing context as to when it is suitable
+        to decode instructions as one type or another. One way of doing this
+        (if suitable) is to disable an instruction for this stage by either
+        marking it is pseudo (via <function>isPsuedo = 1</function>) or as
+        for use in code generation only (<function>isCodeGen = 1</function>).
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Build System</title>
+      <para>
+        As with the assembler parser, the instruction decoder is a sub-library
+        of the main target library and goes in the
+        <filename>Disassembler</filename> directory. This library consists of
+        one source file,
+        <filename><replaceable>arch</replaceable>Disassembler.cpp</filename>.
+        Files for the build system should be created here in the same way as
+        was done for the assembly parser.
+      </para>
+      <para>
+        In addition, the <filename>Disassembler</filename> directory is added
+        to both the <filename>Makefile</filename>,
+        <filename>CMakeLists.txt</filename> and
+        <filename>LLVMBuild.txt</filename> for the target library, with
+        <function>has_disassembler = 1</function> being set in the parents
+        library definition.
+      </para>
+      <para>
+        This library makes use of two extra TableGen files' disassembler
+        tables and enhanced disassembly info. These are in the files
+        <filename><replaceable>arch</replaceable>GenDisassemblerTables.inc</filename>
+        and <filename><replaceable>arch</replaceable>GenEDInfo.inc</filename>
+        respectively. As such these need adding to the 
+        <filename>Makefile</filename> and <filename>CMakeLists.txt</filename>
+        as usual.
+      </para>
+    </sect1>
+      
+    <sect1>
+      <title>Integration</title>
+      <para>
+        Integration of the disassembler occurs in the same way as the
+        instruction assembler, with a static 
+        <function>create<replaceable>arch</replaceable>Disassembler</function>
+        function being defined, which creates and returns a new
+        <function><replaceable>arch</replaceable>Disassembler</function>.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+static MCDisassembler *create]]><replaceable>arch</replaceable><![CDATA[Disassembler(const Target &T,
+                                              const MCSubtargetInfo &STI) {
+  return new ]]><replaceable>arch</replaceable><![CDATA[Disassembler(STI, T.createMCRegInfo(""));
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The <function>LLVMInitialize<replaceable>arch</replaceable>Disassembler</function>
+        function is also defined which registers the disassembler with the rest
+        of the system.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+extern "C" void LLVMInitialize]]><replaceable>arch</replaceable><![CDATA[Disassembler() {
+  // Register the disassembler
+  TargetRegistry::RegisterMCDisassembler(The]]><replaceable>arch</replaceable><![CDATA[Target,
+                                         create]]><replaceable>arch</replaceable><![CDATA[Disassembler);
+}]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Disassembler</title>
+      <para>
+        The <function><replaceable>arch</replaceable>Disassembler</function>
+        extends the <function>MCDisassembler</function> class and is centered
+        around the <function>getInstruction</function> function. This function
+        uses a memory region and decodes an instruction along with its
+        operands, storing this information in a provided
+        <function>MCInst</function>.
+      </para>
+      <note>
+        <para>
+          Information about the <function>MCDisassembler</function> class can
+          be found in &llvm;'s documentation at
+          <ulink url='http://llvm.org/docs/doxygen/html/classllvm_1_1MCDisassembler.html'>
+          llvm.org/docs/doxygen/html/classllvm_1_1MCDisassembler.html</ulink>
+        </para>
+      </note>
+      <para>
+        A support function can be defined which helps read data from the
+        memory object, formatting it in a way that the decoder can use. In the
+        case of &or1k;, this function reads in 4 bytes (the size of an 
+        instruction) and formats it as an unsigned big endian 32-bit word.
+      </para>
+      <para>
+        Should a processor support both big and small endian instructions or 
+        variable length instructions, this function would instead be
+        configured to read a variable number of bytes or to create a word
+        which matches the target's endianness.
+      </para>
+      <para>
+        It should be noted that the function returns Fail if memory could not
+        be read as this is a required step before disassembly.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+static DecodeStatus readInstruction32(const MemoryObject &region,
+                                      uint64_t address,
+                                      uint64_t &size,
+                                      uint32_t &insn) {
+  uint8_t Bytes[4];
+
+  // We want to read exactly 4 bytes of data.
+  if (region.readBytes(address, 4, (uint8_t*)Bytes, NULL) == -1) {
+    size = 0;
+    return MCDisassembler::Fail;
+  }
+
+  // Encoded as big-endian 32-bit word in the stream.
+  insn = (Bytes[0] << 24) |
+         (Bytes[1] << 16) |
+         (Bytes[2] <<  8) |
+         (Bytes[3] <<  0);
+
+  return MCDisassembler::Success;
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The <function>getInstruction</function> should first call the above
+        function to read memory ready for decoding. Should this function
+        return success, then it is passed to the TableGen generated function
+          <function>decode<replaceable>arch</replaceable>Instruction<replaceable>Size</replaceable></function>
+        which does the decoding.
+      </para>
+      <para>
+        This will return <function>Success</function> if the instruction was
+        successfully decoded, otherwise it will return
+        <function>Fail</function>. The <replaceable>Size</replaceable>
+        parameter provided to the function is set to the size of instruction
+        that was successfully decoded.
+      </para>
+      <para>
+        In the case of &or1k;, only 32-bit instructions are supported, so a
+        valid decode will always set this value to 4.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Variable Length Instructions</title>
+      <para>
+        For targets that support variable length instructions, then there will
+        be multiple decode tables to parse through and memory may have to be
+        read multiple times before a successful decode occurs.
+      </para>
+      <para>
+        One approach to this which is be suitable in most cases is to start
+        with the smallest instructions, reading the smallest amount of memory 
+        possible and then using the appropriate decode table.
+      </para>
+      <para>
+        If that fails to match an instruction, then more memory should be
+        read, trying the next smallest instruction table, repeating until all
+        tables have been tested. If no match has then been made an error code
+        should be returned.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Decoding Register Classes</title>
+      <para>
+        As with encoding register values when building the instruction
+        encoder, when decoding instructions support for taking an encoded 
+        register value and creating an Operand object which appropriately
+        describes it is required.
+      </para>
+      <para>
+        The names of these functions are defined by TableGen when building the
+        decoding tables, but follow the form 
+        <function>Decode<replaceable>RegClass</replaceable>RegisterClass</function>.
+        These functions are given the instruction to add an operand to, the
+        encoded register value as well as the address in memory where the
+        instruction can be found at.
+      </para>
+      <para>
+        In the case of the &or1k; architecture, the only register class which
+        can be in an instruction is the a general register, meaning only one
+        function needs defining, <function>DecodeGPRRegisterClass</function>.
+        When called, this function checks that the given register number is
+        within the valid range (0-31). If it is, a new register operand is
+        added to the instruction.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+DecodeStatus DecodeGPRRegisterClass(MCInst &Inst,
+                                    unsigned RegNo,
+                                    uint64_t Address,
+                                    const void *Decoder) {
+
+  if (RegNo > 31)
+    return MCDisassembler::Fail;
+
+  // The internal representation of the registers counts r0: 1, r1: 2, etc.
+  Inst.addOperand(MCOperand::CreateReg(RegNo+1));
+  return MCDisassembler::Success;
+}]]>        
+        </programlisting>
+      </informalfigure>
+      <para>
+        Setting the register value in this case is a case of incrementing the
+        given number by 1 as the internal representation of registers is r0
+        is 1, r1 is 2, etc.
+      </para>
+      <para>
+        For targets with a more complex register definition, it is better to
+        use a switch statement similar to the 
+        <function>getOR1KRegisterNumbering</function> function used in the
+        instruction encoder, but checking the encoding and returning a
+        register object if valid.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Decoding Custom Operands</title>
+      <para>
+        For operands that required custom encoding methods in the instruction
+        encoding, similar functions are also required to decode them.
+      </para>
+      <para>
+        Firstly in the operand's TableGen definition, the variable
+        <function>DecoderMethod</function> needs to be defined as the name of
+        the function in the Disassembler class that will handle them.
+      </para>
+      <para>
+        This function is then defined, taking the bits for each part of the 
+        operand, parsing them and then adding them to the operand in a similar
+        way as was done in the decoding register class example.
+      </para>
+      <para>
+        For &or1k;, the only operand which requires a custom decoder is the
+        memory operand, which combines a 5-bit register value with a signed
+        16-bit offset.
+      </para>
+      <para>
+        Firstly the bit values of the two operands are obtained from the given
+        operand. These are in turn converted to 
+        <function>MCOperand</function>s and added to the instruction.
+      </para>
+      <para>
+        The register operand is handled in the same way as the register
+        decoder, with the offset being sign extended to a 32-bit value
+        before the immediate operand type is created.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+static DecodeStatus DecodeMemoryValue(MCInst &Inst,
+                                      unsigned Insn,
+                                      uint64_t Address,
+                                      const void *Decoder) {
+  unsigned Register = (Insn >> 16) & 0b11111;
+  Inst.addOperand(MCOperand::CreateReg(Register+1));
+  unsigned Offset = (Insn & 0xffff);
+  Inst.addOperand(MCOperand::CreateImm(SignExtend32<16>(Offset)));
+  return MCDisassembler::Success;
+}]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Testing</title>
+      <para>
+        Writing tests for the instruction decoder is simple once tests have
+        been written for instruction encoding. Using
+        <command>llvm-mc -disassemble</command> as the command for the test,
+        tests can be generated by swapping the input and check lines from the
+        encoding tests around, such that the encoding is the input and the
+        printed instruction is the output.
+      </para>
+      <para>
+        For example, using the test from the previous examples.
+      </para>
+      <informalfigure>
+        <programlisting>
+    l.add r1, r2, r3
+# CHECK: # encoding: [0x00,0x18,0x22,0xe0]
+        </programlisting>
+      </informalfigure>
+      <para>
+        becomes
+      </para>
+      <informalfigure>
+        <programlisting>
+    0x00 0x18 0x22 0xe0
+# CHECK: l.add r1, r2, r3
+        </programlisting>
+      </informalfigure>
+      <para>
+        As an aside, both the instruction encoder and decoder can be tested
+        at the same time outside of the test suite by piping them together,
+        reformatting the output from the encoder before feeding it to the
+        decoder. The following one-liner will test the encoding for a 32-bit
+        instruction. Should the encoder and decoder be working, the outputted
+        instruction (minus warnings), should be the same as the instruction
+        specified at the start of the command.
+      </para>
+      <informalfigure>
+        <programlisting>
+echo "l.add r1, r20, r31" | llvm-mc -arch=or1k -show-encoding | \
+sed 's/.*\(0x[0-9a-f]*\),\(0x[0-9a-f]*\),\(0x[0-9a-f]*\),\(0x[0-9a-f]*\).*'\
+'/\1 \2 \3 \4/' | llvm-mc -arch=or1k -disassemble
+        </programlisting>
+      </informalfigure>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Implementing ELF Object Writing</title>
+    <para>
+      Now that individual instructions can be encoded and decoded, the final
+      stage is to enable the writing of ELF Objects which can then be linked
+      by an external linker such as GNU ld.
+    </para>
+    <para>
+      This stage involves defining the relocations that are used with the
+      architecture, LLVM fixups used as well as the algorithms used to 
+      manipulate these relocations and fixups.
+    </para>
+
+    <sect1>
+      <title>Build System</title>
+      <para>
+        Classes and source files for writing ELF files exist within the
+        target's <filename>MCTargetDesc</filename> library, so setting up a
+        new library is not needed. If the file has not been previously
+        created, a <filename>AsmBackend</filename> needs adding to the
+        CMakeLists.txt file in this library.
+      </para>
+      <para>
+        In addition the source file for the ELF object writer needs adding to
+        the same build list. This file has the name
+        <filename><replaceable>arch</replaceable>ELFObjectWriter.cpp</filename>.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Defining Fixups and Relocations</title>
+      <para>
+        Within LLVM, fixups are used to represent information in instructions
+        which is currently unknown. During instruction encoding, if some
+        information is unknown (such as a memory location of an external
+        symbol), it is encoded as if the value is equal to 0 and a fixup is
+        emitted which contains information on how to rewrite the value
+        when information is known.
+      </para>
+      <para>
+        The assembler goes through a stage of relaxation, applying fixups and
+        modifying instruction values when they become known to the system.
+        Once complete, any remaining fixups are converted to relocations
+        and stored in the object file.
+      </para>
+      <para>
+        ELF Relocation types for a target are defined as an &enum; in the LLVM
+        support header <filename>include/llvm/Support/ELF.h</filename> and are
+        referred to as
+        <function>llvm::ELF::<replaceable>RELOCNAME</replaceable></function>.
+      </para>
+      <note>
+        <para>
+          It is vital that these relocations have the same enumerated values
+          as in the linker, otherwise the linker will not be able to
+          understand and handle the object file correctly.
+        </para>
+      </note>
+      <para>
+        An example from the &or1k; implementation is given below.
+      </para>
+      <informalfigure>
+        <programlisting>
+enum {
+  R_OR1K_NONE          =  0,
+  R_OR1K_32            =  1,
+...
+  R_OR1K_RELATIVE      = 21
+};
+        </programlisting>
+      </informalfigure>
+      <para>
+        Fixups are defined in
+         <filename>lib/Target/<replaceable>arch</replaceable>/MCTargetDesc/
+         <replaceable>arch</replaceable>FixupKinds.h</filename>, with (in the
+        general case) one fixup being created for each relocation type defined
+        above, with the exception of the no relocation required reloc.
+      </para>
+      <para>
+        These go into an &enum; called <function>Fixups</function>. The &enum;
+        has its first item set to the value of 
+        <function>FirstTargetFixupKind</function> and ends with a marker for
+        <function>LastTargetFixupKind</function>. The total number of fixups
+        is then defined as <function>NumTargetFixupKinds = LastTargetFixupKind
+        - FirstTargetFixupKind</function>. An example of the fixups used in
+        the &or1k; implementation is shown below.
+      </para>
+      <informalfigure>
+        <programlisting>
+  enum Fixups {
+    // Results in R_OR1K_32
+    fixup_OR1K_32 = FirstTargetFixupKind,
+
+    // Results in R_OR1K_16
+    fixup_OR1K_16,
+
+    // Results in R_OR1K_8
+    fixup_OR1K_8,
+
+    // Results in R_OR1K_LO_16_IN_INSN
+    fixup_OR1K_LO16_INSN,
+    ...
+    // Marker
+    LastTargetFixupKind,
+    NumTargetFixupKinds = LastTargetFixupKind - FirstTargetFixupKind
+  }
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Assembly Backend</title>
+      <para>
+        The assembly backend is responsible for manipulating fixup values,
+        replacing them with values where information is available. The class
+        for this backend inherits from the <function>MCAsmBackend</function>.
+      </para>
+      <note>
+        <para>
+          Information about the <function>MCAsmBackend</function> class can
+          be found in &llvm;'s documentation at
+          <ulink url='http://llvm.org/docs/doxygen/html/classllvm_1_1MCAsmBackend.html'>
+          llvm.org/docs/doxygen/html/classllvm_1_1MCAsmBackend.html</ulink>
+        </para>
+      </note>
+      <para>
+        The <function>getNumFixupKinds</function> function returns the number
+        of fixups which the backend supports. This was defined as part of the
+        <function>Fixups</function> &enum;, so this function simply returns
+        this value.
+      </para>
+      <informalfigure>
+        <programlisting>
+unsigned getNumFixupKinds() const { return OR1K::NumTargetFixupKinds; }
+        </programlisting>
+      </informalfigure>
+      <para>
+        The <function>applyFixup</function> function takes a fixup and
+        provided data value and applies it to a given instruction.
+      </para>
+      <para>
+        To aid in this, a support function 
+        <function>adjustFixupValue</function> is created and called which 
+        manipulates the fixup's value before it is applied. This is done for
+        example where a branch instruction does not store the exact location
+        to branch to but that value without the first two bits. In this case,
+        the value would be bitshifted by two before being applied.
+      </para>
+      <para>
+        With the fixup value adjusted appropriately, the instruction it is to
+        be applied to is then reconstructed as a 64-bit unsigned integer. The
+        fixup value is then shifted and masked into the correct location
+        in the instruction before being applied. Once done, the now modified
+        instruction is written back to the original data field.
+      </para>
+      <para>
+        The following example is from the &or1k; implementation, with the data
+        being loaded and manipulated in a big endian fashion.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+void OR1KAsmBackend::applyFixup(const MCFixup &Fixup, char *Data,
+                                unsigned DataSize, uint64_t Value) const {
+  MCFixupKind Kind = Fixup.getKind();
+  Value = adjustFixupValue((unsigned)Kind, Value);
+
+  if (!Value)
+    return; // This value doesn't change the encoding
+
+  // Where in the object and where the number of bytes that need
+  // fixing up
+  unsigned Offset = Fixup.getOffset();
+  unsigned NumBytes = (getFixupKindInfo(Kind).TargetSize + 7) / 8;
+  unsigned FullSize;
+
+  switch((unsigned)Kind) {
+    default:
+      FullSize = 4;
+      break;
+  }
+
+  // Grab current value, if any, from bits.
+  uint64_t CurVal = 0;
+
+  // Load instruction and apply value
+  for (unsigned i = 0; i != NumBytes; ++i) {
+    unsigned Idx = (FullSize - 1 - i);
+    CurVal |= (uint64_t)((uint8_t)Data[Offset + Idx]) << (i*8);
+  }
+
+  uint64_t Mask = ((uint64_t)(-1) >>
+                   (64 - getFixupKindInfo(Kind).TargetSize));
+  CurVal |= Value & Mask;
+
+  // Write out the fixed up bytes back to the code/data bits.
+  for (unsigned i = 0; i != NumBytes; ++i) {
+    unsigned Idx = (FullSize - 1 - i);
+    Data[Offset + Idx] = (uint8_t)((CurVal >> (i*8)) & 0xff);
+  }
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Where there are spaces in an instruction stream that need filling with
+        executable instructions, a series of &nop;s should
+        be inserted. This is done via the <function>writeNopData</function>
+        function, which specifies the size of memory that needs filling. If 
+        valid instructions can be placed into the instruction stream they are
+        then created and emitted via the provided
+        <function>MCObjectWriter</function>.
+      </para>
+      <para>
+        In the case of the &or1k; implementation, the only &nop; instruction
+        is 32-bits long. Therefore if the space to fill is not a multiple of 
+        4 bytes then the function returns false to indicate that it can't be
+        filled. Otherwise for each set of four bytes, the encoding of a &nop;
+        is emitted via the <function>ObjectWriters</function>
+        <function>Write32</function> function.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+bool OR1KAsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
+  if ((Count % 4) != 0)
+    return false;
+
+  for (uint64_t i = 0; i < Count; i += 4)
+    OW->Write32(0x15000000);
+
+  return true;
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Another function which needs implementing is 
+        <function>relaxInstruction</function>, which takes an instruction and
+        relaxes it to a longer instruction with the same effects.
+      </para>
+      <para>
+        For targets where no instruction ever needs relaxation (e.g. all 
+        instructions are the same size), this function simply returns.
+        Otherwise the longer instruction is created, copying and formatting
+        operands as appropriate.
+      </para>
+      <para>
+        Likewise the <function>mayNeedRelaxation</function> function returns
+        true/false depending on if the instruction may need to be relaxed. In
+        the case of the &or1k;, no instruction ever needs relaxing, therefore
+        the function always returns false.
+      </para>
+      <para>
+        The <function>fixupNeedsRelaxation</function> returns whether an
+        instruction needs to be relaxed based on the given fixup. As the case 
+        with the previous two functions, if no instruction needs to be relaxed 
+        this function will also always return false.
+      </para>
+      <para>
+        Finally, the <function>getFixupKindInfo</function> function needs
+        overriding to provide information about target specific fixups,
+        including their offset, size and flags. This function starts with a
+        table containing details on each fixup.
+      </para>
+      <para>
+        If the fixup type provided is not target specific, the overridden
+        function is called to get the result. Otherwise the entry is looked up
+        in the table specified above and the relevant entry returned. If no
+        entry exists in either table, then an error is raised.
+      </para>
+      <note>
+        <para>
+          The entries in this table must be in the same order as specified
+          in <filename><replaceable>arch</replaceable>FixupKinds.h</filename>.
+        </para>
+      </note>
+      <informalfigure>
+        <programlisting><![CDATA[
+const MCFixupKindInfo &OR1KAsmBackend::getFixupKindInfo(MCFixupKind Kind) const{
+  const static MCFixupKindInfo Infos[OR1K::NumTargetFixupKinds] = {
+    // This table *must* be in same the order of fixup_* kinds in
+    // OR1KFixupKinds.h.
+    //
+    // name                    offset  bits  flags
+    { "fixup_OR1K_32",          0,      32,   0 },
+    { "fixup_OR1K_16",          0,      16,   0 },
+    ... other fixups not shown ...
+  };
+
+  if (Kind < FirstTargetFixupKind)
+     return MCAsmBackend::getFixupKindInfo(Kind);
+
+  assert(unsigned(Kind - FirstTargetFixupKind) < getNumFixupKinds() &&
+         "Invalid kind!");
+  return Infos[Kind - FirstTargetFixupKind];
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        To enable and create the assembly backend,
+        <function>create<replaceable>arch</replaceable>AsmBackend</function>
+        is defined and returns a new
+        <function><replaceable>arch</replaceable>AsmBackend</function> object,
+        based on a given target and triple.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+MCAsmBackend *llvm::create]]><replaceable>arch</replaceable><![CDATA[AsmBackend(const Target &T, StringRef TT) {
+  Triple TheTriple(TT);
+  return new ]]><replaceable>arch</replaceable><![CDATA[AsmBackend(T, Triple(TT).getOS());
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Finally this function is set up with the &mc; target registry,
+        associating the assembly backend with the target.
+      </para>
+      <para>
+        In 
+        <filename><replaceable>arch</replaceable>MCTargetDesc.cpp</filename>,
+        the assembly backend is added in the same way as other components.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+  // Register the ASM Backend
+  TargetRegistry::RegisterMCAsmBackend(The]]><replaceable>arch</replaceable><![CDATA[Target,
+                                       create]]><replaceable>arch</replaceable><![CDATA[AsmBackend);]]>
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>ELF Object Writer</title>
+      <para>
+        The ELF Object Writer class is based on the class
+        <function>MCELFObjectTargetWriter</function> and handles the
+        manipulations of fixups and conversion of fixups to relocs.
+      </para>
+      <note>
+        <para>
+          Information about the <function>MCELFObjectTargetWriter</function>
+          class can be found in &llvm;'s documentation at
+           <ulink url='http://llvm.org/docs/doxygen/html/classllvm_1_1MCELFObjectTargetWriterhtml'>
+          llvm.org/docs/doxygen/html/classllvm_1_1MCELFObjectTargetWriter.html</ulink>
+        </para>
+      </note>
+      <para>
+        The constructor for this class simply sets up the parent class,
+        passing it the OS ABI version and the value used to identify the ELF
+        file as belonging to that architecture.
+      </para>
+      <para>
+        Known machines can be found in an &enum; in 
+        <filename>include/llvm/Support/ELF.h</filename>. Should the machine
+        architecture not be known, a new value should be used that does
+        not conflict with any other architecture.
+      </para>
+      <para>
+        For the &or1k; architecture, this value is
+        <function>ELF::EM_OPENRISC</function> and has the value 92. The
+        constructor is therefore as follows.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+OR1KELFObjectWriter::OR1KELFObjectWriter(uint8_t OSABI)
+  : MCELFObjectTargetWriter(/*Is64Bit*/ false, OSABI, ELF::EM_OPENRISC,
+                            /*HasRelocationAddend*/ true) {}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The <function>GetRelocType</function> function takes a fixup type,
+        mapping it to a relocation type. As in many cases each fixup represents
+        a single representation, the basic structure of this function is a
+        switch statement and setting a variable (<function>Type</function>) to
+        the relocation for the given fixup.
+      </para>
+      <para>
+        In addition to the custom fixups, there are also some built-in fixups
+         (for 32bit absolute relocation etc.) that also need mapping (these are
+         called <function>FK_Data_4</function>, etc. and can be found in 
+        <filename>include/llvm/MC/MCFixup.h</filename>.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+unsigned OR1KELFObjectWriter::GetRelocType(const MCValue &Target,
+                                           const MCFixup &Fixup,
+                                           bool IsPCRel,
+                                           bool IsRelocWithSymbol,
+                                           int64_t Addend) const {
+  unsigned Type;
+  unsigned Kind = (unsigned)Fixup.getKind();
+  switch (Kind) {
+    default: llvm_unreachable("Invalid fixup kind!");
+    case OR1K::fixup_OR1K_PCREL32:
+    case FK_PCRel_4:
+      Type = ELF::R_OR1K_32_PCREL;
+      break;
+    ... other fixups note shown ..
+  return Type;
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        The object writer is enabled in a similar fashion to the other MC
+        components, a function 
+        <function>create<replaceable>arch</replaceable>ELFObjectWriter</function>
+        is used to create and return a new object writer. This function can be
+        modified for example to provide support for different object writers
+        depending on word size and endianness. A simple example from &or1k; is
+        shown below.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+MCObjectWriter *llvm::createOR1KELFObjectWriter(raw_ostream &OS,
+                                                uint8_t OSABI) {
+  MCELFObjectTargetWriter *MOTW = new OR1KELFObjectWriter(OSABI);
+  return createELFObjectWriter(MOTW, OS, /*IsLittleEndian=*/ false);
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        This function is then used in the previously defined Assembly Backend
+        to set up the object writer when the backend needs it.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+MCObjectWriter *OR1KAsmBackend::createObjectWriter(raw_ostream &OS) const {
+  return createOR1KELFObjectWriter(OS,
+                                   MCELFObjectTargetWriter::getOSABI(OSType));
+}]]>
+        </programlisting>
+      </informalfigure>
+      <para>
+        Should the architecture require support for multiple object file
+        types, then the function would be modified so that a different object
+        writer is created depending on the OS requested.
+      </para>
+      <para>
+        Finally support for streaming out object files is added in the
+        <filename><replaceable>arch</replaceable>MCTargetDesc.cpp</filename>
+        file, by registering a
+        <function>create<replaceable>arch</replaceable>MCStreamer</function>
+        function with the target registry.
+      </para>
+      <para>
+        In the below example from &or1k;, this function checks for if the
+        requested target format is MACH-O or COFF. Neither of these are
+        supported by this implementation, so an error is raised if this is
+        requested.
+      </para>
+      <informalfigure>
+        <programlisting><![CDATA[
+static MCStreamer *createOR1KMCStreamer(const Target &T, StringRef TT,
+                                    MCContext &Ctx, MCAsmBackend &MAB,
+                                    raw_ostream &_OS,
+                                    MCCodeEmitter *_Emitter,
+                                    bool RelaxAll,
+                                    bool NoExecStack) {
+  Triple TheTriple(TT);
+  if (TheTriple.isOSDarwin()) {
+    llvm_unreachable("OR1K does not support Darwin MACH-O format");
+  }
+  if (TheTriple.isOSWindows()) {
+    llvm_unreachable("OR1K does not support Windows COFF format");
+  }
+  return createELFStreamer(Ctx, MAB, _OS, _Emitter, RelaxAll, NoExecStack);
+}]]>
+        </programlisting>
+      </informalfigure>
+      <informalfigure>
+        <programlisting>
+  // Register the object streamer
+  TargetRegistry::RegisterMCObjectStreamer(TheOR1KTarget,
+                                           createOR1KMCStreamer);
+        </programlisting>
+      </informalfigure>
+    </sect1>
+
+    <sect1>
+      <title>Testing</title>
+      <para>
+        Tests for object writing can be written in one of two forms. The first
+        consists of using llvm assembly files which are then compiled with
+        <command>llc</command> and the file examined by
+        <command>elf-dump</command> or native instructions are interpreted by
+        <command>llvm-mc</command> and again examined by
+        <command>elf-dump</command>.
+      </para>
+      <para>
+        <command>elf-dump</command> is a command that is part of the LLVM test
+        infrastructure and outputs the instructions and relocations in an
+        object file for the purposes of testing that instruction encoding,
+        sections, relocations and other ELF-based functionality work
+        correctly.
+      </para>
+      <para>
+        To provide a simple demonstration of the tests that can be written,
+        the following has been taken from the tests for the x86_64 Linux
+        target. The test consists of two instructions which when encoded
+        should have relocations associated with them.
+      </para>
+      <para>
+        The <function>CHECK</function> lines of the test look for the section
+        where the encoded instructions will appear and then check that the
+        section's location, flags, etc. are correct. Finally it checks the
+        relocations on the two instructions and ensures that their types,
+        values and addends are correct.
+      </para>
+      <para>
+        If needed, only the relocation sections can be checked. This is useful
+        where section address may not be known but the relocation symbol
+        identifiers and types are still known.
+      </para>
+      <informalfigure>
+        <programlisting>
+// RUN: llvm-mc -filetype=obj -triple x86_64-pc-linux-gnu %s -o - | \
+// RUN: elf-dump --dump-section-data | FileCheck  %s
+
+// Test that we produce the correct relocation.
+
+  loope 0                 # R_X86_64_PC8
+  jmp -256                # R_X86_64_PC32
+
+// CHECK:      # Section 2
+// CHECK-NEXT: (('sh_name', 0x00000001) # '.rela.text'
+// CHECK-NEXT:  ('sh_type', 0x00000004)
+// CHECK-NEXT:  ('sh_flags', 0x0000000000000000)
+// CHECK-NEXT:  ('sh_addr', 0x0000000000000000)
+// CHECK-NEXT:  ('sh_offset', 0x00000000000002e8)
+// CHECK-NEXT:  ('sh_size', 0x0000000000000030)
+// CHECK-NEXT:  ('sh_link', 0x00000006)
+// CHECK-NEXT:  ('sh_info', 0x00000001)
+// CHECK-NEXT:  ('sh_addralign', 0x0000000000000008)
+// CHECK-NEXT:  ('sh_entsize', 0x0000000000000018)
+// CHECK-NEXT:  ('_relocations', [
+// CHECK-NEXT:   # Relocation 0
+// CHECK-NEXT:   (('r_offset', 0x0000000000000001)
+// CHECK-NEXT:    ('r_sym', 0x00000000)
+// CHECK-NEXT:    ('r_type', 0x0000000f)
+// CHECK-NEXT:    ('r_addend', 0x0000000000000000)
+// CHECK-NEXT:   ),
+// CHECK-NEXT:   # Relocation 1
+// CHECK-NEXT:   (('r_offset', 0x0000000000000003)
+// CHECK-NEXT:    ('r_sym', 0x00000000)
+// CHECK-NEXT:    ('r_type', 0x00000002)
+// CHECK-NEXT:    ('r_addend', 0x0000000000000000)
+// CHECK-NEXT:   ),
+// CHECK-NEXT:  ])
+// CHECK-NEXT: ),
+        </programlisting>
+      </informalfigure>
+    </sect1>
+  </chapter>
+
+  <glossary>
+    <title>Glossary</title>
+    <glossentry>
+      <glossterm>Application Binary Interface</glossterm>
+      <acronym>ABI</acronym>
+      <glossdef>
+        <para>
+          The definition of how registers are used during function call and
+          return for a particular architecture.
+        </para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>big endian</glossterm>
+      <glossdef>
+        <para>
+          A multi-byte number representation, in which the most significant
+          byte is placed first (i.e. at the lowest address) in memory.
+        </para>
+      <glossseealso>little endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>little endian</glossterm>
+      <glossdef>
+      <para>
+        A multi-byte number representation, in which the least significant
+        byte is placed first (i.e. at the lowest address) in memory.
+      </para>
+      <glossseealso>big endian</glossseealso>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Machine Code</glossterm>
+      <acronym>MC</acronym>
+      <glossdef>
+        <para>
+          LLVM Library designed for handling low level target-specific
+          instruction constructs for creating assemblers, disassemblers, etc.
+        </para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>TableGen</glossterm>
+      <glossdef>
+        <para>
+          LLVM language and tool for generating classes to aid in instruction
+          assembly, printing, etc. while keeping the need to define the
+          instruction architecture only once.
+        </para>
+      </glossdef>
+    </glossentry>
+  </glossary>
+
+  <bibliography>
+    <title>References</title>
+    <bibliomixed>
+      <title>LLVM Doxygen Documentation</title>
+      <bibliomisc>
+        LLVM API documentation, available at 
+        <ulink url='http://llvm.org/doxygen'>http://llvm.org/doxygen</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+    <bibliomixed>
+      <title>&or1k; Architecture Manual</title>
+      <bibliomisc>
+        Available from the OpenCores SVN repository at
+        <ulink url='http://opencores.org/svnget,or1k?file=/trunk/docs/openrisc_arch.pdf'>
+          http://opencores.org/svnget,or1k?file=/trunk/docs/openrisc_arch.pdf</ulink>
+        </bibliomisc>
+    </bibliomixed>
+    <bibliomixed>
+      <title>&or1k; Relocation Information</title>
+      <bibliomisc>
+        Available in source code form at 
+        <ulink url='https://github.com/skristiansson/or1k-src/blob/or1k/include/elf/or1k.h'>
+          https://github.com/skristiansson/or1k-src/blob/or1k/include/elf/or1k.h</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+  </bibliography>
+</book>
