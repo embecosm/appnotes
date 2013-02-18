@@ -1,0 +1,945 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- acronyms and abbreviations -->
+
+<!-- software applications -->
+<!ENTITY bash "<application class='software'>bash</application>">
+<!ENTITY CVS "<application class='software'>CVS</application>">
+<!ENTITY Git "<application class='software'>Git</application>">
+<!ENTITY CGEN "<application class='software'>CGEN</application>">
+<!ENTITY sourceware "<application class='software'>sourceware</application>">
+
+<!-- commands -->
+<!ENTITY rsync "<application class='command'>rsync</application>">
+
+<!-- organizations -->
+
+<!ENTITY embecosm "Embecosm">
+<!ENTITY Embecosm "Embecosm">
+
+<!ENTITY embecosm_www "Embecosm (<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+
+]>
+
+<book lang="en_US">
+  <title>Howto: &CVS; to &Git;</title>
+  <subtitle>Efficient Multi-Module &CVS; Migration</subtitle>
+
+  <bookinfo>
+    <author>
+      <firstname>Simon</firstname>
+      <surname>Cook</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>February 2013</pubdate>
+    <releaseinfo>Application Note 11. Issue 1</releaseinfo>
+
+    <copyright>
+      <year>2012</year>
+      <holder>&embecosm; Limited</holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>Legal Notice</title>
+      <para>
+        This work is licensed under the Creative Commons Attribution 2.0 UK:
+        England &amp; Wales License. To view a copy of this license, visit
+        <ulink url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+        or send a letter to Creative Commons, 171 Second Street, Suite 300,
+        San Francisco, California, 94105, USA.
+      </para>
+  
+      <para>
+        This license means you are free:
+        <itemizedlist>
+          <listitem>
+            <para>to copy, distribute, display, and perform the work</para>
+          </listitem>
+          <listitem>
+            <para>to make derivative works</para>
+          </listitem>
+        </itemizedlist>
+        under the following conditions:
+        <itemizedlist>
+          <listitem>
+            <para>
+              <emphasis>Attribution.</emphasis> You must give the original
+              author, &embecosm_www;, credit;
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              For any reuse or distribution, you must make clear to others the
+              license terms of this work;
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Any of these conditions can be waived if you get permission from
+              the copyright holder, &embecosm;; and
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Nothing in this license impairs or restricts the author's moral
+              rights.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+
+      <para>
+        &embecosm; is the business name of &embecosm; Limited, a private
+        limited company registered in England and Wales. Registration number
+        6577021.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>Introduction</title>
+    <para>
+      For many years, &CVS; has been the primary tool used by teams of
+      developers on large software code bases, allowing each developer to work 
+      on a single master version of the software. This tool is in continued use
+      today, despite the introduction of alternatives which do not suffer from
+      many of the disadvantages found in &CVS;. One such popular example is
+      &Git;, a distributed versioning tool created and popularized by Linus
+      Torvalds.
+    </para>
+    <para>
+      Tools exist for migrating repositories from &CVS; to &Git;, but these can 
+      suffer from issues such as being buggy and slow when used with remote
+      repositories, issues with repeating path names and non-maintainability
+      (once a repository has been converted, it cannot be fast-forwarded to the
+      latest version). The issue of multiple modules becomes more complex when
+      there are modules whose name is also a top-level directory in the source
+      tree, but where the module does not consist of just that directory; some
+      tools check out just the directory and others the module.
+    </para>
+    <para>
+      This application note covers the process of migrating multiple &CVS;
+      modules from a remote repository to separate &Git; repositories with
+      these tools in a reliable way, whilst minimizing
+      network traffic to remote &CVS; servers when extracting and converting
+      multiple modules (i.e. each file is only checked out once using this
+      process once regardless of the number of modules that will be converted).
+      It also solves the module-directory issue by stripping down the repository
+      to just the required files and then cloning the new repository in its
+      entirety.
+    </para>
+
+    <sect1>
+      <title>Target Audience</title>
+      <para>
+        This Application Note is aimed primarily at &Git; users who wish to
+        import &CVS; repositories into their existing work flows and for
+        developers/administrators who wish to do a permanent or continuous 
+        one-way migration from &CVS; to &Git;. This note assumes basic
+        familiarity with &Git; (i.e. the concept of a remote and a repository)
+        but does not assume familiarity with &CVS;. This script also assumes 
+        understanding of a user's preferred shell; commands written are 
+        compatible with the &bash; shell but should easily be convertible to 
+        another shell.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Example</title>
+      <para>
+        An example of this system is &Embecosm;'s mirror of the &sourceware; &CVS;
+        repository, mirroring the &CGEN; module as a &Git; repository. This can
+        be found at <ulink url='http://www.github.com/embecosm/cgen'>http://github.com/embecosm/cgen</ulink>
+        and is actively maintained via the same process described here.
+        This mirror is used as an example throughout this application note.
+      </para>
+      <para>
+        For the code examples used in this application note, the following shell
+        variables should be set as follows.
+      </para>
+      <programlisting>
+${DESTDIR} : <replaceable>destination directory for module specific &CVS; repo</replaceable>
+${GITDIR}  : <replaceable>destination directory for module specific &Git; repo</replaceable>
+${REPOURL} : <replaceable>URL to push the module specific &Git; repository to</replaceable>
+${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CVS; repo</replaceable>
+      </programlisting>
+    </sect1>
+
+    <sect1>
+      <title>Further information</title>
+      <para>
+        The main source of information regarding the use of &Git; is the &Git; documentation <xref linkend="ref_gitdoc"/>. This documentation can either be browsed on the &Git; website or is installed as man pages with the main &Git; distribution.
+      </para>
+      <para>
+        Similarly, documentation for &CVS; <xref linkend="ref_cvsdoc" />, is also included with its distribution.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>About &embecosm; Application Notes</title>
+      <para>
+        Embecosm publishes a series of free and open source application notes,
+        designed to help working engineers with practical problems.
+      </para>
+      <para>
+        Feedback is always welcome, which should be sent to
+        <email>info@embecosm.com</email>.
+      </para>
+    </sect1>
+  </chapter>
+
+  <chapter id="chap_clone">
+    <title>Mirroring a &CVS; repository</title>
+    <note>
+      <para>
+        This stage is only needed for remote repositories. When using local
+        repositories, the local source should instead be used for further steps.
+      </para>
+    </note>
+    <para>
+      The first step in converting to &Git; is to replicate the &CVS; repository
+      so there a local copy is available. This is done so that when splitting up
+      the repository into those for each module, files and directories that are
+      common to multiple repositories are only downloaded once. In addition, any
+      directory naming issues that arise can simply be solved by renaming the
+      local directory. Once complete, this can be split up to create new &CVS;
+      and &Git; repositories as required.
+    </para>
+    <para>
+      There are two ways in which this can be done. The first method uses
+      &rsync; (or other similar tool) to clone the repository, if such access to
+      the bare repository available. Using &rsync; for this task has the
+      benefit that it minimizes network traffic when updating this copy in
+      the future and additionally allows directories to be omitted as required,
+      for example those that will not feature in any converted repository.
+    </para>
+    <para>
+      For this purpose, the <filename>CVSROOT</filename> directory can be
+      omitted. In the authors experience, the directory is approximately half
+      the size of the entire repository and is not used in any other conversion
+      step, so not downloading this directory dramatically reduces the time and
+      resources needed to complete the conversion.
+    </para>
+    <informalfigure>
+      <programlisting>
+rsync -az -v --delete --delete-excluded --exclude CVSROOT/** \
+  sourceware.org::src-cvs/ ${SRCDIR}
+      </programlisting>
+    </informalfigure>
+    <para>
+      The second method, which can be used if bare repository access is not
+      possible is to use a tool like <command>cvsclone</command> to duplicate
+      the entire repository (using the module name "<filename>.</filename>" or
+      the name of the repositories top level directory).
+    </para>
+    <note>
+      <para>
+        <command>cvsclone</command> is not always found in an operating
+        system's software repository. For this guide, the author obtained
+        a working copy of <command>cvsclone</command> from
+        <ulink url="https://github.com/akavel/cvsclone">
+        https://github.com/akavel/cvsclone</ulink>.
+      </para>
+    </note>
+    <para>
+      For example, to clone the &sourceware; repository, the following command
+      would be used. The tool accepts two parameters, the first being the
+      location of the &CVS; repository to clone (after the <function>-d</function>
+      argument) and the second being the module/directory to be cloned.
+    </para>
+    <informalfigure>
+      <programlisting>
+cvsclone -d :pserver:anoncvs@sourceware.org:/cvs/src src
+      </programlisting>
+    </informalfigure>
+    <para>
+      The <function>-d</function> parameter specifies the &CVS; server to
+      connect to, with <filename>src</filename> being the module to clone.
+    </para>
+    <note>
+      <para>
+        <command>cvsclone</command> takes a lot of time to complete creating
+        a new clone. This is due to it checking out each version of a file
+        sequentially. For large repositories it could take several days for
+        the initial clone operation to complete.
+      </para>
+    </note>
+  </chapter>
+
+  <chapter id="chap_split">
+    <title>Splitting up the Repository</title>
+    <para>
+      &CVS; repositories have a concept of modules, which are different views 
+      into a single repository. As an example repository, module 
+      <replaceable>a</replaceable> could contain files <filename>foo</filename> 
+      and <filename>bar</filename> whilst module <replaceable>b</replaceable> 
+      contains <filename>bar</filename> and <filename>baz</filename>. When a 
+      change to <filename>bar</filename> is made from the perspective of either 
+      module, the same change appears in the other as they are in the same 
+      repository and share the same <filename>bar</filename>.
+    </para>
+    <para>
+      Since &Git; has no equivalent concept, we will create a separate &Git;
+      repository for each &CVS; module. The first step in this is to split the
+      local &CVS; repository into multiple repositories, one for each module.
+      These will contain just the directories and files which make
+      up each module. &rsync; is again used to copy these files from the master
+      &CVS; repository to where the modules repository is stored.
+    </para>
+    <note>
+      <para>
+        This will result in duplication of files that are common to multiple
+        modules. Using the example above, <filename>bar</filename> will be
+        copied to the repository for both the <replaceable>a</replaceable> and
+        <replaceable>b</replaceable> modules.
+      </para>
+    </note>
+    <note>
+      <para>
+        Although this section specifically refers to cloning individual &CVS;
+        modules, it is not limited to this. Any arbitrary selection of files
+        will work in the same way and achieve the same result.
+      </para>
+    </note>
+    <para>
+      To aid in this, a shell function <function>synccvs</function> has been
+      created which copies files out of the correct locations so that the
+      complete repository history is preserved.
+    </para>
+    <para>
+      In &CVS;, tracked files are stored in <filename>,v</filename> files, which
+      contains each file's state across all branches and tags, including their
+      commit metadata. If the file is later deleted, it is moved to a directory
+      called <filename>Attic</filename>. <function>synccvs</function> checks
+      this location in addition to the <filename>HEAD</filename> repository directory to ensure
+      history is preserved wherever it is stored.
+    </para>
+    <para>
+      The <function>synccvs</function> shell function is listed in <xref linkend="synccvs"/>. It accepts one
+      argument, the name of the file or directory to be stored. It then
+      copies the correct files from the master repository (defined as 
+      <filename>${SRCDIR}</filename>) to the module specific directory 
+      (<filename>${DESTDIR}</filename>).
+    </para>
+    <figure id="synccvs">
+      <title><function>synccvs</function> shell function</title>
+      <programlisting>
+# Function for syncing file out of repository
+synccvs() {
+  # Make sure parent directory works, otherwise rsync fails
+  mkdir -p `dirname ${DESTDIR}/${1}`
+  # Firstly if directory, rsync dir
+  if test -d ${SRCDIR}/${1}; then
+    rsync -avz ${SRCDIR}/${1}/ ${DESTDIR}/${1}
+    return
+  fi
+  # Next, if file not in attic, rsync that
+  if test -e ${SRCDIR}/${1},v; then
+    rsync -avz ${SRCDIR}/${1},v ${DESTDIR}/${1},v
+    return
+  fi
+  # Finally, check if file in attic, then rsync that
+  if test -e `dirname ${SRCDIR}/${1}`/Attic/`basename ${SRCDIR}/${1}`,v; then
+    mkdir -p `dirname ${DESTDIR}/${1}`/Attic
+    rsync -avz `dirname ${SRCDIR}/${1}`/Attic/`basename ${SRCDIR}/${1}`,v \
+      `dirname ${DESTDIR}/${1}`/Attic/`basename ${DESTDIR}/${1}`,v
+    return
+  fi
+  echo "Path doesn't exist! ${1}"
+  exit 1
+}
+      </programlisting>
+    </figure>
+    <para>
+      In the following example, this function is used to copy a project's change log
+      (stored in a file called <filename>ChangeLog</filename>)
+      to the new repository. In the case of the sourceware repository, this
+      would be done via the following command.
+    </para>
+    <informalfigure>
+      <programlisting>
+synccvs src/ChangeLog
+      </programlisting>
+    </informalfigure>
+    <para>
+      Finally, once <function>synccvs</function> has been called for all
+      files/folders to be included, the &CVS; repository can be reinitialized,
+      creating a <filename>CVSROOT</filename> directory for the new repository.
+    </para>
+    <informalfigure>
+      <programlisting>
+cvs -d ${DESTDIR} init
+      </programlisting>
+    </informalfigure>
+  </chapter>
+
+  <chapter id="chap_conv">
+    <title>Conversion to Git</title>
+    <para>
+      With separate &CVS; repositories created for each module for conversion,
+      the final stage is to convert these to &Git; using the
+      <command>git cvsimport</command> command, adding remote destinations for
+      each repository and finally pushing these to their remotes.
+    </para>
+    <para>
+      <command>git cvsimport</command> uses a tool called
+      <command>cvsps</command> to create patch sets which are then imported into
+      the &Git; repository. <command>cvsps</command> keeps a cache of what has
+      previously been imported into the repository. There is a risk of
+      this cache causing the repository to update incorrectly during successive
+      updates to the &Git; repository due to the &CVS; reinitialization. This
+      cache should therefore be removed in order to ensure the repository is
+      correctly maintained.
+    </para>
+    <para>
+      The following two line script uses the location of the &CVS; repository and
+      deletes its corresponding <command>cvsps</command> cache file.
+    </para>
+    <informalfigure>
+      <programlisting>
+CVSPSFILE=`echo ${DESTDIR} | sed 's/\//\#/g'`
+rm -Rf ~/.cvsps/${CVSPSFILE}*
+      </programlisting>
+    </informalfigure>
+    <note>
+      <para>
+        There are many different versions of <command>cvsps</command>, each of
+        which have different issues importing different repositories. The author
+        has had the best experience with the following version:
+      </para>
+      <para>
+        <ulink url="https://github.com/Alexpux/cvsps">https://github.com/Alexpux/cvsps</ulink>
+      </para>
+    </note>
+    <para>
+      The &Git; repository is then created using <command>git cvsimport</command>,
+      with the source and destination directories set as required. For the
+      entire repository to be imported as-is, <filename>.</filename> can again
+      be used as the module name. Alternatively the name of a subdirectory can 
+      be used, as in the example below. With keeping with the standard &Git;
+      naming conventions, the <filename>HEAD</filename> branch has been named
+      <filename>master</filename>. The parameters specified when using this
+      program are specified below.
+    </para>
+    <note>
+      <para>
+          If the &CVS; repository already has a branch named
+          <filename>master</filename>, the name of the <filename>HEAD</filename>
+          branch should be set to something other than
+          <filename>master</filename> in the following command, otherwise the
+          import will not occur correctly.
+      </para>
+    </note>
+    <informalfigure>
+      <programlisting>
+git cvsimport -d ${DESTDIR} -C ${GITDIR} -p -z,120 -o master -k src
+      </programlisting>
+    </informalfigure>
+    <para>
+      <command>-d</command> specifies the &CVS; repository, which in this case 
+      is the one previously created when splitting up the main repository.
+    </para>
+    <para>
+      <command>-C</command> does the same for the respective &Git; repository.
+    </para>
+    <para>
+      <command>-p -z,120</command> specifies the amount of time in seconds that
+      two file commits
+      can differ in &CVS; and still be classed as the same commit under &Git;.
+      The default if this option is omitted is 300 seconds (5 minutes). A value 
+      of 2 minutes is used here for demonstration purposes.
+    </para>
+    <para>
+      <command>-o</command> specifies the name to set the <filename>MAIN</filename>
+      branch to have in &Git; (usually <filename>master</filename>).
+    </para>
+    <para>
+      <command>-k</command> sets the directory to treat as the root of the
+     repository. Usually this will be <filename>.</filename> but in this
+     example, due to the structure of the particular &CVS; repository (all 
+     source code is stored in a directory called <filename>src</filename>), this
+     is used instead.
+    </para>
+    <para>
+      Once complete, a remote can be added to the repository and it can be
+      pushed with the <command>--mirror</command> option set, forcing all
+      branches and tags to be in sync with the original &CVS; repository.
+    </para>
+    <informalfigure>
+      <programlisting>
+git remote add origin ${REPOURL}
+git push origin --mirror
+      </programlisting>
+    </informalfigure>
+  </chapter>
+
+  <chapter id="chap_script">
+    <title>Building a Script</title>
+    <para>
+      With the steps in the previous chapters completed, a clone of the &CVS;
+      repository has been made and a &Git; repository made of a module. It may
+      however be desired to do this for many modules and to periodically update
+      these repositories (if for example work is still carried out in &CVS;). As
+      such, creating a script to extend and automate this process is desirable.
+    </para>
+    <para>
+      This script should consist of a step to clone the repository (if needed),
+      followed by sections to handle each module to be converted. The script
+      in Section 5.1 is used to maintain &Embecosm;'s &CGEN; repository and
+      demonstrates the form such a script could take. It is also available
+      under a GPL v3 license and forms Embecosm Software Package 8 (ESP 8),
+      available at <ulink url="http://www.embecosm.com/resources/software">
+      http://www.embecosm.com/resources/software</ulink>.
+    </para>
+    <note>
+      <para>
+         For clarity, the script has had its <function>synccvs</function>
+         function collapsed, but is identical to the one used above.
+      </para>
+    </note>
+    <para>
+      In this example, each module is enabled and disabled in the top
+      configuration section and has its destination set, followed by the
+      initial &CVS; cloning operation.
+    </para>
+    <informalfigure>
+      <programlisting>
+# CGEN
+CGEN=1
+CGENREPO="git@github.com:embecosm/cgen.git"
+# Get sources (we don't check out CVSROOT because we don't use it)
+export SRCDIR=${BASEDIR}/sourceware
+rsync -az -v --delete --delete-excluded --exclude CVSROOT/** \
+  sourceware.org::src-cvs/ ${SRCDIR}
+      </programlisting>
+    </informalfigure>
+    <para>
+      Next, each module in turn has its directories set and
+      relevant files are copied via <function>synccvs</function>.
+    </para>
+    <para>
+      For ease of maintenance, where the same multiple files or 
+      directories need importing into a number of repositories, the task of
+      copying these should be placed into a separate function and 
+      that called instead. The following example is taken from converting the
+      &sourceware; repository of GNU tool chain components. This repository 
+      contains modules for various tools (binutils, GDB, CGEN, etc.) 
+      <function>syncsrcsupport</function> copies the
+      support files (e.g. <filename>configure</filename>) that are common to all
+      compilable modules within the &sourceware; tree. (These files are contained
+      within the <filename>src-support</filename> module in the base &CVS;
+      repository.)
+    </para>
+    <note>
+      <para>
+        The list of &CVS; modules along with the directories and files contained
+        within each module can be found in the 
+        <filename>CVSROOT/modules</filename> file in the remote repository. This
+        is not the same as the regenerated <filename>CVSROOT/modules</filename>
+        files found in each modules repository. This file can either be 
+        downloaded separately via <command>rsync</command>, 
+        <command>cvs</command> or though a <command>cvsweb</command> interface 
+        if one is available.
+      </para>
+    </note>
+    <informalfigure>
+      <programlisting>
+# This function acts as an alias for synccvsing the src-support module found in
+# CVSROOT/modules on sourceware
+syncsrcsupport() {
+  synccvs src/.cvsignore
+  synccvs src/COPYING
+  synccvs src/COPYING3
+  synccvs src/COPYING.LIB
+  synccvs src/COPYING3.LIB
+  synccvs src/COPYING.NEWLIB
+  synccvs src/COPYING.LIBGLOSS
+  synccvs src/ChangeLog
+  synccvs src/MAINTAINERS
+  synccvs src/Makefile.def
+  ... other files not listed ...
+}
+      </programlisting>
+    </informalfigure>
+    <para>
+      Once all files have been synchronized, the &Git; repository is then
+      created and uploaded as previously described.
+    </para>
+    <informalfigure>
+      <programlisting>
+  # Reinitialize cvs for our new repo and then convert (using src as module)
+  cvs -d ${DESTDIR} init
+  git cvsimport -v -d ${DESTDIR} -C ${GITDIR} -p -z,120 -o master -k src
+  # Push to GitHub
+  cd ${GITDIR}
+  git remote rm github || true
+  git remote add github ${CGENREPO}
+  git push github --mirror
+      </programlisting>
+    </informalfigure>
+    <note>
+      <para>
+        It is worth nothing in this example that the original &Git; remote
+        <function>github</function> is first removed before being set. This
+        enables the destination to be changed via the configuration. This
+        command is also combined with <command>true</command> to calculate its
+        return value. This is because the script is set to quit on the first
+        error and attempting to remove a non-existent remote would cause an
+        error.
+      </para>
+      <para>
+        If the remote does not exist (or it cannot be written to) then an error
+        is caught during the <command>git push</command> command and the
+        script exits as intended.
+      </para>
+    </note>
+    <para>
+      Adding other modules to the script is done by duplicating the section
+      for that module, setting the files to be imported and making the
+      appropriate changes to the configuration.
+    </para>
+    <para>
+      Finally, this script can be added to a crontab to allow the repositories
+      to be automatically updated periodically. Alternatively, this script could be added as part of the post commit filters
+      (set by changing the <filename>CVSROOT/loginfo</filename> file),
+      enabling the &Git; repository to be updated as soon as a new &CVS;
+      commit is made. Examples of both of these are shown below.
+    </para>
+    <informalfigure>
+      <programlisting><![CDATA[
+# Update CVS mirrors
+0 * * * * /path/to/mirror/script/mirrorscript]]>
+      </programlisting>
+    </informalfigure>
+    <informalfigure>
+      <programlisting><![CDATA[
+* /path/to/mirror/script/mirrorscript %s]]>
+      </programlisting>
+    </informalfigure>
+    <figure>
+      <title>Complete &CVS; to &Git; conversion script</title>
+      <programlisting><![CDATA[
+#!/bin/bash -e
+# A script to convert sourceware's CVS repo to a set of Git repos
+# Written by Simon Cook <simon.cook@embecosm.com>
+
+# Copyright (c) 2013 Embecosm Limited
+
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+
+# You should have received a copy of the GNU General Public License along
+# with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#######################################
+##           Configuration           ##
+#######################################
+
+# 1. Location to store working directory (script will only work in there, except
+#    for removing CVSPS working files on each iteration)
+BASEDIR='/opt/sourcewaretree'
+# 2. Configuration for which repositories to upload
+#    To enable sync and upload, set the enable variable to 1 and destination
+#    (I have only included a selection here, but really can do all if we want)
+# CGEN
+CGEN=1
+CGENREPO="git@github.com:embecosm/cgen.git"
+# binutils
+BINUTILS=0
+BINURILSREPO="git@github.com:embecosm/binutils.git"
+# src - the entire tree
+ALLSRC=0
+ALLSRCREPO="git@github.com:embecosm/sourceware.git"
+
+# We need a custom function to merge in changes from the different
+# locations that changes may be found in.
+synccvs() {
+  # Make sure parent directory works, otherwise sync fails
+  mkdir -p `dirname ${DESTDIR}/${1}`
+  # Firstly if directory, sync dir
+  if test -d ${SRCDIR}/${1}; then
+    rsync -az ${SRCDIR}/${1}/ ${DESTDIR}/${1}
+    return
+  fi]]>
+      </programlisting>
+    </figure>
+    <informalfigure>
+      <programlisting><![CDATA[
+  # Next, if file not in attic, sync that
+  if test -e ${SRCDIR}/${1},v; then
+    rsync -az ${SRCDIR}/${1},v ${DESTDIR}/${1},v
+    return
+  fi
+  # Finally, check if file in attic, then sync that
+  if test -e `dirname ${SRCDIR}/${1}`/Attic/`basename ${SRCDIR}/${1}`,v; then
+    mkdir -p `dirname ${DESTDIR}/${1}`/Attic
+    rsync -az `dirname ${SRCDIR}/${1}`/Attic/`basename ${SRCDIR}/${1}`,v \
+      `dirname ${DESTDIR}/${1}`/Attic/`basename ${DESTDIR}/${1}`,v
+    return
+  fi
+  echo "Path doesnt exist! ${1}"
+  exit 1
+}
+
+# This function acts as an alias for synccvsing the src-support module found in
+# CVSROOT/modules on sourceware
+syncsrcsupport() {
+  synccvs src/.cvsignore
+  synccvs src/COPYING
+  synccvs src/COPYING3
+  synccvs src/COPYING.LIB
+  synccvs src/COPYING3.LIB
+  synccvs src/COPYING.NEWLIB
+  synccvs src/COPYING.LIBGLOSS
+  synccvs src/ChangeLog
+  synccvs src/MAINTAINERS
+  synccvs src/Makefile.def
+  synccvs src/Makefile.in
+  synccvs src/Makefile.tpl
+  synccvs src/README
+  synccvs src/README-maintainer-mode
+  synccvs src/compile
+  synccvs src/config
+  synccvs src/config-ml.in
+  synccvs src/config.guess
+  synccvs src/config.if
+  synccvs src/config.rpath
+  synccvs src/config.sub
+  synccvs src/configure
+  synccvs src/configure.ac
+  synccvs src/configure.in
+  synccvs src/contrib
+  synccvs src/depcomp
+  synccvs src/etc
+  synccvs src/gettext.m4
+  synccvs src/install-sh
+  synccvs src/lt~obsolete.m4]]>
+      </programlisting>
+    </informalfigure>
+    <informalfigure>
+      <programlisting><![CDATA[
+  synccvs src/ltgcc.m4
+  synccvs src/ltsugar.m4
+  synccvs src/ltversion.m4
+  synccvs src/ltoptions.m4
+  synccvs src/libtool.m4
+  synccvs src/ltcf-c.sh
+  synccvs src/ltcf-cxx.sh
+  synccvs src/ltcf-gcj.sh
+  synccvs src/ltconfig
+  synccvs src/ltmain.sh
+  synccvs src/makefile.vms
+  synccvs src/missing
+  synccvs src/mkdep
+  synccvs src/mkinstalldirs
+  synccvs src/move-if-change
+  synccvs src/setup.com
+  synccvs src/src-release
+  synccvs src/symlink-tree
+  synccvs src/ylwrap
+}
+
+# Get sources (we don't check out CVSROOT because we don't use it)
+export SRCDIR=${BASEDIR}/sourceware
+rsync -az -v --delete --delete-excluded --exclude CVSROOT/** \
+  sourceware.org::src-cvs/ ${SRCDIR}
+
+#######################################
+##            cgen Module            ##
+#######################################
+if test ${CGEN} == 1; then
+  export DESTDIR=${BASEDIR}/cgen
+  export GITDIR=${BASEDIR}/cgen.git
+  # Sync CVS Tree
+  rm -Rf ${DESTDIR}
+  mkdir -p ${DESTDIR}
+  syncsrcsupport
+  synccvs src/CVS
+  synccvs src/cgen
+  synccvs src/cpu
+  # Remove cvsps temporary files
+  CVSPSFILE=`echo ${DESTDIR} | sed 's/\//\#/g'`
+  rm -Rf ~/.cvsps/${CVSPSFILE}*
+  # Reinitialize cvs for our new repo and then convert (using src as module)
+  cvs -d ${DESTDIR} init
+  git cvsimport -v -d ${DESTDIR} -C ${GITDIR} -p -z,120 -o master -k src
+  # Push to GitHub
+  cd ${GITDIR}
+  git remote rm github || true
+  git remote add github ${CGENREPO}]]>
+      </programlisting>
+    </informalfigure>
+    <informalfigure>
+      <programlisting><![CDATA[
+  git push github --mirror
+fi
+
+#######################################
+##          binutils Module          ##
+#######################################
+if test ${BINUTILS} == 1; then
+  export DESTDIR=${BASEDIR}/binutils
+  export GITDIR=${BASEDIR}/binutils.git
+  # Sync CVS Tree
+  rm -Rf ${DESTDIR}
+  mkdir -p ${DESTDIR}
+  syncsrcsupport
+  synccvs src/CVS
+  synccvs src/binutils
+  synccvs src/opcodes
+  synccvs src/bfd
+  synccvs src/libiberty
+  synccvs src/include
+  synccvs src/gas
+  synccvs src/gprof
+  synccvs src/ld
+  synccvs src/gold
+  synccvs src/elfcpp
+ synccvs src/intl
+  synccvs src/texinfo
+  synccvs src/cpu
+  # Remove cvsps temporary files
+  CVSPSFILE=`echo ${DESTDIR} | sed 's/\//\#/g'`
+  rm -Rf ~/.cvsps/${CVSPSFILE}*
+  # Reinitialize cvs for our new repo and then convert (using src as module)
+  cvs -d ${DESTDIR} init
+  git cvsimport -v -d ${DESTDIR} -C ${GITDIR} -p -z,120 -o master -k src
+  # Push to GitHub
+  cd ${GITDIR}
+  git remote rm github || true
+  git remote add github ${BINUTILSREPO}
+  git push github --mirror
+fi
+
+#######################################
+##      src Module (everything)      ##
+#######################################
+if test ${ALLSRC} == 1; then
+  export DESTDIR=${BASEDIR}/allsrc
+  export GITDIR=${BASEDIR}/allsrc.git
+  # Sync CVS Tree
+  rm -Rf ${DESTDIR}
+  mkdir -p ${DESTDIR}
+]]>
+      </programlisting>
+    </informalfigure>  
+    <informalfigure>
+      <programlisting><![CDATA[
+  synccvs src
+  # Remove cvsps temporary files
+  CVSPSFILE=`echo ${DESTDIR} | sed 's/\//\#/g'`
+  rm -Rf ~/.cvsps/${CVSPSFILE}*
+  # Reinitialize cvs for our new repo and then convert (using src as module)
+  cvs -d ${DESTDIR} init
+  git cvsimport -v -d ${DESTDIR} -C ${GITDIR} -p -z,120 -o master -k src
+  # Push to GitHub
+  cd ${GITDIR}
+  git remote rm github || true
+  git remote add github ${ALLSRCREPO}
+  git push github --mirror
+fi]]>
+      </programlisting>
+    </informalfigure>
+  </chapter>
+  <chapter>
+    <title>Summary</title>
+    <para>
+      The following list can be used as a summary for porting a &CVS;
+      repository to a set of &Git; repositories. It serves as a list of 
+      functionality that any updating script should have.
+    </para>
+    <orderedlist>
+      <listitem>
+        <para>
+          Clone the repository (if needed) so that there is a local copy of
+          the &CVS; repository to work from (<xref linkend="chap_clone"/>).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Split up the repository copy into separate repositories for each
+          module, each of which will become &Git; repositories, utilising the
+          <function>synccvs</function> function as required
+          (<xref linkend="chap_split"/>).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Convert each component to a &Git; repository using
+          <command>cvsps</command> and <command>git cvs-import</command>
+          and push these repositories to their respective remotes
+          (<xref linkend="chap_conv"/>).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          (Optional) Set up a cron job or &CVS; post commit filter to
+          automatically incorporate changes
+          (<xref linkend="chap_script"/>).
+        </para>
+      </listitem>
+    </orderedlist>
+  </chapter>
+
+  <glossary>
+    <title>Glossary</title>
+    <glossentry>
+      <glossterm>&CVS;</glossterm>
+      <glossdef>
+        <para>
+          (Concurrent Versions System), open source client-server
+          revision control/source code management system.
+        </para>
+      </glossdef>
+    </glossentry>
+    <glossentry>
+      <glossterm>&Git;</glossterm>
+      <glossdef>
+        <para>
+          Open source distributed revision control/source code management system
+          originally developed by Linus Torvalds for the Linux kernel.
+        </para>
+      </glossdef>
+    </glossentry>
+    <glossentry>
+      <glossterm>Repository</glossterm>
+      <glossdef>
+        <para>
+          A store for source code (and other files) which maintains records of
+          which files were modified at a particular time, what those changes
+          were and who made them.
+        </para>
+      </glossdef>
+    </glossentry>
+  </glossary>
+
+  <bibliography>
+    <title>References</title>
+    <bibliomixed id="ref_gitdoc">
+      <title>&Git; Documentation</title>
+      <bibliomisc>
+        Available at <ulink url="http://git-scm.com/doc">http://git-scm.com/doc</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+    <bibliomixed id="ref_cvsdoc">
+      <title>&CVS; Documentation</title>
+      <bibliomisc>
+        Available at <ulink url="http://ximbiot.com/cvs/manual">http://ximbiot.com/cvs/manual</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+  </bibliography>
+</book>
