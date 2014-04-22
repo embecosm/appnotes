@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
                "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
 <!-- acronyms and abbreviations -->
@@ -7,12 +7,15 @@
 <!-- software applications -->
 <!ENTITY bash "<application class='software'>bash</application>">
 <!ENTITY CVS "<application class='software'>CVS</application>">
-<!ENTITY Git "<application class='software'>Git</application>">
+<!ENTITY git "<application class='software'>git</application>">
 <!ENTITY CGEN "<application class='software'>CGEN</application>">
 <!ENTITY sourceware "<application class='software'>sourceware</application>">
 
 <!-- commands -->
 <!ENTITY rsync "<application class='command'>rsync</application>">
+
+<!-- Products -->
+<!ENTITY arduino "<application class='hardware'>Arduino</application>">
 
 <!-- organizations -->
 
@@ -24,24 +27,24 @@
 ]>
 
 <book lang="en_US">
-  <title>Howto: &CVS; to &Git;</title>
-  <subtitle>Efficient Multi-Module &CVS; Migration</subtitle>
+  <title>&Embecosm; Hardware Projects</title>
+  <subtitle>Build Instructions</subtitle>
 
   <bookinfo>
     <author>
-      <firstname>Simon</firstname>
-      <surname>Cook</surname>
+      <firstname>Emma</firstname>
+      <surname>Bennett</surname>
     </author>
 
     <corpauthor>
       <ulink url="http://www.embecosm.com">&embecosm;</ulink>
     </corpauthor>
 
-    <pubdate>February 2013</pubdate>
-    <releaseinfo>Application Note 11. Issue 1</releaseinfo>
+    <pubdate>April 2014</pubdate>
+    <releaseinfo>Application Note 12. Issue 1</releaseinfo>
 
     <copyright>
-      <year>2012</year>
+      <year>2014</year>
       <holder>&embecosm; Limited</holder>
     </copyright>
 
@@ -54,7 +57,7 @@
         or send a letter to Creative Commons, 171 Second Street, Suite 300,
         San Francisco, California, 94105, USA.
       </para>
-  
+
       <para>
         This license means you are free:
         <itemizedlist>
@@ -105,79 +108,33 @@
   <chapter>
     <title>Introduction</title>
     <para>
-      For many years, &CVS; has been the primary tool used by teams of
-      developers on large software code bases, allowing each developer to work 
-      on a single master version of the software. This tool is in continued use
-      today, despite the introduction of alternatives which do not suffer from
-      many of the disadvantages found in &CVS;. One such popular example is
-      &Git;, a distributed versioning tool created and popularized by Linus
-      Torvalds.
+      As part of its commitment to the free and open source engineering
+      community, &embecosm; visits schools, community groups and hobbyist
+      converences, running courses to introduce people to the wonders of
+      electronics. These courses are largely based on simple &arduino; like
+      processors.
     </para>
     <para>
-      Tools exist for migrating repositories from &CVS; to &Git;, but these can 
-      suffer from issues such as being buggy and slow when used with remote
-      repositories, issues with repeating path names and non-maintainability
-      (once a repository has been converted, it cannot be fast-forwarded to the
-      latest version). The issue of multiple modules becomes more complex when
-      there are modules whose name is also a top-level directory in the source
-      tree, but where the module does not consist of just that directory; some
-      tools check out just the directory and others the module.
-    </para>
-    <para>
-      This application note covers the process of migrating multiple &CVS;
-      modules from a remote repository to separate &Git; repositories with
-      these tools in a reliable way, whilst minimizing
-      network traffic to remote &CVS; servers when extracting and converting
-      multiple modules (i.e. each file is only checked out once using this
-      process once regardless of the number of modules that will be converted).
-      It also solves the module-directory issue by stripping down the repository
-      to just the required files and then cloning the new repository in its
-      entirety.
+      &embecosm; does not sell the kits used on these courses. However the full
+      specification of each kit is given on our website. This application note
+      provides full details of how to construct each kit.
     </para>
 
     <sect1>
       <title>Target Audience</title>
       <para>
-        This Application Note is aimed primarily at &Git; users who wish to
-        import &CVS; repositories into their existing work flows and for
-        developers/administrators who wish to do a permanent or continuous 
-        one-way migration from &CVS; to &Git;. This note assumes basic
-        familiarity with &Git; (i.e. the concept of a remote and a repository)
-        but does not assume familiarity with &CVS;. This script also assumes 
-        understanding of a user's preferred shell; commands written are 
-        compatible with the &bash; shell but should easily be convertible to 
-        another shell.
+        This Application Note is aimed primarily at hobbyist and students who
+	wish to deepen their knowledge of electronics through use of the
+	&embecosm; hardware kits.
       </para>
-    </sect1>
-
-    <sect1>
-      <title>Example</title>
-      <para>
-        An example of this system is &Embecosm;'s mirror of the &sourceware; &CVS;
-        repository, mirroring the &CGEN; module as a &Git; repository. This can
-        be found at <ulink url='http://www.github.com/embecosm/cgen'>http://github.com/embecosm/cgen</ulink>
-        and is actively maintained via the same process described here.
-        This mirror is used as an example throughout this application note.
-      </para>
-      <para>
-        For the code examples used in this application note, the following shell
-        variables should be set as follows.
-      </para>
-      <programlisting>
-${DESTDIR} : <replaceable>destination directory for module specific &CVS; repo</replaceable>
-${GITDIR}  : <replaceable>destination directory for module specific &Git; repo</replaceable>
-${REPOURL} : <replaceable>URL to push the module specific &Git; repository to</replaceable>
-${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CVS; repo</replaceable>
-      </programlisting>
     </sect1>
 
     <sect1>
       <title>Further information</title>
       <para>
-        The main source of information regarding the use of &Git; is the &Git; documentation <xref linkend="ref_gitdoc"/>. This documentation can either be browsed on the &Git; website or is installed as man pages with the main &Git; distribution.
-      </para>
-      <para>
-        Similarly, documentation for &CVS; <xref linkend="ref_cvsdoc" />, is also included with its distribution.
+        In addition to this document, some of the kits have their own &git;
+	repositories as part of the <literal>embecosm</literal> organization
+	on <application class="software">GitHub</application>.
       </para>
     </sect1>
 
@@ -212,10 +169,18 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-                This is the cuttle fish board with nothing on it, you should make sure that you have yours the correct way round .
+                This is the cuttlefish board with nothing on it, you should
+                make sure that you have yours the correct way round .
               </para>
             </entry>
-            <entry>Picture</entry>
+            <entry>
+	      <mediaobject>
+		<imageobject>
+		  <imagedata fileref="image/cuttlefish-bare.png"
+			     format="PNG" />
+		</imageobject>
+	      </mediaobject>
+	    </entry>
           </row>
           <row>
             <entry>
@@ -228,8 +193,9 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-               When soldering your best friend is Blutack!  use it to keep components in place by sticking it on top of 
-               them and then to the table.
+		When soldering your best friend is Blutack!  use it to keep
+		components in place by sticking it on top of them and then to
+		the table.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -245,7 +211,11 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-               First of all you need to solder on the 28 pin socket, this goes right in the middle of the board, once you have soldered it on you can insert the Atmega chip making sure the      		       notches on the socket and on the chip are not pointing towards the pointy end of the chip.
+		First of all you need to solder on the 28 pin socket, this
+		goes right in the middle of the board, once you have soldered
+		it on you can insert the Atmega chip making sure the notches
+		on the socket and on the chip are not pointing towards the
+		pointy end of the chip.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -261,7 +231,9 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-              Now you need to solder on the 10uf capacitor (the one that looks like a tin can!) this one goes right at the pointy end of the cuttlefish board.
+		Now you need to solder on the 10uf capacitor (the one that
+		looks like a tin can!) this one goes right at the pointy end
+		of the cuttlefish board.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -277,7 +249,10 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-              Next to solder is the 16MHz crystal, this is the next component along the board from the 10uf capacitor. sometimes it helps to put a small piece of  cardboard underneath to ensure  		      that the component does not touch the board.
+              Next to solder is the 16MHz crystal, this is the next component
+              along the board from the 10uf capacitor. sometimes it helps to
+              put a small piece of cardboard underneath to ensure that the
+              component does not touch the board.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -293,7 +268,9 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-              After that comes the 22pf capacitors , they are next in line working from the pointy end of the board and they go side by side.
+		After that comes the 22pf capacitors , they are next in line
+		working from the pointy end of the board and they go side by
+		side.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -309,7 +286,10 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-              Now solder on three of the 100nf capacitors, these go in a row between the 22pf capacitors and the 28 pin socket and chip. The other 100nf capacitor needs to be soldered on right 		      next to the other end of the 28 pin socket and chip
+		Now solder on three of the 100nf capacitors, these go in a row
+		between the 22pf capacitors and the 28 pin socket and
+		chip. The other 100nf capacitor needs to be soldered on right
+		next to the other end of the 28 pin socket and chip
               </para>
             </entry>
             <entry>Picture</entry>
@@ -325,7 +305,9 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-              Next you must solder on the 6mm tactile switch, on the board this comes straight after the 100nf capacitor in the square drawn on the board.
+		Next you must solder on the 6mm tactile switch, on the board
+		this comes straight after the 100nf capacitor in the square
+		drawn on the board.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -341,7 +323,9 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-             Now solder on the 10kohm resistor (brown black orange), if you hold your board pointy end down it goes on the right hand side of the 6mm tactile switch and 100nf capacitor.
+		Now solder on the 10kohm resistor (brown black orange), if you
+		hold your board pointy end down it goes on the right hand side
+		of the 6mm tactile switch and 100nf capacitor.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -357,7 +341,11 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-             The next component to solder on is the diode, if you hold your board pointy end down it goes on the left hand side of the 6mm tactile switch and 100nf capacitor, with the thick black 		     stripe pointing upwards. The diode is one of the few components that you do need to get the correct way round.
+		The next component to solder on is the diode, if you hold your
+		board pointy end down it goes on the left hand side of the 6mm
+		tactile switch and 100nf capacitor, with the thick black
+		stripe pointing upwards. The diode is one of the few
+		components that you do need to get the correct way round.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -373,7 +361,14 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
           <row>
             <entry>
               <para>
-             Finally break the 40 pin header (using pliers or just snaping) into two sections of 16 pins and one section of six pins and you should have two spare pins left over.  The two 16 pin 		     sections need soldering on the bottom of the board one either side of the 28 pin socket and chip, so that the pins are pointing down off the bottom of the board. The six pin section 		     needs to be soldered right on the end of the board after the 6mm tactile switch.
+		Finally break the 40 pin header (using pliers or just snaping)
+		into two sections of 16 pins and one section of six pins and
+		you should have two spare pins left over.  The two 16 pin
+		sections need soldering on the bottom of the board one either
+		side of the 28 pin socket and chip, so that the pins are
+		pointing down off the bottom of the board. The six pin section
+		needs to be soldered right on the end of the board after the
+		6mm tactile switch.
               </para>
             </entry>
             <entry>Picture</entry>
@@ -382,79 +377,13 @@ ${SRCDIR}  : <replaceable>source directory for storing initial local copy of &CV
       </tgroup>
     </table>
 
-      <para>
-      
-      </para>
-      <para>
-
-    </para>
-    <para>
-      There are two ways in which this can be done. The first method uses
-      &rsync; (or other similar tool) to clone the repository, if such access to
-      the bare repository available. Using &rsync; for this task has the
-      benefit that it minimizes network traffic when updating this copy in
-      the future and additionally allows directories to be omitted as required,
-      for example those that will not feature in any converted repository.
-    </para>
-    <para>
-      For this purpose, the <filename>CVSROOT</filename> directory can be
-      omitted. In the authors experience, the directory is approximately half
-      the size of the entire repository and is not used in any other conversion
-      step, so not downloading this directory dramatically reduces the time and
-      resources needed to complete the conversion.
-    </para>
-    <informalfigure>
-      <programlisting>
-rsync -az -v --delete --delete-excluded --exclude CVSROOT/** \
-  sourceware.org::src-cvs/ ${SRCDIR}
-      </programlisting>
-    </informalfigure>
-    <para>
-      The second method, which can be used if bare repository access is not
-      possible is to use a tool like <command>cvsclone</command> to duplicate
-      the entire repository (using the module name "<filename>.</filename>" or
-      the name of the repositories top level directory).
-    </para>
-    <note>
-      <para>
-        <command>cvsclone</command> is not always found in an operating
-        system's software repository. For this guide, the author obtained
-        a working copy of <command>cvsclone</command> from
-        <ulink url="https://github.com/akavel/cvsclone">
-        https://github.com/akavel/cvsclone</ulink>.
-      </para>
-    </note>
-    <para>
-      For example, to clone the &sourceware; repository, the following command
-      would be used. The tool accepts two parameters, the first being the
-      location of the &CVS; repository to clone (after the <function>-d</function>
-      argument) and the second being the module/directory to be cloned.
-    </para>
-    <informalfigure>
-      <programlisting>
-cvsclone -d :pserver:anoncvs@sourceware.org:/cvs/src src
-      </programlisting>
-    </informalfigure>
-    <para>
-      The <function>-d</function> parameter specifies the &CVS; server to
-      connect to, with <filename>src</filename> being the module to clone.
-    </para>
-    <note>
-      <para>
-        <command>cvsclone</command> takes a lot of time to complete creating
-        a new clone. This is due to it checking out each version of a file
-        sequentially. For large repositories it could take several days for
-        the initial clone operation to complete.
-      </para>
-    </note>
   </chapter>
 
-  
   <chapter>
     <title>Summary</title>
     <para>
       The following list can be used as a summary for porting a &CVS;
-      repository to a set of &Git; repositories. It serves as a list of 
+      repository to a set of &Git; repositories. It serves as a list of
       functionality that any updating script should have.
     </para>
     <orderedlist>
