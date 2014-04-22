@@ -1,3 +1,29 @@
+2014-04-22  Emma Bennett  <emma.bennett@embecosm.com>
+
+	* ean12/images/cuttlefish-100nF-pullup-cap-soldered.jpg: Created.
+	* ean12/images/cuttlefish-100nf-buffer-cap-soldered.jpg: Created.
+	* ean12/images/cuttlefish-10k-resistor-soldered.jpg: Created.
+	* ean12/images/cuttlefish-10uf-cap-loose-inverted.jpg: Created.
+	* ean12/images/cuttlefish-10uf-cap-loose.jpg: Created.
+	* ean12/images/cuttlefish-10uf-cap-soldered.jpg: Created.
+	* ean12/images/cuttlefish-22pf-cap-clipped.jpg: Created.
+	* ean12/images/cuttlefish-22pf-cap-loose.jpg: Created.
+	* ean12/images/cuttlefish-22pf-cap-soldered.jpg: Created.
+	* ean12/images/cuttlefish-bare.jpg: Created.
+	* ean12/images/cuttlefish-blink.jpg: Created.
+	* ean12/images/cuttlefish-blutack.jpg: Created.
+	* ean12/images/cuttlefish-diode-loose.jpg: Created.
+	* ean12/images/cuttlefish-large-header-loose.jpg: Created.
+	* ean12/images/cuttlefish-large-header-soldered.jpg: Created.
+	* ean12/images/cuttlefish-mpu-inserted.jpg: Created.
+	* ean12/images/cuttlefish-small-header-soldered.jpg: Created.
+	* ean12/images/cuttlefish-socket-alignment.jpg: Created.
+	* ean12/images/cuttlefish-socket-insert-loose.jpg: Created.
+	* ean12/images/cuttlefish-socket-soldered.jpg: Created.
+	* ean12/images/cuttlefish-socket-tacking.jpg: Created.
+	* ean12/images/cuttlefish-switch-soldered.jpg: Created.
+	* ean12/images/cuttlefish-xtal-soldered.jpg: Created.
+
 2014-04-22  Jeremy Bennett  <jeremy.bennett@embecosm.com>
 
 	* ean12/ean12-hardware-projects.docbook: Added example of how to
