@@ -1,0 +1,9 @@
+2014-04-22  Jeremy Bennett  <jeremy.bennett@embecosm.com>
+
+	* .gitignore: Created.
+	* ChangeLog: Created.
+	* ean12/Makefile: Created.
+	* ean12/custom.wordlist: Created.
+	* ean12/ean12-hardware-projects.docbook: Created.
+
+	All previous code for appnotes 1-11 imported from Subversion
