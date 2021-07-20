@@ -1,0 +1,2528 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!-- acronyms and abbreviations -->
+
+<!-- software applications -->
+<!ENTITY gtkwave "<application class='software'>GTKWave</application>">
+
+<!-- Logic gate names -->
+<!ENTITY lognot "<emphasis role='strong'>NOT</emphasis>">
+<!ENTITY logand "<emphasis role='strong'>AND</emphasis>">
+<!ENTITY lognand "<emphasis role='strong'>NAND</emphasis>">
+<!ENTITY logor "<emphasis role='strong'>OR</emphasis>">
+<!ENTITY lognor "<emphasis role='strong'>NOR</emphasis>">
+<!ENTITY logxor "<emphasis role='strong'>XOR</emphasis>">
+<!ENTITY logxnor "<emphasis role='strong'>XNOR</emphasis>">
+
+<!-- components -->
+<!ENTITY de0nano "<application class='hardware'>DE0 Nano</application>">
+<!ENTITY jtag "<application class='hardware'>JTAG</application>">
+<!ENTITY uart "<application class='hardware'>UART</application>">
+
+<!-- commands -->
+<!ENTITY rsync "<application class='command'>rsync</application>">
+
+<!-- organizations -->
+<!ENTITY Embecosm "Embecosm">
+<!ENTITY embecosm "Embecosm">
+
+<!ENTITY embecosm_www "Embecosm(<ulink url='http://www.embecosm.com'>www.embecosm.com</ulink>)">
+
+]>
+
+<book lang="en_US">
+  <title>Chiphack: for teens</title>
+  <subtitle>Silicon chip design for teenagers</subtitle>
+
+  <bookinfo>
+    <author>
+      <firstname>Dan</firstname>
+      <surname>Gorringe</surname>
+    </author>
+
+    <corpauthor>
+      <ulink url="http://www.embecosm.com">&embecosm;</ulink>
+    </corpauthor>
+
+    <pubdate>October 2014</pubdate>
+    <releaseinfo>Application Note 12. Issue 1</releaseinfo>
+
+    <copyright>
+      <year>2014</year>
+      <holder>&embecosm; Limited</holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <title>Legal Notice</title>
+      <para>
+        This work is licensed under the Creative Commons Attribution 2.0 UK:
+        England &amp; Wales License. To view a copy of this license, visit
+        <ulink url="http://creativecommons.org/licenses/by/2.0/uk/">http://creativecommons.org/licenses/by/2.0/uk/</ulink>
+        or send a letter to Creative Commons, 171 Second Street, Suite 300,
+        San Francisco, California, 94105, USA.
+      </para>
+
+      <para>
+        This license means you are free:
+        <itemizedlist>
+          <listitem>
+            <para>to copy, distribute, display, and perform the work</para>
+          </listitem>
+          <listitem>
+            <para>to make derivative works</para>
+          </listitem>
+        </itemizedlist>
+        under the following conditions:
+        <itemizedlist>
+          <listitem>
+            <para>
+              <emphasis>Attribution.</emphasis> You must give the original
+              author, &embecosm_www;, credit;
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              For any reuse or distribution, you must make clear to others the
+              license terms of this work;
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Any of these conditions can be waived if you get permission from
+              the copyright holder, &embecosm;; and
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Nothing in this license impairs or restricts the author's moral
+              rights.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+
+      <para>
+        &embecosm; is the business name of &embecosm; Limited, a private
+        limited company registered in England and Wales. Registration number
+        6577021.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <chapter>
+    <title>Introduction</title>
+    <para>
+      Chiphack <xref linkend="ref_chiphack"/> is a workshop which teaches the
+      basics of silicon chip design. In this application note it has been
+      redesigned to allow teenagers to learn silicon chip design.
+    </para>
+
+    <sect1>
+      <title>
+	What is an FPGA?
+      </title>
+
+      <para>
+	A Field Programmable Gate Array (FPGA) is basically a code-your-own
+	circuit board in which you can design anything for hardware. To
+	describe our design, we use a Hardware description language (HDL), and
+	in this case we will be using Verilog. The goal of this is for teens to
+	come away with enough know-how to be interested and be able to learn
+	more about both FPGAs and computer science.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Target Audience
+      </title>
+
+      <para>
+	This guide is for teenagers who have an interest in computing. No
+	previous knowledge of FPGAs or even programming/computing is needed, so
+	therefore should be suitable for most people with an attention span and
+	a minimal sense of humour.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Difference to software design
+      </title>
+
+      <para>
+	So what is the difference between this, and learning other computer
+	languages such as Java or C? With Verilog you are learning to work with
+	hardware, where unlike software devlopment, everything happens at
+	once. It therefore needs to be approached differently and strange
+	things may happen if you forget: <emphasis>Verilog is
+	Parallel</emphasis>.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	What you will need
+      </title>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    An FPGA development board. I will be using a Terasic &de0nano; (see
+	    <xref linkend="ref_de0_nano"/>).  If you wish to use a different
+	    board you will may need different tools to begin, though the
+	    concepts are common to any FPGA you may use.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    A laptop or PC. This is used to program the device via USB.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    An Internet connection
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Willingness to learn
+	  </para>
+	</listitem>
+      </orderedlist>
+
+    </sect1>
+  </chapter>
+
+  <chapter id="Quartus">
+    <title>Getting Quartus Going</title>
+    <sect1>
+      <title>
+	What is Quartus?
+      </title>
+
+      <para>
+        Quartus is the Verilog compiler that we will be using to build our
+        projects.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Quartus for Windows
+      </title>
+
+      <para>
+        For this you will need: a computer running Windows, a CD with Altera's
+        Quartus software<xref linkend="ref_Quartus"/> , a drink/snack and an
+        Internet connection. (If you don't have the CD to hand, you can grab
+        the software online, making sure to get the web edition.)
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    Put in the CD, and run the <filename>setup.exe</filename> to
+	    install.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Wait for installation to complete. Get snack/drink (this will take
+	    ages).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Download Altera's Windows USB blaster driver<xref
+	    linkend="ref_BlasterWindows"/> (to save time later).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Download the CP210x USB to UART Bridge Driver<xref
+	    linkend="ref_cp210x_vcp_windows"/> and PuTTY terminal application
+	    <xref linkend="ref_PuTTY"/>. These will be used in the examples to
+	    set up a serial connection to the &de0nano;.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Download the examples (<filename>.zip</filename> format) from
+	    chiphack.org<xref linkend="ref_chiphack"/>.
+	  </para>
+	</listitem>
+      </orderedlist>
+    </sect1>
+
+    <sect1>
+      <title>
+	Quartus for Linux
+      </title>
+
+      <para>
+        For this you will need: a computer running Linux, CD with Altera's
+        Quartus software<xref linkend="ref_Quartus"/>, a drink/snack and an
+        Internet connection. (If you don't have the CD to hand, you can grab
+        the software online, making sure to get the web edition.)
+      </para>
+
+      <orderedlist>
+	<listitem>
+	  <para>
+	    Put in the CD, and run <filename>setup.sh</filename>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Wait for installation to complete. Get snack/drink (this will take
+	    ages).
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Download Altera's Linux USB blaster driver. <xref
+	    linkend="ref_BlasterLinux"/>
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Download the examples (<filename>.zip</filename> format) from
+	    chiphack.org<xref linkend="ref_chiphack"/>.
+	  </para>
+	</listitem>
+      </orderedlist>
+
+      <note>
+	<para>
+      	By default, to the board you will need root permissions (very
+      	important). Don't be mistaken by being able to follow the rest of the
+      	tutorial without doing so. When you first open the tools after
+	installation, the tools will be run as root.
+	</para>
+      </note>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="GettingGoing">
+    <title>
+      Getting Something Running
+    </title>
+
+    <sect1>
+      <title>
+	LEDs
+      </title>
+
+      <para>
+        Open Quartus<xref linkend="ref_Quartus"/>, go to <filename> File >
+        Open Project</filename> then find the sample project <filename>
+        DE0_NANO</filename><xref linkend="ref_de0_nano"/> from the
+        <filename>.zip</filename> you downloaded as part of Getting Quartus
+	Going.
+      </para>
+
+      <note>
+	<para>
+	  If you are running Linux you will need to rename <filename>
+	  .sdc</filename> to <filename>.SDC</filename>(note capitials).
+	</para>
+      </note>
+
+      <para>
+	Next open the <filename>.v</filename> file and add it to the project.
+      </para>
+
+      <para>
+	If you run this project as is, nothing will happen apart from the
+	LEDs ceasing to glow nicely. Therefore under
+	<computeroutput>REG/WIRE</computeroutput> declarations write:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+wire [07:00] leds;
+assign LED[07:00] = leds;
+assign leds = 1;
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Next run the assembler (very important), followed by the programmer.
+	Ensure hardware is set to USB-Blaster, add the <filename>.sof</filename>
+	file and press "start" (for best/any results have the &de0nano; plugged
+	in).
+      </para>
+
+      <note>
+	<para>
+	  You may have to change the dropdown in the <computeroutput>Tasks
+ 	  </computeroutput> window from the <literal>Full design</literal> flow
+	  to <literal>Compilation</literal>.
+	</para>
+      </note>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Binary
+      </title>
+
+      <para>
+        <quote>There are 10 types of people in this world. People who
+        understand binary, and those who don't.</quote>
+      </para>
+
+      <para>
+	On the strip of LEDs you can see that 1 is represented by the first
+	led lighting up. If we change the <literal>assign leds</literal> to
+	equal 2 and run it, we see that the second LED lights up, and if we
+	change it to 3 then both the first and the second LEDs light up. This
+	is because these are represented in binary.
+      </para>
+      <para>
+	Binary is made up of 0s and 1s, and each column represents a different
+	number, the first being 1, second being 2, third being 4, then 8 and 16
+	and so on. With these numbers you can make any other number for example
+	19 can be represented as 10011, as 16 + 2 + 1 = 19 (see <xref linkend="fig_Binary"/>).
+      </para>
+
+      <figure id="fig_Binary">
+	<title>
+	  Binary representations of numbers
+	</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="binaryRLS.png"
+		       format="PNG"
+		       width="90%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </sect1>
+
+  </chapter>
+
+  <chapter>
+    <title>
+      Computer Logic
+    </title>
+
+    <para>
+      When programming in Verilog, you are designing hardware, therefore it is
+      important you can understand how it works, so what is a computer's
+      'logic'?
+    </para>
+
+    <para>
+      To begin with computers are effectively complex circuit boards, they use
+      wires to transfer inputs, however a wire can only be in 2 states: on
+      (1) or off (0).
+    </para>
+
+    <sect1>
+      <title>
+      Addition
+      </title>
+
+      <para>
+	Adding numbers together on a calculator is easy, but how is it
+	done? As we have already found out, computers use binary. Therefore
+	we must first see what the sums would look like in binary, or atleast
+	the inputs and outcomes.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+01 one
+01 plus one
+__
+10 two
+	</programlisting>
+      </informalfigure>
+
+      <informalfigure>
+	<programlisting>
+01 one
+00 plus zero
+__
+01 one
+	</programlisting>
+      </informalfigure>
+
+      <informalfigure>
+	<programlisting>
+010 two
+010 plus two
+__
+100 four
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	With this we can spot a pattern, which we can use to make a basic
+	calculator. If there is a single 'one' then it will display that else
+	if there are two 'ones' then you shift over the 'one'. For example:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+010 two
+001 plus one
+__
+011 three
+	</programlisting>
+      </informalfigure>
+
+      <sect2>
+	<title>
+	  Logic Gates
+	</title>
+
+	<para>
+	  To then create this we would have to use logic gates. A logic gate
+	  is a building block for manipulating inputs into outputs, for
+	  example a &lognot; gate will take in a '0' and output a '1'. Other
+	  gates, use 2 inputs, though only produce 1 output. For example an
+	  &logand; gate will only set its output on if both of its inputs are
+	  on. You can probably guess what an &logor; gate does: if at least one
+	  input is 1, then the output is 1. You could use an &logxor; gate,
+	  which will only output '1' if only one of its inputs are '1' not both.
+	</para>
+
+	<note>
+	  <para>
+	    You can use gates such as &lognand; which is both &lognot; and
+	    &logand; so if will output 1 if both input wires are not 1. The
+	    same applies for &lognor; and &logxnor;.
+	  </para>
+	</note>
+
+	<para>
+	  Logic gates are normally explained through diagrams, such as those
+	  found in <xref linkend="fig_LogicGates"/>.
+	</para>
+
+	<figure id="fig_LogicGates">
+	  <title>
+	    Symbols for different logic gates
+	  </title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="LogicGates.png"
+			 format="PNG"
+			 width="90%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>
+	  For our basic calculator, we will be able to add by saying there
+	  are either zero, one or two for each binary digit. We will have two
+	  inputs per binary digit, so for each digit you can check to see if:
+	  its output should be one (with &logxor;) or if both are on (with
+	  &logand;), if both are down, add one to the the next digit, if it is
+	  on its own, make the output for said wire '1'.
+	</para>
+
+	<note>
+	  <para>
+	    Using the popular game Minecraft, and its redstone mechanic you
+	    can create computer logic. It's not too hard to create a working
+	    calculator such as this.
+	  </para>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="minecraftlogic.png"
+			 format="PNG"
+			 width="90%"
+			 scalefit="1"
+			 align="center" />
+	    </imageobject>
+	  </mediaobject>
+	</note>
+
+      </sect2>
+
+    </sect1>
+
+  </chapter>
+
+
+  <chapter id="chap_clone">
+    <title>
+      Counters Projects
+    </title>
+
+    <sect1>
+      <title>
+	Manual Counter
+      </title>
+
+      <para>
+        First we will make a counter which goes up on our command alone. For
+	this we need an empty <filename>.v</filename> file, so load up
+        <filename>DE0_NANO.v</filename><xref linkend="ref_de0_nano"/> and
+        empty it. For this project, we will be learning how to make a
+        <filename>.v</filename> file from the beginning, and to start we need
+	to declare a module, which is done like this:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+module DE0_NANO(LED,KEY);
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	More generally the following format is used:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+	  module &lt;module name&gt; (&lt;list on inputs and outputs&gt;);
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	First we declare the name of the module to be <filename>DE0_NANO
+	</filename>, as the top-level module needs to be the name of the
+	project. We next declare the inputs and outputs used by the module,
+	fully stating which are inputs and which are outputs.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+input  [01:00] KEY; // we then declare that there are two buttons
+output [07:00] LED; // and 8 LEDs
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	We then need to create our registers and wires, but first it is
+	important to understand what the difference between these are. A wire
+	can not store data, it is either on or off, whereas a register can
+	store data.
+      </para>
+    <informalfigure>
+      <programlisting>
+	wire [07:00] leds_out;
+	reg  [07:00] counter;
+      </programlisting>
+    </informalfigure>
+
+    <para>
+      We then need to assign our registers to their outputs:
+    </para>
+
+    <informalfigure>
+      <programlisting>
+assign leds_out = counter;              // note: a comment is simply two
+assign LED[07:00] = leds_out[07:00];    // slashes, and creates a comment
+assign add = KEY[01];                   // for the rest of the line
+      </programlisting>
+    </informalfigure>
+
+    <note>
+      <para>
+	We can assign wires to registers straight away. All we need to do is
+	add an equals sign followed by what its going to be assigned to,
+	followed by a semicolon. For example we could have said:
+      </para>
+
+      <informalfigure>
+	<programlisting>
+wire [07:00] leds_out = counter;
+	</programlisting>
+      </informalfigure>
+    </note>
+
+    <para>
+      Then we need to create an initial statement so that our register starts
+      with a known value, as otherwise it would be random.
+    </para>
+
+    <informalfigure>
+      <programlisting>
+initial counter = 1
+
+/* Note there are also block comments that comment out the entire
+   area between them and is simply a slash and a star.
+ */
+      </programlisting>
+    </informalfigure>
+
+    <para>
+      Once we have declared all our wires, registers and infrastructure we
+      have to write the code that does things, which in this case is a counter
+      that works manually, on the press of a key. We start this using an
+      <literal>always</literal> block: within a <literal>begin</literal> and
+      <literal>end</literal>, you state what will happen every
+      <literal>posedge</literal> (positive edge) clock, or whatever you chose
+      (you can also use <literal>negedge</literal>).
+    </para>
+
+    <informalfigure>
+      <programlisting>
+always @(posedge add) begin
+        counter &lt;= counter + 1;
+end
+      </programlisting>
+    </informalfigure>
+
+    <note>
+      <para>
+	Here you can see that we have used '&lt;=', which represents
+	<quote>will become</quote>. This means that on the next
+	<quote>add</quote>, <varname>counter</varname> will be incremented by
+	one. This called a <emphasis>non-blocking assignment</emphasis> as it
+	doesn't block execution while it occurs. It does not happen straight
+	away, as this may interfere with other commands in your code, which
+	would then create a race condition in the hardware. For example if you
+	have an <literal>if (count == 1)</literal> but if
+	<varname>counter</varname> = <literal>count + 1</literal> then this
+	would happen straight away and <varname>count</varname> would not equal
+	1 when you want it to. 
+      </para>
+
+      <para>
+	Make sure to always use non-blocking assignments.
+      </para>
+    </note>
+
+    <informalfigure>
+      <programlisting>
+end module
+      </programlisting>
+    </informalfigure>
+
+    <para>
+      The <literal>end module</literal> is not for the <literal>always
+      </literal> block but instead finishes the module we started at the
+      beginning, it is very important to have enough <literal>ends</literal>
+      and <literal>end module</literal>s, as well as keeping them properly
+      indented so your code is easily read. Now when we run this we should get
+      a lovely manual counter. What should happen is that every time that we
+      press down on the add button the variable of count will go up by one and
+      then the leds will display the count.
+    </para>
+
+  </sect1>
+
+    <sect1>
+      <title>
+	Automatic Counter
+      </title>
+
+      <para>
+	Since we have created a manual counter and we are getting of bored of
+	trying to find a pen to press down on KEY[01], it is time we
+	made an autonomous counter!
+      </para>
+
+      <sect2>
+        <title>
+	  Clocks
+	</title>
+
+	<para>
+	  For this we will be using a clock, but first what is a clock? (note:
+	  Not the one you find on the wall). In hardware, a clock is less of a
+	  clock more of a crazy metronome for fans of sabre dance<xref
+	  linkend="ref_SabreDance"/>, but instead of sound it outputs ones and
+	  zeros. A clock changes from 0 to 1 and back inside a cycle. This is
+	  what changes when you hear about the 'speed' of a computer, for
+	  example in the fastest i7 processor, a cycle will happen
+	  3,800,000,000 (a very big number) times a second! However clocks are
+	  not perfect, they don't precisely go up on every cycle instead they
+	  slope, therefore making a positive and a negative edge, positive
+	  being from 0 to 1 and negative the opposite.
+        </para>
+
+      </sect2>
+
+      <sect2>
+	<title>
+	  Implementing the Counter
+	</title>
+
+	<para>
+	  If we take the code we have just written we can change the line
+	  which tells us on KEY[01] do this to on
+	  <varname>CLOCK_50</varname>. Though first we will need to create
+	  <varname>CLOCK_50</varname> as an input of the module. It is named
+	  this as of the clock in the chip runs at 50 MHz. So the module will
+	  become:
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+module DE0_NANO (LED,KEY,CLOCK_50) // note we do not have to use
+                                   // all of the inputs
+   input [01:00] KEY;
+   input CLOCK_50;
+   output [07:00] LED;
+
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  and now we can change the trigger in the <literal>always</literal>
+	  block to <varname>CLOCK_50</varname>.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+always @(posedge CLOCK_50)
+   count &lt;= count +1
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  However if we now run this we will see 255 displayed on the leds,
+	  this is because the clock is going so fast that we cannot even see
+	  it count, therefore to fix it we will use wider registers: we will
+	  change our count register to be 32 bits wide.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+   reg [31:00] count;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  If we were to run this we would get the same result as previously.
+	  However if we then stated that we wanted the LEDs to only show the
+	  output of the highest 8 digits, it will appear as if the clock is
+	  going  slower. We create this by only selecting a small amount of the
+	  register, the highest 8 digits. Imagine that there are also another 24
+	  LEDs to the left/right of your display.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+   assign leds_out = count[31:24]
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  If we now run this we will see that the leds will now count slowly.
+	  Note you can change the registers to create a slower or faster
+	  clock if you wish.
+	</para>
+
+	<para>
+	  However with this we have to command over what happens, with no
+	  control to stop the clock. We can reintroduce
+	  <varname>KEY[01]</varname> to stop and
+	  then restart the counting. This is done by adding a new register
+	  called <varname>go</varname> and <literal>if</literal> statements to
+	  declare when and when not to run. Firstly we need to add a register.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+   reg go;
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  As you can see we don't need to specify the size of our go register
+	  as is only being used as 0 and 1. The default size of 1 bit is
+	  sufficient.
+	</para>
+
+	<para>
+	  Then we introduce the KEY[01] and by pressing once it will turn go
+	  on, and then again it will turn the count of.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+   always @(posedge KEY[01]) begin
+      if (go == 1)
+         go &lt;= 0;
+      else
+         go &lt;= go + 1;
+   end
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  We then add <literal>if</literal> statements to the posedge of the
+	  clock to stop the count once <varname>go</varname> is 0.
+	</para>
+
+	<informalfigure>
+	  <programlisting>
+   always @(posedge CLOCK_50) begin
+      if (go == 1)
+         count &lt;= count + 1;
+      if (go == 0)
+          count &lt;= 0;
+   end
+	  </programlisting>
+	</informalfigure>
+
+	<para>
+	  Now once compiled and run you should have an automatic counter at
+	  your control, *insert evil laugh here*.
+	</para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>
+	Fibonacci Counter
+      </title>
+
+      <para>
+	The Fibonacci sequence is a sequence in which the subsequent number is
+	the sum of the previous for example, the start would be 0 + 1 = 1 and
+	then 1 + 1 = 2 and then 1 + 2 = 3 and so on. This is achieved similarly
+	to the counters project, however as we need to remember the previous
+	count, we therefore need to start with 2 registers.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   reg [07:00] pcount, count; // pcount represents previous count
+	</programlisting>
+      </informalfigure>
+
+      <note>
+	<para>
+	  You can create more than one register at a time by placing in commas,
+	  we will then use the wires and assigns used for the normal count .
+	</para>
+      </note>
+
+      <informalfigure>
+	<programlisting>
+   wire [07:00] leds;
+   assign LED[07:00] = leds;
+   assign leds = count;
+   assign reset = ~KEY[0];
+   assign next = ~KEY[1];
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Now we have to write the code to create a Fibonacci sequence.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   always @(posedge next or posedge reset ) begin
+      if (reset == 1'b1)begin
+         count &lt;= 0;
+      end
+      else begin                // else would be equal to if on next
+         count &lt;= count + pcount;
+         pcount &lt;= count;
+ 	 if (count == 0) begin  // need to change otherwise the
+                                // answer will always be 0
+             count &lt;= 1;     // this applies to both the reset and starting
+         end
+      end
+   end
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	In this example, an <literal>always</literal> block which contains 2
+	possibilities is used, one for each KEYs begin pressed down
+	individually this is so that the variables can be controlled with both
+	keys. First I created a	reset and then I made <varname>count</varname>
+	1, as if it were zero it could not then create the sequence. 
+	(Technically it works, but is a little boring). So you need to make
+	sure you can set the initial values, and then you create the sequence:
+	<varname>count</varname> becomes previous <varname>count</varname>
+	plus <varname>count</varname>, and previous <varname>count</varname>
+	will become count. (Am I the only one who has an urge to watch a
+	vampire movie?)
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="StateMachine">
+    <title>
+      Our Lock
+    </title>
+
+    <para>
+      Out next project is a lock to keep our secret number safe behind a 4
+      digit code. However we will aproach this by a different method; we will
+      work out how to implement this using a state machine.
+    </para>
+
+    <sect1>
+      <title>
+	What is a state machine?
+      </title>
+
+      <para>
+	A state machine is a machine which represents a number of different
+	states. These help us create solutions to complex questions by
+	representing it as a set of states where each does one or two simple
+	functions. The next state is chosen based on the inputs to the state
+	machines and the outputs are set depending on the current state.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Our first State machine
+      </title>
+
+      <para>
+        Our first step will be to draw out our state machine so we are
+        completely clear how it will work, making sure to name our states in a
+	meaningful way.
+      </para>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="state machineS.png"
+		     format="PNG"
+		     width="90%"
+		     scalefit="1"
+		     align="center" />
+	</imageobject>
+      </mediaobject>
+
+      <para>
+	Next we define these names and associate these with a number. We can
+	use the names in place of the number when writing the code that drives
+	out state machine. However also for this project we will need to create
+	another slow clock, so we need to define some other stuff. We will be
+	making our 4 digit lock by having the LEDs light up a single light to
+	represent such number, one key will be used to move this one place to
+	right and the other will be used to enter the digit, if all 4 digits
+	are correct we will then have it display our top secret message, or if
+	incorrect have it show nothing at all.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+`define STATE_INITIAL 10'd0
+`define STATE_CORRECT_1 10'd1
+`define STATE_CORRECT_2 10'd2
+`define STATE_CORRECT_3 10'd3
+`define STATE_WRONG_1 10'd4
+`define STATE_WRONG_2 10'd5
+`define STATE_WRONG_3 10'd6
+`define STATE_UNLOCKED 10'd7
+`define STATE_LOCKOUT_CHECK 10'd8
+`define STATE_LOCKOUT 10'd9
+`ifdef SIMULATE
+`define COUNTER_SIZE 8 // 32 bits	// for later, when we use GTKWave
+`define SLOW_CLK_BIT 2 // 16th bit	// as will not need to be visible
+`else
+`define COUNTER_SIZE 32 // 32 bits	// but we kind of what that now
+`define SLOW_CLK_BIT 20 // 16th bit
+`endif
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	We have defined these with names as is easier for us to remember, as
+	otherwise we would have to remember that <literal>4'd7</literal> is
+	equal to unlocked and other general nastiness of the sort. Next we need
+	to define our inputs and outputs.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+module DE0_NANO (CLOCK_50,KEY,LED);
+   input CLOCK_50;
+   input [01:00] KEY;
+   output [07:00] LED;
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Now we can work on the slow clock, which is needed so that we can see
+	what is running, we will start by using somebody else's	open source
+	code.
+      </para>
+
+      <para>
+	As you can see during the code we use a <literal>dummy_reset</literal>.
+	This is because	the code we started with used a reset based on a
+	key. As we are using both keys already and do not need a reset key, we
+	therefore need something to replace the reset in the code that doesn't
+	affect anything.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+`ifdef SIMULATE
+ `define COUNTER_SIZE 8
+ `define SLOW_CLK_BIT 2
+`else
+ `define COUNTER_SIZE 32
+ `define SLOW_CLK_BIT 20
+`endif
+
+   reg  [`COUNTER_SIZE-1:00] clkcount;
+   assign slow_clock = clkcount[`SLOW_CLK_BIT-1]; // you can see with '`'
+   reg dummy_reset;                               // we refer to defines
+   initial dummy_reset = 0;
+
+   edge_detect ed_0 (.CLK( slow_clock),
+                     .RST (dummy_reset),
+                     .IN (next),
+                     .OUT (next_ed));
+   edge_detect ed_1 (.CLK (slow_clock),
+                     .RST (dummy_reset),
+                     .IN (enter),
+                     .OUT (enter_ed));
+
+   always @(posedge CLOCK_50) begin
+      if (dummy_reset == 1'b1) begin
+         clkcount &lt;= 0;
+      end
+      else begin
+         clkcount &lt;= clkcount + 1;
+      end
+   end
+endmodule
+	</programlisting>
+      </informalfigure>
+
+
+      <informalfigure>
+	<programlisting>
+module edge_detect(
+  input  CLK,
+  input  RST,
+  input  IN,
+  output OUT );
+
+  reg a, b;
+  // the edge detect signal is (b AND (NOT a))
+  assign OUT = a &amp; !b;
+
+  always @(posedge CLK) begin
+    // it's always good to have a reset condition, otherwise
+    // the state of the register will show up as undertemined
+    // in simulation ('x')
+    if (RST == 1'b1) begin
+      a &lt;= 0;
+      b &lt;= 0;
+         end
+         else begin
+      a &lt;= IN;
+      b &lt;= a;
+         end
+  end
+endmodule
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Now we can create all the registers and wires needed for our
+	states. Additionally, we will need our normal LED ones, a count, as
+	well as <varname>lockout</varname>, <varname>nextlockout</varname>,
+	<varname>state</varname> and <varname>nextstate</varname>. We will be
+	using the edge detect on our keys so that we get a proper result, as
+	keys/buttons don't work how you would expect them to; instead of nicely
+	going up once, they often spike, and then reach the normal level,
+	therefore sometimes creating 2 pulses.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   reg [07:00] ledscount;
+   reg [03:00] lockout,nextlockout;
+   reg [02:00] count;
+   reg [15:00] state,nextstate;
+
+   wire next, enter;
+   wire next_ed, enter_ed;   // 'ed' stands for edge_detect
+
+   assign LED[07:00] = ledscount[07:00];  // which LEDs will be lit up
+   assign next = ~KEY[00] ;               // to scroll through the leds
+   assign enter = ~KEY[01] ;              // to select which value to enter
+
+   initial lockout = 0;
+   initial state = `STATE_INITIAL;
+   initial nextstate = `STATE_INITIAL;
+   initial count = 0;
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Now we move onto the code that manages states, what the states do
+	but also which they move to under what conditions. First we
+	start with our initial state, it will need to have the positive edge of
+	the next key move the leds along 1 slot and to know which key is
+	correct, so it can make the next state
+	<varname>STATE_CORRECT_1</varname> or <varname>STATE_WRONG_1</varname>
+	depending on if the value is correct.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   always @(posedge slow_clock) begin
+      if (state = `STATE_INITIAL) begin
+         ledscount &lt;= 3'd1 &lt;&lt; count;
+         if (next_ed) begin
+            count &lt;= count + 3'd1;
+         end
+         else if (enter_ed) begin
+            if (count == 3'd3)
+               nextstate &lt;= `STATE_CORRECT_1
+            else if (count != 3'd3)
+               nextstate &lt;= `STATE_WRONG_1
+         end
+      end
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	As you can see in this example, I have used <literal>3'd3</literal>.
+	This represents (in reverse order) a number 3, in decimal, 3 bits
+	long. In general this is
+	<literal>&lt;size&gt;'&lt;type&gt;&lt;number&gt;</literal>. Therefore
+	you can see the first digit of this code is the number 3. This is then
+	repeated for the next two states, replacing the nextstates. The
+	following represents <varname>STATE_CORRECT_3</varname>.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   if (state == `STATE_CORRECT_3) begin
+      ledscount &lt;= 3'd1 &lt;&lt; count;
+      if (next_ed) begin
+         count &lt;= count + 3'd1 ;
+      end
+      else if (enter_ed) begin
+         if (count == 3'd7)
+            nextstate &lt;= `STATE_UNLOCKED;
+         else if (count != 3'd7)
+            nextstate &lt;= `STATE_LOCKOUT_CHECK;
+      end
+   end
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	You can see in this one that if the value is correct, instead of moving
+	to <varname>STATE_CORRECT_4</varname>, it has gone to
+	<varname>STATE_UNLOCKED</varname>. However if you get it wrong it
+	doesn't go straight back to the initial state, but instead goes to a
+	lockout check. This checks if lockout is 2 and if not adds 1 to
+	lockout. Additionally, if lockout is 2 then we move to
+	<varname>STATE_LOCKOUT</varname>, otherwise it is sent to
+	<varname>STATE_INITIAL</varname> so that another attempt to enter the
+	pass code can be made (my pass code is not 1337).
+      </para>
+
+      <para>
+	We now need to make our <varname>STATE_WRONG</varname> states. These
+	are purely in place to prevent people being able to guess the code, so
+	needs to have have no notable difference to the others, so needs the
+	LEDs to be able to move from left to right and to move forward one, and
+	once enter is pressed move to the next state until 4 digits have been
+	entered. In order to make it harder to guess the 4 digit code, it will
+	only ever link to the next <varname>STATE_WRONG</varname> state or to
+	<varname>STATE_UNLOCKED_CHECK</varname>. You will need to make your
+	own versions or <varname>STATE_WRONG_2</varname> and 3 linking to the
+	appropriate places, such as the following.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   if (state == `STATE_WRONG_1) begin
+      ledscount &lt;= 3'd1 &lt;&lt; count;
+      if (next_ed) begin
+         count &lt;= count + 3'd1 ;
+      end
+      if (enter_ed) begin         // go to `STATE_WRONG_2
+         nextstate &lt;= `STATE_WRONG_2;
+      end
+   end
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	We now need to write the lockout and unlocked states, first starting
+	with <varname>STATE_LOCKOUT_CHECK</varname> as this will be
+	the most difficult. In this state, you need to check that lockout is
+	not 2 (this gives the unlocker 3 opportunities as on his/her first go
+	round he/she will have 0 lockouts, on his/her second 1, and on his/her
+	third he/she will have 2, and if he/she gets to the end he/she will
+	then will be locked out). If lockouts is set, the next state is set to
+	lockout, if it is not, we make nextlockout equal to lockout plus 1,
+	and then transition to the initial state.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   // How many times did we get it wrong?
+   if (state == `STATE_LOCKOUT_CHECK) begin
+      count &lt;= 0;                         // will reset number
+      if (lockout == 4'd2) begin
+         nextstate &lt;= `STATE_LOCKOUT;     // has already had 3
+                                             // incorrect attempts
+      end
+      else begin
+         nextstate &lt;= `STATE_INITIAL;     // has had 2 or less
+         nextlockout &lt;= lockout + 4'd1;   // incorrect attempts
+
+      end
+   end
+   // wrong more than 3 times
+   if (state == `STATE_LOCKOUT) begin
+      ledscount &lt;= 255;
+   end
+   // Unlocked because 4 digits were entered correctly
+   if (state == `STATE_UNLOCKED) begin
+      ledscount &lt;= &lt;mystery code&gt;;
+   end
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Remember we need to make sure we state that on every clock cycle
+	<varname>nextstate</varname> becomes <varname>state</varname> and
+	<varname>nextlockout</varname> becomes <varname>lockout</varname>.
+	We then finish with ending the module.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+   state &lt;= nextstate;
+   lockout &lt;= nextlockout;
+
+endmodule
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	It should now work, making sure you have correctly set your code, you
+	can now keep a number up to 255 vaguely secure from another bunch of
+	teenagers, hurrah!
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="UART">
+    <title>
+      &uart;
+    </title>
+
+    <sect1>
+      <title>
+	What is a &uart;?
+      </title>
+
+      <para>
+	A Universal Asynchronous Receiver/transmitter (&uart;) is a simple bit
+	based method of transferring data between machines. A method of
+	communicating via serial communication to a computer, or to a
+	peripheral.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>
+	Hello? world?
+      </title>
+
+      <para>
+	Our first &uart; project shall be to transmit <quote>Hello,
+	world!</quote> to the monitor, so first we need to create the &uart;
+	transmitter on the FPGA. We create a register to hold the state of
+	our transmit state, one for the data we want to transmit and
+	one for the word state.
+      </para>
+
+       <informalfigure>
+	 <programlisting>
+   reg [3:0] transmit_state;  // will be used like a state machine
+   reg [13:00] word_state;    // will be used to determine where
+                              // in the sentence we are
+   reg [07:00] transmit_data;
+	 </programlisting>
+       </informalfigure>
+
+       <para>
+	 We will also be transmitting at 115200 baud so we will need
+	 to use a clock divider register to create a clock that runs
+	 at the right speed.
+       </para>
+
+       <informalfigure>
+	 <programlisting>
+   reg [09:00] clock_divider_counter
+   reg uart_clock;
+	 </programlisting>
+       </informalfigure>
+
+       <para>
+	 For the clock divider, we divide the clock by 217, as this
+	 roughly goes into 50,000,000  230400(2 x 115200) times (this
+	 is because we will need a posedge for our UART).
+       </para>
+
+       <informalfigure>
+	 <programlisting>
+   always @(posedge CLOCK_50) begin
+      if (reset == 1'b1)                      // reset if reset button hit
+         clock_divider_counter &lt;= 0;
+      else if (clock_divider_counter == 217)  // reset if too high
+         clock_divider_counter &lt;= 0;
+      else
+         clock_divider_counter &lt;= clock_divider_counter + 1;
+   end
+
+
+   always @(posedge CLOCK_50) begin
+      if (reset == 1'b1)
+         uart_clock &lt;= 0;
+      else if(clock_divider_counter == 217)
+         uart_clock &lt;= ~uart_clock;
+   end
+	 </programlisting>
+       </informalfigure>
+
+       <para>
+	 We then create the code that creates our message. This will
+	 be implemented as a state machine, but this time a
+	 <literal>case</literal> statement will be used to implement
+	 the state machine.
+       </para>
+
+       <informalfigure>
+	 <programlisting>
+   always @(posedge uart_clock or posedge reset) begin
+      if (reset) begin        // Reset to the "IDLE" state
+         transmit_state &lt;= 0;
+         word_state &lt;= 1;
+         UART_TX &lt;= 1;     // The UART line is set to '1'
+                              // when idle, or reset
+      end
+        </programlisting>
+    </informalfigure>
+
+    <para>
+      Firstly we create the reset condition. If we are in reset it
+      will then set <varname>transmit_state</varname>,
+      <varname>word_state</varname> and <varname>UART_TX</varname>
+      and not do anything else in the always block. Once we are out of reset
+      we can process the main logic as follows:
+    </para>
+
+    <informalfigure>
+      <programlisting>
+      else begin
+         // What follows is the skeleton of the state machine to control
+        // the bits going onto the UART transmit line.
+        // You will want to, from the idle state:
+        // 1. detect the pushbutton press and go to the the start bit state
+        // 2. then the 8 data bits (LSB first)
+        // 3. finally the stop bit
+        // 4. return to this state ready for the next transmit
+         case (transmit_state)
+         0:
+            begin
+            if (key1_edge_detect == 1)
+               transmit_state &lt;= 1;
+            end
+         1:
+            begin
+               UART_TX &lt;= 0;
+               transmit_state &lt;=2;
+               // Start bit state, and progress onto the next state
+	       end
+         2,3,4,5,6,7,8,9:
+            begin
+               UART_TX &lt;= transmit_data[transmit_state - 2];
+               transmit_state &lt;= transmit_state + 1;
+               // Data bits
+               // when transmit_state is 2 we want transmit_data[0]
+               // when transmit_state is 3 we want transmit_data[1]
+               // ...
+	       // when transmit_state is 9 we want transmit_data[7]
+	       /* Fill me - assign appropriate data bit to UART_TX here
+	       - don't forget to continue incriminating the
+	       state
+	       */
+            end
+      </programlisting>
+    </informalfigure>
+
+    <para>
+      We then make sure that our word state stays valid by checking if it
+      is 14, and if not making sure to add 1 to the
+      <varname>word_state</varname>.
+    </para>
+
+    <informalfigure>
+      <programlisting>
+         10:
+            begin
+               UART_TX &lt;= 1;
+               transmit_state &lt;= 0;
+               if (word_state == 14) begin
+                  word_state &lt;= 1;
+            end
+            else
+               word_state &lt;= word_state + 1;
+      </programlisting>
+    </informalfigure>
+
+    <para>
+      To send our message, we look at <varname>word_state</varname>. If it
+      equals for example 1, <varname>transmit_data</varname> will become 'H'
+      or the next character in our message. Characters are sent using a
+      hexadecimal representation, therefore you will need an ASCII table <xref
+      linkend="ref_asciitable"/> to look up which codes you want. I wonder how
+      many pop culture references you can display solely using this
+      FPGA.</para>
+
+      <note>
+	<para>
+	  This is still inside the always block.
+	</para>
+      </note>
+
+      <informalfigure>
+	<programlisting>
+    begin
+      if (word_state == 1)
+         transmit_data &lt;= 8'h48; //H
+      if (word_state == 2)
+         transmit_data &lt;= 8'h65; //e
+      if (word_state == 3)
+         transmit_data &lt;= 8'h6c; //l
+      if (word_state == 4)
+         transmit_data &lt;= 8'h6c; //l
+      if (word_state == 5)
+         transmit_data &lt;= 8'h6f; //o
+      if (word_state == 6)
+         transmit_data &lt;= 8'h2c; //,
+      if (word_state == 7)
+         transmit_data &lt;= 8'h20; //
+      if (word_state == 8)
+         transmit_data &lt;= 8'h57; //W
+      if (word_state == 9)
+         transmit_data &lt;= 8'h6f; //o
+      if (word_state == 10)
+         transmit_data &lt;= 8'h72; //r
+      if (word_state == 11)
+         transmit_data &lt;= 8'h6c; //l
+      if (word_state == 12)
+         transmit_data &lt;= 8'h64; //d
+      if (word_state == 13)
+         transmit_data &lt;= 8'h21; //!
+      if (word_state == 14)
+         transmit_data &lt;= 8'h20; //
+   end
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Next we clean up, and finish the code, by introducing a default
+	condition it shouldn't reach, but if it does it will go back to the
+	idle state, also setting the LEDs and the edge_detect state.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+      end
+         default:
+
+            transmit_state &lt;= 0;
+         endcase
+      end
+   end
+
+   always @(posedge uart_clock)
+      key1_reg &lt;= KEY[1];
+
+   assign key1_edge_detect = ~KEY[1] &amp; key1_reg;
+                                 // Detect the change in level
+   assign LED = transmit_data;   // or change to what you
+	</programlisting>
+      </informalfigure>
+
+      <informalfigure>
+	<programlisting>
+	  endmodule
+	</programlisting>
+      </informalfigure>
+
+      <para>
+	Always remember to finish modules with an <literal>endmodule</literal>.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Getting it to run on the screen
+      </title>
+
+      <para>
+	You will need to use one of &Embecosm;'s USB &uart;s and have it
+	plugged in correctly to the board but also into the computer you are
+	want to display the message on. See <xref linkend="fig_uart"/>.
+      </para>
+
+      <figure id="fig_uart">
+	<title>
+	  USB to &uart; connector.
+	</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="uart.jpg"
+		       format="JPG"
+		       width="90%"
+		       scalefit="1"
+		       align="center" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>
+	On Windows, to view the &uart; you will need to get a
+	terminal &mdash; we suggest PuTTY. Once loaded you will need to change
+	the connection type to serial, change the serial line to the address
+	of the device (for example COM3, this may differ per machine, you may
+	need to look it up under devices), and the speed to 115200.
+      </para>
+
+      <para>
+	For Linux you will need to be in the <literal>dialout</literal> group
+	and then you can use the command below in the terminal to display your
+	message.
+      </para>
+
+      <informalfigure>
+	<programlisting>
+$ screen /dev/ttyUSB0 115200
+	</programlisting>
+      </informalfigure>
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="OpenRISC">
+    <title>OpenRISC and SoC</title>
+    <caution>
+      <para>
+	This is more advanced work, and you are advised to use Linux. There
+	will be no Windows support, so consider a using a virtual machine.
+	</para>
+    </caution>
+
+    <sect1>
+      <title>
+	What is OpenRISC?
+      </title>
+
+      <para>
+        No it is not the open source remake of the Parker Brothers board game,
+        instead OpenRISC stands for open reduced instruction set computer and
+	is a  project which has created a computer architecture and
+	implementation and tools for its development. It is a design
+	specification for an open source processor.
+      </para>
+
+      <para>
+        The OpenRISC 1000 architecture has a 32-bit instruction word and either
+        32-bit or 64-bit data. As it is reduced instruction set, its
+        instructions are relatively simple like:
+      </para>
+
+      <programlisting>
+	add register 3 with register 6 and store in register 8
+      </programlisting>
+
+      <para>
+	or
+      </para>
+
+      <programlisting>
+	load the data at the memory address held in register 4 into register 5
+      </programlisting>
+
+      <para>
+        Whereas a more complex instruction set computer (CISC) may be capable of
+        doing much more in a single instruction:
+      </para>
+
+    <programlisting>
+      load the data at the memory address in register 2, increment it, compare
+      with zero, and store back at the address held in register 4 while
+      incriminating both registers 2 and 3
+    </programlisting>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	What is a SoC?
+      </title>
+
+      <para>
+       A System on (a) Chip. When we bring this together with our own
+       synthesisable models of peripheral controllers, communications I/O
+       and system infrastructure we have a system capable of many
+       things. Typically the brains of the system is the programmable CPU.
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>
+	Installation
+      </title>
+
+       <warning>
+	 <para>
+	   This will take a long time.
+	 </para>
+       </warning>
+
+       <para>
+	 To install you will need:
+       </para>
+
+       <orderedlist>
+	 <listitem>
+	   <para>
+	     The OpenRISC GNU tool chain (bare metal, newlib-basic, or1k-elf-)
+	   </para>
+	 </listitem>
+
+	 <listitem>
+	   <para>
+	     The FuseSoC devlopment environment
+	   </para>
+	 </listitem>
+
+	 <listitem>
+	   <para>
+	     Icarus Verilog and &gtkwave;
+	   </para>
+	 </listitem>
+
+	 <listitem>
+	   <para>
+	     The Altera Quartus tools (for synthesis, board programming)<xref
+	     linkend="ref_Quartus"/>
+	   </para>
+	 </listitem>
+
+	 <listitem>
+	   <para>
+	     The OpenOCD debug proxy
+	   </para>
+	 </listitem>
+       </orderedlist>
+
+       <sect2>
+	 <title>
+	   General System Tools
+	 </title>
+
+	 <para>
+	   These will be necessary for various parts of the flow. On Debian or
+	   Ubuntu systems you can install them with:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+sudo apt-get -y install build-essential make gcc g++ flex bison    \
+patch texinfo libncurses5-dev libmpfr-dev libgmp3-dev libmpc-dev   \
+libzip-dev python-dev libexpat1-dev libftdi-dev libtool autoconf   \
+libftdi-dev subversion libelf-dev elfutils
+	   </programlisting>
+	 </informalfigure>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   OpenRISC GNU tool chain precompiled for 32-bit linux
+	 </title>
+	 <para>
+	   You will need to find the or1k-elf toolchain online and extract it
+	   in the <filename>/opt</filename> directory, creating the directory
+	   <filename>or1k-toolchain</filename>. These tools will need to be in
+	   your PATH in order to use, them, so the following needs to be run
+	   to enable this by default.
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+echo "# OpenRISC tool chain path" >> ~/.bashrc
+echo "export PATH=\$PATH:/opt/or1k-toolchain/bin" >> ~/.bashrc
+	   </programlisting>
+	 </informalfigure>
+
+	 <note>
+	   <para>
+	     If this does not work, consult the Chiphack Wiki.
+	   </para>
+	 </note>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Quartus Tools
+	 </title>
+
+	 <para>
+	   You should already have these installed, however if you have not
+	   visit their website and download and install <emphasis>Altera
+	   Quartus II Web Edition</emphasis>.
+	 </para>
+
+	 <para>
+	   These can also be added to your <varname>PATH</varname> using the
+	   following, noting to change the version number to the one you have
+	   installed:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+echo "# Altera Quartus tools path" >> ~/.bashrc
+echo "export ALTERA_PATH=/opt/altera/13.1" >> ~/.bashrc
+echo "export PATH=\$PATH:\$ALTERA_PATH/quartus/bin" >> ~/.bashrc
+	   </programlisting>
+	 </informalfigure>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Icarus Verilog and &gtkwave;
+	 </title>
+
+	 <para>
+	   These are both open source projects, and can be easy installed from
+	   any modern Linux distribution. Otherwise you can follow an install
+	   guide from the Icarus Verilog wiki.
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+sudo apt-get install iVerilog gtkwave
+	   </programlisting>
+	 </informalfigure>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   OpenOCD
+	 </title>
+
+	 <para>
+	   OpenOCD is the debug proxy we'll use to talk to the board over
+	   &jtag;.
+	 </para>
+
+	 <para>
+	   Download the source to <filename>$HOME/or1k</filename>
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+	     git clone https://github.com/openrisc/openOCD.git
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Go into the <filename>OpenOCD</filename> directory and, bootstrap it:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+./bootstrap
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   You may need to install <emphasis>libtool</emphasis> and
+	   <emphasis>autoconf</emphasis> via your package manager to run the
+	   bootstrap process.
+	 </para>
+
+	 <para>
+	   Once that is finished, configure and compile:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+./configure --enable-usb_blaster_libftdI --enable-adv_debug_sys \\
+ --enable-altera_vjtag --enable-maintainer-mode
+make
+make install
+	   </programlisting>
+	 </informalfigure>
+
+	 <note>
+	   <para>
+	     I suggest downloading and playing a game of
+	     <emphasis>greed</emphasis> in the wait (it takes along time).
+	   </para>
+
+	   <informalfigure>
+	     <programlisting>
+sudo apt-get install greed
+greed
+	     </programlisting>
+	   </informalfigure>
+	 </note>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   FuseSoC
+	 </title>
+
+	 <para>
+	   The SoC development tool is now needed.
+	 </para>
+
+	 <para>
+	   Clone this from GitHub into <filename>$HOME/or1k</filename>
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+git clone https://github.com/olofk/fusesoc.git
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Now go into <filename>fusesoc</filename> and run the following:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+autoreconf -i
+./configure &amp;&amp; make
+make install
+	   </programlisting>
+	 </informalfigure>
+       </sect2>
+
+       <sect2>
+	 <title>
+	   orpsoc-cores
+	 </title>
+
+	 <para>
+	   The OpenRISC set of configurations for <application
+	   class="software">FuseSoC</application> to work with, needs to be
+	   downloaded next.
+	 </para>
+
+	 <para>
+	   Clone this from GitHub into <filename>$HOME/or1k</filename>
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+git clone https://github.com/openrisc/orpsoc-cores.git
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Hurrah, we did it! No more installs!
+	 </para>
+
+       </sect2>
+
+     </sect1>
+
+     <sect1>
+       <title>
+	 Waves
+       </title>
+
+       <sect2>
+	 <title>
+	   Hello? Again?
+	 </title>
+
+	 <para>
+	   Now we will be writing something to run on the OpenRISC and for us
+	   to be able to debug in &gtkwave;. Unlike software programming it is
+	   very hard to debug hardware, and viewing the
+	   <filename>.vcd</filename> is as close to a debugger as you can get.
+	   This allows us to view the values of every
+	   register and wire so therefore lets us understand what has
+	   occured. We start by writing a simple program in a file called
+	   <filename>hello.c</filename>:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+int main(void)
+{
+    printf("Hello world, from an OpenRISC system!\n");
+    return 0;
+}
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   We then compile it using the OpenRISC toolchain.
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+or1k-elf-gcc hello.c -o hello.elf
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Then we can run it on a simulator using <filename>fusesoc</filename>.
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+fusesoc sim mor1kx-generic --elf-load hello.elf
+	   </programlisting>
+	 </informalfigure>
+
+	 <note>
+	   <para>
+	     If it doesn't run correctly make sure you have all the tools
+	     installed.
+	   </para>
+	 </note>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Waveform
+	 </title>
+
+	 <para>
+	   We can now inspect the program we have just run in &gtkwave;, which
+	   we installed earlier. First we run it to produce a
+	   <filename>.vcd</filename>, which is a file that &gtkwave; can open.
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+fusesoc sim mor1kx-generic --elf-load hello.elf --vcd
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   This can then be opened with &gtkwave;
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+gtkwave build/mor1kx-generic/sim-icarus/testlog.vcd
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   The program should now load up. In the hierarchy browser (top left
+	   corner) expand <filename> orpsoc_tb</filename> then
+	   <filename>dut</filename>. Then highlight mor1kx (the processor), this
+	   will now list the signals in the window below. Select all signals
+	   beginning with <filename>iwbm</filename> and insert, then do the
+	   same for <filename>dwbm</filename>. To be able to see properly, zoom 
+	   in so you can see 100s of nanoseconds, similar to  <xref linkend="fig_wave"/>:
+	 </para>
+
+	 <figure id="fig_wave">
+	   <title>
+	     Example of a wave trace
+	   </title>
+
+	   <mediaobject>
+	     <imageobject>
+	       <imagedata fileref="wave.png"
+			  format="PNG"
+			  width="90%"
+			  scalefit="1"
+			  align="center" />
+	     </imageobject>
+	   </mediaobject>
+	 </figure>
+
+       </sect2>
+
+     </sect1>
+
+     <sect1>
+       <title>
+	 Running on the &de0nano;
+       </title>
+
+       <para>
+	 Now we will be building and then running the system on our FPGA.
+       </para>
+
+       <sect2>
+	 <title>
+	   USB to &uart; patch
+	 </title>
+
+	 <para>
+	   We will modify the source for the &de0nano; system in
+	   <filename>orpsoc-cores</filename> to support the use of the
+	   Embecosm USB to &uart; board. Firstly download and apply the
+	   following patch:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+wget http://goo.gl/xw74Aa
+git am xw74Aa
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   The system's source is now suitable to work with the Embecosm USB to
+	   &uart;.
+	 </para>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Programming the board
+	 </title>
+
+	 <para>
+	   We will now build the image to be programmed onto the &de0nano;.
+	   Note this will take a while. From the <filename>or1k</filename>
+	   directory.
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+fusesoc build de0_nano
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   In the synthesis directory there is also a makefile recipe for
+	   programming the board:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+fusesoc pgm de0_nano
+	   </programlisting>
+	 </informalfigure>
+
+	 <note>
+	   <para>
+	     There are several things could go wrong here. The first is that the
+	     system JTAG daemon running needs to be killed and the Altera
+	     version run instead, to do this run:
+	   </para>
+
+	   <informalfigure>
+	     <programlisting>
+killall jtagd
+sudo /opt/altera/13.1/quartus/bin/jtagd
+	     </programlisting>
+	   </informalfigure>
+
+	   <para>
+	     Another problem might be that the OpenOCD debugger is still using
+	     the JTAG/USB port. Exiting OpenOCD will fix this.
+	   </para>
+
+	   <para>
+	     Another could be basic permissions on the USB device and this may
+	     fix things:
+	   </para>
+
+	   <informalfigure>
+	     <programlisting>
+sudo make pgm
+	     </programlisting>
+	   </informalfigure>
+	 </note>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Connecting the debug proxy
+	 </title>
+
+	 <para>
+	   From the OpenOCD directory run the following:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+sudo ./build/src/openocd -f ./tcl/interface/altera-usb-blaster.cfg \\
+    -f altera-dev.tcl
+	   </programlisting>
+	 </informalfigure>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Rebuilding our program
+	 </title>
+
+	 <para>
+	   We are going to take the c code we wrote earlier and now recompile
+	   it to run on the &de0nano;
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+or1k-elf-gcc hello.c -o hello_de0_nano.elf -mboard=de0_nano
+	   </programlisting>
+	 </informalfigure>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Openning a terminal
+	 </title>
+
+	 <para>
+	   Next open a terminal, like we did for the &uart; using the
+	   following:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+screen /dev/ttyUSB0 115200
+	   </programlisting>
+	 </informalfigure>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Connecting the debugger
+	 </title>
+
+	 <para>
+	   We will be using a debugger, solely for running a program on the
+	   machine however these can be used to stop a program executing at
+	   any time and evaluate the state of the machine. For example we can
+	   look at the value of any variable in our code.
+	 </para>
+
+	 <para>
+	   In a new terminal run the OpenRISC GNU Debugger (GDB) and
+	   specify the executable we want to run:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+or1k-elf-gdb hello_de0_nano.elf
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Within GDB we tell it to connect to the port that OpenOCD is
+	   running on:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+(gdb) target remote :50001
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   We can now access the system memory and registers, for example
+	   to look at the memory at address zero, we use:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+x 0x0
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Now, to run the program, first we begin by:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+(gdb) load
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   and then:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+(gdb) continue
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Hurrah, it works!
+	 </para>
+
+       </sect2>
+
+       <sect2>
+	 <title>
+	   Running Linux on our FPGA
+	 </title>
+
+	 <para>
+	   Congratulations on getting this far, but you have not finished
+	   yet&hellip; Now, instead of running "hello world", we will run Linux
+	   <emphasis>*dramatic music*</emphasis>. but first we need to
+	   download it:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+wget https://www.dropbox.com/s/bi5vx8kmqnjdldx/vmlinux-de0_nano
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Now load it in the GDB as before, though this time with a couple of
+	   changes:
+	 </para>
+
+	 <informalfigure>
+	   <programlisting>
+(gdb) file vmlinux_de0_nano
+(gdb) load
+(gdb) spr npc 0x100
+(gdb) c
+	   </programlisting>
+	 </informalfigure>
+
+	 <para>
+	   Look! it's moving. It's alive. It's alive...
+	 </para>
+
+	 <para>
+	   However, unfortunately it is a embedded version of Linux, little is
+	   doable on it therefore it is solely a bragging right, for now&hellip;
+	 </para>
+
+       </sect2>
+
+     </sect1>
+
+   </chapter>
+
+
+   <glossary>
+     <title>
+       Glossary
+     </title>
+
+     <glossentry>
+       <glossterm>HDL</glossterm>
+       <glossdef>
+	 <para>
+	   HDL stands for hardware description language, for example Verilog
+	   is a language which is used to describe the FPGA
+	 </para>
+       </glossdef>
+     </glossentry>
+
+     <glossentry>
+       <glossterm>FPGA</glossterm>
+       <glossdef>
+	 <para>
+	   Field Programmable Gate Array, are able to be changed using a HDL
+	   such as Verilog.
+	 </para>
+       </glossdef>
+     </glossentry>
+
+     <glossentry>
+      <glossterm>&uart;</glossterm>
+      <glossdef>
+        <para>
+          A &uart; (Universal Asynchronous Receiver/Transmitter), used to communicate between chips (not potatoes).
+        </para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>&de0nano;</glossterm>
+      <glossdef>
+        <para>
+	  The model of FPGA i have been using.
+        </para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>OpenRISC</glossterm>
+      <glossdef>
+        <para>
+          A set of opensource design specifications for a processor, we shall
+          be using an implementation of it.
+        </para>
+      </glossdef>
+    </glossentry>
+
+    <glossentry>
+      <glossterm>Binary</glossterm>
+      <glossdef>
+        <para>
+          A way of displaying numbers only using '1's and '0's.
+        </para>
+      </glossdef>
+    </glossentry>
+
+  </glossary>
+
+  <bibliography>
+    <title>
+      References
+    </title>
+
+    <bibliomixed id="ref_chiphack">
+      <title>Chiphack Repository</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://chiphack.org">http://chiphack.org</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_Logic">
+      <title>Basic Logic</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/index.html#orgate">http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/index.html#orgate</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_ChiphackWiki">
+      <title>Chiphack Wiki</title>
+      <bibliomisc>
+        Available at <ulink url="https://github.com/embecosm/chiphack/wiki">https://github.com/embecosm/chiphack/wiki</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_Quartus">
+      <title>Quartus</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.altera.co.uk/products/software/quartus-ii/web-edition/qts-we-index.html">http://www.altera.co.uk/products/software/quartus-ii/web-edition/qts-we-index.html</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_asciitable">
+      <title>ASCII Table</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.asciitable.com/">http://www.asciitable.com/</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_de0_nano">
+      <title>DE0_NANO</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.terasic.com/">https://www.terasic.com.tw/cgi-bin/page/archive.pl?No=593/</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_PuTTY">
+      <title>PuTTY</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.chiark.greenend.org.uk/~sgtatham/putty/">http://www.chiark.greenend.org.uk/~sgtatham/putty/</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_IcarusVerilog">
+      <title>Icarus Verilog alternate install method</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://iVerilog.wikia.com/wiki/Installation_Guide">http://iVerilog.wikia.com/wiki/Installation_Guide</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_cp210x_vcp_windows">
+      <title>CP210x USB to &uart; Bridge</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx">http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_BlasterLinux">
+      <title>Altera USB Blaster driver for linux</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.altera.co.uk/download/drivers/dri-usb_b-lnx.html">http://www.altera.co.uk/download/drivers/dri-usb_b-lnx.html</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_SabreDance">
+      <title>Sabre Dance</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.youtube.com/watch?v=gqg3l3r_DRI">http://www.youtube.com/watch?v=gqg3l3r_DRI</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+
+    <bibliomixed id="ref_BlasterWindows">
+      <title>Altera USB Blaster driver for Windows</title>
+      <bibliomisc>
+        Available at <ulink
+        url="http://www.altera.co.uk/download/drivers/usb-blaster/dri-usb-blaster-vista.html">http://www.altera.co.uk/download/drivers/usb-blaster/dri-usb-blaster-vista.html</ulink>.
+      </bibliomisc>
+    </bibliomixed>
+  </bibliography>
+
+</book>
