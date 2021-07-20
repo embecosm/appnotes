@@ -25,7 +25,7 @@
 # We just specify the root of the document name. Everything else is done for
 # us (we use all the defaults).
 
-DOCROOT        = ean12-hardware-projects.docbook
+DOCROOT        = ean16-hardware-projects.docbook
 
 # ----------------------------------------------------------------------------
 # Others do all the hard work
